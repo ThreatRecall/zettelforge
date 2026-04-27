@@ -52,19 +52,27 @@ nav:
     - Quickstart: tutorials/01-quickstart.md
     - First CTI Report: tutorials/02-first-cti-report.md
   - How-To Guides:
-    - Store Threat Actor: how-to/store-threat-actor.md
+    - Build Extensions: how-to/build-extensions.md
     - Configure LanceDB: how-to/configure-lancedb.md
-    - Configure TypeDB: how-to/configure-typedb.md
     - Configure OpenCTI: how-to/configure-opencti.md
-    - Resolve Aliases: how-to/resolve-aliases.md
+    - Configure Sigma Ingestion: how-to/configure-sigma-ingestion.md
+    - Configure TypeDB: how-to/configure-typedb.md
+    - Configure YARA Ingestion: how-to/configure-yara-ingestion.md
     - Ingest News Report: how-to/ingest-news-report.md
-    - Run Temporal Query: how-to/run-temporal-query.md
-    - Query APT Tools: how-to/query-apt-tools.md
     - Integrate LLM Agent: how-to/integrate-llm-agent.md
+    - Integrate with CrewAI: how-to/integrate-with-crewai.md
+    - Integrate with LangChain: how-to/integrate-with-langchain.md
+    - Maintain LanceDB: how-to/maintain-lancedb.md
     - Migrate JSONL to SQLite: how-to/migrate-jsonl-to-sqlite.md
+    - Query APT Tools: how-to/query-apt-tools.md
     - Reproduce Benchmarks: how-to/reproduce-benchmarks.md
+    - Resolve Aliases: how-to/resolve-aliases.md
+    - Run Temporal Query: how-to/run-temporal-query.md
+    - Set Up MCP Server: how-to/set-up-mcp-server.md
+    - Store Threat Actor: how-to/store-threat-actor.md
     - Troubleshoot: how-to/troubleshoot.md
     - Upgrade: how-to/upgrade.md
+    - Use Detection Rules: how-to/use-detection-rules.md
   - Concepts:
     - Architecture: explanation/architecture.md
     - Two-Phase Pipeline: explanation/two-phase-pipeline.md
@@ -73,13 +81,21 @@ nav:
     - LLM Budgets & Timeouts: explanation/llm-budgets-and-timeouts.md
     - Zettelkasten Philosophy: explanation/zettelkasten-philosophy.md
   - Reference:
-    - Memory Manager API: reference/memory-manager-api.md
-    - Configuration: reference/configuration.md
-    - Retrieval Policies: reference/retrieval-policies.md
-    - STIX Schema: reference/stix-schema.md
-    - Governance Controls: reference/governance-controls.md
     - Architecture Deep Dive: reference/architecture-deep-dive.md
+    - Configuration: reference/configuration.md
+    - Detection Rules Schema: reference/detection-rules-schema.md
+    - Editions: reference/editions.md
+    - Entity Indexer Concurrency: reference/entity-indexer-concurrency.md
+    - Governance Controls: reference/governance-controls.md
+    - KG Edge Schema: reference/kg-edge-schema.md
+    - MCP Protocol: reference/mcp-protocol.md
+    - Memory Manager API: reference/memory-manager-api.md
     - Module Inventory: reference/module-inventory.md
+    - Retrieval Policies: reference/retrieval-policies.md
+    - Sigma Schema Reference: reference/sigma-schema-reference.md
+    - STIX Schema: reference/stix-schema.md
+    - Web API Reference: reference/web-api.md
+    - YARA Schema Reference: reference/yara-schema-reference.md
   - Design:
     - Brand Identity: brand/brandIdentity.md
     - RFC-001 Conversational Entity Extractor: rfcs/RFC-001-conversational-entity-extractor.md
