@@ -10,6 +10,7 @@ Conversational Entity Extension (RFC-001):
 """
 
 import atexit
+import contextlib
 import fcntl
 import json
 import os
@@ -17,7 +18,7 @@ import re
 import tempfile
 import threading
 from pathlib import Path
-from typing import Dict, List, Optional, Set
+from typing import ClassVar
 
 from zettelforge.json_parse import extract_json
 from zettelforge.log import get_logger
@@ -29,7 +30,7 @@ class EntityExtractor:
     """Extract entities from text using regex (CTI) and LLM (conversational) patterns."""
 
     # Regex fast-path for CTI entities — deterministic, zero-latency
-    REGEX_PATTERNS: Dict[str, re.Pattern] = {
+    REGEX_PATTERNS: ClassVar[dict[str, re.Pattern]] = {
         "cve": re.compile(r"(CVE-\d{4}-\d{4,})", re.IGNORECASE),
         "intrusion_set": re.compile(
             r"\b((?:apt|unc|ta|fin|temp)\s*-?\s*\d+)\b",
@@ -68,7 +69,7 @@ class EntityExtractor:
     }
 
     # All entity types the system recognizes
-    ENTITY_TYPES: List[str] = [
+    ENTITY_TYPES: ClassVar[list[str]] = [
         # CTI (regex)
         "cve",
         "intrusion_set",
@@ -128,7 +129,7 @@ class EntityExtractor:
     _PERSON_PATTERN = re.compile(r"(?:^|\n)\s*([A-Z][a-z]{2,15}):", re.MULTILINE)
 
     # Common words that match the person pattern but aren't names
-    _NAME_STOPWORDS = {
+    _NAME_STOPWORDS: ClassVar[set[str]] = {
         "the",
         "and",
         "but",
@@ -191,7 +192,7 @@ class EntityExtractor:
         re.IGNORECASE,
     )
 
-    def _filter_false_positive_hashes(self, candidates: List[str], text: str) -> List[str]:
+    def _filter_false_positive_hashes(self, candidates: list[str], text: str) -> list[str]:
         """Remove hash candidates that appear in code or VCS contexts.
 
         Strategy: build the set of hex strings that sit on a line whose content
@@ -210,7 +211,7 @@ class EntityExtractor:
             return candidates
 
         # Build set of hex strings that live on a code-context line
-        fp_hashes: Set[str] = set()
+        fp_hashes: set[str] = set()
         for line in text.splitlines():
             if self._CODE_CONTEXT_PATTERN.search(line):
                 # Mark every hex string on this line as a false positive
@@ -219,9 +220,9 @@ class EntityExtractor:
 
         return [c for c in candidates if c.lower() not in fp_hashes]
 
-    def extract_regex(self, text: str) -> Dict[str, List[str]]:
+    def extract_regex(self, text: str) -> dict[str, list[str]]:
         """Extract CTI + IOC + conversational entities using regex. Fast, no LLM."""
-        results: Dict[str, List[str]] = {}
+        results: dict[str, list[str]] = {}
 
         # Hash IOC types that need false-positive filtering
         hash_types = {"md5", "sha1", "sha256"}
@@ -247,7 +248,7 @@ class EntityExtractor:
 
         return results
 
-    def extract_llm(self, text: str) -> Dict[str, List[str]]:
+    def extract_llm(self, text: str) -> dict[str, list[str]]:
         """Extract conversational entities using LLM NER.
 
         Returns dict with person, location, organization, event, activity, temporal keys.
@@ -270,9 +271,12 @@ class EntityExtractor:
             from zettelforge.llm_client import generate
 
             prompt = f"Extract named entities from this text:\n\n{text[:2000]}\n\nJSON:"
+            # 2500-token budget for reasoning-model headroom (v2.5.2; pre-fix
+            # 300 was exhausted by qwen3.5+ <think> tokens, leaving the NER
+            # JSON empty and entity extraction silently no-opping).
             output = generate(
                 prompt,
-                max_tokens=300,
+                max_tokens=2500,
                 temperature=0.0,
                 system=self.NER_SYSTEM_PROMPT,
             )
@@ -281,7 +285,7 @@ class EntityExtractor:
             if parsed is None and output and output.strip():
                 _logger.info("retry_parse", site="entity_indexer_ner", attempt=2)
                 retry_prompt = prompt + "\n\nRespond with valid JSON only."
-                output = generate(retry_prompt, max_tokens=300, temperature=0.3, json_mode=True)
+                output = generate(retry_prompt, max_tokens=2500, temperature=0.3, json_mode=True)
                 parsed = extract_json(output, expect="object")
             return self._parse_ner_output_from_parsed(parsed, output, conversational_types)
 
@@ -289,14 +293,14 @@ class EntityExtractor:
             _logger.warning("llm_entity_extraction_failed", exc_info=True)
             return empty
 
-    def _parse_ner_output(self, output: str, expected_types: List[str]) -> Dict[str, List[str]]:
+    def _parse_ner_output(self, output: str, expected_types: list[str]) -> dict[str, list[str]]:
         """Parse LLM NER output into normalized entity dict."""
         parsed = extract_json(output, expect="object")
         return self._parse_ner_output_from_parsed(parsed, output, expected_types)
 
     def _parse_ner_output_from_parsed(
-        self, parsed, output: str, expected_types: List[str]
-    ) -> Dict[str, List[str]]:
+        self, parsed, output: str, expected_types: list[str]
+    ) -> dict[str, list[str]]:
         """Build normalized entity dict from a pre-parsed JSON object."""
         empty = {t: [] for t in expected_types}
 
@@ -312,7 +316,7 @@ class EntityExtractor:
             return empty
 
         # Normalize values
-        results: Dict[str, List[str]] = {}
+        results: dict[str, list[str]] = {}
         for etype in expected_types:
             values = parsed.get(etype, [])
             if isinstance(values, list):
@@ -328,7 +332,7 @@ class EntityExtractor:
 
         return results
 
-    def extract_all(self, text: str, use_llm: bool = False) -> Dict[str, List[str]]:
+    def extract_all(self, text: str, use_llm: bool = False) -> dict[str, list[str]]:
         """Extract all entity types from text.
 
         Uses regex for CTI types (always) and LLM for conversational types
@@ -350,7 +354,7 @@ class EntityExtractor:
             llm_results = self.extract_llm(text)
             # Merge LLM results with regex results (extend, don't overwrite)
             for etype, values in llm_results.items():
-                if etype in results and results[etype]:
+                if results.get(etype):
                     # Deduplicate across regex + LLM
                     merged = set(results[etype])
                     merged.update(values)
@@ -369,18 +373,18 @@ class EntityExtractor:
 class EntityIndexer:
     """Index notes by entities for fast lookup"""
 
-    def __init__(self, index_path: Optional[str] = None):
+    def __init__(self, index_path: str | None = None):
         from zettelforge.memory_store import get_default_data_dir
 
         if index_path is None:
             index_path = get_default_data_dir() / "entity_index.json"
         self.index_path = Path(index_path)
-        self.index: Dict[str, Dict[str, Set[str]]] = {
+        self.index: dict[str, dict[str, set[str]]] = {
             etype: {} for etype in EntityExtractor.ENTITY_TYPES
         }
         self.extractor = EntityExtractor()
         self._dirty = False
-        self._flush_timer: Optional[threading.Timer] = None
+        self._flush_timer: threading.Timer | None = None
         # RLock so that paths which already hold the lock (e.g. add_note →
         # _schedule_flush) don't deadlock on the timer-coordination
         # acquisition. Same lock guards all index reads/writes/serialize
@@ -437,13 +441,11 @@ class EntityIndexer:
         except Exception:
             # Best-effort cleanup; raise so caller observes the failure.
             if os.path.exists(tmp_path):
-                try:
+                with contextlib.suppress(OSError):
                     os.unlink(tmp_path)
-                except OSError:
-                    pass
             raise
 
-    def add_note(self, note_id: str, entities: Dict[str, List[str]]) -> None:
+    def add_note(self, note_id: str, entities: dict[str, list[str]]) -> None:
         """Add note to entity index."""
         # Hold _flush_lock for the whole mutation so concurrent save() /
         # remove_note() / load() can't observe a torn index. Same lock
@@ -503,13 +505,13 @@ class EntityIndexer:
                 self.save()
                 self._dirty = False
 
-    def get_note_ids(self, entity_type: str, entity_value: str) -> List[str]:
+    def get_note_ids(self, entity_type: str, entity_value: str) -> list[str]:
         """Get note IDs for a specific entity."""
         if entity_type not in self.index:
             return []
         return list(self.index[entity_type].get(entity_value.lower(), []))
 
-    def search_entities(self, query: str, limit: int = 10) -> Dict[str, List[str]]:
+    def search_entities(self, query: str, limit: int = 10) -> dict[str, list[str]]:
         """Search for entities matching a query across all types.
 
         Useful for recall when the entity type is unknown.
@@ -522,14 +524,14 @@ class EntityIndexer:
             Dict mapping entity type to list of matching entity values.
         """
         query_lower = query.lower()
-        results: Dict[str, List[str]] = {}
+        results: dict[str, list[str]] = {}
         for etype, entities in self.index.items():
-            matches = [ev for ev in entities.keys() if ev.startswith(query_lower)][:limit]
+            matches = [ev for ev in entities if ev.startswith(query_lower)][:limit]
             if matches:
                 results[etype] = matches
         return results
 
-    def stats(self) -> Dict:
+    def stats(self) -> dict:
         """Get index statistics."""
         return {
             entity_type: {
@@ -539,7 +541,7 @@ class EntityIndexer:
             for entity_type, entities in self.index.items()
         }
 
-    def build(self) -> Dict:
+    def build(self) -> dict:
         """Rebuild index from all notes."""
         from zettelforge.memory_store import MemoryStore
 

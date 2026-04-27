@@ -10,7 +10,7 @@ If no extensions are installed, all features use built-in backends.
 
 import logging
 import os
-from typing import Any, Optional
+from typing import Any
 
 _logger = logging.getLogger("zettelforge.extensions")
 _extensions: dict[str, Any] = {}
@@ -49,7 +49,7 @@ def has_extension(name: str) -> bool:
     return name in _extensions
 
 
-def get_extension(name: str) -> Optional[Any]:
+def get_extension(name: str) -> Any | None:
     """Get a loaded extension module, or None."""
     if not _loaded:
         load_extensions()

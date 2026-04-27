@@ -88,7 +88,7 @@ def run_demo():
     print()
     for i, report in enumerate(SAMPLE_REPORTS, 1):
         start = time.perf_counter()
-        note, status = mm.remember(report["content"], domain="security_ops")
+        note, _status = mm.remember(report["content"], domain="security_ops")
         elapsed = (time.perf_counter() - start) * 1000
 
         # Show extracted entities

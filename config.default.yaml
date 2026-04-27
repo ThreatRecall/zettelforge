@@ -146,11 +146,14 @@ embedding:
 # extraction, and RAG synthesis.
 #
 # Provider selects the backend registered in zettelforge.llm_providers:
-#   local           — in-process llama-cpp-python (requires zettelforge[local])
+#   local           — in-process LLM inference (see local_backend below; requires zettelforge[local] or zettelforge[local-onnx])
 #   ollama          — Ollama HTTP API
+#   litellm         — LiteLLM routing to 100+ providers (RFC-012; requires zettelforge[litellm])
 #   mock            — test-only canned responses
-#   openai_compat   — any /v1/chat/completions endpoint (Phase 2, upcoming)
-#   anthropic       — Anthropic native SDK (Phase 3, upcoming)
+#
+# local_backend selects the in-process inference engine when provider=local:
+#   llama-cpp-python     — GGUF models via llama-cpp-python (default; requires zettelforge[local])
+#   onnxruntime-genai    — ONNX models via ONNX Runtime GenAI (requires zettelforge[local-onnx])
 #
 # Examples:
 #   # Default — Ollama on localhost
@@ -159,7 +162,29 @@ embedding:
 #
 #   # In-process GGUF (fully offline)
 #   provider: local
+#   local_backend: llama-cpp-python
 #   model: Qwen/Qwen2.5-3B-Instruct-GGUF
+#
+#   # In-process ONNX (AMD GPU via ROCm)
+#   provider: local
+#   local_backend: onnxruntime-genai
+#   model: microsoft/Phi-3-mini-4k-instruct-onnx
+#   extra:
+#     filename: phi3-mini-4k-instruct-q4.onnx
+#     provider: rocm            # cpu, cuda, dml, rocm, openvino, coreml
+#
+#   # LiteLLM — unified routing (requires pip install zettelforge[litellm])
+#   # Model name determines the provider. Examples:
+#   #   gpt-4o, gpt-4o-mini                      → OpenAI
+#   #   claude-sonnet-4-20250514, claude-3-opus   → Anthropic
+#   #   gemini/gemini-2.0-flash                   → Google Gemini
+#   #   groq/llama-3.3-70b-versatile              → Groq
+#   #   together_ai/meta-llama/Llama-3.3-70B      → Together AI
+#   #   openrouter/anthropic/claude-3.5-sonnet    → OpenRouter
+#   #   bedrock/anthropic.claude-3-sonnet         → AWS Bedrock
+#   provider: litellm
+#   model: gpt-4o
+#   api_key: ${OPENAI_API_KEY}
 #
 # api_key supports ${ENV_VAR} references — never commit raw API keys.
 #   api_key: ${OPENAI_API_KEY}
@@ -177,10 +202,11 @@ embedding:
 #   ZETTELFORGE_LLM_PROVIDER=ollama
 #   ZETTELFORGE_LLM_MODEL=qwen2.5:7b
 #   ZETTELFORGE_LLM_URL=http://gpu-box:11434
-#   ZETTELFORGE_LLM_API_KEY=sk-...
+#   ZETTELFORGE_LLM_API_KEY=***
 #   ZETTELFORGE_LLM_TIMEOUT=60
 #   ZETTELFORGE_LLM_MAX_RETRIES=2
 #   ZETTELFORGE_LLM_FALLBACK=ollama
+#   ZETTELFORGE_LLM_LOCAL_BACKEND=onnxruntime-genai   # only when provider=local
 #
 llm:
   provider: ollama
@@ -188,9 +214,10 @@ llm:
   url: http://localhost:11434
   api_key: ""
   temperature: 0.1
-  timeout: 60.0
+  timeout: 180.0  # v2.5.2: bumped from 60s for reasoning-model headroom
   max_retries: 2
   fallback: ""
+  local_backend: llama-cpp-python  # used when provider=local (RFC-011)
   extra: {}
 
 
@@ -302,6 +329,15 @@ synthesis:
 # Validation rules applied before remember() and recall() operations.
 # Enforces data classification, retention, access control, and audit logging.
 #
+# PII detection (RFC-013, optional) uses Microsoft Presidio to scan content
+# for personally identifiable information before storage. Disabled by default.
+# Requires: pip install zettelforge[pii]
+#
+# PII action options:
+#   log       — detect and warn, pass content through unchanged
+#   redact    — replace PII with [REDACTED] before storage
+#   block     — raise exception if any PII is detected
+#
 # Examples:
 #   # Production (default)
 #   enabled: true
@@ -314,12 +350,69 @@ synthesis:
 #   enabled: true
 #   min_content_length: 20
 #
+#   # PII log-only (see what PII flows through your pipeline)
+#   enabled: true
+#   min_content_length: 1
+#   pii:
+#     enabled: true
+#     action: log
+#
+#   # PII redact (automatically remove PII before storage)
+#   enabled: true
+#   min_content_length: 1
+#   pii:
+#     enabled: true
+#     action: redact
+#
+#   # PII block (strict — reject content with detected PII)
+#   enabled: true
+#   min_content_length: 1
+#   pii:
+#     enabled: true
+#     action: block
+#
+# Env overrides:
+#   ZETTELFORGE_PII_ENABLED=true
+#   ZETTELFORGE_PII_ACTION=redact
+#   ZETTELFORGE_LIMITS_MAX_CONTENT_LENGTH=104857600
+#   ZETTELFORGE_LIMITS_RECALL_TIMEOUT=60
+#
 governance:
   enabled: true
   min_content_length: 1
+  pii:
+    enabled: false
+    action: log
+    redact_placeholder: "[REDACTED]"
+    entities: []
+    language: en
+    nlp_model: en_core_web_sm
+  limits:
+    max_content_length: 52428800  # 50 MB, 0 = unlimited
+    recall_timeout_seconds: 30.0  # seconds, 0 = unlimited
 
 
-# ── Cache ───────────────────────────────────────────────────────────────────
+# ── LanceDB Maintenance (RFC-009 Phase 1.5) ─────────────────────────────────
+# Background daemon that prunes stale LanceDB version-history per shard.
+#
+# Examples:
+#   # Default — clean up every hour, keep versions < 1 hour old
+#   cleanup_interval_minutes: 60
+#   cleanup_older_than_seconds: 3600
+#
+#   # Aggressive cleanup (high-ingestion environments)
+#   cleanup_interval_minutes: 15
+#   cleanup_older_than_seconds: 600
+#
+#   # Disable cleanup entirely
+#   cleanup_interval_minutes: 0
+#
+lance:
+  cleanup_interval_minutes: 60
+  cleanup_older_than_seconds: 3600
+
+
+# ── Cache
 # In-memory cache for TypeDB query results. Reduces round-trips for
 # frequently accessed entities and relationships.
 #
@@ -366,3 +459,32 @@ logging:
   level: INFO
   log_intents: true
   log_causal: true
+
+
+# ── Web UI (RFC-015) ─────────────────────────────────────────────────────────
+# ZettelForge Web Management Interface — SPA served at GET /.
+#
+# Examples:
+#   # Default — enabled on 0.0.0.0:8088
+#   enabled: true
+#   host: 0.0.0.0
+#   port: 8088
+#
+#   # Custom port (e.g., behind nginx reverse proxy)
+#   enabled: true
+#   host: 127.0.0.1
+#   port: 9000
+#
+#   # Disable web UI entirely (library-only mode)
+#   enabled: false
+#
+# Env overrides:
+#   ZETTELFORGE_WEB_ENABLED=true
+#   ZETTELFORGE_WEB_PORT=8088
+#   ZETTELFORGE_WEB_UI_DIR=/path/to/ui
+#
+web:
+  enabled: true
+  host: 0.0.0.0
+  port: 8088
+

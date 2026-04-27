@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 import yaml
 
@@ -33,7 +33,7 @@ _log = logging.getLogger(__name__)
 
 # What the caller may pass as ``rule`` — a parsed dict, a raw YAML string, or
 # a Path to a .yml/.yaml file.
-RuleSource = Union[dict, str, Path]
+RuleSource = dict | str | Path
 
 
 def ingest_rule(
@@ -41,7 +41,7 @@ def ingest_rule(
     mm: Any,
     *,
     domain: str = "detection",
-    source_ref: Optional[str] = None,
+    source_ref: str | None = None,
 ) -> tuple[Any, list[dict[str, Any]]]:
     """Ingest a single Sigma rule.
 
@@ -156,7 +156,7 @@ def ingest_rules_dir(
 # ── Internals ────────────────────────────────────────────────────────────────
 
 
-def _coerce(rule: RuleSource) -> tuple[dict[str, Any], Optional[str]]:
+def _coerce(rule: RuleSource) -> tuple[dict[str, Any], str | None]:
     """Turn the caller's input into ``(parsed_dict, default_source_ref)``."""
     if isinstance(rule, dict):
         return rule, None

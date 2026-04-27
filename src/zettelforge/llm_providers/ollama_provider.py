@@ -8,7 +8,7 @@ registry can build instances from :class:`~zettelforge.config.LLMConfig`.
 from __future__ import annotations
 
 import time
-from typing import Any, Optional
+from typing import Any
 
 from zettelforge.log import get_logger
 
@@ -39,7 +39,7 @@ class OllamaProvider:
         self,
         model: str = "",
         url: str = "",
-        timeout: float = 60.0,
+        timeout: float = 180.0,  # see config.LLMConfig.timeout for rationale
         **_: Any,
     ) -> None:
         self._model = model or _DEFAULT_MODEL
@@ -51,7 +51,7 @@ class OllamaProvider:
         prompt: str,
         max_tokens: int = 400,
         temperature: float = 0.1,
-        system: Optional[str] = None,
+        system: str | None = None,
         json_mode: bool = False,
     ) -> str:
         import ollama

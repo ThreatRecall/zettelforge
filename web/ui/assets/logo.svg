@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" role="img" aria-label="ThreatRecall">
+  <title>ThreatRecall</title>
+  <defs>
+    <linearGradient id="shieldGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8ED1A0"></stop>
+      <stop offset="100%" stop-color="#5EAE78"></stop>
+    </linearGradient>
+  </defs>
+
+  
+  <path d="M55 35 H345 a16 16 0 0 1 16 16 V265 c0 96 -71 162 -161 196 c-90 -34 -161 -100 -161 -196 V51 a16 16 0 0 1 16 -16 Z" fill="url(#shieldGrad)"></path>
+
+  
+  <path d="M200 158 C 198 205 190 250 192 275 S 199 345 200 365" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1.5 7" opacity="0.5"></path>
+
+  
+  <circle cx="200" cy="155" r="24" fill="#FFFFFF"></circle>
+
+  
+  <path d="M 128,93 C 128,111.7 131.3,115 150,115 C 131.3,115 128,118.3 128,137 C 128,118.3 124.7,115 106,115 C 124.7,115 128,111.7 128,93 Z" fill="#FFFFFF"></path>
+  <path d="M 272,93 C 272,111.7 275.3,115 294,115 C 275.3,115 272,118.3 272,137 C 272,118.3 268.7,115 250,115 C 268.7,115 272,111.7 272,93 Z" fill="#FFFFFF"></path>
+  <path d="M 200,61 C 200,70.35 201.65,72 211,72 C 201.65,72 200,73.65 200,83 C 200,73.65 198.35,72 189,72 C 198.35,72 200,70.35 200,61 Z" fill="#FFFFFF"></path>
+
+  <circle cx="168" cy="85" r="3.5" fill="#FFFFFF"></circle>
+  <circle cx="232" cy="85" r="3.5" fill="#FFFFFF"></circle>
+  <circle cx="112" cy="160" r="2.5" fill="#FFFFFF"></circle>
+  <circle cx="288" cy="160" r="2.5" fill="#FFFFFF"></circle>
+
+  
+  <rect x="188" y="200" width="24" height="28" rx="8" fill="#FFFFFF"></rect>
+  <rect x="181" y="252" width="22" height="26" rx="7" fill="#FFFFFF"></rect>
+  <rect x="186" y="302" width="19" height="22" rx="6" fill="#FFFFFF"></rect>
+
+  
+  <path d="M 200.0,342.0 L 194.5,360.5 L 175.8,356.0 L 189.0,370.0 L 175.8,384.0 L 194.5,379.5 L 200.0,398.0 L 205.5,379.5 L 224.2,384.0 L 211.0,370.0 L 224.2,356.0 L 205.5,360.5 Z" fill="#FFFFFF"></path>
+
+  
+  <circle cx="155" cy="348" r="3" fill="#FFFFFF"></circle>
+  <circle cx="245" cy="348" r="3" fill="#FFFFFF"></circle>
+  <circle cx="160" cy="408" r="2.5" fill="#FFFFFF"></circle>
+  <circle cx="240" cy="408" r="2.5" fill="#FFFFFF"></circle>
+</svg>

@@ -1,0 +1,114 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   ZettelForge / ThreatRecall — Design Tokens
+   Converted from colors_and_type.css for Jinja2 template compatibility
+   ────────────────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ── Brand colors ─────────────────────────────────────────────────────── */
+  --signal-neon:        #00FFA3;
+  --signal-neon-dim:    #00CC82;
+  --signal-leaf:        #5EAE78;
+  --signal-leaf-soft:   #8ED1A0;
+  --signal-leaf-deep:   #3F8A59;
+
+  /* Graphite — near-black neutrals */
+  --graphite-0:         #0A0E17;
+  --graphite-1:         #0D0F1C;
+  --graphite-2:         #0D1117;
+  --graphite-3:         #161B22;
+  --graphite-4:         #21262D;
+  --graphite-5:         #30363D;
+  --graphite-6:         #484F58;
+
+  /* Fog — mid/light neutrals */
+  --fog-0:              #FFFFFF;
+  --fog-1:              #F4F6FA;
+  --fog-2:              #E5E9F0;
+  --fog-3:              #C9D1D9;
+  --fog-4:              #8B949E;
+  --fog-5:              #6B7280;
+  --fog-6:              #1F2937;
+
+  /* Semantic signals */
+  --tier-a-fg:          #3FB950;
+  --tier-a-bg:          #1A472A;
+  --tier-b-fg:          #A371F7;
+  --tier-b-bg:          #2A1A47;
+  --tier-c-fg:          #D29922;
+  --tier-c-bg:          #3A2A0F;
+
+  --intent-factual:     #58A6FF;
+  --intent-temporal:    #F0883E;
+  --intent-relational:  #A371F7;
+  --intent-causal:      #DB61A2;
+  --intent-exploratory: #3FB950;
+
+  --danger:             #F85149;
+  --warning:            #D29922;
+  --success:            #3FB950;
+  --info:               #58A6FF;
+
+  /* ── Foreground / background semantic aliases ─────────────────────────── */
+  --bg-app:             var(--graphite-0);
+  --bg-surface:         var(--graphite-3);
+  --bg-surface-hi:      var(--graphite-4);
+  --bg-input:           var(--graphite-2);
+
+  --fg-primary:         var(--fog-3);
+  --fg-secondary:       var(--fog-4);
+  --fg-tertiary:        var(--graphite-6);
+  --fg-inverse:         var(--graphite-0);
+
+  --border-default:     var(--graphite-5);
+  --border-focus:       var(--intent-factual);
+  --border-hover:       var(--intent-factual);
+
+  /* ── Typography ───────────────────────────────────────────────────────── */
+  --font-body:          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono:          'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --font-display:       'Neuropol', 'Inter', sans-serif;
+
+  /* ── Spacing ──────────────────────────────────────────────────────────── */
+  --space-1:            4px;
+  --space-2:            8px;
+  --space-3:            12px;
+  --space-4:            16px;
+  --space-5:            20px;
+  --space-6:            24px;
+  --space-8:            32px;
+  --space-10:           40px;
+  --space-12:           48px;
+  --space-16:           64px;
+  --space-20:           80px;
+
+  /* ── Radii ────────────────────────────────────────────────────────────── */
+  --radius-sm:          4px;
+  --radius-md:          6px;
+  --radius-lg:          8px;
+  --radius-pill:        9999px;
+
+  /* ── Shadows ──────────────────────────────────────────────────────────── */
+  --shadow-focus:       0 0 0 3px rgba(88, 166, 255, 0.10);
+  --shadow-glow:        0 0 0 1px rgba(0, 255, 163, 0.35), 0 0 16px rgba(0, 255, 163, 0.15);
+
+  /* ── Transitions ──────────────────────────────────────────────────────── */
+  --transition-fast:    120ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-base:    200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-slow:    320ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* ── Utility classes ─────────────────────────────────────────────────────── */
+.font-mono { font-family: var(--font-mono); }
+.font-display { font-family: var(--font-display); }
+.text-primary { color: var(--fg-primary); }
+.text-secondary { color: var(--fg-secondary); }
+.text-tertiary { color: var(--fg-tertiary); }
+.bg-surface { background: var(--bg-surface); }
+.border-default { border: 1px solid var(--border-default); }
+
+/* Tier badges */
+.tier-a { background: var(--tier-a-bg); color: var(--tier-a-fg); }
+.tier-b { background: var(--tier-b-bg); color: var(--tier-b-fg); }
+.tier-c { background: var(--tier-c-bg); color: var(--tier-c-fg); }

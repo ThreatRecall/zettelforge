@@ -4,8 +4,8 @@ description: "Diagnose the most common ZettelForge install, ingest, and recall i
 diataxis_type: "how-to"
 audience: "Operator / Developer"
 tags: [troubleshooting, debugging, errors, performance]
-last_updated: "2026-04-16"
-version: "2.2.0"
+last_updated: "2026-04-25"
+version: "2.6.0"
 ---
 
 # Troubleshoot ZettelForge
@@ -47,12 +47,21 @@ TextEmbedding(model_name="nomic-ai/nomic-embed-text-v1.5-Q")
 
 ### Ollama backend returns empty strings
 
-Ollama is running but the requested model is not pulled:
+Two distinct causes share this symptom:
+
+**1. Model not pulled.** Confirm the requested model is actually present:
 
 ```bash
 ollama list                       # confirm model presence
 ollama pull qwen2.5:3b             # or whatever ZETTELFORGE_LLM_MODEL points to
 ```
+
+**2. Reasoning-model token starvation.** If you're on a reasoning model (qwen3.5+, qwen3.6, nemotron-3) and the OCSF log shows
+`event=llm_call_empty_response done_reason=length eval_count=<num_predict>`, the model used its entire token budget on hidden `<think>...</think>` tokens before emitting a final answer.
+
+Pre-2.5.2 budgets were too low (300–1024 tokens depending on call site) and silently failed every causal-extraction, synthesis, fact-extraction, and LLM-NER call. **Upgrade to 2.5.2+**; the per-call-site caps are now 2500–8000 tokens. See the [Configuration Reference §Per-call-site `max_tokens` budgets](../reference/configuration.md#per-call-site-max_tokens-budgets-v260-config-driven) for the exact values and now config-overridable in v2.6.0.
+
+If you can't upgrade and you're stuck on a reasoning model, switch to a non-reasoning model (e.g. `gemma4:e4b`, `qwen2.5:3b`) which doesn't emit `<think>` tokens.
 
 ## `remember()` problems
 
@@ -65,19 +74,38 @@ too. For benchmark or replay scenarios, set
 
 ### `remember()` is slow (> 1 s per call)
 
-The fast path should return in ~45 ms as of v2.1.1. If you are seeing
-multi-second latencies:
+The fast path should return in ~45 ms (v2.1.1+) or ~55 ms warm with
+fastembed preload (v2.4.3+). If you are seeing multi-second latencies:
 
 - You are on a version older than v2.1.1 and `_check_supersession` is
   running linearly. **Upgrade.** See CHANGELOG v2.1.1 P0-1.
+- You're on v2.4.x or older and your `notes_<domain>.lance` shard has
+  accumulated multi-gigabyte version-history overhead.
+  Run `python -m zettelforge.scripts.compact_lance --data-dir
+  ~/.amem --all --force` once, then **upgrade to v2.4.3+** so the
+  background `lance.cleanup_*` daemon (RFC-009 Phase 1.5) keeps it
+  trimmed. See the [Configuration Reference §lance section](../reference/configuration.md#lance-rfc-009-phase-15)
+  for the daemon's two knobs and the operational rationale.
 - You passed `sync=True`. That is expected — it blocks until the
   background enrichment queue (causal triples, LLM NER, A-Mem
-  evolution) finishes.
+  evolution) finishes. **On a 9B-Q4_K_M reasoning model in v2.5.2,
+  this is now 1–3 minutes per note** because causal extraction
+  uses an 8000-token budget. Use the default async path unless you
+  specifically need the result inline.
 - `llm_ner.enabled` is `true` and the LLM backend is slow. LLM NER
   runs asynchronously, so it should not block your `remember()` call
   — but if the enrichment queue fills up (`maxsize=500`), writes
   back-pressure. Either scale the LLM or set
   `ZETTELFORGE_LLM_NER_ENABLED=false`.
+
+### `remember()` aborts with `KeyError: 'from_node_id'` on construct
+
+Pre-v2.5.1 versions hard-failed `KnowledgeGraph._cache_edge` on legacy
+edges that used `{source_id, target_id, relation_type}` keys instead of
+the canonical `{from_node_id, to_node_id, relationship}`. This affects
+any deployment with mixed-schema history in `kg_edges.jsonl` and takes
+down every `recall()` and `synthesize()` at construction time. The
+v2.5.1 hotfix added a normalize-on-load pass; **upgrade to 2.5.1+**.
 
 ### Entities I expect are not extracted
 
@@ -113,6 +141,69 @@ Known behaviour — `_check_supersession()` is entity-overlap driven and
 LOCOMO-style dialogue shares speakers. Pass
 `exclude_superseded=False` on `recall()` or disable evolution via
 `mm.remember(..., evolve=False)` for the ingest pass.
+
+## `synthesize()` problems
+
+### Every query returns `"No specific answer found for: …"`
+
+The synthesis fallback string. The LLM call returned empty, malformed
+JSON, or raised. Most likely cause on a reasoning model: token
+starvation — see [Ollama backend returns empty strings](#ollama-backend-returns-empty-strings).
+
+**Upgrade to v2.5.2+** which raised the synthesis budget from 800 to
+2500 tokens; otherwise switch to a non-reasoning model.
+
+You can confirm by grepping the OCSF log:
+
+```bash
+grep '"schema":"synthesis","raw":""' ~/.amem/logs/zettelforge.log | tail -5
+grep '"event":"llm_call_empty_response"' ~/.amem/logs/zettelforge.log | tail -5
+```
+
+Both events appear when synthesis is silently degrading.
+
+### `synthesize()` returned an answer but cited 0 sources
+
+`recall()` itself returned no notes for the query. Check:
+
+- `retrieval.similarity_threshold` — too high; lower to 0.15.
+- `retrieval.default_k` — too low; raise.
+- `synthesis.tier_filter` — defaulted to `["A", "B"]`; if all your
+  notes are tier `"C"`, broaden the filter or annotate tier on ingest.
+
+## Causal triple extraction problems
+
+### `kg_edges` table has no `edge_type=causal` rows
+
+Either the LLM call returned empty (token-starvation, see Ollama
+section above) or the parser failed. Check:
+
+```bash
+sqlite3 ~/.amem/zettelforge.db \
+  "SELECT edge_type, count(*) FROM kg_edges GROUP BY edge_type;"
+```
+
+If you only see `heuristic` rows, no causal triples are being
+persisted. **v2.5.2** is the minimum version where this works
+end-to-end on reasoning models — earlier versions silently failed
+because the 300-token budget at the call site was exhausted by
+`<think>` tokens.
+
+If you're on 2.5.2+ and still seeing zero causal edges:
+
+1. Confirm the LLM is reachable and returns non-empty responses for
+   the synthesis prompt. (`json_parse.extract_json` already strips
+   markdown code fences and supports `expect="array"` via a
+   `\[.*\]` regex with DOTALL, so a fenced JSON-array reply is *not*
+   the cause.)
+2. Pass `sync=True` and watch the OCSF log for
+   `event=parse_failed schema=causal_triples raw=...`. The `raw`
+   preview will show what the model actually returned — usually
+   either an empty string (token starvation, see Ollama section
+   above) or relations outside the allowlist (`causes`, `enables`,
+   `targets`, `uses`, `exploits`, `attributed_to`, `related_to`); the
+   latter is logged as `event=invalid_causal_relation` with the
+   offending relation string.
 
 ## MCP
 
@@ -157,8 +248,8 @@ data directory (never to stdout by design — see GOV-012). Typical
 locations:
 
 ```bash
-tail -f ~/.amem/zettelforge.log        # OCSF structured events (API activity, auth, file I/O)
-tail -f ~/.amem/audit.log              # Security-relevant events only (GOV-012)
+tail -f ~/.amem/logs/zettelforge.log        # OCSF structured events (API activity, auth, file I/O)
+tail -f ~/.amem/logs/audit.log              # Security-relevant events only (GOV-012)
 tail -f ~/.amem/telemetry/telemetry_$(date +%F).jsonl  # Operational telemetry (RFC-007)
 ```
 

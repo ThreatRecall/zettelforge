@@ -19,7 +19,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 @dataclass
@@ -27,20 +27,20 @@ class DailyMetrics:
     """Aggregated telemetry report for a single day."""
 
     date: str
-    total_queries: Optional[int] = None
-    total_synthesis: Optional[int] = None
-    avg_recall_latency_ms: Optional[float] = None
-    avg_synthesis_latency_ms: Optional[float] = None
-    avg_confidence: Optional[float] = None
-    notes_per_query: Optional[float] = None
-    tier_distribution: Dict[str, int] = field(default_factory=dict)
-    feedback_count: Optional[int] = None
-    avg_utility: Optional[float] = None
-    top_utility_notes: List[str] = field(default_factory=list)
-    unused_notes_count: Optional[int] = None
+    total_queries: int | None = None
+    total_synthesis: int | None = None
+    avg_recall_latency_ms: float | None = None
+    avg_synthesis_latency_ms: float | None = None
+    avg_confidence: float | None = None
+    notes_per_query: float | None = None
+    tier_distribution: dict[str, int] = field(default_factory=dict)
+    feedback_count: int | None = None
+    avg_utility: float | None = None
+    top_utility_notes: list[str] = field(default_factory=list)
+    unused_notes_count: int | None = None
 
 
-def _load_events(data_dir: str, date_str: str) -> List[Dict[str, Any]]:
+def _load_events(data_dir: str, date_str: str) -> list[dict[str, Any]]:
     """Load today's telemetry JSONL, return empty list if missing."""
     path = Path(data_dir) / f"telemetry_{date_str}.jsonl"
     if not path.exists():
@@ -52,7 +52,7 @@ def _load_events(data_dir: str, date_str: str) -> List[Dict[str, Any]]:
     return events
 
 
-def _aggregate(events: List[Dict[str, Any]], date_str: str, data_dir: str) -> Dict[str, Any]:
+def _aggregate(events: list[dict[str, Any]], date_str: str, data_dir: str) -> dict[str, Any]:
     """Aggregate all events for one day into the daily report schema."""
     if not events:
         report = DailyMetrics(date=date_str)
@@ -151,7 +151,7 @@ def _aggregate(events: List[Dict[str, Any]], date_str: str, data_dir: str) -> Di
     }
 
 
-def main(date_str: Optional[str] = None) -> None:
+def main(date_str: str | None = None) -> None:
     data_dir = Path.home() / ".amem" / "telemetry"
 
     if date_str is None:

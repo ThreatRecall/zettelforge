@@ -129,6 +129,33 @@ class TestYamlOverrides:
         _apply_yaml(cfg, {"typedb": {"nonexistent_key": "value"}})
         assert not hasattr(cfg.typedb, "nonexistent_key")
 
+    def test_apply_yaml_lance(self):
+        """Regression: the `lance:` section was documented in
+        config.default.yaml but the YAML loader silently ignored it,
+        so operators couldn't actually override RFC-009 Phase 1.5
+        knobs from YAML. See PR #126 review."""
+        cfg = ZettelForgeConfig()
+        _apply_yaml(
+            cfg,
+            {
+                "lance": {
+                    "cleanup_interval_minutes": 15,
+                    "cleanup_older_than_seconds": 900,
+                }
+            },
+        )
+        assert cfg.lance.cleanup_interval_minutes == 15
+        assert cfg.lance.cleanup_older_than_seconds == 900
+
+    def test_apply_yaml_lance_disable(self):
+        """`cleanup_interval_minutes: 0` must round-trip; that's the
+        documented value to disable the maintenance daemon."""
+        cfg = ZettelForgeConfig()
+        _apply_yaml(cfg, {"lance": {"cleanup_interval_minutes": 0}})
+        assert cfg.lance.cleanup_interval_minutes == 0
+        # Other knob keeps its default
+        assert cfg.lance.cleanup_older_than_seconds == 3600
+
     def test_load_yaml_file(self):
         with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
             f.write("typedb:\n  host: from-file\n  port: 9999\nbackend: jsonl\n")

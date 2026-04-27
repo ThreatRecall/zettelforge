@@ -4,6 +4,7 @@ A-MEM Agentic Memory Architecture V1.0
 """
 
 import atexit
+import contextlib
 import fcntl
 import glob
 import hashlib
@@ -12,9 +13,9 @@ import os
 import tempfile
 import threading
 import time
+from collections.abc import Iterator
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Iterator, List, Optional
 
 from zettelforge.log import get_logger
 from zettelforge.note_schema import MemoryNote
@@ -41,9 +42,9 @@ class MemoryStore:
 
     def __init__(
         self,
-        jsonl_path: Optional[str] = None,
-        lance_path: Optional[str] = None,
-        embedding_dim: Optional[int] = None,
+        jsonl_path: str | None = None,
+        lance_path: str | None = None,
+        embedding_dim: int | None = None,
     ):
         data_dir = get_default_data_dir()
 
@@ -65,11 +66,11 @@ class MemoryStore:
         self.jsonl_path.parent.mkdir(parents=True, exist_ok=True)
         self.lance_path.mkdir(parents=True, exist_ok=True)
         self._lancedb = None
-        self._note_cache: Optional[Dict[str, MemoryNote]] = None
-        self._source_ref_index: Optional[Dict[str, str]] = None  # source_ref -> note_id
+        self._note_cache: dict[str, MemoryNote] | None = None
+        self._source_ref_index: dict[str, str] | None = None  # source_ref -> note_id
 
         self._dirty_access: set = set()  # note IDs with unsaved access updates
-        self._access_flush_timer: Optional[threading.Timer] = None
+        self._access_flush_timer: threading.Timer | None = None
         self._access_flush_lock = threading.Lock()
         atexit.register(self._flush_access)
 
@@ -140,7 +141,9 @@ class MemoryStore:
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         import random
 
-        suffix = str(random.randint(0, 9999)).zfill(4)
+        # Note IDs are not security-sensitive; collisions are tolerated
+        # (timestamp-prefixed → vanishing collision probability per second).
+        suffix = str(random.randint(0, 9999)).zfill(4)  # noqa: S311
         return f"note_{ts}_{suffix}"
 
     def _ensure_cache(self):
@@ -151,7 +154,7 @@ class MemoryStore:
         self._source_ref_index = {}
         if not self.jsonl_path.exists():
             return
-        with open(self.jsonl_path, "r") as f:
+        with open(self.jsonl_path) as f:
             for line in f:
                 if line.strip():
                     try:
@@ -247,11 +250,10 @@ class MemoryStore:
                 activity = "Create"
             else:
                 tbl = self.lancedb.open_table(table_name)
-                # Remove existing row if present (prevents ghost duplicates)
-                try:
+                # Remove existing row if present (prevents ghost duplicates).
+                # Table may be empty or ID may not exist — both are fine.
+                with contextlib.suppress(Exception):
                     tbl.delete(f"id = '{note.id}'")
-                except Exception:
-                    pass  # Table may be empty or ID may not exist
                 tbl.add([note_data])
                 activity = "Update"
 
@@ -283,13 +285,13 @@ class MemoryStore:
                 duration_ms=duration_ms,
             )
 
-    def read_all_notes(self) -> List[MemoryNote]:
+    def read_all_notes(self) -> list[MemoryNote]:
         """Read all notes from JSONL store"""
         notes = []
         if not self.jsonl_path.exists():
             return notes
 
-        with open(self.jsonl_path, "r") as f:
+        with open(self.jsonl_path) as f:
             for line in f:
                 if line.strip():
                     try:
@@ -307,7 +309,7 @@ class MemoryStore:
         # Dead code below — kept for reference of old disk-based path
         if not self.jsonl_path.exists():
             return
-        with open(self.jsonl_path, "r") as f:
+        with open(self.jsonl_path) as f:
             for line in f:
                 if line.strip():
                     try:
@@ -316,12 +318,12 @@ class MemoryStore:
                     except Exception as e:
                         _logger.warning("note_parse_failed", error=str(e))
 
-    def get_note_by_id(self, note_id: str) -> Optional[MemoryNote]:
+    def get_note_by_id(self, note_id: str) -> MemoryNote | None:
         """Retrieve a specific note by ID. O(1) via cache."""
         self._ensure_cache()
         return self._note_cache.get(note_id)
 
-    def get_note_by_source_ref(self, source_ref: str) -> Optional[MemoryNote]:
+    def get_note_by_source_ref(self, source_ref: str) -> MemoryNote | None:
         """Find a note by its source_ref field. O(1) via index. Returns None if not found."""
         self._ensure_cache()
         note_id = self._source_ref_index.get(source_ref)
@@ -329,11 +331,11 @@ class MemoryStore:
             return None
         return self._note_cache.get(note_id)
 
-    def get_notes_by_domain(self, domain: str) -> List[MemoryNote]:
+    def get_notes_by_domain(self, domain: str) -> list[MemoryNote]:
         """Retrieve all notes for a specific domain"""
         return [n for n in self.iterate_notes() if n.metadata.domain == domain]
 
-    def get_recent_notes(self, limit: int = 10) -> List[MemoryNote]:
+    def get_recent_notes(self, limit: int = 10) -> list[MemoryNote]:
         """Get most recent notes"""
         notes = list(self.iterate_notes())
         notes.sort(key=lambda n: n.created_at, reverse=True)
@@ -343,7 +345,7 @@ class MemoryStore:
         """Count total notes"""
         if not self.jsonl_path.exists():
             return 0
-        with open(self.jsonl_path, "r") as f:
+        with open(self.jsonl_path) as f:
             return sum(1 for line in f if line.strip())
 
     def _rewrite_note(self, note: MemoryNote) -> None:
@@ -352,7 +354,7 @@ class MemoryStore:
             return
 
         # Hold an exclusive lock on the canonical file for the entire read-write-replace cycle
-        with open(self.jsonl_path, "r") as lock_fh:
+        with open(self.jsonl_path) as lock_fh:
             fcntl.flock(lock_fh, fcntl.LOCK_EX)
             try:
                 # Read all notes under the lock
@@ -367,7 +369,7 @@ class MemoryStore:
                                 updated = True
                             else:
                                 notes.append(data)
-                        except Exception:
+                        except Exception:  # noqa: S110 — corrupt JSONL lines are dropped
                             pass
 
                 if not updated:

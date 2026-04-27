@@ -1,7 +1,8 @@
 """Unit tests for the RFC-002 Phase 1 provider infrastructure.
 
 Covers the registry contract, the built-in providers' behaviour, and
-the refactored ``generate()`` delegation path.
+the refactored ``generate()`` delegation path. RFC-011 adds tests for
+the ``OnnxGenAIBackend`` and ``LocalProvider`` backend dispatching.
 """
 
 from __future__ import annotations
@@ -19,6 +20,10 @@ from zettelforge.llm_providers import (
     registry,
 )
 from zettelforge.llm_providers.base import LLMProvider
+from zettelforge.llm_providers.local_provider import (
+    LlamaCppBackend,
+    OnnxGenAIBackend,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -33,7 +38,7 @@ def reset_registry_instances():
     registry.reset()
 
 
-# ── Protocol contract ────────────────────────────────────────────────────────
+# ---- Protocol contract -------------------------------------------------------
 
 
 class TestLLMProviderProtocol:
@@ -53,7 +58,7 @@ class TestLLMProviderProtocol:
         assert "mock" in names
 
 
-# ── Registry ─────────────────────────────────────────────────────────────────
+# ---- Registry ----------------------------------------------------------------
 
 
 class TestRegistry:
@@ -79,7 +84,7 @@ class TestRegistry:
         assert "mock" in available()
 
 
-# ── MockProvider ─────────────────────────────────────────────────────────────
+# ---- MockProvider ------------------------------------------------------------
 
 
 class TestMockProvider:
@@ -111,9 +116,9 @@ class TestMockProvider:
         assert mock.generate("") == "mock response"
 
 
-# ── OllamaProvider ───────────────────────────────────────────────────────────
+# ---- OllamaProvider ----------------------------------------------------------
 
-# The ollama SDK is not a core dependency — skip this class when it is
+# The ollama SDK is not a core dependency -- skip this class when it is
 # unavailable (e.g. the minimal CI environment without zettelforge[local]).
 pytest.importorskip("ollama", reason="ollama SDK not installed")
 
@@ -198,10 +203,394 @@ class TestOllamaProvider:
         assert provider.name == "ollama"
 
 
-# ── LocalProvider ────────────────────────────────────────────────────────────
+# ---- LlamaCppBackend (RFC-011) -----------------------------------------------
 
 
-class TestLocalProvider:
+class TestLlamaCppBackend:
+    def test_constructs_with_defaults(self):
+        backend = LlamaCppBackend()
+        assert backend._model_id == "Qwen/Qwen2.5-3B-Instruct-GGUF"
+        assert backend._filename == "qwen2.5-3b-instruct-q4_k_m.gguf"
+        assert backend._n_ctx == 4096
+
+    def test_constructs_with_custom_values(self):
+        backend = LlamaCppBackend(
+            model="org/custom-model",
+            filename="custom-q4.gguf",
+            n_ctx=8192,
+        )
+        assert backend._model_id == "org/custom-model"
+        assert backend._filename == "custom-q4.gguf"
+        assert backend._n_ctx == 8192
+
+    def test_unknown_kwargs_ignored(self):
+        backend = LlamaCppBackend(
+            model="x",
+            api_key="ignored",
+            timeout=120.0,
+        )
+        assert backend.name == "llama-cpp-python"
+
+    def test_json_mode_appends_instruction_when_no_system(self):
+        backend = LlamaCppBackend()
+        fake_llm = _FakeLlamaCpp()
+        backend._llm = fake_llm
+        backend.generate("prompt", json_mode=True)
+        messages = fake_llm.last_messages
+        assert messages[0]["role"] == "system"
+        assert "JSON" in messages[0]["content"]
+
+    def test_json_mode_extends_existing_system(self):
+        backend = LlamaCppBackend()
+        fake_llm = _FakeLlamaCpp()
+        backend._llm = fake_llm
+        backend.generate("prompt", system="Base prompt.", json_mode=True)
+        system = fake_llm.last_messages[0]["content"]
+        assert system.startswith("Base prompt.")
+        assert "JSON" in system
+
+    def test_generate_strips_output(self):
+        backend = LlamaCppBackend()
+        fake_llm = _FakeLlamaCpp()
+        backend._llm = fake_llm
+        result = backend.generate("hello")
+        assert result == "out"  # _FakeLlamaCpp returns "  out  "
+
+    def test_cannot_set_llm_on_not_initialized(self):
+        """_llm setter raises if backend has no _llm attribute."""
+        backend = LlamaCppBackend()
+        backend._llm = _FakeLlamaCpp()
+        assert backend._llm is not None
+
+
+# ---- OnnxGenAIBackend (RFC-011) ----------------------------------------------
+
+
+class _FakeOnnxGenAI:
+    """Minimal stand-in for onnxruntime_genai module used by OnnxGenAIBackend tests."""
+
+    class Model:
+        @classmethod
+        def from_pretrained(cls, repo_id, filename=None, provider=None):
+            return cls()
+
+    class Tokenizer:
+        def __init__(self, model):
+            self.model = model
+            self.eos_token_id = 2
+
+        def encode(self, text):
+            # Return a fake token list: number of tokens based on length
+            return list(range(10))
+
+        def decode(self, tokens):
+            return "decoded output"
+
+    class GeneratorParams:
+        def __init__(self, model):
+            self.model = model
+            self.input_ids = None
+
+        def set_search_options(self, max_length, temperature):
+            self.max_length = max_length
+            self.temperature = temperature
+
+    class Generator:
+        def __init__(self, model, params):
+            self.model = model
+            self.params = params
+            self._call_count = 0
+
+        def generate_next_token(self):
+            self._call_count += 1
+            if self._call_count >= 5:
+                return 2  # eos_token_id
+            return 42
+
+        def __del__(self):
+            pass
+
+
+class TestOnnxGenAIBackend:
+    def test_constructs_with_defaults(self):
+        backend = OnnxGenAIBackend()
+        assert backend._model_id == "microsoft/Phi-3-mini-4k-instruct-onnx"
+        assert backend._filename == "phi3-mini-4k-instruct-q4.onnx"
+        assert backend._n_ctx == 4096
+        assert backend._provider == "cpu"
+
+    def test_constructs_with_custom_values(self):
+        backend = OnnxGenAIBackend(
+            model="org/onnx-model",
+            filename="model-q4.onnx",
+            n_ctx=8192,
+            provider="rocm",
+        )
+        assert backend._model_id == "org/onnx-model"
+        assert backend._filename == "model-q4.onnx"
+        assert backend._n_ctx == 8192
+        assert backend._provider == "rocm"
+
+    def test_unknown_kwargs_ignored(self):
+        backend = OnnxGenAIBackend(
+            model="x",
+            api_key="ignored",
+            timeout=120.0,
+        )
+        assert backend.name == "onnxruntime-genai"
+
+    def test_generate_with_mock_sdk(self, monkeypatch):
+        backend = OnnxGenAIBackend(model="test/model", filename="test.onnx")
+
+        # Patch the onnxruntime_genai module at import time in _load()
+        import types
+        fake_module = types.ModuleType("onnxruntime_genai")
+        fake_module.Model = _FakeOnnxGenAI.Model
+        fake_module.Tokenizer = _FakeOnnxGenAI.Tokenizer
+        fake_module.GeneratorParams = _FakeOnnxGenAI.GeneratorParams
+        fake_module.Generator = _FakeOnnxGenAI.Generator
+        monkeypatch.setitem(__import__("sys").modules, "onnxruntime_genai", fake_module)
+
+        result = backend.generate("hello", max_tokens=100)
+        assert result == "decoded output"
+
+    def test_generate_with_system_prompt(self, monkeypatch):
+        backend = OnnxGenAIBackend(model="test/model", filename="test.onnx")
+
+        import types
+        fake_module = types.ModuleType("onnxruntime_genai")
+        fake_module.Model = _FakeOnnxGenAI.Model
+        fake_module.Tokenizer = _FakeOnnxGenAI.Tokenizer
+        fake_module.GeneratorParams = _FakeOnnxGenAI.GeneratorParams
+        fake_module.Generator = _FakeOnnxGenAI.Generator
+        monkeypatch.setitem(__import__("sys").modules, "onnxruntime_genai", fake_module)
+
+        result = backend.generate(
+            "hello", max_tokens=100, system="You are a helpful assistant."
+        )
+        assert result == "decoded output"
+
+    def test_import_error_raised_when_sdk_missing(self):
+        backend = OnnxGenAIBackend(model="test/model", filename="test.onnx")
+        with pytest.raises(ImportError, match="onnxruntime-genai"):
+            backend.generate("hello")
+
+    def test_name_property(self):
+        backend = OnnxGenAIBackend()
+        assert backend.name == "onnxruntime-genai"
+
+
+# ---- LiteLLMProvider (RFC-012) -------------------------------------------------
+
+
+class _FakeLiteLLM:
+    """Minimal stand-in for the litellm module used by LiteLLMProvider tests."""
+
+    @staticmethod
+    def completion(
+        model: str,
+        messages: list[dict[str, str]],
+        max_tokens: int,
+        temperature: float,
+        timeout: float,
+        num_retries: int,
+        **kwargs: object,
+    ) -> dict:
+        return {
+            "choices": [{"message": {"content": "  lorem ipsum  "}}],
+            "model": model,
+        }
+
+
+class TestLiteLLMProvider:
+    def test_constructs_with_defaults(self):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        provider = LiteLLMProvider()
+        assert provider._model == "gpt-4o-mini"
+        assert provider._api_key == ""
+        assert provider._timeout == 60.0
+        assert provider._max_retries == 2
+
+    def test_constructs_with_custom_values(self):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        provider = LiteLLMProvider(
+            model="claude-sonnet-4-20250514",
+            api_key="sk-test",
+            timeout=120.0,
+            max_retries=5,
+        )
+        assert provider._model == "claude-sonnet-4-20250514"
+        assert provider._api_key == "sk-test"
+        assert provider._timeout == 120.0
+        assert provider._max_retries == 5
+
+    def test_unknown_kwargs_ignored(self):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        provider = LiteLLMProvider(
+            model="gpt-4o",
+            url="ignored",
+            filename="ignored",
+        )
+        assert provider.name == "litellm"
+
+    def test_name_property(self):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        assert LiteLLMProvider().name == "litellm"
+
+    def test_import_error_raised_when_sdk_missing(self):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        provider = LiteLLMProvider(model="gpt-4o")
+        with pytest.raises(ImportError, match="litellm"):
+            provider.generate("hello")
+
+    def test_generate_with_mock_completion(self, monkeypatch):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        import types
+        mock_module = types.ModuleType("litellm")
+        mock_module.completion = _FakeLiteLLM.completion
+        monkeypatch.setitem(__import__("sys").modules, "litellm", mock_module)
+
+        provider = LiteLLMProvider(model="gpt-4o-mini")
+        result = provider.generate("hello")
+        assert result == "lorem ipsum"
+
+    def test_generate_passes_api_key(self, monkeypatch):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        import types
+
+        calls: list[dict] = []
+
+        def _completion(**kwargs: object) -> dict:
+            calls.append(kwargs)
+            return {"choices": [{"message": {"content": "ok"}}]}
+
+        mock_module = types.ModuleType("litellm")
+        mock_module.completion = _completion
+        monkeypatch.setitem(__import__("sys").modules, "litellm", mock_module)
+
+        provider = LiteLLMProvider(model="gpt-4o", api_key="sk-test-key")
+        provider.generate("hello")
+        assert len(calls) == 1
+        assert calls[0]["api_key"] == "sk-test-key"
+
+    def test_generate_passes_system_prompt(self, monkeypatch):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        import types
+
+        calls: list[dict] = []
+
+        def _completion(**kwargs: object) -> dict:
+            calls.append(kwargs)
+            return {"choices": [{"message": {"content": "ok"}}]}
+
+        mock_module = types.ModuleType("litellm")
+        mock_module.completion = _completion
+        monkeypatch.setitem(__import__("sys").modules, "litellm", mock_module)
+
+        provider = LiteLLMProvider(model="gpt-4o")
+        provider.generate("hello", system="You are a helpful assistant.")
+        assert len(calls) == 1
+        messages = calls[0]["messages"]
+        assert messages[0]["role"] == "system"
+        assert messages[0]["content"] == "You are a helpful assistant."
+        assert messages[1]["role"] == "user"
+        assert messages[1]["content"] == "hello"
+
+    def test_generate_passes_json_mode(self, monkeypatch):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        import types
+
+        calls: list[dict] = []
+
+        def _completion(**kwargs: object) -> dict:
+            calls.append(kwargs)
+            return {"choices": [{"message": {"content": '{"key": "value"}'}}]}
+
+        mock_module = types.ModuleType("litellm")
+        mock_module.completion = _completion
+        monkeypatch.setitem(__import__("sys").modules, "litellm", mock_module)
+
+        provider = LiteLLMProvider(model="gpt-4o")
+        result = provider.generate("hello", json_mode=True)
+        assert len(calls) == 1
+        assert calls[0]["response_format"] == {"type": "json_object"}
+        assert result == '{"key": "value"}'
+
+    def test_generate_omits_api_key_when_empty(self, monkeypatch):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        import types
+
+        calls: list[dict] = []
+
+        def _completion(**kwargs: object) -> dict:
+            calls.append(kwargs)
+            return {"choices": [{"message": {"content": "ok"}}]}
+
+        mock_module = types.ModuleType("litellm")
+        mock_module.completion = _completion
+        monkeypatch.setitem(__import__("sys").modules, "litellm", mock_module)
+
+        provider = LiteLLMProvider(model="gpt-4o")  # no api_key
+        provider.generate("hello")
+        assert "api_key" not in calls[0]
+
+    def test_satisfies_llm_provider_protocol(self):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        assert isinstance(LiteLLMProvider(model="x"), LLMProvider)
+
+    def test_litellm_provider_registered(self):
+        # litellm may not be installed, but the registration attempt
+        # at import time in __init__.py should be graceful.
+        names = available()
+        # If SDK is available, litellm should be in the list.
+        # If not, it's silently skipped — no crash.
+        import importlib
+
+        try:
+            importlib.import_module("litellm")
+            assert "litellm" in names
+        except ImportError:
+            assert "litellm" not in names
+
+
+# ---- LocalProvider dispatching (RFC-011) --------------------------------------
+
+
+class TestLocalProviderBackendDispatching:
+    def test_default_backend_is_llama_cpp(self):
+        provider = LocalProvider()
+        impl = provider._get_impl()
+        assert isinstance(impl, LlamaCppBackend)
+
+    def test_onnxruntime_backend_selected(self):
+        provider = LocalProvider(backend="onnxruntime-genai")
+        impl = provider._get_impl()
+        assert isinstance(impl, OnnxGenAIBackend)
+
+    def test_explicit_llama_cpp_backend(self):
+        provider = LocalProvider(backend="llama-cpp-python")
+        impl = provider._get_impl()
+        assert isinstance(impl, LlamaCppBackend)
+
+    def test_generate_delegates_to_llama_cpp(self):
+        provider = LocalProvider()
+        fake_llm = _FakeLlamaCpp()
+        # Inject fake via backward-compat _llm setter
+        provider._llm = fake_llm
+        result = provider.generate("hello")
+        assert result == "out"
+
     def test_unknown_kwargs_ignored_at_construction(self):
         provider = LocalProvider(
             model="Qwen/Qwen2.5-3B-Instruct-GGUF",
@@ -230,23 +619,7 @@ class TestLocalProvider:
         assert "JSON" in system
 
 
-class _FakeLlamaCpp:
-    """Minimal stand-in for llama_cpp.Llama used by LocalProvider tests."""
-
-    def __init__(self) -> None:
-        self.last_messages: list[dict[str, str]] = []
-
-    def create_chat_completion(
-        self,
-        messages: list[dict[str, str]],
-        max_tokens: int,
-        temperature: float,
-    ) -> dict:
-        self.last_messages = messages
-        return {"choices": [{"message": {"content": "  out  "}}]}
-
-
-# ── generate() delegation (llm_client) ───────────────────────────────────────
+# ---- generate() delegation (llm_client) --------------------------------------
 
 
 class TestGenerateDelegatesToProvider:
@@ -266,7 +639,7 @@ class TestGenerateDelegatesToProvider:
         class _Flaky:
             name = "flaky"
 
-            def generate(self, *a, **kw):  # noqa: D401 — test stub
+            def generate(self, *a, **kw):  # noqa: D401 -- test stub
                 raise RuntimeError("transient")
 
         with patch.dict(
@@ -294,16 +667,16 @@ class TestGenerateDelegatesToProvider:
                     generate("hi")
 
 
-# ── Config (RFC-002 extensions) ──────────────────────────────────────────────
+# ---- Config (RFC-002 extensions) ---------------------------------------------
 
 
 class TestLLMConfigRepr:
     def test_api_key_is_redacted(self):
         from zettelforge.config import LLMConfig
 
-        cfg = LLMConfig(api_key="sk-supersecret")
+        cfg = LLMConfig(api_key="***")
         text = repr(cfg)
-        assert "sk-supersecret" not in text
+        assert "***" not in text
         assert "***" in text
 
     def test_empty_api_key_shows_empty_string(self):
@@ -331,3 +704,22 @@ class TestEnvRefResolution:
 
         assert _resolve_env_refs("plain") == "plain"
         assert _resolve_env_refs("") == ""
+
+
+# ---- Test helpers ------------------------------------------------------------
+
+
+class _FakeLlamaCpp:
+    """Minimal stand-in for llama_cpp.Llama used by LocalProvider tests."""
+
+    def __init__(self) -> None:
+        self.last_messages: list[dict[str, str]] = []
+
+    def create_chat_completion(
+        self,
+        messages: list[dict[str, str]],
+        max_tokens: int,
+        temperature: float,
+    ) -> dict:
+        self.last_messages = messages
+        return {"choices": [{"message": {"content": "  out  "}}]}

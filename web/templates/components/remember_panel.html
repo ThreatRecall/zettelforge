@@ -1,0 +1,72 @@
+<!-- RememberPanel Component -->
+<div class="remember-panel" id="remember-section">
+    <textarea 
+        id="remember-content" 
+        placeholder="Paste threat intelligence to store..."
+        class="remember-textarea"
+    ></textarea>
+    <div class="remember-actions">
+        <button onclick="doRemember()" class="remember-button">Store in Memory</button>
+        <span class="remember-hint">Supports STIX 2.1, markdown, and plain text</span>
+    </div>
+</div>
+
+<style>
+.remember-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+.remember-textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: var(--space-3);
+    background: var(--bg-input);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    color: var(--fg-primary);
+    font-size: 14px;
+    font-family: var(--font-body);
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.remember-textarea:focus {
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-focus);
+}
+.remember-textarea::placeholder {
+    color: var(--fg-tertiary);
+}
+.remember-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+}
+.remember-button {
+    padding: var(--space-2) var(--space-4);
+    background: var(--signal-leaf-deep);
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--fog-0);
+    font-size: 13px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+.remember-button:hover {
+    background: var(--signal-leaf);
+}
+.remember-button:active {
+    opacity: 0.85;
+}
+.remember-hint {
+    color: var(--fg-tertiary);
+    font-size: 12px;
+}
+</style>

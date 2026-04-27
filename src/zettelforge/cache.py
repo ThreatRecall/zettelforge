@@ -8,7 +8,7 @@
 """
 
 import time
-from typing import Any, Dict, Optional
+from typing import Any
 
 
 class SmartCache:
@@ -19,12 +19,12 @@ class SmartCache:
     def __init__(self, maxsize: int = 10000, ttl_seconds: int = 3600):
         self.maxsize = maxsize
         self.ttl_seconds = ttl_seconds
-        self._cache: Dict = {}
+        self._cache: dict = {}
         self._hits = 0
         self._misses = 0
         self._last_cleanup = time.time()
 
-    def get(self, key: str) -> Optional[Any]:
+    def get(self, key: str) -> Any | None:
         """Get item from cache with TTL check."""
         self._cleanup_if_needed()
 
@@ -64,7 +64,7 @@ class SmartCache:
         for k in expired:
             del self._cache[k]
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Return cache performance metrics."""
         total = self._hits + self._misses
         hit_rate = self._hits / total if total > 0 else 0

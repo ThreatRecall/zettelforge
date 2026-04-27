@@ -4,7 +4,6 @@ A-MEM Agentic Memory Architecture V1.0
 """
 
 import threading
-from typing import Dict, List, Optional, Tuple
 
 
 class SynthesisValidator:
@@ -24,7 +23,7 @@ class SynthesisValidator:
         self.max_summary_length = max_summary_length
         self.max_answer_length = max_answer_length
 
-    def validate_response(self, response: Dict) -> Tuple[bool, List[str]]:
+    def validate_response(self, response: dict) -> tuple[bool, list[str]]:
         """Validate a complete synthesis response."""
         errors = []
         synthesis = response.get("synthesis", {})
@@ -46,7 +45,7 @@ class SynthesisValidator:
 
         return len(errors) == 0, errors
 
-    def check_quality_score(self, response: Dict) -> Dict:
+    def check_quality_score(self, response: dict) -> dict:
         """Compute a quality score for a response."""
         synthesis = response.get("synthesis", {})
         sources = response.get("sources", [])
@@ -72,7 +71,7 @@ class SynthesisValidator:
         }
 
 
-_validator: Optional[SynthesisValidator] = None
+_validator: SynthesisValidator | None = None
 _validator_lock = threading.Lock()
 
 

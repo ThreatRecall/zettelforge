@@ -10,7 +10,7 @@ Causal Triple Extension (2026-04-06):
 
 import re
 from datetime import datetime
-from typing import Dict, List
+from typing import ClassVar
 
 from zettelforge.alias_resolver import AliasResolver
 from zettelforge.json_parse import extract_json
@@ -26,7 +26,7 @@ from zettelforge.vector_memory import get_embedding
 class NoteConstructor:
     """Construct enriched memory notes from raw content"""
 
-    def extract_entities(self, text: str) -> Dict[str, List[str]]:
+    def extract_entities(self, text: str) -> dict[str, list[str]]:
         """Extract entities from text using the shared EntityExtractor."""
         from zettelforge.entity_indexer import EntityExtractor
 
@@ -79,7 +79,7 @@ class NoteConstructor:
             return context
         return text[:100]
 
-    def _extract_keywords(self, text: str) -> List[str]:
+    def _extract_keywords(self, text: str) -> list[str]:
         """Extract keywords from text."""
         # Simple keyword extraction
         words = re.findall(r"\b[a-zA-Z]{4,}\b", text.lower())
@@ -93,7 +93,7 @@ class NoteConstructor:
 
     # ===== Causal Triple Extraction (MAGMA-style) =====
 
-    CAUSAL_RELATIONS = [
+    CAUSAL_RELATIONS: ClassVar[list[str]] = [
         "causes",
         "enables",
         "targets",
@@ -103,7 +103,7 @@ class NoteConstructor:
         "related_to",
     ]
 
-    def extract_causal_triples(self, text: str, note_id: str = "") -> List[Dict[str, str]]:
+    def extract_causal_triples(self, text: str, note_id: str = "") -> list[dict[str, str]]:
         """
         Use LLM to extract causal triples from text.  [Enterprise]
         Returns list of {subject, relation, object, note_id}
@@ -122,7 +122,15 @@ JSON:"""
         try:
             from zettelforge.llm_client import generate
 
-            output = generate(prompt, max_tokens=300, temperature=0.1)
+            # 8000 tokens for causal extraction — the highest cap in the
+            # codebase. This prompt asks the model to enumerate every causal
+            # relation in a passage, which triggers the longest reasoning
+            # chains anywhere in the system. Empirical: qwen3.5:9b at
+            # num_predict=4000 was *stochastically* sufficient (~70% success
+            # rate), eval_count varied between 2.8k (success) and 4k+ (still
+            # in <think> tags when budget exhausted). 8000 keeps the
+            # success rate >95% on the same model. v2.5.2 CHANGELOG.
+            output = generate(prompt, max_tokens=8000, temperature=0.1)
 
             parsed = extract_json(output, expect="array")
             if parsed is None:
@@ -163,7 +171,7 @@ JSON:"""
             _logger.warning("causal_extraction_failed", error=str(e))
             return []
 
-    def store_causal_edges(self, triples: List[Dict], note_id: str = "", backend=None) -> int:
+    def store_causal_edges(self, triples: list[dict], note_id: str = "", backend=None) -> int:
         """
         Store causal triples as edges in KnowledgeGraph.
         Returns number of edges added.

@@ -9,14 +9,16 @@ WARNING-3: synchronous=NORMAL means the last transaction before an OS crash
 (power failure, kernel panic) may be lost.  Application-level crashes are safe.
 """
 
+import contextlib
 import json
 import sqlite3
 import threading
 import uuid
 from collections import defaultdict, deque
+from collections.abc import Iterator
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional
+from typing import Any
 
 from zettelforge.note_schema import (
     Content,
@@ -266,8 +268,9 @@ _NOTE_COLUMNS = [
     "vuln_meta",
 ]
 
+# _NOTE_COLUMNS is a module-level constant; row values are ?-bound. Safe.
 _INSERT_NOTE_SQL = (
-    f"INSERT OR REPLACE INTO notes ({', '.join(_NOTE_COLUMNS)}) "
+    f"INSERT OR REPLACE INTO notes ({', '.join(_NOTE_COLUMNS)}) "  # noqa: S608
     f"VALUES ({', '.join('?' for _ in _NOTE_COLUMNS)})"
 )
 
@@ -322,13 +325,11 @@ class SQLiteBackend(StorageBackend):
             if conn is None:
                 return
             self._conn = None
-            try:
+            with contextlib.suppress(Exception):
                 conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
-            except Exception:
-                pass
             conn.close()
 
-    def health_check(self) -> Dict[str, Any]:
+    def health_check(self) -> dict[str, Any]:
         if self._conn is None:
             return {
                 "status": "closed",
@@ -373,7 +374,7 @@ class SQLiteBackend(StorageBackend):
             self.db_path, "Update", actor="SQLiteBackend.rewrite_note", note_id=note.id
         )
 
-    def get_note_by_id(self, note_id: str) -> Optional[MemoryNote]:
+    def get_note_by_id(self, note_id: str) -> MemoryNote | None:
         with self._write_lock:
             self._check_open()
             cur = self._conn.execute("SELECT * FROM notes WHERE id = ?", (note_id,))
@@ -382,7 +383,7 @@ class SQLiteBackend(StorageBackend):
             return None
         return _row_to_note(row)
 
-    def get_note_by_source_ref(self, source_ref: str) -> Optional[MemoryNote]:
+    def get_note_by_source_ref(self, source_ref: str) -> MemoryNote | None:
         with self._write_lock:
             self._check_open()
             cur = self._conn.execute(
@@ -407,14 +408,14 @@ class SQLiteBackend(StorageBackend):
             for row in rows:
                 yield _row_to_note(row)
 
-    def get_notes_by_domain(self, domain: str) -> List[MemoryNote]:
+    def get_notes_by_domain(self, domain: str) -> list[MemoryNote]:
         with self._write_lock:
             self._check_open()
             cur = self._conn.execute("SELECT * FROM notes WHERE domain = ?", (domain,))
             rows = cur.fetchall()
         return [_row_to_note(r) for r in rows]
 
-    def get_recent_notes(self, limit: int = 10) -> List[MemoryNote]:
+    def get_recent_notes(self, limit: int = 10) -> list[MemoryNote]:
         with self._write_lock:
             self._check_open()
             cur = self._conn.execute(
@@ -454,7 +455,7 @@ class SQLiteBackend(StorageBackend):
 
     # ── Vector Index Sync ───────────────────────────────────────────────
 
-    def reindex_vector(self, note_id: str, vector: List[float]) -> None:
+    def reindex_vector(self, note_id: str, vector: list[float]) -> None:
         """Update embedding vector in SQLite.  LanceDB sync is external.
 
         Targeted UPDATE inside a single lock acquisition — avoids the
@@ -480,7 +481,7 @@ class SQLiteBackend(StorageBackend):
         self,
         entity_type: str,
         entity_value: str,
-        properties: Optional[Dict] = None,
+        properties: dict | None = None,
     ) -> str:
         now = datetime.now().isoformat()
         props_json = json.dumps(properties or {})
@@ -512,7 +513,7 @@ class SQLiteBackend(StorageBackend):
             self._conn.commit()
         return node_id
 
-    def get_kg_node(self, entity_type: str, entity_value: str) -> Optional[Dict]:
+    def get_kg_node(self, entity_type: str, entity_value: str) -> dict | None:
         with self._write_lock:
             self._check_open()
             cur = self._conn.execute(
@@ -540,8 +541,8 @@ class SQLiteBackend(StorageBackend):
         to_type: str,
         to_value: str,
         relationship: str,
-        note_id: Optional[str] = None,
-        properties: Optional[Dict] = None,
+        note_id: str | None = None,
+        properties: dict | None = None,
     ) -> str:
         with self._write_lock:
             self._check_open()
@@ -594,8 +595,8 @@ class SQLiteBackend(StorageBackend):
         self,
         entity_type: str,
         entity_value: str,
-        relationship: Optional[str] = None,
-    ) -> List[Dict]:
+        relationship: str | None = None,
+    ) -> list[dict]:
         with self._write_lock:
             self._check_open()
             # Resolve node_id
@@ -646,7 +647,7 @@ class SQLiteBackend(StorageBackend):
         start_type: str,
         start_value: str,
         max_depth: int = 2,
-    ) -> List[List[Dict]]:
+    ) -> list[list[dict]]:
         """BFS/DFS traversal up to max_depth.  Returns list of paths."""
         with self._write_lock:
             self._check_open()
@@ -660,9 +661,9 @@ class SQLiteBackend(StorageBackend):
 
         start_node_id = row["node_id"]
         visited: set = set()
-        results: List[List[Dict]] = []
+        results: list[list[dict]] = []
 
-        def _dfs(current_id: str, depth: int, path: List[Dict]):
+        def _dfs(current_id: str, depth: int, path: list[dict]):
             if depth > max_depth or current_id in visited:
                 return
             visited.add(current_id)
@@ -688,7 +689,7 @@ class SQLiteBackend(StorageBackend):
                     "to_type": erow["to_type"],
                     "to_value": erow["to_value"],
                 }
-                new_path = path + [step]
+                new_path = [*path, step]
                 results.append(new_path)
                 _dfs(erow["to_node_id"], depth + 1, new_path)
 
@@ -697,7 +698,7 @@ class SQLiteBackend(StorageBackend):
 
     # ── Temporal KG ─────────────────────────────────────────────────────
 
-    def get_entity_timeline(self, entity_type: str, entity_value: str) -> List[Dict]:
+    def get_entity_timeline(self, entity_type: str, entity_value: str) -> list[dict]:
         """Get temporal timeline of states for an entity via temporal edges."""
         with self._write_lock:
             self._check_open()
@@ -733,7 +734,7 @@ class SQLiteBackend(StorageBackend):
         timeline.sort(key=lambda x: x["timestamp"] or "")
         return timeline
 
-    def get_changes_since(self, timestamp: str) -> List[Dict]:
+    def get_changes_since(self, timestamp: str) -> list[dict]:
         """Get all temporal edge changes since a given ISO-8601 timestamp."""
         with self._write_lock:
             self._check_open()
@@ -762,7 +763,7 @@ class SQLiteBackend(StorageBackend):
             )
         return changes
 
-    def get_kg_node_by_id(self, node_id: str) -> Optional[Dict]:
+    def get_kg_node_by_id(self, node_id: str) -> dict | None:
         """Lookup a KG node by its internal node_id."""
         with self._write_lock:
             self._check_open()
@@ -785,7 +786,7 @@ class SQLiteBackend(StorageBackend):
         entity_value: str,
         max_depth: int = 3,
         max_visited: int = 50,
-    ) -> List[Dict]:
+    ) -> list[dict]:
         """BFS over outgoing causal edges — traces forward from cause to effects."""
         with self._write_lock:
             self._check_open()
@@ -800,7 +801,7 @@ class SQLiteBackend(StorageBackend):
         start_id = row["node_id"]
         visited: set = set()
         bfs_queue: deque = deque([(start_id, 0)])
-        causal_edges: List[Dict] = []
+        causal_edges: list[dict] = []
 
         while bfs_queue and len(visited) < max_visited:
             current_id, depth = bfs_queue.popleft()
@@ -831,7 +832,7 @@ class SQLiteBackend(StorageBackend):
         entity_value: str,
         max_depth: int = 3,
         max_visited: int = 50,
-    ) -> List[Dict]:
+    ) -> list[dict]:
         """BFS over incoming causal edges — traces back to root causes."""
         with self._write_lock:
             self._check_open()
@@ -846,7 +847,7 @@ class SQLiteBackend(StorageBackend):
         start_id = row["node_id"]
         visited: set = set()
         bfs_queue: deque = deque([(start_id, 0)])
-        causal_edges: List[Dict] = []
+        causal_edges: list[dict] = []
 
         while bfs_queue and len(visited) < max_visited:
             current_id, depth = bfs_queue.popleft()
@@ -889,7 +890,7 @@ class SQLiteBackend(StorageBackend):
             self._conn.execute("DELETE FROM entity_index WHERE note_id = ?", (note_id,))
             self._conn.commit()
 
-    def get_note_ids_for_entity(self, entity_type: str, entity_value: str) -> List[str]:
+    def get_note_ids_for_entity(self, entity_type: str, entity_value: str) -> list[str]:
         with self._write_lock:
             self._check_open()
             cur = self._conn.execute(
@@ -899,7 +900,7 @@ class SQLiteBackend(StorageBackend):
             rows = cur.fetchall()
         return [r["note_id"] for r in rows]
 
-    def search_entities(self, query: str, limit: int = 10) -> Dict[str, List[str]]:
+    def search_entities(self, query: str, limit: int = 10) -> dict[str, list[str]]:
         """Prefix search across entity types."""
         with self._write_lock:
             self._check_open()
@@ -909,7 +910,7 @@ class SQLiteBackend(StorageBackend):
                 (f"{query}%", limit),
             )
             rows = cur.fetchall()
-        result: Dict[str, List[str]] = defaultdict(list)
+        result: dict[str, list[str]] = defaultdict(list)
         for row in rows:
             result[row["entity_type"]].append(row["entity_value"])
         return dict(result)

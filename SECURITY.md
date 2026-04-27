@@ -1,145 +1,65 @@
 # Security Policy
 
-## Canonical Channels
-
-To avoid supply-chain and impersonation risk, only the following are
-official distribution channels for ZettelForge and ThreatRecall:
-
-| Artifact | Canonical URL |
-|---|---|
-| Source repository | https://github.com/rolandpg/zettelforge |
-| Python package | https://pypi.org/project/zettelforge/ |
-| Release artifacts | https://github.com/rolandpg/zettelforge/releases |
-| Documentation | https://docs.threatrecall.ai/ |
-| Official hosted service | https://threatrecall.ai/ |
-| Security disclosure | contact@threatrecall.ai (this file) |
-
-Packages installed from anywhere else — including any `zettelforge-*`
-typosquats, alternate PyPI mirrors, forks published under a different
-namespace, or third-party "ZettelForge Cloud" / "ThreatRecall" hosted
-services — are not affiliated with this project and have not been
-reviewed by the maintainers. Verify provenance via the signed release
-artifacts when in doubt.
-
 ## Reporting a Vulnerability
 
-**Do not open a public GitHub issue for security vulnerabilities.**
-
-Report security issues by email to:
-
-**contact@threatrecall.ai**
-
-Include in your report:
-- A description of the vulnerability and its potential impact
-- Steps to reproduce the issue or a proof-of-concept
-- The affected version(s)
-- Any suggested mitigations you have identified
-
-### Response SLA
-
-| Stage | Target |
-|---|---|
-| Acknowledgement | Within 48 hours of receipt |
-| Initial assessment (severity + scope) | Within 5 business days |
-| Fix or mitigation available | Within 30 days for Critical/High, 90 days for Medium/Low |
-| Public disclosure | Coordinated with reporter after fix is available |
-
-If you have not received a response within 48 hours, follow up at the
-same address with "SECURITY FOLLOW-UP" in the subject line.
-
-We follow responsible disclosure: we will coordinate public disclosure
-timing with you and credit you in the advisory unless you prefer to
-remain anonymous.
-
----
+This is a solo-maintainer project. For security-related issues:
+- Open a GitHub Security Advisory in the repository
+- Tag with `security` label
+- Expect acknowledgement within 48 hours
 
 ## Supported Versions
 
-Security fixes are applied to the current release and, where feasible,
-backported to the prior minor release.
-
 | Version | Supported |
-|---|---|
-| 2.4.x (current) | Yes — active security support |
-| 2.3.x | Critical fixes only, for 60 days after 2.4.0 release |
-| < 2.3 | No — upgrade required |
+|---------|-----------|
+| latest release | ✅ |
+| master branch | ✅ (CI gates) |
+| older releases | ❌ |
 
----
+## Supply Chain Security
 
-## Security Scope
-
-### In Scope
-
-The following components are covered by this policy:
-
-- **Memory pipeline** — `remember()`, `recall()`, `synthesize()`, and
-  the two-phase extraction pipeline
-- **Storage layer** — SQLite backend (notes, knowledge graph, entity index)
-  and the LanceDB vector index. Legacy JSONL paths still present for
-  migration are also in scope.
-- **MCP server** — all tool handlers exposed to Claude Code and other
-  MCP clients
-- **REST API** — all FastAPI endpoints in `src/zettelforge/server.py`
-  and the ThreatRecall web UI
-- **Authentication** — JWT/OAuth handling, `THREATENGRAM_LICENSE_KEY`
-  validation, edition gating
-- **Governance** — `GovernanceValidator`, OCSF audit event emission,
-  `structlog` configuration
-- **Configuration** — layered config resolution (env vars, YAML,
-  defaults), secrets handling
-- **Enterprise features** — TypeDB integration, multi-tenant auth,
-  OpenCTI sync
-
-### Out of Scope
-
-- Issues in third-party dependencies (report these upstream; we will
-  upgrade promptly if a dependency is affected)
-- Vulnerabilities requiring physical access to the host machine
-- Social engineering attacks
-- Issues in documentation only (no code path affected)
-- The LOCOMO benchmark tooling in `benchmarks/`
-
----
+This project implements:
+- SHA-pinned GitHub Actions (all third-party actions pinned by commit SHA)
+- PyPI trusted publishing (OIDC, no long-lived tokens)
+- pip-audit on every CI run (HIGH/CRITICAL must pass)
+- Dependabot for weekly dependency updates
+- Snyk SAST scanning on every push/PR
 
 ## Known Security Architecture
 
+See [THREAT_MODEL.md](docs/THREAT_MODEL.md) for the complete STRIDE threat model.
+
 ### Data at Rest
 
-- Notes, the knowledge graph, and the entity index are stored in a local
-  SQLite database (WAL mode) under the configured data directory. No
-  encryption at rest is applied by ZettelForge itself — encrypt the
-  filesystem or volume at the OS level for sensitive deployments.
-- LanceDB vector index files live alongside the SQLite database and
-  carry the same recommendation.
-- Legacy v2.1.x deployments that still use JSONL (`notes.jsonl`,
-  `kg_nodes.jsonl`, `kg_edges.jsonl`, `entity_index.json`) should run
-  `scripts/migrate_jsonl_to_sqlite.py` — the JSONL paths are no longer
-  the default but remain supported as a migration input.
+- Notes, the knowledge graph, and the entity index are stored in a local SQLite database (WAL mode) under the configured data directory. No encryption at rest is applied by ZettelForge itself -- encrypt the filesystem or volume at the OS level for sensitive deployments.
+- LanceDB vector index files live alongside the SQLite database and carry the same recommendation.
+
+### PII Protection
+
+- As of v2.5.0 (RFC-013), optional PII detection via Microsoft Presidio scans content before `remember()` storage. Three modes: log (discovery), redact (compliance), block (strict). Disabled by default. Requires `pip install zettelforge[pii]` to activate.
+- Raw PII text is never written to structured logs. Only entity type and detection score are recorded.
+
+### LLM Provider Security
+
+- Four providers: `local` (in-process, no network), `ollama` (localhost HTTP), `litellm` (cloud APIs), `mock` (testing). Each is configurable via `llm.provider` in config.yaml.
+- `local` provider is fully offline. `ollama` runs on localhost only. `litellm` makes outbound HTTPS calls to configured cloud APIs.
+- API keys use `${ENV_VAR}` resolution -- never committed to YAML. Redacted from all log output via `LLMConfig.__repr__`.
+- Provider timeout is configurable (default 60s). LiteLLM provider supports configurable retry count.
 
 ### Injection Defenses
 
-- As of v2.1.1, all LanceDB query expressions are parameterized.
-  String-interpolated queries were present in v2.1.0 and earlier
-  (see CVE advisory, if issued, or CHANGELOG v2.1.1 P0-3).
+- As of v2.1.1, all LanceDB query expressions are parameterized. String-interpolated queries were present in v2.1.0 and earlier (see CVE advisory, if issued, or CHANGELOG v2.1.1 P0-3).
 
 ### File Locking
 
-- As of v2.1.1, all JSONL and entity index write paths use
-  `fcntl.flock()` exclusive locks to prevent concurrent-write corruption.
+- As of v2.1.1, all JSONL and entity index write paths use `fcntl.flock()` exclusive locks to prevent concurrent-write corruption.
 
 ### Audit Logging
 
-- All security-relevant operations emit OCSF v1.3 structured events via
-  `structlog`. Authorization decisions, API activity, and file activity
-  are auditable in any SIEM that ingests JSON logs.
+- All security-relevant operations emit OCSF v1.3 structured events via `structlog`. Authorization decisions, API activity, and file activity are auditable in any SIEM that ingests JSON logs.
 
 ### Air-Gap Deployments
 
-- ZettelForge supports fully offline operation (fastembed ONNX +
-  llama-cpp-python). No telemetry or external calls are made in this
-  configuration.
-
----
+- ZettelForge supports fully offline operation (fastembed ONNX + llama-cpp-python). No telemetry or external calls are made in this configuration.
 
 ## Disclosure Policy
 
@@ -152,6 +72,4 @@ ZettelForge follows a coordinated disclosure model:
 5. We release the fix and publish a security advisory simultaneously.
 6. We credit the reporter in the advisory (unless they opt out).
 
-We ask reporters to give us a reasonable time to fix issues before
-public disclosure. We will not take legal action against good-faith
-security researchers who follow this policy.
+We ask reporters to give us a reasonable time to fix issues before public disclosure. We will not take legal action against good-faith security researchers who follow this policy.

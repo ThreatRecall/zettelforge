@@ -6,6 +6,304 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **CrewAI integration** (issue #40). New optional extra
+  `pip install zettelforge[crewai]` exposes `ZettelForgeRecallTool`,
+  `ZettelForgeRememberTool`, and `ZettelForgeSynthesizeTool` as CrewAI
+  `BaseTool` subclasses. CTI-focused crews can now use ZettelForge as a
+  drop-in alternative to CrewAI's existing Mem0 memory tools, with
+  per-tool description copy aimed at routing the LLM to the right tool
+  (recall for lookups, remember for findings, synthesize for final answers).
+  See `examples/crewai_cti_crew.py` for a runnable two-agent demo.
+  Tests gated on `pytest.importorskip("crewai")`; 11 pass against
+  crewai 1.14.x.
+
+## [2.6.2] - 2026-04-27
+
+UI/UX release. Fixes the `/config` page so the Apply button actually works
+and surfaces enum-style settings as dropdowns instead of free-text inputs.
+No data migration. No config changes. No API contract changes.
+
+### Fixed
+
+- **`/config` "Save Changes" button is no longer dead.** The Quick Settings
+  panel called `saveConfigForm()` and `reloadConfig()` — neither function
+  was defined anywhere, so the button silently no-op'd and the panel
+  rendered "Loading schema..." forever. Replaced with a real form-based
+  editor whose Apply button PUTs a nested payload to `/api/config` and
+  reloads from server on success.
+
+### Added
+
+- **Form-based config editor with dropdowns.** `/config` now renders a
+  grouped settings form alongside the YAML editor. Known enum fields
+  (`backend`, `embedding.provider`, `llm.provider`, `llm.local_backend`,
+  `logging.level`, `synthesis.default_format`, `governance.pii.action`)
+  render as `<select>` controls instead of free-text inputs. Restart-
+  required leaves get a "restart required" badge sourced from the same
+  set the server uses, so the UI warning is never out of sync with the
+  server's classification.
+- **Pending-changes counter and Revert button.** The form tracks dirty
+  fields by dotted path, builds a single nested payload on Apply, and
+  shows `N pending change(s) (M need restart)` next to the buttons.
+- **YAML editor accepts both YAML and JSON** (was JSON-only despite the
+  label) and skips redacted `***` secrets so they aren't PUT back as
+  literal strings.
+
+### Tests
+
+- 4 new tests in `tests/test_web_api.py`: dropdown enum round-trip for
+  `logging.level` (restart-required) and `synthesis.default_format` (live);
+  multi-section nested payload from a single Apply; and a regression guard
+  on the `/config` HTML structure (form tab, dropdown enum declarations,
+  restart-leaf flags, and proof the dead `saveConfigForm`/`reloadConfig`
+  handlers are gone). 28 passed, 2 skipped (was 24 + 2).
+
+## [2.6.1] - 2026-04-25
+
+Hotfix release. Resolves three blockers found in code review of the
+RFC-015 web GUI shipped in v2.6.0. No data migration. No config changes.
+
+### Fixed
+
+- **`/config` HTML page now renders.** `_to_dict` was defined as a closure
+  inside `get_config_endpoint`, so every render of `/config` raised
+  `NameError`, was silently swallowed by a bare `except`, and left the
+  YAML body blank on initial server-side render. Promoted to a module-level
+  `_config_to_dict` helper used by both routes. (PR #131)
+- **`PUT /api/config` correctly reports nested restart-required fields.**
+  The check compared top-level payload keys against a set of dotted-path
+  fields, so payloads like `{"embedding": {"provider": "x"}}` were
+  reported as `applied: ["embedding"]`, `pending_restart: []`, telling
+  operators a restart-required change had taken effect when it had not.
+  Added `_flatten_keys` to walk nested payloads to dotted leaf paths;
+  `applied` and `pending_restart` now contain accurate dotted paths.
+  (PR #131)
+- **`/config` HTML route is now auth-gated.** `/api/config` was protected,
+  but the HTML shell (and once the `_to_dict` bug was fixed, its
+  server-rendered YAML body) was reachable without an API key. Added
+  `Depends(require_api_guard)` and made the YAML body redact secrets
+  before serialization. (PR #131)
+
+### Tests
+
+- Added four regression tests in `tests/test_web_api.py` covering all
+  three fixes. 24 passed, 2 skipped (was 20 + 2).
+
+## [2.6.0] - 2026-04-25
+
+Feature release. Adds configurable content-size limits for DoS mitigation
+(RFC-014) and moves per-call-site LLM token budgets out of hardcoded
+literals into `LLMConfig`, making them overridable at deploy time.
+
+### Added
+
+- **Configurable content size limits** (`GovernanceConfig.limits.max_content_length`,
+  default 50 MB). `remember()` calls with content exceeding the limit are
+  rejected with a clear error message. Set to `0` to disable the check.
+  Environment override: `ZETTELFORGE_LIMITS_MAX_CONTENT_LENGTH`.
+  (RFC-014, PR #123)
+- **Per-call-site `max_tokens` budgets configurable via `LLMConfig`**.
+  Five new fields: `max_tokens_causal` (8000), `max_tokens_synthesis` (2500),
+  `max_tokens_fact` (2500), `max_tokens_ner` (2500), `max_tokens_evolution` (2500).
+  Defaults match v2.5.2 values. No behavioral change for existing configs.
+  (PR #126, issue #125)
+
+### Changed
+
+- **Docs: config reconciliation for v2.5.2** — `config.default.yaml` gained
+  the `lance:` section (RFC-009 Phase 1.5), `docs/reference/configuration.md`
+  now covers all v2.5.2 knobs (`lance`, `pii`, per-call-site budgets), and
+  `docs/explanation/llm-budgets-and-timeouts.md` explains the reasoning-model
+  token-budget tradeoffs. (PR #126)
+- **`_apply_yaml()` now handles `lance:` section** — previously the
+  `lance.cleanup_interval_minutes` and `lance.cleanup_older_than_seconds` YAML
+  knobs were silently ignored (regression from RFC-009 Phase 1.5 landing in
+  v2.4.x without the `_apply_yaml` branch). (PR #126, code review finding)
+
+### Internal
+
+- **Removed `docs/superpowers/` from version control**. The directory holds
+  workspace scratch — internal research and notes with unredacted incident
+  detail. 18 files (7319 lines) untracked. No published content lost.
+  (PR #128)
+
+## [2.5.2] - 2026-04-25
+
+Hotfix release. Restores end-to-end functionality of synthesis, causal
+triple extraction, fact extraction, LLM NER, and neighbor evolution
+under any reasoning-style LLM (qwen3.5+, qwen3.6, nemotron-3, etc.).
+
+### Fixed
+
+- **Reasoning-model token starvation across every LLM call site**.
+  Reasoning models emit hidden `<think>...</think>` tokens that count
+  against `num_predict` but never appear in the final `response` field
+  Ollama returns. Pre-2.5.2 token caps (`max_tokens=300`/`400`/`800`/
+  `1024`) were exhausted entirely by the thinking phase on these
+  models, leaving the JSON answer empty. Symptoms: synthesis fell back
+  to `"No specific answer found for: …"` on every query; causal triple
+  extraction persisted **0 edges** despite rich CTI text; LLM NER
+  silently no-opped; neighbor evolution `parse_failed{schema=...,
+  raw=""}` warnings flooded the log.
+
+  Bumped every `generate(..., max_tokens=...)` call site to give
+  reasoning models room to think *and* emit a final answer. Affected
+  files:
+
+  | File | Old cap | New cap |
+  |---|---|---|
+  | `note_constructor.py` (causal triples) | 300 | **8000** |
+  | `synthesis_generator.py` | 800 | 2500 |
+  | `fact_extractor.py` | 400 | 2500 |
+  | `entity_indexer.py` (NER) | 300 | 2500 |
+  | `memory_evolver.py` (2 sites) | 1024 | 2500 |
+
+  Causal extraction needs the largest budget because the prompt asks
+  the model to enumerate *every* causal relation in a passage; this
+  triggers the longest reasoning chains anywhere in the system.
+  Empirical against `qwen3.5:9b`: at 4000 tokens the call was
+  *stochastically* sufficient (eval_count varied 2.8k–4k+, ~70%
+  success), so 8000 is the conservative cap that keeps the success
+  rate above 95% on the same model. Other call sites converge with
+  less reasoning overhead so 2500 suffices.
+
+- **LLM client timeout bumped 60s → 180s**. `LLMConfig.timeout` and
+  `OllamaProvider` constructor default were both 60 seconds — well
+  below the 60–120s wall-clock time of a 4000–8000 token reasoning
+  generation on a 9B-Q4_K_M model. `ReadTimeout` was firing during
+  causal extraction even when the model would have returned valid
+  JSON given another 30 seconds. Bumped both defaults plus
+  `config.default.yaml` to 180s.
+
+  Verified end-to-end on `qwen3.5:9b`:
+  - Synthesis: query "What CVE does DROPBEAR exploit?" returns
+    `"CVE-2024-3094"` with 1 source citation (was returning
+    `"No specific answer found for: …"` on every call pre-2.5.2).
+  - Causal extraction: corpus seeded with APT28/DROPBEAR/CVE-2024-3094
+    text yields a 4-triple JSON array in 137s wall time:
+    `APT28 → targets → manufacturing sector`,
+    `APT28 → uses → DROPBEAR`,
+    `DROPBEAR → exploits → CVE-2024-3094`,
+    `APT28 → attributed_to → Russian GRU Unit 26165`.
+
+### Operational note
+
+Slow models. With 8000 tokens of reasoning budget, single causal
+extraction calls now take 60–140s on a 9B model. `remember(sync=True)`
+in this configuration will block 1–3 minutes per note. The default
+async path (background enrichment queue) is the preferred mode.
+Operators on faster hardware or smaller models can lower the caps via
+config/env if needed, but the v2.5.2 defaults trade latency for
+end-to-end correctness on the reference model.
+
+### Notes
+
+This explains the `evolution_parse_failed` and `causal_triples
+parse_failed` cascades documented in the v2.4.x Vigil incident. The
+v2.4.2 PR #95 Tier 1/2 LLM observability surfaced the empty responses
+but the root-cause attribution to token-cap-vs-thinking-budget waited
+until the v2.5.1 perf-bench run made the failure reproducible end-to-end.
+
+## [2.5.1] - 2026-04-25
+
+Hotfix release. Surfaced during the v2.5.0 perf benchmark run.
+
+### Fixed
+
+- **`KnowledgeGraph._cache_edge` crashed on legacy-schema edges**.
+  Long-running deployments accumulated `kg_edges.jsonl` entries written
+  by a now-removed pre-v2.5.x writer that used
+  `{source_id, target_id, relation_type}` instead of the canonical
+  `{from_node_id, to_node_id, relationship}` keys. The loader hard-failed
+  with `KeyError: 'from_node_id'` on the first such row, taking down
+  every `recall()` and `synthesize()` that touches the KG. Affects any
+  workspace with mixed-schema edge history; observed locally with 189k
+  edges where ~80k were the legacy shape.
+  `_normalize_edge_schema()` now remaps legacy keys to canonical on load
+  and silently drops entries that are still un-normalizable, with a
+  count logged at WARNING so operators can see the skip volume.
+  Six new regression tests in `tests/test_kg_edge_schema.py` cover
+  pass-through, remap, missing-fields, non-dict, mixed-batch, and
+  corrupt-JSON cases. The previously-broken environment-dependent
+  `test_basic.py::test_ingest_relationship` now passes deterministically.
+
+## [2.5.0] - 2026-04-25
+
+Compliance-driven minor release. Closes every CRITICAL and HIGH audit
+finding except H-3 (mypy strict) and the ANN slice of H-1, both of
+which need per-module ratchet plans. Also adds two new optional LLM
+backends, a Presidio PII detector, and supply-chain hardening.
+
+### Added
+
+- **RFC-011 — Local LLM backend selection** (#104). New `local_backend`
+  config knob picks between `llama-cpp-python` (GGUF) and
+  `onnxruntime-genai` (ONNX) at runtime. Both ship as optional extras
+  (`pip install zettelforge[local]` or `[local-onnx]`).
+- **RFC-012 — LiteLLM unified provider** (#108). Routes to 100+
+  upstream LLM providers via the LiteLLM SDK. Optional extra
+  (`pip install zettelforge[litellm]`); the base package never imports
+  it unless the SDK is present.
+- **RFC-013 — Microsoft Presidio PII detection** (#118). Optional PII
+  validator with three policies (`log` / `redact` / `block`),
+  configurable via `governance.pii.*`. CTI allowlist excludes
+  `IP_ADDRESS` / `URL` / `DOMAIN_NAME` from detection so legitimate
+  threat-intel indicators flow through unmodified. Soft dependency —
+  `pip install zettelforge[pii]` to activate; the base package never
+  imports `presidio_analyzer` unless the SDK is present.
+- **GOV-009 Snyk SCA + SAST declared in `controls.yaml`** (#114). The
+  spec-drift validator now walks every `.github/workflows/*.yml` so
+  controls whose CI step lives outside `ci.yml` (Snyk's separate
+  workflow) can be honestly declared.
+- **GOV-006 solo-maintainer compensating controls** (#117). New
+  `controls.yaml` entry pins the existing CI gates (lint, tests,
+  governance spec-drift) as compensating controls for the GOV-006
+  two-person review rule that cannot be physically satisfied with one
+  human maintainer. CODEOWNERS updated with explanatory comment.
+- **`SECURITY.md` + CODEOWNERS** added to the repo root for vulnerability
+  disclosure and review attribution.
+
+### Changed
+
+- **All GitHub Actions are now SHA-pinned** (audit H-5 hardening). Every
+  `uses: org/repo@vX` reference replaced with `uses: org/repo@<full-sha> # vX.Y.Z`
+  to prevent supply-chain attacks via tag rewrites.
+- **Ruff rule set ratcheted to GOV-003 §"Tooling and Automation" minus
+  ANN** (#106 + #107 + #109 + #111 + #113). Active `select` list:
+  `{E, F, I, W, N, T20, B, UP, SIM, RUF, S}`. Per-line `# noqa: SXXX`
+  annotations document each accepted exception (best-effort fallbacks,
+  non-crypto RNG, `?`-bound SQL with constant column lists).
+  `RUF002`/`RUF003` ignored globally for stylistic en-dash and ×.
+- **CI install-step shell precedence fixed** (#112). The
+  `pip install -e ".[dev]" || pip install -e "." && pip install pytest...`
+  chain parsed as `(A || B) && C`, so the pytest install ran on
+  every success path including when `[dev]` already provided pytest.
+  Wrapped the fallback in parentheses.
+- **CONTRIBUTING.md accuracy** (#115). Documents `ruff format`
+  (project hasn't used black for a while) and lists what CI actually
+  enforces so new contributors have a green-build target.
+
+### Compliance audit closure (`tasks/compliance-audit-2026-04-25.md`)
+
+| Severity | Finding | Status |
+|---|---|---|
+| CRITICAL | C-1 branch protection | CLOSED (with required status checks) |
+| CRITICAL | C-2 fabricated `no_hardcoded_secrets` claim | CLOSED (#100) |
+| HIGH | H-1 ruff full select per GOV-003 | CLOSED for {E,F,I,W,N,T20,B,UP,SIM,RUF,S}; ANN ratcheting per-module |
+| HIGH | H-2 coverage threshold not enforced | CLOSED (#100) |
+| HIGH | H-4 GOV-006 / CODEOWNERS solo-maintainer | CLOSED on the zettelforge side (#117); GOV-006 doc amendment in `rolandpg/governance` repo is separate scope |
+| HIGH | H-5 SCA gate + SHA-pinned actions | CLOSED (#102 + #114 + SHA-pin commit) |
+| MEDIUM | M-1 bare `except:` in production | CLOSED (#100) |
+| MEDIUM | M-3 OCSF `timezone_offset` field | CLOSED (#100) |
+| LOW | L-4 CI install-step shell precedence | CLOSED (#112) |
+
+Outstanding: H-3 (mypy --strict in CI; needs per-module ratchet plan
+for 393 errors across 38 files), M-2 (rewrite GOV-016 to match the
+YAML-frontmatter practice already in use), M-4 (lock file), H-1 ANN
+ratchet (121 findings across 38 files).
+
 ## [2.4.3] - 2026-04-25
 
 Patch release. Three small but consequential fixes that landed during the post-v2.4.2 Vigil live-test session, plus the standalone `compact_lance` maintenance script and Nexus's Tier 0/1/2 LLM observability instrumentation.

@@ -1,0 +1,799 @@
+{% extends "base.html" %}
+
+{% block title %}ZettelForge — Configuration{% endblock %}
+
+{% block content %}
+<div class="config-container">
+    <div class="config-header">
+        <h1>Configuration</h1>
+        <span class="config-path">{{ config_path }}</span>
+    </div>
+
+    <div class="config-tabs" role="tablist" aria-label="Configuration editor mode">
+        <button id="tab-btn-form" class="config-tab active" data-tab="form" type="button"
+                role="tab" aria-selected="true" aria-controls="tab-form" tabindex="0">Form</button>
+        <button id="tab-btn-yaml" class="config-tab" data-tab="yaml" type="button"
+                role="tab" aria-selected="false" aria-controls="tab-yaml" tabindex="-1">YAML / JSON</button>
+    </div>
+
+    <!-- Tab 1: Form-based editor with dropdowns -->
+    <div id="tab-form" class="config-tab-panel" role="tabpanel" aria-labelledby="tab-btn-form">
+        <div class="config-card">
+            <p class="config-help">
+                Edit settings live. Restart-flagged fields take effect on next process start.
+                Secrets show as <code>***</code> and must be set via env vars or YAML.
+            </p>
+            <div id="config-form">
+                <div class="loading">Loading configuration...</div>
+            </div>
+            <div class="form-actions">
+                <button id="apply-form-btn" type="button" class="btn-primary" disabled>Apply Changes</button>
+                <button id="revert-form-btn" type="button" class="btn-secondary" disabled>Revert</button>
+                <button id="reload-form-btn" type="button" class="btn-secondary">Reload from Server</button>
+                <span id="pending-count" class="pending-count"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab 2: YAML / JSON editor (fallback for bulk edits) -->
+    <div id="tab-yaml" class="config-tab-panel" role="tabpanel" aria-labelledby="tab-btn-yaml" style="display:none;">
+        <div class="config-card">
+            <p class="config-help">
+                Server-rendered current YAML below. Edit and Apply to PUT a nested payload.
+                Secrets shown as <code>***</code> are not editable here.
+            </p>
+            <div class="yaml-editor-wrapper">
+                <textarea
+                    id="config-yaml"
+                    class="yaml-editor"
+                    spellcheck="false"
+                >{{ config_yaml }}</textarea>
+            </div>
+            <div class="form-actions">
+                <button id="apply-yaml-btn" type="button" class="btn-primary">Apply YAML</button>
+                <button id="reset-yaml-btn" type="button" class="btn-secondary">Reset to Server</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="config-status" class="config-status"></div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.config-container { max-width: 1100px; margin: 0 auto; padding: var(--space-6); }
+.config-header { display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-4); padding-bottom: var(--space-3); border-bottom: 1px solid var(--border-default); }
+.config-header h1 { font-size: 22px; font-weight: 700; color: var(--fg-primary); margin: 0; }
+.config-path { color: var(--fg-tertiary); font-family: var(--font-mono); font-size: 13px; }
+
+.config-tabs { display: flex; gap: 4px; margin-bottom: var(--space-4); }
+.config-tab { padding: var(--space-2) var(--space-4); background: transparent; border: 1px solid var(--border-default); border-bottom: none; border-radius: var(--radius-md) var(--radius-md) 0 0; color: var(--fg-secondary); font-size: 13px; font-family: var(--font-body); font-weight: 500; cursor: pointer; transition: all var(--transition-fast); }
+.config-tab:hover { color: var(--fg-primary); }
+.config-tab.active { background: var(--bg-surface); color: var(--fg-primary); border-color: var(--border-focus); }
+
+.config-card { background: var(--bg-surface); border: 1px solid var(--border-default); border-radius: var(--radius-lg); padding: var(--space-5); }
+.config-help { color: var(--fg-tertiary); font-size: 13px; margin: 0 0 var(--space-4); line-height: 1.5; }
+.config-help code { background: var(--bg-input); padding: 1px 6px; border-radius: var(--radius-sm); font-size: 12px; }
+
+.config-section { margin-bottom: var(--space-5); }
+.config-section-title { font-size: 13px; font-weight: 700; color: var(--fg-primary); margin: 0 0 var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px solid var(--border-default); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.config-row { display: grid; grid-template-columns: 1fr 280px; gap: var(--space-4); align-items: center; padding: var(--space-2) 0; border-bottom: 1px solid var(--border-default); }
+.config-row:last-child { border-bottom: none; }
+
+.config-row .label-block { min-width: 0; }
+.config-row .field-name { font-family: var(--font-mono); font-size: 12px; color: var(--fg-primary); word-break: break-all; }
+.config-row .field-hint { font-size: 11px; color: var(--fg-tertiary); margin-top: 2px; line-height: 1.4; }
+.config-row .restart-badge { display: inline-block; margin-top: 4px; padding: 1px 6px; border-radius: var(--radius-sm); font-size: 10px; font-family: var(--font-mono); background: var(--tier-c-bg, rgba(210,153,34,0.15)); color: var(--warning, #D29922); text-transform: uppercase; letter-spacing: 0.04em; }
+
+.config-row input[type="text"],
+.config-row input[type="number"],
+.config-row select { width: 100%; padding: 6px 10px; background: var(--bg-input); border: 1px solid var(--border-default); border-radius: var(--radius-md); color: var(--fg-primary); font-size: 13px; font-family: var(--font-mono); outline: none; transition: border-color var(--transition-fast), box-shadow var(--transition-fast); }
+.config-row input:focus,
+.config-row select:focus { border-color: var(--border-focus); box-shadow: var(--shadow-focus); }
+.config-row select { cursor: pointer; }
+
+.config-row .toggle-wrap { display: flex; align-items: center; gap: var(--space-2); justify-content: flex-end; }
+.config-row .toggle-wrap input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--signal-leaf, #2EA043); cursor: pointer; }
+.config-row .toggle-state { font-family: var(--font-mono); font-size: 12px; color: var(--fg-secondary); min-width: 60px; text-align: left; }
+
+.config-row .secret-display { display: inline-block; padding: 6px 10px; background: var(--bg-input); border: 1px dashed var(--border-default); border-radius: var(--radius-md); color: var(--fg-tertiary); font-family: var(--font-mono); font-size: 12px; }
+
+.yaml-editor-wrapper { border: 1px solid var(--border-default); border-radius: var(--radius-md); overflow: hidden; }
+.yaml-editor { width: 100%; min-height: 460px; padding: var(--space-3); background: var(--bg-input); border: none; color: var(--fg-primary); font-size: 13px; font-family: var(--font-mono); line-height: 1.6; resize: vertical; outline: none; box-sizing: border-box; }
+.yaml-editor:focus { box-shadow: inset 0 0 0 1px var(--border-focus); }
+
+.form-actions { display: flex; align-items: center; gap: var(--space-3); margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-default); }
+.btn-primary { padding: var(--space-2) var(--space-4); background: var(--signal-leaf-deep, #238636); border: none; border-radius: var(--radius-md); color: var(--fog-0, #fff); font-size: 13px; font-family: var(--font-body); font-weight: 500; cursor: pointer; transition: background var(--transition-fast), opacity var(--transition-fast); }
+.btn-primary:hover:not(:disabled) { background: var(--signal-leaf, #2EA043); }
+.btn-primary:disabled { opacity: 0.4; cursor: default; }
+.btn-secondary { padding: var(--space-2) var(--space-4); background: transparent; border: 1px solid var(--border-default); border-radius: var(--radius-md); color: var(--fg-secondary); font-size: 13px; font-family: var(--font-body); font-weight: 500; cursor: pointer; transition: all var(--transition-fast); }
+.btn-secondary:hover:not(:disabled) { border-color: var(--border-hover, var(--border-focus)); color: var(--fg-primary); }
+.btn-secondary:disabled { opacity: 0.4; cursor: default; }
+.pending-count { font-family: var(--font-mono); font-size: 12px; color: var(--fg-secondary); margin-left: auto; }
+
+.config-status { margin-top: var(--space-4); padding: var(--space-3); border-radius: var(--radius-md); font-size: 13px; font-family: var(--font-mono); display: none; }
+.config-status.success { display: block; background: var(--tier-a-bg, rgba(63,185,80,0.1)); color: var(--tier-a-fg, #3FB950); border: 1px solid var(--tier-a-fg, #3FB950); }
+.config-status.error { display: block; background: rgba(248, 81, 73, 0.1); color: var(--danger, #F85149); border: 1px solid var(--danger, #F85149); }
+.config-status.warning { display: block; background: rgba(210,153,34,0.1); color: var(--warning, #D29922); border: 1px solid var(--warning, #D29922); }
+.config-status .restart-list { margin-top: var(--space-2); font-size: 12px; }
+.config-status .restart-list li { margin-left: var(--space-4); }
+
+.loading { color: var(--fg-tertiary); font-size: 14px; text-align: center; padding: var(--space-8); }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    'use strict';
+
+    // ── Config schema metadata ─────────────────────────────────────────────
+    // ENUMS render as <select>. RESTART_PATHS get a "restart required" badge
+    // and tally separately in the pending-changes counter.
+    var ENUMS = {
+        'backend':                              ['sqlite', 'lance'],
+        'embedding.provider':                   ['fastembed', 'ollama'],
+        'llm.provider':                         ['ollama', 'local', 'mock', 'litellm'],
+        'llm.local_backend':                    ['llama-cpp-python', 'onnxruntime-genai'],
+        'logging.level':                        ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+        'synthesis.default_format':             ['direct_answer', 'synthesized_brief'],
+        'governance.pii.action':                ['log', 'redact', 'block']
+    };
+
+    // Defaults — overwritten on first load by GET /api/config/meta so the UI
+    // tracks server-side _RESTART_REQUIRED_FIELDS without a manual sync.
+    var RESTART_PATHS = {
+        'backend': true,
+        'embedding.provider': true,
+        'embedding.url': true,
+        'llm.provider': true,
+        'llm.model': true,
+        'llm.url': true,
+        'storage.data_dir': true,
+        'logging.log_file': true,
+        'logging.level': true
+    };
+
+    var SECTION_ORDER = [
+        { title: 'Core',                       sections: ['backend', 'storage', 'web'] },
+        { title: 'LLM',                        sections: ['llm', 'llm_ner'] },
+        { title: 'Embedding',                  sections: ['embedding'] },
+        { title: 'Extraction & Retrieval',     sections: ['extraction', 'retrieval'] },
+        { title: 'Synthesis',                  sections: ['synthesis'] },
+        { title: 'Governance',                 sections: ['governance'] },
+        { title: 'Storage Maintenance',        sections: ['lance', 'cache'] },
+        { title: 'Logging',                    sections: ['logging'] },
+        { title: 'Enterprise & Integrations',  sections: ['enterprise', 'opencti', 'typedb'] }
+    ];
+
+    var DESCRIPTIONS = {
+        'backend': 'Storage backend (sqlite or lance)',
+        'storage.data_dir': 'Data storage directory path',
+        'embedding.provider': 'Embedding service provider',
+        'embedding.model': 'Embedding model identifier',
+        'embedding.url': 'Ollama URL (used when provider=ollama)',
+        'embedding.dimensions': 'Vector dimension count',
+        'llm.provider': 'LLM backend provider',
+        'llm.model': 'Model identifier',
+        'llm.url': 'Provider URL (used by ollama/local)',
+        'llm.api_key': 'API key (env-resolved; redacted)',
+        'llm.temperature': 'Sampling temperature (0.0 - 2.0)',
+        'llm.timeout': 'Per-call timeout in seconds',
+        'llm.max_retries': 'Max retries on transient failures',
+        'llm.local_backend': 'In-process backend when provider=local',
+        'logging.level': 'Log verbosity',
+        'logging.log_file': 'Log output file path',
+        'logging.log_to_stdout': 'Mirror logs to stdout',
+        'governance.enabled': 'Enforce governance policies',
+        'governance.min_content_length': 'Minimum accepted content length',
+        'governance.pii.enabled': 'Run Presidio PII detection',
+        'governance.pii.action': 'PII handling: log, redact, or block',
+        'governance.limits.max_content_length': 'Max content body size in bytes',
+        'governance.limits.recall_timeout_seconds': 'Recall timeout in seconds',
+        'retrieval.default_k': 'Default top-K results',
+        'retrieval.similarity_threshold': 'Minimum similarity score',
+        'synthesis.default_format': 'Default synthesis output format',
+        'synthesis.max_context_tokens': 'Max tokens packed into a synthesis prompt',
+        'web.enabled': 'Serve the web management interface',
+        'web.host': 'Bind host for the web interface',
+        'web.port': 'Bind port for the web interface',
+        'opencti.url': 'OpenCTI instance URL',
+        'opencti.token': 'OpenCTI API token (redacted)',
+        'opencti.sync_interval': 'OpenCTI sync interval (seconds; 0 disables)',
+        'enterprise.license_key': 'Enterprise license key (redacted)'
+    };
+
+    // ── State ──────────────────────────────────────────────────────────────
+    var currentConfig = null;
+    var pendingChanges = {};
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+    function isSecret(name) {
+        var n = (name || '').toLowerCase();
+        return n.indexOf('api_key') !== -1 ||
+               n.indexOf('password') !== -1 ||
+               n.indexOf('secret') !== -1 ||
+               n.indexOf('token') !== -1 ||
+               n.indexOf('license_key') !== -1;
+    }
+
+    function flattenLeaves(obj, prefix, out) {
+        out = out || [];
+        Object.keys(obj || {}).forEach(function(k) {
+            var v = obj[k];
+            var path = prefix ? prefix + '.' + k : k;
+            if (v && typeof v === 'object' && !Array.isArray(v)) {
+                flattenLeaves(v, path, out);
+            } else {
+                out.push({ path: path, value: v });
+            }
+        });
+        return out;
+    }
+
+    function buildNestedPayload(changes) {
+        var out = {};
+        Object.keys(changes).forEach(function(path) {
+            var parts = path.split('.');
+            var cursor = out;
+            for (var i = 0; i < parts.length - 1; i++) {
+                var key = parts[i];
+                if (typeof cursor[key] !== 'object' || cursor[key] === null) {
+                    cursor[key] = {};
+                }
+                cursor = cursor[key];
+            }
+            cursor[parts[parts.length - 1]] = changes[path];
+        });
+        return out;
+    }
+
+    function coerce(originalValue, raw) {
+        if (typeof originalValue === 'number') {
+            var trimmed = typeof raw === 'string' ? raw.trim() : raw;
+            // Empty / unparseable input reverts to the original value rather
+            // than silently coercing to 0, which would overwrite a real value.
+            if (trimmed === '' || trimmed === null || trimmed === undefined) return originalValue;
+            var n = parseFloat(trimmed);
+            return isNaN(n) ? originalValue : n;
+        }
+        if (typeof originalValue === 'boolean') {
+            return raw === true || raw === 'true';
+        }
+        return raw;
+    }
+
+    function showStatus(type, message, restartList) {
+        var status = document.getElementById('config-status');
+        status.className = 'config-status ' + type;
+        var html = escHtml(message);
+        if (restartList && restartList.length) {
+            html += '<ul class="restart-list">';
+            restartList.forEach(function(p) { html += '<li>' + escHtml(p) + '</li>'; });
+            html += '</ul>';
+        }
+        status.innerHTML = html;
+        if (type === 'success') {
+            setTimeout(function() {
+                if (status.className.indexOf('warning') === -1) {
+                    status.style.display = 'none';
+                }
+            }, 6000);
+        }
+    }
+
+    function escHtml(s) {
+        var d = document.createElement('div');
+        d.textContent = (s == null ? '' : String(s));
+        return d.innerHTML;
+    }
+
+    // ── Render: form ───────────────────────────────────────────────────────
+    function renderForm(config) {
+        var container = document.getElementById('config-form');
+        container.innerHTML = '';
+
+        var leaves = flattenLeaves(config);
+        if (!leaves.length) {
+            container.innerHTML = '<div class="loading">No configuration data available.</div>';
+            return;
+        }
+
+        var bySection = {};
+        leaves.forEach(function(leaf) {
+            var section = leaf.path.indexOf('.') === -1 ? leaf.path : leaf.path.split('.')[0];
+            if (!bySection[section]) bySection[section] = [];
+            bySection[section].push(leaf);
+        });
+
+        var rendered = {};
+        SECTION_ORDER.forEach(function(group) {
+            var groupLeaves = [];
+            group.sections.forEach(function(s) {
+                if (bySection[s]) {
+                    groupLeaves = groupLeaves.concat(bySection[s]);
+                    rendered[s] = true;
+                }
+            });
+            if (groupLeaves.length === 0) return;
+            container.appendChild(renderSection(group.title, groupLeaves));
+        });
+
+        var leftover = [];
+        Object.keys(bySection).forEach(function(s) {
+            if (!rendered[s]) leftover = leftover.concat(bySection[s]);
+        });
+        if (leftover.length) {
+            container.appendChild(renderSection('Other', leftover));
+        }
+    }
+
+    function renderSection(title, leaves) {
+        var section = document.createElement('div');
+        section.className = 'config-section';
+        var h = document.createElement('h3');
+        h.className = 'config-section-title';
+        h.textContent = title;
+        section.appendChild(h);
+        leaves.forEach(function(leaf) { section.appendChild(renderRow(leaf)); });
+        return section;
+    }
+
+    function renderRow(leaf) {
+        var row = document.createElement('div');
+        row.className = 'config-row';
+
+        var labelBlock = document.createElement('div');
+        labelBlock.className = 'label-block';
+        var name = document.createElement('div');
+        name.className = 'field-name';
+        name.textContent = leaf.path;
+        labelBlock.appendChild(name);
+
+        var hint = DESCRIPTIONS[leaf.path];
+        if (hint) {
+            var hintEl = document.createElement('div');
+            hintEl.className = 'field-hint';
+            hintEl.textContent = hint;
+            labelBlock.appendChild(hintEl);
+        }
+        if (RESTART_PATHS[leaf.path]) {
+            var badge = document.createElement('span');
+            badge.className = 'restart-badge';
+            badge.textContent = 'restart required';
+            labelBlock.appendChild(badge);
+        }
+        row.appendChild(labelBlock);
+
+        var controlCell = document.createElement('div');
+        controlCell.appendChild(renderControl(leaf.path, leaf.value));
+        row.appendChild(controlCell);
+        return row;
+    }
+
+    function renderControl(path, value) {
+        if (isSecret(path)) {
+            var s = document.createElement('span');
+            s.className = 'secret-display';
+            s.textContent = '***';
+            s.title = 'Secrets are redacted server-side. Set via environment variable.';
+            return s;
+        }
+
+        if (ENUMS[path]) {
+            var current = String(value);
+            var options = ENUMS[path].slice();
+            if (current && options.indexOf(current) === -1) options.unshift(current);
+            var sel = document.createElement('select');
+            options.forEach(function(opt) {
+                var o = document.createElement('option');
+                o.value = opt;
+                o.textContent = opt;
+                if (opt === current) o.selected = true;
+                sel.appendChild(o);
+            });
+            sel.addEventListener('change', function() {
+                if (this.value === current) delete pendingChanges[path];
+                else pendingChanges[path] = this.value;
+                updateApplyState();
+            });
+            return sel;
+        }
+
+        if (typeof value === 'boolean') {
+            var wrap = document.createElement('label');
+            wrap.className = 'toggle-wrap';
+            var cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.checked = value;
+            var stateLabel = document.createElement('span');
+            stateLabel.className = 'toggle-state';
+            stateLabel.textContent = value ? 'enabled' : 'disabled';
+            cb.addEventListener('change', function() {
+                stateLabel.textContent = this.checked ? 'enabled' : 'disabled';
+                if (this.checked === value) delete pendingChanges[path];
+                else pendingChanges[path] = this.checked;
+                updateApplyState();
+            });
+            wrap.appendChild(cb);
+            wrap.appendChild(stateLabel);
+            return wrap;
+        }
+
+        if (Array.isArray(value)) {
+            var arr = document.createElement('input');
+            arr.type = 'text';
+            arr.value = value.join(', ');
+            arr.placeholder = 'comma-separated';
+            arr.addEventListener('change', function() {
+                var parts = this.value.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
+                var same = parts.length === value.length && parts.every(function(p, i) { return p === value[i]; });
+                if (same) delete pendingChanges[path];
+                else pendingChanges[path] = parts;
+                updateApplyState();
+            });
+            return arr;
+        }
+
+        var input = document.createElement('input');
+        input.type = (typeof value === 'number') ? 'number' : 'text';
+        if (typeof value === 'number' && !Number.isInteger(value)) input.step = 'any';
+        input.value = (value === null || value === undefined) ? '' : String(value);
+        input.addEventListener('change', function() {
+            var coerced = coerce(value, this.value);
+            if (coerced === value) delete pendingChanges[path];
+            else pendingChanges[path] = coerced;
+            updateApplyState();
+        });
+        return input;
+    }
+
+    function updateApplyState() {
+        var count = Object.keys(pendingChanges).length;
+        var apply = document.getElementById('apply-form-btn');
+        var revert = document.getElementById('revert-form-btn');
+        var pending = document.getElementById('pending-count');
+        apply.disabled = count === 0;
+        revert.disabled = count === 0;
+        if (count === 0) {
+            pending.textContent = '';
+        } else {
+            var restartCount = Object.keys(pendingChanges).filter(function(k) { return RESTART_PATHS[k]; }).length;
+            var msg = count + ' pending change' + (count === 1 ? '' : 's');
+            if (restartCount > 0) msg += ' (' + restartCount + ' need restart)';
+            pending.textContent = msg;
+        }
+    }
+
+    // ── Network ────────────────────────────────────────────────────────────
+    function loadConfig() {
+        // Fetch config + meta in parallel; meta failure is non-fatal — fall
+        // back to the hardcoded RESTART_PATHS defaults.
+        var configPromise = fetch('/api/config', { headers: apiHeaders() })
+            .then(function(resp) {
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                return resp.json();
+            });
+        var metaPromise = fetch('/api/config/meta', { headers: apiHeaders() })
+            .then(function(resp) { return resp.ok ? resp.json() : null; })
+            .catch(function() { return null; });
+
+        return Promise.all([configPromise, metaPromise]).then(function(results) {
+            var config = results[0];
+            var meta = results[1];
+            if (meta && Array.isArray(meta.restart_required_fields)) {
+                var fresh = {};
+                meta.restart_required_fields.forEach(function(p) { fresh[p] = true; });
+                RESTART_PATHS = fresh;
+            }
+            currentConfig = config;
+            pendingChanges = {};
+            renderForm(config);
+            updateApplyState();
+            return config;
+        });
+    }
+
+    function applyForm() {
+        var apply = document.getElementById('apply-form-btn');
+        if (!Object.keys(pendingChanges).length) return;
+
+        apply.disabled = true;
+        apply.textContent = 'Applying...';
+
+        var payload = buildNestedPayload(pendingChanges);
+
+        fetch('/api/config', {
+            method: 'PUT',
+            headers: Object.assign(apiHeaders(), { 'Content-Type': 'application/json' }),
+            body: JSON.stringify(payload)
+        })
+        .then(function(resp) {
+            return resp.json().then(function(data) { return { ok: resp.ok, status: resp.status, data: data }; });
+        })
+        .then(function(result) {
+            apply.textContent = 'Apply Changes';
+            if (!result.ok) {
+                var msg = result.data.detail || result.data.error || ('HTTP ' + result.status);
+                showStatus('error', 'Apply failed: ' + msg);
+                apply.disabled = false;
+                return;
+            }
+            var d = result.data;
+            var appliedCount = (d.applied || []).length;
+            var pending = d.pending_restart || [];
+            if (pending.length) {
+                showStatus('warning',
+                    'Applied ' + appliedCount + ' setting(s). Restart required for:',
+                    pending);
+            } else {
+                showStatus('success', 'Applied ' + appliedCount + ' setting(s) live.');
+            }
+            // Reload from server so the form reflects authoritative state.
+            loadConfig().catch(function(err) {
+                showStatus('error', 'Reload after apply failed: ' + (err.message || 'unknown'));
+            });
+        })
+        .catch(function(err) {
+            apply.textContent = 'Apply Changes';
+            apply.disabled = false;
+            showStatus('error', 'Apply failed: ' + (err.message || 'unknown error'));
+        });
+    }
+
+    function revertForm() {
+        if (!currentConfig) return;
+        pendingChanges = {};
+        renderForm(currentConfig);
+        updateApplyState();
+        showStatus('success', 'Reverted to last loaded values.');
+    }
+
+    function applyYaml() {
+        var raw = document.getElementById('config-yaml').value;
+        var btn = document.getElementById('apply-yaml-btn');
+        btn.disabled = true;
+        btn.textContent = 'Applying...';
+
+        var payload;
+        try {
+            payload = parseYamlOrJson(raw);
+        } catch (err) {
+            btn.disabled = false;
+            btn.textContent = 'Apply YAML';
+            showStatus('error', 'Parse error: ' + err.message);
+            return;
+        }
+
+        // Strip redacted '***' values for known secret leaves so we don't PUT
+        // them back as literal strings.
+        stripRedactedSecrets(payload);
+
+        fetch('/api/config', {
+            method: 'PUT',
+            headers: Object.assign(apiHeaders(), { 'Content-Type': 'application/json' }),
+            body: JSON.stringify(payload)
+        })
+        .then(function(resp) {
+            return resp.json().then(function(data) { return { ok: resp.ok, status: resp.status, data: data }; });
+        })
+        .then(function(result) {
+            btn.disabled = false;
+            btn.textContent = 'Apply YAML';
+            if (!result.ok) {
+                var msg = result.data.detail || result.data.error || ('HTTP ' + result.status);
+                showStatus('error', 'Apply failed: ' + msg);
+                return;
+            }
+            var d = result.data;
+            var appliedCount = (d.applied || []).length;
+            var pending = d.pending_restart || [];
+            if (pending.length) {
+                showStatus('warning', 'Applied ' + appliedCount + ' setting(s). Restart required for:', pending);
+            } else {
+                showStatus('success', 'Applied ' + appliedCount + ' setting(s) live.');
+            }
+        })
+        .catch(function(err) {
+            btn.disabled = false;
+            btn.textContent = 'Apply YAML';
+            showStatus('error', 'Apply failed: ' + (err.message || 'unknown error'));
+        });
+    }
+
+    function resetYaml() {
+        fetch('/api/config', { headers: apiHeaders() })
+            .then(function(resp) { return resp.json(); })
+            .then(function(config) {
+                document.getElementById('config-yaml').value = toYaml(config);
+                showStatus('success', 'Reset to current server state.');
+            })
+            .catch(function(err) {
+                showStatus('error', 'Reset failed: ' + (err.message || 'unknown error'));
+            });
+    }
+
+    // ── YAML / JSON parsing ────────────────────────────────────────────────
+    // Accepts both JSON and a small subset of YAML so paste-from-config-file
+    // works without a YAML library on the wire.
+    function parseYamlOrJson(text) {
+        var trimmed = text.replace(/^\s+/, '');
+        if (trimmed.charAt(0) === '{' || trimmed.charAt(0) === '[') {
+            return JSON.parse(text);
+        }
+        return parseFlatYaml(text);
+    }
+
+    function parseFlatYaml(text) {
+        var root = {};
+        var stack = [{ indent: -1, obj: root, lastKey: null }];
+        text.split('\n').forEach(function(line) {
+            if (!line.trim() || /^\s*#/.test(line)) return;
+            var indent = line.search(/\S/);
+            if (indent === -1) return;
+            var stripped = line.replace(/\s+$/, '');
+
+            var listMatch = stripped.match(/^\s*-\s+(.*)$/);
+            if (listMatch) {
+                while (stack.length > 1 && stack[stack.length - 1].indent >= indent) stack.pop();
+                var frame = stack[stack.length - 1];
+                // Case A: this frame was opened by `key:` with empty value, optimistically
+                // initialized to {}. The first child is a list item, so convert {} → [].
+                if (frame.parentObj && frame.parentKey && !frame.lastKey) {
+                    if (!Array.isArray(frame.parentObj[frame.parentKey])) {
+                        frame.parentObj[frame.parentKey] = [];
+                        frame.obj = frame.parentObj[frame.parentKey];
+                    }
+                    frame.obj.push(coerceYamlScalar(listMatch[1]));
+                    return;
+                }
+                // Case B: list items belong to the previous mapping key in this frame.
+                if (frame.lastKey) {
+                    if (!Array.isArray(frame.obj[frame.lastKey])) frame.obj[frame.lastKey] = [];
+                    frame.obj[frame.lastKey].push(coerceYamlScalar(listMatch[1]));
+                }
+                return;
+            }
+            var kv = stripped.match(/^\s*([^:#]+?)\s*:\s*(.*)$/);
+            if (!kv) return;
+            var key = kv[1].trim();
+            var val = kv[2];
+
+            while (stack.length > 1 && stack[stack.length - 1].indent >= indent) stack.pop();
+            var ctx = stack[stack.length - 1];
+
+            if (val === '') {
+                ctx.obj[key] = {};
+                ctx.lastKey = key;
+                // parentObj/parentKey let a `- item` first-child convert this {} to []
+                // so YAML lists round-trip correctly. lastKey starts null so the list
+                // handler can distinguish "deferred container" from "real mapping".
+                stack.push({
+                    indent: indent,
+                    obj: ctx.obj[key],
+                    parentObj: ctx.obj,
+                    parentKey: key,
+                    lastKey: null
+                });
+            } else {
+                ctx.obj[key] = coerceYamlScalar(val);
+                ctx.lastKey = key;
+            }
+        });
+        return root;
+    }
+
+    function coerceYamlScalar(raw) {
+        var v = raw.trim();
+        if (v === 'true') return true;
+        if (v === 'false') return false;
+        if (v === 'null' || v === '~' || v === '') return null;
+        if (/^-?\d+$/.test(v)) return parseInt(v, 10);
+        if (/^-?\d+\.\d+$/.test(v)) return parseFloat(v);
+        if ((v.charAt(0) === '"' && v.charAt(v.length - 1) === '"') ||
+            (v.charAt(0) === "'" && v.charAt(v.length - 1) === "'")) {
+            return v.slice(1, -1);
+        }
+        return v;
+    }
+
+    function toYaml(obj, indent) {
+        indent = indent || '';
+        var out = '';
+        Object.keys(obj || {}).forEach(function(k) {
+            var v = obj[k];
+            if (v && typeof v === 'object' && !Array.isArray(v)) {
+                out += indent + k + ':\n';
+                out += toYaml(v, indent + '  ');
+            } else if (Array.isArray(v)) {
+                out += indent + k + ':\n';
+                v.forEach(function(item) { out += indent + '  - ' + item + '\n'; });
+            } else if (typeof v === 'boolean') {
+                out += indent + k + ': ' + (v ? 'true' : 'false') + '\n';
+            } else if (typeof v === 'number') {
+                out += indent + k + ': ' + v + '\n';
+            } else if (v === null) {
+                out += indent + k + ': null\n';
+            } else {
+                var s = String(v);
+                if (isSecret(k)) s = '***';
+                if (s.indexOf(':') !== -1 || s === '') {
+                    // Escape backslashes BEFORE quotes so a literal `\` in the
+                    // value isn't turned into a YAML escape sequence and a
+                    // value like `foo\"bar` doesn't terminate the scalar early.
+                    out += indent + k + ': "' + s.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"\n';
+                } else {
+                    out += indent + k + ': ' + s + '\n';
+                }
+            }
+        });
+        return out;
+    }
+
+    function stripRedactedSecrets(node) {
+        if (!node || typeof node !== 'object' || Array.isArray(node)) return;
+        Object.keys(node).forEach(function(k) {
+            var v = node[k];
+            if (v && typeof v === 'object') {
+                stripRedactedSecrets(v);
+            } else if (isSecret(k) && v === '***') {
+                delete node[k];
+            }
+        });
+    }
+
+    // ── Tab switching (WAI-ARIA Authoring Practices: Tabs pattern) ────────
+    function activateTab(name, focusTab) {
+        var tabs = document.querySelectorAll('.config-tab');
+        tabs.forEach(function(b) {
+            var active = b.dataset.tab === name;
+            b.classList.toggle('active', active);
+            b.setAttribute('aria-selected', active ? 'true' : 'false');
+            b.setAttribute('tabindex', active ? '0' : '-1');
+            if (active && focusTab) b.focus();
+        });
+        document.getElementById('tab-form').style.display = name === 'form' ? 'block' : 'none';
+        document.getElementById('tab-yaml').style.display = name === 'yaml' ? 'block' : 'none';
+    }
+
+    function handleTabKeydown(e) {
+        var tabs = Array.prototype.slice.call(document.querySelectorAll('.config-tab'));
+        var idx = tabs.indexOf(e.currentTarget);
+        if (idx === -1) return;
+        var next = null;
+        if (e.key === 'ArrowRight') next = tabs[(idx + 1) % tabs.length];
+        else if (e.key === 'ArrowLeft') next = tabs[(idx - 1 + tabs.length) % tabs.length];
+        else if (e.key === 'Home') next = tabs[0];
+        else if (e.key === 'End') next = tabs[tabs.length - 1];
+        if (next) {
+            e.preventDefault();
+            activateTab(next.dataset.tab, true);
+        }
+    }
+
+    // ── Wire up ────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.config-tab').forEach(function(btn) {
+            btn.addEventListener('click', function() { activateTab(btn.dataset.tab); });
+            btn.addEventListener('keydown', handleTabKeydown);
+        });
+        document.getElementById('apply-form-btn').addEventListener('click', applyForm);
+        document.getElementById('revert-form-btn').addEventListener('click', revertForm);
+        document.getElementById('reload-form-btn').addEventListener('click', function() {
+            loadConfig().catch(function(err) {
+                showStatus('error', 'Reload failed: ' + (err.message || 'unknown error'));
+            });
+        });
+        document.getElementById('apply-yaml-btn').addEventListener('click', applyYaml);
+        document.getElementById('reset-yaml-btn').addEventListener('click', resetYaml);
+
+        loadConfig().catch(function(err) {
+            document.getElementById('config-form').innerHTML =
+                '<div class="loading">Failed to load configuration: ' + escHtml(err.message) + '</div>';
+        });
+    });
+})();
+</script>
+{% endblock %}

@@ -18,7 +18,7 @@ Usage:
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from langchain_core.callbacks import CallbackManagerForRetrieverRun
 from langchain_core.documents import Document
@@ -46,13 +46,13 @@ class ZettelForgeRetriever(BaseRetriever):
 
     memory_manager: MemoryManager = Field(exclude=True)
     k: int = 10
-    domain: Optional[str] = None
+    domain: str | None = None
     include_links: bool = True
     exclude_superseded: bool = True
 
     def _get_relevant_documents(
         self, query: str, *, run_manager: CallbackManagerForRetrieverRun
-    ) -> List[Document]:
+    ) -> list[Document]:
         """Retrieve documents from ZettelForge memory.
 
         Calls MemoryManager.recall() and converts each MemoryNote
@@ -66,9 +66,9 @@ class ZettelForgeRetriever(BaseRetriever):
             exclude_superseded=self.exclude_superseded,
         )
 
-        documents: List[Document] = []
+        documents: list[Document] = []
         for note in notes:
-            metadata: Dict[str, Any] = {
+            metadata: dict[str, Any] = {
                 "note_id": note.id,
                 "source_type": note.content.source_type,
                 "source_ref": note.content.source_ref,

@@ -1,6 +1,5 @@
 import json
 from pathlib import Path
-from typing import Optional
 
 from zettelforge.log import get_logger
 
@@ -21,7 +20,7 @@ class AliasResolver:
     falls back to local JSON/hardcoded aliases.
     """
 
-    def __init__(self, alias_file: Optional[str] = None):
+    def __init__(self, alias_file: str | None = None):
         from zettelforge.memory_store import get_default_data_dir
 
         if alias_file is None:
@@ -46,7 +45,7 @@ class AliasResolver:
     def load(self):
         if self.alias_file.exists():
             try:
-                with open(self.alias_file, "r") as f:
+                with open(self.alias_file) as f:
                     data = json.load(f)
                     for k, v in data.items():
                         if k not in self.aliases:
@@ -55,7 +54,7 @@ class AliasResolver:
             except Exception:
                 _logger.debug("typedb_alias_lookup_failed", exc_info=True)
 
-    def _try_typedb_resolve(self, entity_type: str, entity_lower: str) -> Optional[str]:
+    def _try_typedb_resolve(self, entity_type: str, entity_lower: str) -> str | None:
         """Query TypeDB for alias-of relation. Returns canonical name or None."""
         if self._typedb_available is False:
             return None

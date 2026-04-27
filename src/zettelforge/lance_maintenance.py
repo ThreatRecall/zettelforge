@@ -1,13 +1,13 @@
 """Periodic LanceDB version-cleanup daemon (RFC-009 Phase 1.5).
 
-The 2026-04-25 Phase 0.5 attribution
-(`docs/superpowers/research/2026-04-25-phase-0.5-attribution.md`)
-established that the dominant cost of `MemoryStore._index_in_lance()`
-on a write-heavy shard is LanceDB walking an unbounded version chain
-on each insert. ``cleanup_old_versions()`` collapses the chain back
-to the latest manifest; without periodic invocation the bloat returns
-at ~2 versions per `remember()` and reproduces the 5.69 GB / 55s-tail
-condition observed on Vigil's `notes_cti` shard.
+On a write-heavy shard the dominant cost of
+`MemoryStore._index_in_lance()` is LanceDB walking an unbounded
+version chain on each insert. ``cleanup_old_versions()`` collapses
+the chain back to the latest manifest; without periodic invocation
+the chain grows at roughly two versions per ``remember()`` call,
+reproducing the multi-GB bloat / 55-second tail latency that
+motivated this RFC. See ``docs/rfcs/RFC-009-enrichment-pipeline-v2.md``
+§"Phase 1.5 — LanceDB version cleanup" for the full attribution.
 
 Design:
 
@@ -34,9 +34,10 @@ from __future__ import annotations
 import os
 import threading
 import time
+from collections.abc import Callable
 from datetime import timedelta
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional
+from typing import Any
 
 from zettelforge.log import get_logger
 
@@ -57,7 +58,7 @@ class LanceVersionMaintenance:
         db: Any,
         interval_minutes_provider: Callable[[], int],
         older_than_seconds_provider: Callable[[], int],
-        table_root: Optional[Path] = None,
+        table_root: Path | None = None,
         clock: Callable[[], float] = time.monotonic,
         sleep: Callable[[float], None] = time.sleep,
     ) -> None:
@@ -90,7 +91,7 @@ class LanceVersionMaintenance:
         self._sleep = sleep
 
         self._lock = threading.Lock()
-        self._threads: Dict[str, threading.Thread] = {}
+        self._threads: dict[str, threading.Thread] = {}
         self._stop_event = threading.Event()
 
     # ── Lifecycle ───────────────────────────────────────────────────────
@@ -140,7 +141,7 @@ class LanceVersionMaintenance:
             t.start()
             _logger.info("lance_maintenance_thread_started", table=table_name)
 
-    def stop(self, timeout: Optional[float] = None) -> None:
+    def stop(self, timeout: float | None = None) -> None:
         """Signal all threads to exit on their next loop boundary.
 
         Threads check :py:attr:`_stop_event` between sleep wakeups.
@@ -207,13 +208,13 @@ class LanceVersionMaintenance:
             elapsed_seconds=elapsed_s,
         )
 
-    def _table_dir(self, table_name: str) -> Optional[Path]:
+    def _table_dir(self, table_name: str) -> Path | None:
         if self._table_root is None:
             return None
         return Path(self._table_root) / f"{table_name}.lance"
 
 
-def _safe_dir_size(path: Optional[Path]) -> int:
+def _safe_dir_size(path: Path | None) -> int:
     if path is None or not path.exists():
         return 0
     total = 0
@@ -226,7 +227,7 @@ def _safe_dir_size(path: Optional[Path]) -> int:
     return total
 
 
-def _extract_versions_pruned(stats: Any) -> Optional[int]:
+def _extract_versions_pruned(stats: Any) -> int | None:
     """LanceDB returns a metrics object that varies by version.
 
     Best-effort: try common attribute names; otherwise return ``None``

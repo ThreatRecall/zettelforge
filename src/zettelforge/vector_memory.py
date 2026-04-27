@@ -21,7 +21,6 @@ import threading
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
 
 from zettelforge.log import get_logger
 
@@ -99,7 +98,7 @@ def preload_embedding_model() -> None:
 # ── Embedding ────────────────────────────────────────────────────────────────
 
 
-def get_embedding(text: str, model: Optional[str] = None) -> List[float]:
+def get_embedding(text: str, model: str | None = None) -> list[float]:
     """Generate embedding. Uses fastembed (in-process) by default, ollama/HTTP as fallback."""
     provider = get_embedding_provider()
 
@@ -130,18 +129,18 @@ def get_embedding(text: str, model: Optional[str] = None) -> List[float]:
     except Exception:
         _logger.warning("http_embedding_failed", exc_info=True)
 
-    # Last resort: deterministic mock embedding
-    h = int(hashlib.md5(text.encode()).hexdigest(), 16)
+    # Last resort: deterministic mock embedding (non-cryptographic).
+    h = int(hashlib.md5(text.encode(), usedforsecurity=False).hexdigest(), 16)
     import random
 
     random.seed(h)
     from zettelforge.config import get_config
 
     dim = get_config().embedding.dimensions
-    return [random.random() for _ in range(dim)]
+    return [random.random() for _ in range(dim)]  # noqa: S311
 
 
-def get_embedding_batch(texts: List[str], model: Optional[str] = None) -> List[List[float]]:
+def get_embedding_batch(texts: list[str], model: str | None = None) -> list[list[float]]:
     """Batch embed. Native batch with fastembed, sequential with ollama."""
     provider = get_embedding_provider()
 
@@ -188,7 +187,7 @@ class VectorMemory:
     Stores entries in LanceDB with Nomic embeddings.
     """
 
-    def __init__(self, db_path: Optional[str] = None):
+    def __init__(self, db_path: str | None = None):
         from zettelforge.memory_store import get_default_data_dir
 
         if db_path is None:
@@ -197,7 +196,7 @@ class VectorMemory:
         self.db = None
         self.table = None
         self.embedding_model = get_embedding_model()
-        self._embedding_cache: Dict[str, List[float]] = {}
+        self._embedding_cache: dict[str, list[float]] = {}
 
     def init(self):
         """Connect to or create the LanceDB database."""
@@ -216,7 +215,7 @@ class VectorMemory:
         """Stable hash of text content for dedup."""
         return hashlib.sha256(text.encode("utf-8")).hexdigest()[:32]
 
-    def _chunk_text(self, text: str, max_tokens: int = 512, overlap: int = 128) -> List[str]:
+    def _chunk_text(self, text: str, max_tokens: int = 512, overlap: int = 128) -> list[str]:
         """
         Simple token-aware text chunker.
         Splits on sentence boundaries, groups up to max_tokens.
@@ -243,13 +242,13 @@ class VectorMemory:
     def add(
         self,
         text: str,
-        tags: Optional[List[str]] = None,
+        tags: list[str] | None = None,
         session_key: str = "default",
         source: str = "session",
-        metadata: Optional[Dict] = None,
+        metadata: dict | None = None,
         chunk: bool = True,
         overwrite: bool = False,
-    ) -> List[str]:
+    ) -> list[str]:
         """
         Add a memory entry. Returns list of chunk IDs added.
         """
@@ -266,10 +265,7 @@ class VectorMemory:
             if existing:
                 return []
 
-        if chunk and len(text) > 2000:
-            chunks = self._chunk_text(text)
-        else:
-            chunks = [text]
+        chunks = self._chunk_text(text) if chunk and len(text) > 2000 else [text]
 
         ids = []
         for chunk_text in chunks:
@@ -301,9 +297,9 @@ class VectorMemory:
         self,
         query: str,
         top_k: int = 5,
-        source_filter: Optional[str] = None,
-        session_filter: Optional[str] = None,
-    ) -> List[Dict]:
+        source_filter: str | None = None,
+        session_filter: str | None = None,
+    ) -> list[dict]:
         """
         Semantic search across all memory entries.
         """
@@ -338,7 +334,7 @@ class VectorMemory:
             for r in results
         ]
 
-    def get_recent(self, session_key: Optional[str] = None, limit: int = 20) -> List[Dict]:
+    def get_recent(self, session_key: str | None = None, limit: int = 20) -> list[dict]:
         """Get most recent memory entries."""
         if self.table is None:
             self.init()
@@ -349,7 +345,7 @@ class VectorMemory:
 
         return q.to_list()
 
-    def delete(self, content_hash: Optional[str] = None, entry_id: Optional[str] = None):
+    def delete(self, content_hash: str | None = None, entry_id: str | None = None):
         """Delete by content_hash or entry ID."""
         if self.table is None:
             self.init()
@@ -365,7 +361,7 @@ class VectorMemory:
             self.init()
         return len(self.table.to_list())
 
-    def stats(self) -> Dict:
+    def stats(self) -> dict:
         """Return memory store statistics."""
         if self.table is None:
             self.init()

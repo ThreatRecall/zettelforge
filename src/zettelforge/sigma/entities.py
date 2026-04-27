@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any
 
 import yaml
 
@@ -39,13 +39,13 @@ class SigmaRule(DetectionRule):
     Adds Phase 1b Sigma-specific fields on top of the shared contract.
     """
 
-    logsource_product: Optional[str] = None
-    logsource_service: Optional[str] = None
-    logsource_category: Optional[str] = None
-    rule_level: Optional[str] = None  # raw Sigma ``level`` before enum mapping
-    rule_status: Optional[str] = None  # raw Sigma ``status`` before enum mapping
-    sigma_format_version: Optional[str] = None
-    detection_body: Optional[str] = None
+    logsource_product: str | None = None
+    logsource_service: str | None = None
+    logsource_category: str | None = None
+    rule_level: str | None = None  # raw Sigma ``level`` before enum mapping
+    rule_status: str | None = None  # raw Sigma ``status`` before enum mapping
+    sigma_format_version: str | None = None
+    detection_body: str | None = None
     rule_type: str = "detection"  # detection | correlation | filter
     fields: list[str] = field(default_factory=list)
     falsepositives: list[str] = field(default_factory=list)

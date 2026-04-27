@@ -16,7 +16,12 @@ import yaml
 
 
 GOVERNANCE_MANIFEST = Path(__file__).parent.parent / "governance" / "controls.yaml"
-CI_WORKFLOW = Path(__file__).parent.parent / ".github" / "workflows" / "ci.yml"
+WORKFLOWS_DIR = Path(__file__).parent.parent / ".github" / "workflows"
+# CI_WORKFLOW retained for backwards compat with any external callers,
+# but the validator now walks every *.yml under WORKFLOWS_DIR so a CI
+# step in a non-ci.yml workflow (e.g. snyk-security.yml) can also satisfy
+# a control's `ci_step` reference.
+CI_WORKFLOW = WORKFLOWS_DIR / "ci.yml"
 
 
 def _load_manifest():
@@ -28,12 +33,19 @@ def _load_manifest():
         return yaml.safe_load(f)
 
 
+def _read_all_workflow_text() -> str:
+    """Concatenate every .yml/.yaml file under .github/workflows/."""
+    assert WORKFLOWS_DIR.is_dir(), f"Workflows dir not found: {WORKFLOWS_DIR}"
+    chunks: list[str] = []
+    for path in sorted(WORKFLOWS_DIR.iterdir()):
+        if path.suffix in (".yml", ".yaml") and path.is_file():
+            chunks.append(path.read_text())
+    return "\n".join(chunks)
+
+
 def _extract_gov_labels_from_ci():
-    """Extract all GOV-XXX labels from CI workflow step names."""
-    assert CI_WORKFLOW.exists(), f"CI workflow not found: {CI_WORKFLOW}"
-    ci_text = CI_WORKFLOW.read_text()
-    # Match step names like "GOV-003 — ..." or "GOV-012 — ..."
-    return set(re.findall(r"GOV-\d{3}", ci_text))
+    """Extract all GOV-XXX labels from any workflow step name."""
+    return set(re.findall(r"GOV-\d{3}", _read_all_workflow_text()))
 
 
 class TestGovernanceSpecDrift:
@@ -103,16 +115,19 @@ class TestGovernanceSpecDrift:
                 )
 
     def test_ci_step_references_exist_in_workflow(self):
-        """Every ci_step referenced in the manifest must exist in ci.yml."""
+        """Every ci_step referenced in the manifest must exist in some workflow."""
         manifest = _load_manifest()
-        ci_text = CI_WORKFLOW.read_text()
+        all_workflows = _read_all_workflow_text()
 
         missing = []
         for control_id, control in manifest["controls"].items():
             for rule in control["rules"]:
                 ci_step = rule.get("ci_step")
-                if ci_step and ci_step not in ci_text:
-                    missing.append(f"{control_id}/{rule['id']}: ci_step '{ci_step}' not found in ci.yml")
+                if ci_step and ci_step not in all_workflows:
+                    missing.append(
+                        f"{control_id}/{rule['id']}: ci_step '{ci_step}' "
+                        f"not found in any .github/workflows/*.yml"
+                    )
 
         assert missing == [], (
             f"Manifest references CI steps that don't exist:\n" +

@@ -28,7 +28,7 @@ import os
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 try:
     import pandas as pd
@@ -45,12 +45,12 @@ DEFAULT_DATA_DIR = "~/.amem/telemetry"
 # ── Data loading ─────────────────────────────────────────────────────────
 
 
-def load_events(data_dir: Path) -> List[Dict[str, Any]]:
+def load_events(data_dir: Path) -> list[dict[str, Any]]:
     """Load all telemetry events across every ``telemetry_*.jsonl`` file.
 
     Tolerates corrupt lines so one bad entry doesn't break the dashboard.
     """
-    events: List[Dict[str, Any]] = []
+    events: list[dict[str, Any]] = []
     if not data_dir.exists():
         return events
     for path in sorted(data_dir.glob("telemetry_*.jsonl")):
@@ -65,9 +65,9 @@ def load_events(data_dir: Path) -> List[Dict[str, Any]]:
     return events
 
 
-def to_dataframe(events: List[Dict[str, Any]]) -> "pd.DataFrame":
+def to_dataframe(events: list[dict[str, Any]]) -> pd.DataFrame:
     """Normalize events into a DataFrame with a ``date`` column for grouping."""
-    rows: List[Dict[str, Any]] = []
+    rows: list[dict[str, Any]] = []
     for ev in events:
         ts = ev.get("timestamp")
         if isinstance(ts, (int, float)):
@@ -95,7 +95,7 @@ def to_dataframe(events: List[Dict[str, Any]]) -> "pd.DataFrame":
 # ── Computations (pure functions — tested in test_telemetry_dashboard.py) ──
 
 
-def daily_volume(df: "pd.DataFrame") -> "pd.DataFrame":
+def daily_volume(df: pd.DataFrame) -> pd.DataFrame:
     """Count recall vs synthesis events per day."""
     subset = df[df["event_type"].isin(["recall", "synthesis"])]
     if subset.empty:
@@ -104,7 +104,7 @@ def daily_volume(df: "pd.DataFrame") -> "pd.DataFrame":
     return grouped
 
 
-def latency_percentiles(df: "pd.DataFrame", event_type: str) -> Dict[str, float]:
+def latency_percentiles(df: pd.DataFrame, event_type: str) -> dict[str, float]:
     """Return p50 / p95 / max latency for ``event_type`` (recall or synthesis)."""
     subset = df[(df["event_type"] == event_type) & df["duration_ms"].notna()]
     if subset.empty:
@@ -116,7 +116,7 @@ def latency_percentiles(df: "pd.DataFrame", event_type: str) -> Dict[str, float]
     }
 
 
-def tier_distribution(df: "pd.DataFrame") -> Dict[str, int]:
+def tier_distribution(df: pd.DataFrame) -> dict[str, int]:
     """Sum tier counts across all DEBUG-mode recall events."""
     totals: Counter[str] = Counter()
     for dist in df["tier_distribution"].dropna():
@@ -126,7 +126,7 @@ def tier_distribution(df: "pd.DataFrame") -> Dict[str, int]:
     return dict(totals)
 
 
-def utility_trend(df: "pd.DataFrame") -> "pd.DataFrame":
+def utility_trend(df: pd.DataFrame) -> pd.DataFrame:
     """Daily mean utility across feedback events (auto + explicit)."""
     feedback = df[(df["event_type"] == "feedback") & df["utility"].notna()]
     if feedback.empty:
@@ -134,7 +134,7 @@ def utility_trend(df: "pd.DataFrame") -> "pd.DataFrame":
     return feedback.groupby("date")["utility"].mean().reset_index(name="mean_utility")
 
 
-def unused_notes(df: "pd.DataFrame") -> List[str]:
+def unused_notes(df: pd.DataFrame) -> list[str]:
     """Notes that appear in at least one recall result but never get cited.
 
     Useful signal: a note retrieved repeatedly but never cited in

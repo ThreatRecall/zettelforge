@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZettelForge — CTI Memory</title>
+<link rel="stylesheet" href="/ui/colors_and_type.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg-app); color: var(--fg-1); font-family: var(--font-sans); min-height: 100vh; overflow-x: hidden; }
+  #app { display: flex; min-height: 100vh; }
+  .app-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .app-content { flex: 1; max-width: 960px; width: 100%; margin: 0 auto; padding: var(--sp-6); }
+  .sidebar-toggle { display: none; }
+  @media (max-width: 768px) {
+    .sidebar-toggle { display: flex; }
+    .app-sidebar { display: none; }
+    .app-sidebar.open { display: flex; position: fixed; inset: 0; z-index: 100; }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  .pulse { animation: pulse 1.4s ease-in-out infinite; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="sidebar-root" class="app-sidebar"></div>
+  <div class="app-main">
+    <div id="header-root"></div>
+    <div id="toast-root"></div>
+    <div id="content-root" class="app-content"></div>
+  </div>
+</div>
+<script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.js"></script>
+<script src="/ui/js/lib/state.js"></script>
+<script src="/ui/js/lib/api.js"></script>
+<script src="/ui/js/components/spinner.js"></script>
+<script src="/ui/js/components/toast.js"></script>
+<script src="/ui/js/components/tabs.js"></script>
+<script src="/ui/js/components/result-card.js"></script>
+<script src="/ui/js/components/sidebar.js"></script>
+<script src="/ui/js/components/header.js"></script>
+<script src="/ui/js/views/dashboard.js"></script>
+<script src="/ui/js/views/search.js"></script>
+<script src="/ui/js/views/knowledge-graph.js"></script>
+<script src="/ui/js/views/logs.js"></script>
+<script src="/ui/js/views/ingest.js"></script>
+<script src="/ui/js/views/entities.js"></script>
+<script src="/ui/js/views/history.js"></script>
+<script src="/ui/js/views/configuration.js"></script>
+<script src="/ui/js/app.js"></script>
+</body>
+</html>

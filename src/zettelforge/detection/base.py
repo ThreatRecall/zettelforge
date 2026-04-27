@@ -12,7 +12,7 @@ added for the shared explainer (§3c).
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass
@@ -28,18 +28,18 @@ class DetectionRule:
     title: str
     source_format: str  # "sigma" | "yara" | "unknown"
     content_sha256: str
-    description: Optional[str] = None
-    author: Optional[str] = None
-    date: Optional[str] = None
-    modified: Optional[str] = None
+    description: str | None = None
+    author: str | None = None
+    date: str | None = None
+    modified: str | None = None
     references: list[str] = field(default_factory=list)
     tags: list[str] = field(default_factory=list)
-    level: Optional[str] = None  # informational | low | medium | high | critical
-    status: Optional[str] = None  # experimental | test | stable | deprecated
-    tlp: Optional[str] = None
-    license: Optional[str] = None
-    source_repo: Optional[str] = None
-    source_path: Optional[str] = None
+    level: str | None = None  # informational | low | medium | high | critical
+    status: str | None = None  # experimental | test | stable | deprecated
+    tlp: str | None = None
+    license: str | None = None
+    source_repo: str | None = None
+    source_path: str | None = None
     extra: dict[str, Any] = field(default_factory=dict)
 
     def explain_prompt(self) -> str:

@@ -7,19 +7,18 @@ first access. Callers resolve via :func:`get`. See RFC-002.
 from __future__ import annotations
 
 import threading
-from typing import Dict, Type
 
 from zettelforge.llm_providers.base import LLMProvider
 from zettelforge.log import get_logger
 
 _logger = get_logger("zettelforge.llm_providers.registry")
 
-_registry: Dict[str, Type[LLMProvider]] = {}
-_instances: Dict[str, LLMProvider] = {}
+_registry: dict[str, type[LLMProvider]] = {}
+_instances: dict[str, LLMProvider] = {}
 _lock = threading.Lock()
 
 
-def register(name: str, provider_class: Type[LLMProvider]) -> None:
+def register(name: str, provider_class: type[LLMProvider]) -> None:
     """Register a provider class by name.
 
     Raises:

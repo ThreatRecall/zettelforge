@@ -389,6 +389,43 @@ combined = (vector_norm * w_v) + (graph_norm * w_g)
 - `langchain_retriever.py` — LangChain integration
 - `__init__.py`
 
+## Web Frontend Layer
+
+### `web/app.py`
+
+**Purpose:** FastAPI server serving the SPA and all REST API endpoints.
+
+**Endpoints (existing):** recall, remember, synthesize, stats, edition, sync
+**Endpoints (RFC-015):** health, config (GET+PUT), graph/nodes, graph/edges, entities, history, ingest, telemetry, storage, logs, logs/stream (SSE), telemetry/stream (SSE)
+
+**Authentication:** API key via `X-API-Key` header or `Authorization: Bearer`, with loopback allowlist for local-only deployments.
+
+### `web/ui/` (23 files)
+
+**Purpose:** Vanilla JS single-page application (no React, no npm, no build step).
+
+**Library layer:**
+- `js/lib/state.js` — Reactive pub/sub state store
+- `js/lib/api.js` — Fetch wrapper with auth headers
+
+**Components (6):**
+- `header.js` — Top bar with shield-neuron SVG mark, Neuropol wordmark, stats
+- `sidebar.js` — 220px nav with Lucide icons, active accent
+- `result-card.js` — Memory note row styled per design system
+- `tabs.js`, `toast.js`, `spinner.js` — Reusable UI primitives
+
+**Views (8):**
+- `dashboard.js` — System health tiles, telemetry stats, intent bar chart
+- `search.js` — Recall/synthesize/remember with format selector
+- `knowledge-graph.js` — 2D SVG force-directed graph, color-coded by type
+- `logs.js` — Filterable log table with auto-refresh and expandable detail
+- `ingest.js` — Manual/bulk ingestion with file upload
+- `entities.js` — Paginated entity browser with filters and sort
+- `history.js` — Session activity timeline with re-run and export
+- `configuration.js` — Feature flag toggles + YAML editor
+
+**Design System:** `colors_and_type.css` (286 lines of CSS custom properties), `fonts/Neuropol.otf`, SVG logo marks from the ZettelForge Design System archive.
+
 ## Other Modules
 
 ### `consolidation.py` (18K lines)
@@ -454,8 +491,10 @@ memory_manager
 | Category | Count |
 |----------|-------|
 | Core modules | 57 |
-| Test files | 43 |
+| Test files | 44 |
 | Detection rule modules | 12 |
 | LLM provider modules | 5 |
+| Web UI views | 8 |
+| Web UI components | 6 |
 | Most lines | memory_manager.py (52K) |
 | Most imported | log.py (19 imports) |

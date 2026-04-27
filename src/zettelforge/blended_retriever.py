@@ -10,13 +10,13 @@ similarity scores from VectorRetriever. Uses min-max normalization
 per signal before weighted fusion.
 """
 
-from typing import Callable, Dict, List, Optional
+from collections.abc import Callable
 
 from zettelforge.graph_retriever import ScoredResult
 from zettelforge.note_schema import MemoryNote
 
 
-def _normalize_scores(scored_list: List[tuple]) -> List[tuple]:
+def _normalize_scores(scored_list: list[tuple]) -> list[tuple]:
     """Min-max normalize scores to [0, 1] range.
 
     If all scores are equal or list is empty, returns uniform scores.
@@ -40,12 +40,12 @@ class BlendedRetriever:
 
     def blend(
         self,
-        vector_results: List[tuple],  # List[Tuple[MemoryNote, float]] - actual similarity scores
-        graph_results: List[ScoredResult],
-        policy: Dict[str, float],
-        note_lookup: Callable[[str], Optional[MemoryNote]],
+        vector_results: list[tuple],  # List[Tuple[MemoryNote, float]] - actual similarity scores
+        graph_results: list[ScoredResult],
+        policy: dict[str, float],
+        note_lookup: Callable[[str], MemoryNote | None],
         k: int = 10,
-    ) -> List[MemoryNote]:
+    ) -> list[MemoryNote]:
         """
         Blend vector and graph results with normalized score fusion.
 
@@ -67,7 +67,7 @@ class BlendedRetriever:
         norm_graph = _normalize_scores(graph_scored)
 
         # Build combined score map: note_id -> (blended_score, MemoryNote)
-        scores: Dict[str, tuple] = {}
+        scores: dict[str, tuple] = {}
 
         # Vector signal
         for note, norm_score in norm_vector:
@@ -91,12 +91,12 @@ class BlendedRetriever:
 
     def blend_rrf(
         self,
-        vector_results: List[tuple],  # List[Tuple[MemoryNote, float]]
-        graph_results: List[ScoredResult],
-        note_lookup: Callable[[str], Optional[MemoryNote]],
+        vector_results: list[tuple],  # List[Tuple[MemoryNote, float]]
+        graph_results: list[ScoredResult],
+        note_lookup: Callable[[str], MemoryNote | None],
         k: int = 10,
         rrf_k: int = 60,
-    ) -> List[MemoryNote]:
+    ) -> list[MemoryNote]:
         """
         Reciprocal Rank Fusion (RRF) — rank-based fusion that is robust
         to score scale differences.
@@ -105,7 +105,7 @@ class BlendedRetriever:
         This is the standard fusion method used in production retrieval
         systems (Elastic, Vespa, etc.).
         """
-        scores: Dict[str, tuple] = {}
+        scores: dict[str, tuple] = {}
 
         # Vector signal — rank by original similarity score
         sorted_vector = sorted(vector_results, key=lambda x: x[1], reverse=True)

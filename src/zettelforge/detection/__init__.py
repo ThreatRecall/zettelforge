@@ -16,8 +16,8 @@ from zettelforge.detection.explainer import RuleExplanation, explain
 
 __all__ = [
     "ALL_CONSUMERS",
-    "DetectionRule",
     "DetectionMatchConsumer",
+    "DetectionRule",
     "RuleExplanation",
     "RuleMatchEvent",
     "explain",

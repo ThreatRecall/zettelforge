@@ -16,11 +16,14 @@ Usage:
     cfg.retrieval.default_k  # 10
 """
 
+from __future__ import annotations
+
+import contextlib
 import os
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from zettelforge.log import get_logger
 
@@ -37,7 +40,7 @@ def _resolve_env_refs(value: str) -> str:
     rather than silently shipping the literal ``${...}`` token.
     """
 
-    def _replace(match: "re.Match[str]") -> str:
+    def _replace(match: re.Match[str]) -> str:
         var_name = match.group(1)
         env_value = os.environ.get(var_name)
         if env_value is None:
@@ -84,11 +87,15 @@ class EmbeddingConfig:
 
 @dataclass
 class LLMConfig:
-    """LLM provider configuration (RFC-002).
+    """LLM provider configuration (RFC-002, extended by RFC-011).
 
     ``provider`` selects the backend registered in
     :mod:`zettelforge.llm_providers`. ``api_key`` supports ``${VAR}``
     env-reference syntax and is redacted from ``repr()``.
+
+    ``local_backend`` selects the in-process inference engine when
+    ``provider`` is ``"local"``. Options: ``"llama-cpp-python"`` (default)
+    or ``"onnxruntime-genai"``. Ignored for all other providers.
     """
 
     provider: str = "ollama"
@@ -96,19 +103,20 @@ class LLMConfig:
     url: str = "http://localhost:11434"
     api_key: str = ""  # supports ${ENV_VAR} references — never commit raw keys
     temperature: float = 0.1
-    timeout: float = 60.0
+    timeout: float = 180.0  # v2.5.2: bumped from 60s — reasoning models at higher num_predict (4000 for causal triples) routinely exceed 60s on a 9B at Q4_K_M
     max_retries: int = 2
     fallback: str = ""  # empty preserves implicit local→ollama fallback
-    extra: Dict[str, Any] = field(default_factory=dict)
+    local_backend: str = "llama-cpp-python"  # RFC-011: "llama-cpp-python" or "onnxruntime-genai"
+    extra: dict[str, Any] = field(default_factory=dict)
 
     # Keys under ``extra`` that are commonly used for secrets. Matched
     # case-insensitively as substrings so ``openai_api_key``, ``client_secret``,
     # ``auth_token``, ``azure_ad_token``, ``credentials_json`` all redact.
     _SENSITIVE_EXTRA_KEYS = ("key", "token", "secret", "password", "credential", "auth")
 
-    def _redact_extra(self) -> Dict[str, Any]:
+    def _redact_extra(self) -> dict[str, Any]:
         """Return ``extra`` with sensitive-looking values replaced by ``'***'``."""
-        redacted: Dict[str, Any] = {}
+        redacted: dict[str, Any] = {}
         for k, v in self.extra.items():
             k_low = k.lower() if isinstance(k, str) else ""
             if isinstance(v, str) and v and any(s in k_low for s in self._SENSITIVE_EXTRA_KEYS):
@@ -127,6 +135,7 @@ class LLMConfig:
             f"url={self.url!r}, api_key={key_display}, "
             f"temperature={self.temperature}, timeout={self.timeout}, "
             f"max_retries={self.max_retries}, fallback={self.fallback!r}, "
+            f"local_backend={self.local_backend!r}, "
             f"extra={self._redact_extra()!r})"
         )
 
@@ -154,13 +163,50 @@ class RetrievalConfig:
 class SynthesisConfig:
     max_context_tokens: int = 3000
     default_format: str = "direct_answer"
-    tier_filter: List[str] = field(default_factory=lambda: ["A", "B"])
+    tier_filter: list[str] = field(default_factory=lambda: ["A", "B"])
+
+
+@dataclass
+class PIIConfig:
+    """Presidio PII detection settings (RFC-013, optional).
+
+    Disabled by default -- no new core dependencies. Requires
+    ``pip install zettelforge[pii]`` to activate.
+
+    ``action`` can be ``"log"`` (warn only, pass through),
+    ``"redact"`` (replace PII with placeholders), or
+    ``"block"`` (raise exception before storage).
+    ``entities``: empty list = detect all supported PII types.
+    ``_CTI_ALLOWLIST`` in ``pii_validator.py`` excludes IP_ADDRESS,
+    URL, and DOMAIN_NAME from detection since these are legitimate
+    CTI indicators.
+    """
+
+    enabled: bool = False
+    action: str = "log"
+    redact_placeholder: str = "[REDACTED]"
+    entities: list[str] = field(default_factory=list)
+    language: str = "en"
+    nlp_model: str = "en_core_web_sm"
+
+
+@dataclass
+class LimitsConfig:
+    """Operation limits for DoS mitigation (RFC-014).
+
+    Values of 0 disable the limit (unlimited).
+    """
+
+    max_content_length: int = 52428800  # bytes, 50 MB default
+    recall_timeout_seconds: float = 30.0
 
 
 @dataclass
 class GovernanceConfig:
     enabled: bool = True
     min_content_length: int = 1
+    pii: PIIConfig = field(default_factory=PIIConfig)
+    limits: LimitsConfig = field(default_factory=LimitsConfig)
 
 
 @dataclass
@@ -214,6 +260,19 @@ class OpenCTIConfig:
 
 
 @dataclass
+class WebConfig:
+    """Web UI configuration (RFC-015: ZettelForge Web Management Interface).
+
+    Controls the SPA management interface served at GET /.
+    """
+
+    enabled: bool = True
+    host: str = "0.0.0.0"
+    port: int = 8088
+    ui_dir: str = ""  # defaults to web/ui/ relative to project root at runtime
+
+
+@dataclass
 class ZettelForgeConfig:
     storage: StorageConfig = field(default_factory=StorageConfig)
     typedb: TypeDBConfig = field(default_factory=TypeDBConfig)
@@ -230,9 +289,10 @@ class ZettelForgeConfig:
     logging: LoggingConfig = field(default_factory=LoggingConfig)
     enterprise: ExtensionsConfig = field(default_factory=ExtensionsConfig)
     opencti: OpenCTIConfig = field(default_factory=OpenCTIConfig)
+    web: WebConfig = field(default_factory=WebConfig)
 
 
-def _find_config_file() -> Optional[Path]:
+def _find_config_file() -> Path | None:
     """Find config.yaml in standard locations."""
     candidates = [
         Path("config.yaml"),
@@ -289,10 +349,8 @@ def _parse_simple_yaml(path: Path) -> dict:
                     try:
                         value = int(value)
                     except ValueError:
-                        try:
+                        with contextlib.suppress(ValueError):
                             value = float(value)
-                        except ValueError:
-                            pass
                 result[current_section][key] = value
             elif ":" in stripped and current_section is None:
                 key, _, value = stripped.partition(":")
@@ -357,8 +415,25 @@ def _apply_yaml(cfg: ZettelForgeConfig, data: dict):
 
     if "governance" in data and isinstance(data["governance"], dict):
         for k, v in data["governance"].items():
-            if hasattr(cfg.governance, k):
+            if not hasattr(cfg.governance, k):
+                continue
+            # RFC-013: pii is a nested dataclass, not a flat value
+            if k == "pii" and isinstance(v, dict):
+                for pk, pv in v.items():
+                    if hasattr(cfg.governance.pii, pk):
+                        setattr(cfg.governance.pii, pk, pv)
+            # RFC-014: limits is a nested dataclass (DoS mitigations)
+            elif k == "limits" and isinstance(v, dict):
+                for lk, lv in v.items():
+                    if hasattr(cfg.governance.limits, lk):
+                        setattr(cfg.governance.limits, lk, lv)
+            else:
                 setattr(cfg.governance, k, v)
+
+    if "lance" in data and isinstance(data["lance"], dict):
+        for k, v in data["lance"].items():
+            if hasattr(cfg.lance, k):
+                setattr(cfg.lance, k, v)
 
     if "cache" in data and isinstance(data["cache"], dict):
         for k, v in data["cache"].items():
@@ -379,6 +454,12 @@ def _apply_yaml(cfg: ZettelForgeConfig, data: dict):
         for k, v in data["opencti"].items():
             if hasattr(cfg.opencti, k):
                 setattr(cfg.opencti, k, v)
+
+    # RFC-015: web UI config
+    if "web" in data and isinstance(data["web"], dict):
+        for k, v in data["web"].items():
+            if hasattr(cfg.web, k):
+                setattr(cfg.web, k, v)
 
 
 def _apply_env(cfg: ZettelForgeConfig):
@@ -438,9 +519,25 @@ def _apply_env(cfg: ZettelForgeConfig):
     if v := os.environ.get("ZETTELFORGE_LLM_FALLBACK"):
         cfg.llm.fallback = v
 
+    # RFC-011: local backend selection
+    if v := os.environ.get("ZETTELFORGE_LLM_LOCAL_BACKEND"):
+        cfg.llm.local_backend = v
+
     # LLM NER
     if v := os.environ.get("ZETTELFORGE_LLM_NER_ENABLED"):
         cfg.llm_ner.enabled = v.lower() in ("true", "1", "yes")
+
+    # RFC-013: PII detection via Presidio
+    if v := os.environ.get("ZETTELFORGE_PII_ENABLED"):
+        cfg.governance.pii.enabled = v.lower() in ("true", "1", "yes")
+    if v := os.environ.get("ZETTELFORGE_PII_ACTION"):
+        cfg.governance.pii.action = v
+
+    # RFC-014: Operation limits (DoS mitigation)
+    if v := os.environ.get("ZETTELFORGE_LIMITS_MAX_CONTENT_LENGTH"):
+        cfg.governance.limits.max_content_length = int(v)
+    if v := os.environ.get("ZETTELFORGE_LIMITS_RECALL_TIMEOUT"):
+        cfg.governance.limits.recall_timeout_seconds = float(v)
 
     # Extensions license key (used by zettelforge-enterprise fallback path)
     if v := os.environ.get("THREATENGRAM_LICENSE_KEY"):
@@ -454,10 +551,21 @@ def _apply_env(cfg: ZettelForgeConfig):
     if os.environ.get("OPENCTI_SYNC_INTERVAL"):
         cfg.opencti.sync_interval = int(os.environ["OPENCTI_SYNC_INTERVAL"])
 
+    # RFC-015: Web UI
+    if v := os.environ.get("ZETTELFORGE_WEB_ENABLED"):
+        cfg.web.enabled = v.lower() in ("true", "1", "yes")
+    if v := os.environ.get("ZETTELFORGE_WEB_PORT"):
+        try:
+            cfg.web.port = int(v)
+        except ValueError:
+            get_logger("zettelforge.config").warning("invalid_web_port", value=v)
+    if v := os.environ.get("ZETTELFORGE_WEB_UI_DIR"):
+        cfg.web.ui_dir = v
+
 
 # ── Singleton ──────────────────────────────────────────────
 
-_config: Optional[ZettelForgeConfig] = None
+_config: ZettelForgeConfig | None = None
 
 
 def get_config() -> ZettelForgeConfig:

@@ -227,4 +227,6 @@ def enrich_with_entities(task: str) -> dict:
 
 **Entity retrieval**: `mm.recall_actor()`, `mm.recall_tool()`, `mm.recall_cve()` provide O(1) indexed lookups for targeted enrichment.
 
+**LLM provider options**: Configure via `config.yaml` `llm:` section. The default is `provider: ollama` with `model: qwen3.5:9b`. Optional extras: `pip install zettelforge[local]` for in-process GGUF inference, `pip install zettelforge[local-onnx]` for ONNX inference, `pip install zettelforge[litellm]` for LiteLLM routing to 100+ cloud providers.
+
 **Performance**: `remember()` is fast (no LLM). `remember_with_extraction()` is slow (LLM per fact). `get_context()` is fast (vector search). Tune `min_importance` and `max_facts` for throughput.

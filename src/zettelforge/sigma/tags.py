@@ -16,7 +16,6 @@ Everything else returns ``None`` — the caller still persists the raw
 from __future__ import annotations
 
 import re
-from typing import Optional
 
 # attack.g\d+ / attack.s\d+  → IntrusionSet / Malware (not emitted as
 # techniques). Only technique tags (T + digits, optionally .digits) become
@@ -26,7 +25,7 @@ _ATTACK_GROUP_RE = re.compile(r"^g\d+$", re.IGNORECASE)
 _ATTACK_SOFTWARE_RE = re.compile(r"^s\d+$", re.IGNORECASE)
 
 
-def _normalize_cve(suffix: str) -> Optional[str]:
+def _normalize_cve(suffix: str) -> str | None:
     """Normalize a Sigma CVE suffix (``2021-44228`` or ``2021.44228``) to
     canonical ``CVE-YYYY-NNNN`` form. Returns ``None`` if it doesn't match."""
     # Sigma writes cve.2024.3094 (dots) per the spec, but many rules in
@@ -40,7 +39,7 @@ def _normalize_cve(suffix: str) -> Optional[str]:
     return f"CVE-{year}-{num}"
 
 
-def resolve_sigma_tag(tag: str) -> Optional[tuple[str, str]]:
+def resolve_sigma_tag(tag: str) -> tuple[str, str] | None:
     """Resolve a Sigma tag to a typed entity reference.
 
     Returns ``(entity_type, entity_value)`` for tags that upgrade to a

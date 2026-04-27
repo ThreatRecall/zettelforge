@@ -71,11 +71,11 @@ def _build_note_content(
 
 def ingest_rule(
     rule_source: str | Path | dict[str, Any],
-    mm: "MemoryManager | None" = None,
+    mm: MemoryManager | None = None,
     *,
     domain: str = "detection",
     tier: str = "warn",
-) -> tuple["MemoryNote | None", list[dict[str, Any]]]:
+) -> tuple[MemoryNote | None, list[dict[str, Any]]]:
     """Ingest a single YARA rule (file, text, or pre-parsed dict).
 
     Args:
@@ -108,7 +108,7 @@ def ingest_rule(
 
 def ingest_rules_dir(
     path: str | Path,
-    mm: "MemoryManager | None" = None,
+    mm: MemoryManager | None = None,
     *,
     glob: str = "**/*.yar",
     tier: str = "warn",
@@ -225,12 +225,12 @@ def _normalize_source(src: str | Path | dict[str, Any]) -> list[dict[str, Any]]:
 
 def _ingest_single(
     rule_dict: dict[str, Any],
-    mm: "MemoryManager",
+    mm: MemoryManager,
     *,
     domain: str,
     tier: str,
     source_path: str | None = None,
-) -> tuple["MemoryNote | None", list[dict[str, Any]], bool]:
+) -> tuple[MemoryNote | None, list[dict[str, Any]], bool]:
     """Ingest one rule. Returns ``(note_or_None, relations, is_new)``.
 
     ``is_new`` is ``False`` when the rule was already present and we hit
@@ -278,9 +278,7 @@ def _ingest_single(
     return note, relations, True
 
 
-def _persist_relations(
-    mm: "MemoryManager", relations: list[dict[str, Any]], *, note_id: str
-) -> None:
+def _persist_relations(mm: MemoryManager, relations: list[dict[str, Any]], *, note_id: str) -> None:
     """Write each canonical-shape relation into the KG via the storage backend.
 
     Mirrors ``zettelforge.sigma.ingest._persist_relations``: same defensive

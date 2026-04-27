@@ -6,7 +6,7 @@ Records every call and returns canned responses in order. See
 
 from __future__ import annotations
 
-from typing import Any, Optional
+from typing import Any
 
 
 class MockProvider:
@@ -23,7 +23,7 @@ class MockProvider:
 
     name = "mock"
 
-    def __init__(self, responses: Optional[list[str]] = None, **_: Any) -> None:
+    def __init__(self, responses: list[str] | None = None, **_: Any) -> None:
         self._responses: list[str] = list(responses) if responses else ["mock response"]
         self._call_count = 0
         self.calls: list[dict[str, Any]] = []
@@ -33,7 +33,7 @@ class MockProvider:
         prompt: str,
         max_tokens: int = 400,
         temperature: float = 0.1,
-        system: Optional[str] = None,
+        system: str | None = None,
         json_mode: bool = False,
     ) -> str:
         self.calls.append(

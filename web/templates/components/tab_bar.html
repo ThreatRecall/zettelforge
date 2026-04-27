@@ -1,0 +1,42 @@
+<!-- TabBar Component -->
+<div class="tab-bar" role="tablist">
+    {% for tab in tabs %}
+    <button 
+        class="tab-button {% if tab.active %}active{% endif %}" 
+        onclick="setMode('{{ tab.id }}')"
+        role="tab"
+        aria-selected="{{ 'true' if tab.active else 'false' }}"
+    >
+        {{ tab.label }}
+    </button>
+    {% endfor %}
+</div>
+
+<style>
+.tab-bar {
+    display: flex;
+    gap: var(--space-1);
+    margin-bottom: var(--space-4);
+}
+.tab-button {
+    padding: var(--space-2) var(--space-4);
+    background: transparent;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    color: var(--fg-secondary);
+    cursor: pointer;
+    font-size: 13px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    transition: all var(--transition-fast);
+}
+.tab-button:hover {
+    border-color: var(--border-hover);
+    color: var(--fg-primary);
+}
+.tab-button.active {
+    background: var(--bg-surface-hi);
+    color: var(--fg-primary);
+    border-color: var(--intent-factual);
+}
+</style>

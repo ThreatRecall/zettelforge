@@ -18,7 +18,7 @@ Event classes:
 from datetime import datetime, timezone
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from zettelforge.log import get_logger
 
@@ -45,7 +45,7 @@ def _resolve_product_version() -> str:
                 stripped = line.strip()
                 if stripped.startswith("version") and "=" in stripped:
                     return stripped.split("=", 1)[1].strip().strip('"').strip("'")
-    except Exception:  # pragma: no cover — defensive; fall through to metadata
+    except Exception:  # pragma: no cover  # noqa: S110 — defensive; fall through to metadata
         pass
 
     try:
@@ -126,9 +126,9 @@ def log_api_activity(
     operation: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    actor: Optional[str] = None,
-    resource: Optional[str] = None,
-    duration_ms: Optional[float] = None,
+    actor: str | None = None,
+    resource: str | None = None,
+    duration_ms: float | None = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF API Activity event (class 6002).
@@ -163,7 +163,7 @@ def log_authentication(
     auth_protocol: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    src_endpoint: Optional[str] = None,
+    src_endpoint: str | None = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF Authentication event (class 3001).
@@ -196,8 +196,8 @@ def log_authorization(
     resource: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    privileges: Optional[str] = None,
-    policy: Optional[str] = None,
+    privileges: str | None = None,
+    policy: str | None = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF Authorization event (class 3003).
@@ -231,9 +231,9 @@ def log_config_change(
     resource: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    actor: Optional[str] = None,
-    prev_value: Optional[str] = None,
-    new_value: Optional[str] = None,
+    actor: str | None = None,
+    prev_value: str | None = None,
+    new_value: str | None = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF Configuration Change event (class 5002).
@@ -269,8 +269,8 @@ def log_file_activity(
     activity: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    actor: Optional[str] = None,
-    duration_ms: Optional[float] = None,
+    actor: str | None = None,
+    duration_ms: float | None = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF File Activity event (class 1001).
@@ -336,8 +336,8 @@ def log_account_change(
     activity: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    prev_value: Optional[str] = None,
-    new_value: Optional[str] = None,
+    prev_value: str | None = None,
+    new_value: str | None = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF Account Change event (class 3005).

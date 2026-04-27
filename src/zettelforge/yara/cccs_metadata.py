@@ -249,10 +249,10 @@ def validate_metadata(rule_meta: dict[str, Any], tier: Tier = "warn") -> Validat
 
 
 __all__ = [
-    "ValidationResult",
-    "Tier",
     "CCCS_YARA_SPEC",
     "CCCS_YARA_VALUES",
     "REQUIRED_FIELDS",
+    "Tier",
+    "ValidationResult",
     "validate_metadata",
 ]

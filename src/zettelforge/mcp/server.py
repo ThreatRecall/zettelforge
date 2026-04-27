@@ -5,7 +5,6 @@ import os
 import sys
 import threading
 import time
-from typing import Optional
 
 from zettelforge import MemoryManager, __version__
 
@@ -15,7 +14,7 @@ from zettelforge import MemoryManager, __version__
 # backend defaults to sqlite when the server actually runs.
 os.environ.setdefault("ZETTELFORGE_BACKEND", "sqlite")
 
-_mm: Optional[MemoryManager] = None
+_mm: MemoryManager | None = None
 _mm_lock = threading.Lock()
 
 
@@ -61,7 +60,7 @@ def handle_tool_call(name: str, arguments: dict) -> dict:
     elif name == "zettelforge_recall":
         query = arguments.get("query", "")
         k = arguments.get("k", 10)
-        domain = arguments.get("domain", None)
+        domain = arguments.get("domain")
         start = time.perf_counter()
         results = mm.recall(query, domain=domain, k=k, exclude_superseded=False)
         latency = time.perf_counter() - start

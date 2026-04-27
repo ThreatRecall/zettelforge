@@ -16,7 +16,7 @@ This addresses SAGA Gap 2: Temporal Memory Maintenance.
 import threading
 import time
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 from zettelforge.log import get_logger
 from zettelforge.ocsf import STATUS_SUCCESS, log_api_activity
@@ -55,13 +55,13 @@ class SemanticShiftDetector:
         self.min_epg_size = min_epg_size
 
         # Active window state
-        self._epg_entities: Dict[str, int] = {}  # entity -> count
-        self._epg_topics: Dict[str, float] = {}  # domain -> weight
+        self._epg_entities: dict[str, int] = {}  # entity -> count
+        self._epg_topics: dict[str, float] = {}  # domain -> weight
         self._epg_count: int = 0
-        self._last_note_time: Optional[datetime] = None
+        self._last_note_time: datetime | None = None
         self._lock = threading.Lock()
 
-    def observe(self, note_entities: Dict[str, List[str]], note_domain: str) -> None:
+    def observe(self, note_entities: dict[str, list[str]], note_domain: str) -> None:
         """Update the EPG state with a new note's entities and domain."""
         with self._lock:
             self._epg_count += 1
@@ -82,10 +82,10 @@ class SemanticShiftDetector:
 
     def detect_shift(
         self,
-        note_entities: Dict[str, List[str]],
+        note_entities: dict[str, list[str]],
         note_domain: str,
-        note_time: Optional[datetime] = None,
-    ) -> Tuple[bool, Dict[str, Any]]:
+        note_time: datetime | None = None,
+    ) -> tuple[bool, dict[str, Any]]:
         """
         Check whether a new note represents a semantic shift from the EPG.
 
@@ -97,7 +97,7 @@ class SemanticShiftDetector:
                 return False, {"reason": "epg_too_small", "epg_count": self._epg_count}
 
             shift_signals = []
-            metadata: Dict[str, Any] = {"epg_count": self._epg_count}
+            metadata: dict[str, Any] = {"epg_count": self._epg_count}
 
             # --- Signal 1: Entity novelty ---
             new_entities = 0
@@ -153,7 +153,7 @@ class SemanticShiftDetector:
             self._epg_count = 0
             self._last_note_time = None
 
-    def get_state(self) -> Dict[str, Any]:
+    def get_state(self) -> dict[str, Any]:
         """Get current EPG state for diagnostics."""
         with self._lock:
             return {
@@ -185,30 +185,30 @@ class ConsolidationEngine:
     contradiction checks before promoting to TAN.
     """
 
-    def __init__(self, memory_manager, shift_detector: Optional[SemanticShiftDetector] = None):
+    def __init__(self, memory_manager, shift_detector: SemanticShiftDetector | None = None):
         self._mm = memory_manager
         self._detector = shift_detector or SemanticShiftDetector()
         self._logger = get_logger("zettelforge.consolidation.engine")
         self._consolidation_count: int = 0
-        self._last_consolidation_time: Optional[str] = None
+        self._last_consolidation_time: str | None = None
 
     def should_consolidate(
         self,
-        note_entities: Dict[str, List[str]],
+        note_entities: dict[str, list[str]],
         note_domain: str,
-        note_time: Optional[datetime] = None,
-    ) -> Tuple[bool, Dict[str, Any]]:
+        note_time: datetime | None = None,
+    ) -> tuple[bool, dict[str, Any]]:
         """Check if consolidation should be triggered for this note."""
         return self._detector.detect_shift(note_entities, note_domain, note_time)
 
-    def consolidate(self, force: bool = False) -> Dict[str, Any]:
+    def consolidate(self, force: bool = False) -> dict[str, Any]:
         """
         Execute consolidation: EPG → TAN.
 
         Returns consolidation report with stats.
         """
         start = time.perf_counter()
-        report: Dict[str, Any] = {
+        report: dict[str, Any] = {
             "triggered_at": datetime.now().isoformat(),
             "forced": force,
             "notes_examined": 0,
@@ -250,25 +250,25 @@ class ConsolidationEngine:
                 return report
 
             # Build entity cache before domain grouping (avoid redundant extraction)
-            entity_cache: Dict[str, Dict[str, List[str]]] = {}
+            entity_cache: dict[str, dict[str, list[str]]] = {}
             for note in epg_notes:
                 entity_cache[note.id] = self._mm.indexer.extractor.extract_all(
                     note.content.raw, use_llm=False
                 )
 
             # Group by domain
-            domain_groups: Dict[str, list] = {}
+            domain_groups: dict[str, list] = {}
             for note in epg_notes:
                 domain = note.metadata.domain or "general"
                 domain_groups.setdefault(domain, []).append(note)
 
             # Consolidate each domain group
-            for domain, notes in domain_groups.items():
+            for _domain, notes in domain_groups.items():
                 if len(notes) < 2:
                     continue
 
                 # Find overlapping entity pairs for potential merges
-                entity_map: Dict[str, List[str]] = {}  # entity_key -> [note_ids]
+                entity_map: dict[str, list[str]] = {}  # entity_key -> [note_ids]
                 for note in notes:
                     entities = entity_cache[note.id]
                     for etype, values in entities.items():
@@ -278,7 +278,7 @@ class ConsolidationEngine:
 
                 # Identify notes sharing 2+ entities (candidates for merge)
                 merge_candidates = set()
-                for entity_key, note_ids in entity_map.items():
+                for _entity_key, note_ids in entity_map.items():
                     if len(note_ids) >= 2:
                         for nid in note_ids:
                             merge_candidates.add(nid)
@@ -339,7 +339,7 @@ class ConsolidationEngine:
         return report
 
     def _detect_contradictions(
-        self, notes: list, entity_cache: Dict[str, Dict[str, List[str]]]
+        self, notes: list, entity_cache: dict[str, dict[str, list[str]]]
     ) -> set:
         """
         SSGM-inspired contradiction detection.
@@ -383,7 +383,7 @@ class ConsolidationEngine:
 
         return contradicted
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get consolidation engine statistics."""
         return {
             "consolidation_count": self._consolidation_count,
@@ -425,16 +425,16 @@ class ConsolidationMiddleware:
         )
         self._engine = ConsolidationEngine(memory_manager, self._detector)
         self.auto_consolidate = auto_consolidate
-        self._async_thread: Optional[threading.Thread] = None
+        self._async_thread: threading.Thread | None = None
         self._thread_lock = threading.Lock()
         self._logger = get_logger("zettelforge.consolidation.middleware")
 
     def before_write(
         self,
-        note_entities: Dict[str, List[str]],
+        note_entities: dict[str, list[str]],
         note_domain: str,
-        note_time: Optional[datetime] = None,
-    ) -> Tuple[bool, Optional[Dict[str, Any]]]:
+        note_time: datetime | None = None,
+    ) -> tuple[bool, dict[str, Any] | None]:
         """
         Call before writing a note to the store.
 
@@ -479,11 +479,11 @@ class ConsolidationMiddleware:
             self._async_thread = threading.Thread(target=_consolidate, daemon=True)
             self._async_thread.start()
 
-    def consolidate_now(self) -> Dict[str, Any]:
+    def consolidate_now(self) -> dict[str, Any]:
         """Manually trigger consolidation (blocking)."""
         return self._engine.consolidate(force=True)
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get middleware statistics."""
         stats = self._engine.get_stats()
         stats["auto_consolidate"] = self.auto_consolidate

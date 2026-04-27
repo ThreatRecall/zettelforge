@@ -18,7 +18,7 @@ Example::
 from __future__ import annotations
 
 import os
-from typing import Any, Dict, Optional
+from typing import Any
 
 from zettelforge.llm_providers import LLMProviderConfigurationError, registry
 from zettelforge.log import get_logger
@@ -33,6 +33,10 @@ DEFAULT_LLM_MODEL = "Qwen/Qwen2.5-3B-Instruct-GGUF"
 DEFAULT_LLM_FILENAME = "qwen2.5-3b-instruct-q4_k_m.gguf"
 DEFAULT_OLLAMA_MODEL = "qwen2.5:3b"
 DEFAULT_OLLAMA_URL = "http://localhost:11434"
+
+# RFC-011: ONNX GenAI backend defaults
+_DEFAULT_ONNX_MODEL = "microsoft/Phi-3-mini-4k-instruct-onnx"
+_DEFAULT_ONNX_FILENAME = "phi3-mini-4k-instruct-q4.onnx"
 
 
 def get_llm_provider() -> str:
@@ -74,7 +78,7 @@ def get_ollama_url() -> str:
 # ── Provider kwargs ──────────────────────────────────────────────────────────
 
 
-def _provider_kwargs(provider_name: str) -> Dict[str, Any]:
+def _provider_kwargs(provider_name: str) -> dict[str, Any]:
     """Build constructor kwargs for a provider from current config + env.
 
     The registry caches instances keyed by name, so these kwargs are only
@@ -82,7 +86,7 @@ def _provider_kwargs(provider_name: str) -> Dict[str, Any]:
     config changes at runtime — it clears both the cached config and the
     cached provider instances.
     """
-    kwargs: Dict[str, Any] = {}
+    kwargs: dict[str, Any] = {}
 
     try:
         from zettelforge.config import get_config
@@ -108,18 +112,37 @@ def _provider_kwargs(provider_name: str) -> Dict[str, Any]:
         # The shared config's ``llm.model`` may be an Ollama tag like
         # ``qwen3.5:9b``. llama-cpp-python interprets that as a HuggingFace
         # repo id and fails. If the configured value looks like an Ollama tag
-        # (colon, no slash) we ignore it and fall back to ``DEFAULT_LLM_MODEL``
-        # unless the user explicitly set ``ZETTELFORGE_LLM_MODEL``.
+        # (colon, no slash) we ignore it and fall back to a backend-appropriate
+        # default unless the user explicitly set ``ZETTELFORGE_LLM_MODEL``.
         cfg_model = kwargs.get("model") or ""
         looks_like_ollama_tag = ":" in cfg_model and "/" not in cfg_model
-        local_default = "" if looks_like_ollama_tag else cfg_model
-        kwargs["model"] = os.environ.get(
-            "ZETTELFORGE_LLM_MODEL", local_default or DEFAULT_LLM_MODEL
-        )
-        kwargs["filename"] = os.environ.get(
-            "ZETTELFORGE_LLM_FILENAME",
-            kwargs.get("filename") or DEFAULT_LLM_FILENAME,
-        )
+
+        # RFC-011: determine local backend to select correct defaults
+        local_backend = "llama-cpp-python"
+        if llm_cfg is not None:
+            lb = getattr(llm_cfg, "local_backend", None)
+            if lb:
+                local_backend = lb
+                kwargs["backend"] = lb
+
+        if local_backend == "onnxruntime-genai":
+            kwargs["model"] = os.environ.get(
+                "ZETTELFORGE_LLM_MODEL",
+                ("" if looks_like_ollama_tag else (cfg_model or _DEFAULT_ONNX_MODEL)),
+            )
+            kwargs["filename"] = os.environ.get(
+                "ZETTELFORGE_LLM_FILENAME",
+                kwargs.get("filename") or _DEFAULT_ONNX_FILENAME,
+            )
+        else:
+            kwargs["model"] = os.environ.get(
+                "ZETTELFORGE_LLM_MODEL",
+                ("" if looks_like_ollama_tag else cfg_model) or DEFAULT_LLM_MODEL,
+            )
+            kwargs["filename"] = os.environ.get(
+                "ZETTELFORGE_LLM_FILENAME",
+                kwargs.get("filename") or DEFAULT_LLM_FILENAME,
+            )
     elif provider_name == "ollama":
         # ``ZETTELFORGE_OLLAMA_MODEL`` is deprecated in favour of
         # ``ZETTELFORGE_LLM_MODEL`` but still honoured through v2.x.
@@ -134,7 +157,7 @@ def _provider_kwargs(provider_name: str) -> Dict[str, Any]:
     return {k: v for k, v in kwargs.items() if v != ""}
 
 
-def _fallback_provider(primary: str) -> Optional[str]:
+def _fallback_provider(primary: str) -> str | None:
     """Return the fallback provider name for ``primary`` (or ``None``)."""
     try:
         from zettelforge.config import get_config
@@ -160,7 +183,7 @@ def generate(
     prompt: str,
     max_tokens: int = 400,
     temperature: float = 0.1,
-    system: Optional[str] = None,
+    system: str | None = None,
     json_mode: bool = False,
 ) -> str:
     """Generate text from a prompt via the configured LLM provider.
@@ -263,7 +286,7 @@ def _generate_local(
     prompt: str,
     max_tokens: int,
     temperature: float,
-    system: Optional[str],
+    system: str | None,
     json_mode: bool = False,
 ) -> str:
     """Deprecated compat shim — prefer :func:`generate`."""
@@ -277,7 +300,7 @@ def _generate_ollama(
     prompt: str,
     max_tokens: int,
     temperature: float,
-    system: Optional[str] = None,
+    system: str | None = None,
     json_mode: bool = False,
 ) -> str:
     """Deprecated compat shim — prefer :func:`generate`."""

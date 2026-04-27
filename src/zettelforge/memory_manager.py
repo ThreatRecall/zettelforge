@@ -9,13 +9,14 @@ With zettelforge-enterprise: TypeDB backend, deeper traversal, extended synthesi
 """
 
 import atexit
+import concurrent.futures
 import queue
 import threading
 import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 import structlog
 
@@ -80,7 +81,7 @@ class MemoryManager:
     Main interface for agent memory operations.
     """
 
-    def __init__(self, jsonl_path: Optional[str] = None, lance_path: Optional[str] = None):
+    def __init__(self, jsonl_path: str | None = None, lance_path: str | None = None):
         # Derive data_dir from jsonl_path if provided (tests pass custom paths)
         _data_dir = None
         if jsonl_path:
@@ -113,7 +114,10 @@ class MemoryManager:
             memory_store=self._lance_store,
             note_lookup=lambda nid: self.store.get_note_by_id(nid),
         )
-        self.governance = GovernanceValidator()
+        self.governance = GovernanceValidator(
+            pii_config=get_config().governance.pii,
+            limits_config=get_config().governance.limits,
+        )
         self.resolver = AliasResolver()
         self.consolidation = ConsolidationMiddleware(self)
 
@@ -135,8 +139,8 @@ class MemoryManager:
         self._telemetry = get_telemetry()
         # Correlation slot — recall stores its query_id/results here so
         # synthesize() can attach synthesis telemetry to the same query_id.
-        self._telemetry_query_id: Optional[str] = None
-        self._telemetry_retrieved_notes: Optional[List] = None
+        self._telemetry_query_id: str | None = None
+        self._telemetry_retrieved_notes: list | None = None
 
         # Dual-stream enrichment: background worker for LLM causal extraction
         self._enrichment_queue: queue.Queue = queue.Queue(maxsize=500)
@@ -158,7 +162,7 @@ class MemoryManager:
         domain: str = "general",
         evolve: bool = False,
         sync: bool = False,
-    ) -> Tuple[MemoryNote, str]:
+    ) -> tuple[MemoryNote, str]:
         """
         Create a new memory note from content.
 
@@ -218,11 +222,11 @@ class MemoryManager:
         sync: bool,
         request_id: str,
         start: float,
-    ) -> Tuple[MemoryNote, str]:
+    ) -> tuple[MemoryNote, str]:
         """Inner body of remember(); split out so trace_id binding can wrap it."""
-        # Governance validation
+        # Governance validation (may return redacted content when PII is enabled)
         try:
-            self.governance.enforce("remember", content)
+            content = self.governance.enforce("remember", content)
             log_authorization(
                 actor="system",
                 resource="remember",
@@ -277,7 +281,7 @@ class MemoryManager:
         # [RFC-009 Phase 0.5] Per-phase timings to attribute remember() latency.
         # Emitted in ocsf_api_activity.phase_timings_ms so the RFC-007 aggregator
         # can bucket them without schema changes.
-        phase_timings_ms: Dict[str, float] = {}
+        phase_timings_ms: dict[str, float] = {}
 
         _p = time.perf_counter()
         note = self.constructor.construct(
@@ -423,7 +427,7 @@ class MemoryManager:
         context: str = "",
         min_importance: int = 3,
         max_facts: int = 5,
-    ) -> List[Tuple[Optional[MemoryNote], str]]:
+    ) -> list[tuple[MemoryNote | None, str]]:
         """
         Mem0-style two-phase pipeline: extract salient facts, then decide ADD/UPDATE/DELETE/NOOP.
 
@@ -481,7 +485,7 @@ class MemoryManager:
         min_importance: int = 3,
         max_facts: int = 10,
         chunk_size: int = 3000,
-    ) -> List[Tuple[Optional[MemoryNote], str]]:
+    ) -> list[tuple[MemoryNote | None, str]]:
         """
         Ingest a news report or threat report.
 
@@ -540,20 +544,78 @@ class MemoryManager:
     def recall(
         self,
         query: str,
-        domain: Optional[str] = None,
+        domain: str | None = None,
         k: int = 10,
         include_links: bool = True,
         exclude_superseded: bool = True,
         include_expired: bool = False,
-        actor: Optional[str] = None,
-    ) -> List[MemoryNote]:
+        actor: str | None = None,
+    ) -> list[MemoryNote]:
         """
         Retrieve memories relevant to query using blended vector + graph retrieval.
 
         Uses intent classifier to determine retrieval strategy weights,
         then combines vector similarity and graph traversal results
         with cross-encoder reranking.
+
+        If governance.limits.recall_timeout_seconds is set (> 0), the
+        retrieval pipeline is capped by a wall-clock timeout. Exceeding
+        the timeout logs a warning and returns an empty list. This is a
+        defense-in-depth control for D-03 (deep graph traversal DoS) per
+        RFC-014.
         """
+        timeout = get_config().governance.limits.recall_timeout_seconds
+        if timeout > 0:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                future = pool.submit(
+                    self._recall_inner,
+                    query,
+                    domain,
+                    k,
+                    include_links,
+                    exclude_superseded,
+                    include_expired,
+                    actor,
+                )
+                try:
+                    return future.result(timeout=timeout)
+                except concurrent.futures.TimeoutError:
+                    self._logger.warning(
+                        "recall_timed_out",
+                        timeout_seconds=timeout,
+                        query=query[:100],
+                    )
+                    log_api_activity(
+                        operation="recall",
+                        status_id=STATUS_FAILURE,
+                        query=query[:200],
+                        domain=domain,
+                        k=k,
+                        result_count=0,
+                        duration_ms=timeout * 1000,
+                        request_id=uuid.uuid4().hex,
+                    )
+                    return []
+        return self._recall_inner(
+            query,
+            domain,
+            k,
+            include_links,
+            exclude_superseded,
+            include_expired,
+            actor,
+        )
+
+    def _recall_inner(
+        self,
+        query: str,
+        domain: str | None = None,
+        k: int = 10,
+        include_links: bool = True,
+        exclude_superseded: bool = True,
+        include_expired: bool = False,
+        actor: str | None = None,
+    ) -> list[MemoryNote]:
         request_id = uuid.uuid4().hex
         start = time.perf_counter()
         self.stats["retrievals"] += 1
@@ -566,7 +628,7 @@ class MemoryManager:
         from zettelforge.intent_classifier import get_intent_classifier
 
         classifier = get_intent_classifier()
-        intent, intent_meta = classifier.classify(query)
+        intent, _intent_meta = classifier.classify(query)
         policy = classifier.get_traversal_policy(intent)
 
         # Extract entities from query for graph traversal
@@ -580,7 +642,7 @@ class MemoryManager:
         # requires real similarity scores for min-max fusion. Without this,
         # commit 0e1c73 fails with ValueError: too many values to unpack.
         _vector_start = time.perf_counter()
-        vector_scored: List[tuple] = self.retriever.retrieve(
+        vector_scored: list[tuple] = self.retriever.retrieve(
             query=query,
             domain=domain,
             k=k,
@@ -591,11 +653,10 @@ class MemoryManager:
 
         # Temporal boost: for temporal queries, prioritize notes containing dates from the query
         if intent.value == "temporal":
-            try:
-                import re as _re
+            import importlib.util
+            import re as _re
 
-                import dateparser  # noqa: F401
-
+            if importlib.util.find_spec("dateparser") is not None:
                 # Extract date-like strings from query
                 date_patterns = _re.findall(
                     r"\b(?:january|february|march|april|may|june|july|august|september|"
@@ -616,8 +677,6 @@ class MemoryManager:
                         else:
                             rest.append((note, score))
                     vector_scored = boosted + rest
-            except ImportError:
-                pass
 
         # Blended retrieval: combine vector similarity with graph traversal
         from zettelforge.blended_retriever import BlendedRetriever
@@ -695,7 +754,15 @@ class MemoryManager:
                 if reranker is not None:
                     docs = [n.content.raw[:512] for n in results]
                     scores = list(reranker.rerank(query, docs))
-                    paired = sorted(zip(scores, results), key=lambda x: x[0], reverse=True)
+                    # B905: strict=True — scores and results have identical
+                    # length by construction (one score per doc), so a length
+                    # mismatch would be a programming error, not a silent
+                    # truncation bug.
+                    paired = sorted(
+                        zip(scores, results, strict=True),
+                        key=lambda x: x[0],
+                        reverse=True,
+                    )
                     results = [note for _, note in paired]
             except Exception:
                 self._logger.warning("reranking_failed_using_original_order", exc_info=True)
@@ -751,7 +818,7 @@ class MemoryManager:
         )
         return results
 
-    def recall_entity(self, entity_type: str, entity_value: str, k: int = 5) -> List[MemoryNote]:
+    def recall_entity(self, entity_type: str, entity_value: str, k: int = 5) -> list[MemoryNote]:
         """
         Fast lookup by entity type and value.
         entity_type: 'cve', 'actor', 'threat_actor', 'intrusion_set', 'tool',
@@ -770,11 +837,11 @@ class MemoryManager:
                 notes.append(note)
         return notes
 
-    def recall_cve(self, cve_id: str, k: int = 5) -> List[MemoryNote]:
+    def recall_cve(self, cve_id: str, k: int = 5) -> list[MemoryNote]:
         """Fast lookup by CVE-ID (case-insensitive)"""
         return self.recall_entity("cve", cve_id.upper(), k)
 
-    def recall_actor(self, actor_name: str, k: int = 5) -> List[MemoryNote]:
+    def recall_actor(self, actor_name: str, k: int = 5) -> list[MemoryNote]:
         """Fast lookup by threat actor name.
 
         Searches legacy 'actor', STIX 'threat_actor', and STIX
@@ -793,16 +860,16 @@ class MemoryManager:
                     seen.add(note.id)
         return results
 
-    def recall_technique(self, technique_id: str, k: int = 25) -> List[MemoryNote]:
+    def recall_technique(self, technique_id: str, k: int = 25) -> list[MemoryNote]:
         """Fast lookup by MITRE ATT&CK technique ID (e.g., T1059)."""
         return self.recall_entity("attack_pattern", technique_id.upper(), k)
 
-    def recall_tool(self, tool_name: str, k: int = 5) -> List[MemoryNote]:
+    def recall_tool(self, tool_name: str, k: int = 5) -> list[MemoryNote]:
         """Fast lookup by tool name"""
         return self.recall_entity("tool", tool_name.lower(), k)
 
     def get_context(
-        self, query: str, domain: Optional[str] = None, k: int = 10, token_budget: int = 4000
+        self, query: str, domain: str | None = None, k: int = 10, token_budget: int = 4000
     ) -> str:
         """
         Get formatted memory context for agent prompt injection.
@@ -811,7 +878,7 @@ class MemoryManager:
             query=query, domain=domain, k=k, token_budget=token_budget
         )
 
-    def get_stats(self) -> Dict:
+    def get_stats(self) -> dict:
         """Get memory system statistics"""
         return {
             **self.stats,
@@ -819,7 +886,7 @@ class MemoryManager:
             "entity_index": self.indexer.stats(),
         }
 
-    def _update_knowledge_graph(self, note: MemoryNote, resolved_entities: Dict[str, List[str]]):
+    def _update_knowledge_graph(self, note: MemoryNote, resolved_entities: dict[str, list[str]]):
         now = datetime.now().isoformat()
         edge_props = {"first_observed": now, "confidence": note.metadata.confidence}
 
@@ -1112,7 +1179,7 @@ class MemoryManager:
             except Exception:
                 self._logger.warning("enrichment_drain_failed", exc_info=True)
 
-    def evolve_note(self, note_id: str, sync: bool = False) -> Optional[Dict]:
+    def evolve_note(self, note_id: str, sync: bool = False) -> dict | None:
         """Trigger neighbor evolution for an existing note.
 
         Intended for manual or MCP invocation.
@@ -1180,8 +1247,8 @@ class MemoryManager:
         return True
 
     def _check_supersession(
-        self, new_note: MemoryNote, resolved_entities: Dict[str, List[str]]
-    ) -> Optional[MemoryNote]:
+        self, new_note: MemoryNote, resolved_entities: dict[str, list[str]]
+    ) -> MemoryNote | None:
         from datetime import datetime
 
         _entity_keys = [
@@ -1199,7 +1266,7 @@ class MemoryManager:
         ]
 
         # Build the new note's normalised entity sets once.
-        new_entities: Dict[str, set] = {
+        new_entities: dict[str, set] = {
             k: set(e.lower() for e in resolved_entities.get(k, [])) for k in _entity_keys
         }
 
@@ -1207,7 +1274,7 @@ class MemoryManager:
         # least one entity value with the new note — O(E) instead of O(N).
         # Also pre-compute per-candidate overlap counts while traversing the index
         # so we never need to re-extract entities from raw content.
-        candidate_overlap: Dict[str, int] = {}
+        candidate_overlap: dict[str, int] = {}
         for key in _entity_keys:
             for evalue in new_entities[key]:
                 nids = self.store.get_note_ids_for_entity(key, evalue)
@@ -1273,7 +1340,7 @@ class MemoryManager:
         to_type: str,
         to_value: str,
         relationship: str,
-        properties: Optional[Dict] = None,
+        properties: dict | None = None,
     ) -> None:
         """Ingest a STIX relationship into the knowledge graph.
 
@@ -1310,7 +1377,7 @@ class MemoryManager:
         entity_value: str,
         max_depth: int = 3,
         direction: str = "forward",
-    ) -> List[Dict]:
+    ) -> list[dict]:
         """Trace causal provenance chain from an entity.
 
         Args:
@@ -1349,14 +1416,14 @@ class MemoryManager:
             )
         return chain
 
-    def get_entity_relationships(self, entity_type: str, entity_value: str) -> List[Dict]:
+    def get_entity_relationships(self, entity_type: str, entity_value: str) -> list[dict]:
         """Get direct relationships for an entity from the knowledge graph."""
         # Resolve alias if necessary
         canonical = self.resolver.resolve(entity_type, entity_value)
 
         return self.store.get_kg_neighbors(entity_type, canonical)
 
-    def traverse_graph(self, start_type: str, start_value: str, max_depth: int = 2) -> List[Dict]:
+    def traverse_graph(self, start_type: str, start_value: str, max_depth: int = 2) -> list[dict]:
         """Traverse relationships from a starting entity.
 
         Depth is capped at 2 without the enterprise extension.
@@ -1380,9 +1447,9 @@ class MemoryManager:
         query: str,
         format: str = "direct_answer",
         k: int = 10,
-        tier_filter: List[str] = None,
-        actor: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        tier_filter: list[str] | None = None,
+        actor: str | None = None,
+    ) -> dict[str, Any]:
         """
         Synthesize an answer from retrieved memories (Phase 7 RAG-as-Answer).
 
@@ -1447,7 +1514,7 @@ class MemoryManager:
         )
         return result
 
-    def validate_synthesis(self, response: Dict) -> Tuple[bool, List[str]]:
+    def validate_synthesis(self, response: dict) -> tuple[bool, list[str]]:
         """
         Validate a synthesis response for quality.
 
@@ -1457,7 +1524,7 @@ class MemoryManager:
         validator = get_synthesis_validator()
         return validator.validate_response(response)
 
-    def check_synthesis_quality(self, response: Dict) -> Dict:
+    def check_synthesis_quality(self, response: dict) -> dict:
         """
         Compute quality score for a synthesis response.
 
@@ -1468,7 +1535,7 @@ class MemoryManager:
 
 
 # Global memory manager instance
-_memory_manager: Optional[MemoryManager] = None
+_memory_manager: MemoryManager | None = None
 
 
 def get_memory_manager() -> MemoryManager:

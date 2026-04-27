@@ -1,0 +1,58 @@
+<!-- SynthesisBlock Component -->
+<div class="synthesis-block">
+    <h3 class="synthesis-title">Synthesized Answer</h3>
+    <div class="synthesis-content">
+        {{ answer }}
+    </div>
+    <div class="synthesis-sources">
+        <span class="sources-label">Sources:</span>
+        {% for source in sources %}
+        <span class="source-id font-mono">{{ source }}</span>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.synthesis-block {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-bottom: var(--space-4);
+}
+.synthesis-title {
+    color: var(--intent-factual);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.synthesis-content {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--fg-primary);
+    margin-bottom: var(--space-4);
+}
+.synthesis-sources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border-default);
+}
+.sources-label {
+    color: var(--fg-tertiary);
+    font-size: 12px;
+    font-weight: 500;
+}
+.source-id {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--bg-surface-hi);
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    color: var(--intent-factual);
+}
+</style>

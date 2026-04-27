@@ -17,10 +17,10 @@ jobs:
       actions: read
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
         with:
           python-version: '3.12'
 
@@ -30,7 +30,7 @@ jobs:
           pip install -e ".[dev]" || pip install -e "."
 
       - name: Set up Snyk CLI
-        uses: snyk/actions/setup@master
+        uses: snyk/actions/setup@9adf32b1121593767fc3c057af55b55db032dc04
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
@@ -65,7 +65,7 @@ jobs:
 
       - name: Upload SARIF to GitHub
         if: steps.check_token.outputs.has_token == 'true'
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@b25d0ebf40e5b63ee81e1bd6e5d2a12b7c2aeb61
         with:
           sarif_file: snyk-code.sarif
         continue-on-error: true

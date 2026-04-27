@@ -25,7 +25,7 @@ import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 _QUERY_TTL_SECONDS = 3600  # evict tracked queries older than this on start_query
 
@@ -35,9 +35,9 @@ class _QueryContext:
     """In-memory bookkeeping for an active query. Not persisted."""
 
     query: str
-    actor: Optional[str]
+    actor: str | None
     start_ts: float
-    results: List[Any] = field(default_factory=list)
+    results: list[Any] = field(default_factory=list)
 
 
 class TelemetryCollector:
@@ -61,12 +61,12 @@ class TelemetryCollector:
         self._data_dir = Path(os.path.expanduser(data_dir))
         self._logger_name = logger_name
         self._write_lock = threading.Lock()
-        self._queries: Dict[str, _QueryContext] = {}
+        self._queries: dict[str, _QueryContext] = {}
         self._queries_lock = threading.Lock()
 
     # ── Query lifecycle ────────────────────────────────────────────────
 
-    def start_query(self, query: str, actor: Optional[str] = None) -> str:
+    def start_query(self, query: str, actor: str | None = None) -> str:
         """Begin tracking a query. Returns ``query_id`` (UUID4 hex) for correlation.
 
         Evicts tracked queries older than 1 hour on each call so memory use
@@ -84,7 +84,7 @@ class TelemetryCollector:
                 del self._queries[qid]
         return query_id
 
-    def _get_context(self, query_id: str) -> Optional[_QueryContext]:
+    def _get_context(self, query_id: str) -> _QueryContext | None:
         with self._queries_lock:
             return self._queries.get(query_id)
 
@@ -93,7 +93,7 @@ class TelemetryCollector:
     def log_recall(
         self,
         query_id: str,
-        results: List[Any],
+        results: list[Any],
         intent: str,
         vector_latency_ms: int = 0,
         graph_latency_ms: int = 0,
@@ -111,7 +111,7 @@ class TelemetryCollector:
         query_text = self._truncate_query(ctx.query if ctx else "", debug)
         actor = ctx.actor if ctx else None
 
-        event: Dict[str, Any] = {
+        event: dict[str, Any] = {
             "event_type": "recall",
             "timestamp": time.time(),
             "query_id": query_id,
@@ -139,7 +139,7 @@ class TelemetryCollector:
     def log_synthesis(
         self,
         query_id: str,
-        result: Dict[str, Any],
+        result: dict[str, Any],
         synthesis_latency_ms: int = 0,
     ) -> None:
         """Write a synthesis event to today's telemetry JSONL.
@@ -158,7 +158,7 @@ class TelemetryCollector:
         cited_notes = _cited_note_ids(result)
         sources_count = _sources_count(result)
 
-        event: Dict[str, Any] = {
+        event: dict[str, Any] = {
             "event_type": "synthesis",
             "timestamp": time.time(),
             "query_id": query_id,
@@ -183,7 +183,7 @@ class TelemetryCollector:
         query_id: str,
         note_id: str,
         utility: int,
-        agent: Optional[str] = None,
+        agent: str | None = None,
     ) -> None:
         """Write an explicit feedback event. Utility is 1–5."""
         event = {
@@ -199,8 +199,8 @@ class TelemetryCollector:
     def auto_feedback_from_synthesis(
         self,
         query_id: str,
-        retrieved_notes: List[Any],
-        synthesis_result: Dict[str, Any],
+        retrieved_notes: list[Any],
+        synthesis_result: dict[str, Any],
     ) -> None:
         """Infer utility from citation patterns. DEBUG mode only.
 
@@ -225,7 +225,7 @@ class TelemetryCollector:
     def _debug_enabled(self) -> bool:
         return logging.getLogger(self._logger_name).isEnabledFor(logging.DEBUG)
 
-    def _duration_ms(self, ctx: Optional[_QueryContext]) -> int:
+    def _duration_ms(self, ctx: _QueryContext | None) -> int:
         if ctx is None:
             return 0
         return int((time.time() - ctx.start_ts) * 1000)
@@ -234,11 +234,11 @@ class TelemetryCollector:
         limit = 500 if debug else 200
         return query[:limit]
 
-    def _path_for(self, when: Optional[datetime] = None) -> Path:
+    def _path_for(self, when: datetime | None = None) -> Path:
         when = when or datetime.now()
         return self._data_dir / f"telemetry_{when.strftime('%Y-%m-%d')}.jsonl"
 
-    def _append(self, event: Dict[str, Any]) -> None:
+    def _append(self, event: dict[str, Any]) -> None:
         """Serialize and append one JSONL line. Creates data_dir on first write."""
         path = self._path_for()
         line = json.dumps(event, default=str)
@@ -251,11 +251,11 @@ class TelemetryCollector:
 # ── Helpers (duck-typed; avoid importing MemoryNote to keep this standalone) ──
 
 
-def _note_id(note: Any) -> Optional[str]:
+def _note_id(note: Any) -> str | None:
     return getattr(note, "id", None)
 
 
-def _note_summary(note: Any, rank: int) -> Dict[str, Any]:
+def _note_summary(note: Any, rank: int) -> dict[str, Any]:
     metadata = getattr(note, "metadata", None)
     content = getattr(note, "content", None)
     return {
@@ -267,8 +267,8 @@ def _note_summary(note: Any, rank: int) -> Dict[str, Any]:
     }
 
 
-def _tier_distribution(notes: List[Any]) -> Dict[str, int]:
-    dist: Dict[str, int] = {}
+def _tier_distribution(notes: list[Any]) -> dict[str, int]:
+    dist: dict[str, int] = {}
     for note in notes:
         metadata = getattr(note, "metadata", None)
         tier = getattr(metadata, "tier", None) if metadata is not None else None
@@ -286,9 +286,9 @@ def _stringify_intent(intent: Any) -> str:
     return str(intent)
 
 
-def _cited_note_ids(synthesis_result: Dict[str, Any]) -> List[str]:
+def _cited_note_ids(synthesis_result: dict[str, Any]) -> list[str]:
     sources = synthesis_result.get("sources", [])
-    ids: List[str] = []
+    ids: list[str] = []
     for source in sources:
         if isinstance(source, dict):
             nid = source.get("note_id")
@@ -299,14 +299,14 @@ def _cited_note_ids(synthesis_result: Dict[str, Any]) -> List[str]:
     return ids
 
 
-def _sources_count(synthesis_result: Dict[str, Any]) -> int:
+def _sources_count(synthesis_result: dict[str, Any]) -> int:
     metadata = synthesis_result.get("metadata")
     if isinstance(metadata, dict) and "sources_count" in metadata:
         return int(metadata["sources_count"])
     return len(synthesis_result.get("sources", []) or [])
 
 
-def _confidence(synthesis_result: Dict[str, Any]) -> Optional[float]:
+def _confidence(synthesis_result: dict[str, Any]) -> float | None:
     # Synthesis schema varies — confidence may sit under "synthesis"
     # (per schema in synthesis_generator.py) or at the top level.
     synthesis = synthesis_result.get("synthesis")
@@ -319,7 +319,7 @@ def _confidence(synthesis_result: Dict[str, Any]) -> Optional[float]:
 
 # ── Singleton ──────────────────────────────────────────────────────────
 
-_telemetry_instance: Optional[TelemetryCollector] = None
+_telemetry_instance: TelemetryCollector | None = None
 _telemetry_singleton_lock = threading.Lock()
 
 

@@ -17,8 +17,8 @@ from zettelforge.sigma.parser import (
 from zettelforge.sigma.tags import resolve_sigma_tag
 
 __all__ = [
-    "SigmaRule",
     "SigmaParseError",
+    "SigmaRule",
     "SigmaValidationError",
     "from_rule_dict",
     "ingest_rule",

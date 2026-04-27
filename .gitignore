@@ -12,6 +12,17 @@ tasks/
 docs/.ralph/
 agentsync.md
 
+# Internal research/specs/plans — workspace scratch that contains
+# unredacted incident detail, customer references, and intermediate
+# reasoning. Kept on disk for the maintainer; not published.
+docs/superpowers/
+
+# Claude Code session artifacts — agent worktrees, transcripts, and
+# scratch state created by the maintainer's local tooling. Belt-and-
+# suspenders: these were never tracked, but listing them prevents an
+# accidental `git add -A` from sweeping them in.
+.claude/
+
 # MkDocs build output (regenerated from docs/)
 site/
 
@@ -28,6 +39,8 @@ downloads/
 eggs/
 .eggs/
 lib/
+!web/ui/js/lib/
+!web/ui/js/lib/*.js
 lib64/
 parts/
 sdist/

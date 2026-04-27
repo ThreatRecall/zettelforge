@@ -1,0 +1,47 @@
+name: Stale issue and PR management
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"  # Every Monday at 09:00 UTC
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # Issues
+          stale-issue-message: >
+            This issue has been inactive for 60 days. It will be closed
+            in 14 days unless there is new activity. If this is still
+            relevant, please comment to keep it open.
+          close-issue-message: >
+            This issue has been automatically closed after 14 days of
+            inactivity. It can be reopened at any time.
+          days-before-issue-stale: 60
+          days-before-issue-close: 14
+          stale-issue-label: stale
+          exempt-issue-labels: "p0,planned,help wanted,good first issue"
+
+          # PRs
+          stale-pr-message: >
+            This pull request has been inactive for 60 days. It will be
+            closed in 14 days unless there is new activity.
+          close-pr-message: >
+            This pull request has been automatically closed after 14 days
+            of inactivity.
+          days-before-pr-stale: 60
+          days-before-pr-close: 14
+          stale-pr-label: stale
+          exempt-pr-labels: "draft,work-in-progress"
+
+          # General
+          operations-per-run: 100
+          remove-stale-when-updated: true
+          delete-branch: false

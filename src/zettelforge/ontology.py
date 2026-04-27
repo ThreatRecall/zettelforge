@@ -10,7 +10,7 @@ import json
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import yaml
 
@@ -362,7 +362,7 @@ class OntologyValidator:
     Validates entity and relation operations against type constraints.
     """
 
-    def __init__(self, schema_path: Optional[str] = None):
+    def __init__(self, schema_path: str | None = None):
         self.schema_path = schema_path
         self.custom_types = {}
         self.custom_relations = {}
@@ -377,11 +377,11 @@ class OntologyValidator:
             self.custom_types = schema.get("types", {})
             self.custom_relations = schema.get("relations", {})
 
-    def get_type_definition(self, type_name: str) -> Dict:
+    def get_type_definition(self, type_name: str) -> dict:
         """Get type definition, falling back to defaults."""
         return self.custom_types.get(type_name, ENTITY_TYPES.get(type_name, {}))
 
-    def validate_entity(self, entity_type: str, properties: Dict) -> tuple[bool, List[str]]:
+    def validate_entity(self, entity_type: str, properties: dict) -> tuple[bool, list[str]]:
         """
         Validate entity against type constraints.
         Returns (is_valid, error_messages)
@@ -417,9 +417,8 @@ class OntologyValidator:
                     "end >= start" in validate_expr
                     and "end" in properties
                     and "start" in properties
-                ):
-                    if properties["end"] < properties["start"]:
-                        errors.append("End time must be >= start time")
+                ) and properties["end"] < properties["start"]:
+                    errors.append("End time must be >= start time")
             except Exception as e:
                 errors.append(f"Validation error: {e}")
 
@@ -427,7 +426,7 @@ class OntologyValidator:
 
     def validate_relation(
         self, from_type: str, relation_type: str, to_type: str
-    ) -> tuple[bool, List[str]]:
+    ) -> tuple[bool, list[str]]:
         """
         Validate relation is allowed between types.
         Returns (is_valid, error_messages)
@@ -456,15 +455,15 @@ class TypedEntityStore:
     Integrates with ZettelForge KnowledgeGraph.
     """
 
-    def __init__(self, data_dir: str, validator: Optional[OntologyValidator] = None):
+    def __init__(self, data_dir: str, validator: OntologyValidator | None = None):
         self.data_dir = Path(data_dir)
         self.entities_file = self.data_dir / "ontology_entities.jsonl"
         self.relations_file = self.data_dir / "ontology_relations.jsonl"
         self.validator = validator or OntologyValidator()
 
         # In-memory cache
-        self._entities: Dict[str, Dict] = {}
-        self._relations: List[Dict] = []
+        self._entities: dict[str, dict] = {}
+        self._relations: list[dict] = []
 
         self._load()
 
@@ -484,21 +483,21 @@ class TypedEntityStore:
                         rel = json.loads(line)
                         self._relations.append(rel)
 
-    def _save_entity(self, entity: Dict):
+    def _save_entity(self, entity: dict):
         """Append entity to JSONL."""
         self.data_dir.mkdir(parents=True, exist_ok=True)
         with open(self.entities_file, "a") as f:
             f.write(json.dumps(entity) + "\n")
 
-    def _save_relation(self, relation: Dict):
+    def _save_relation(self, relation: dict):
         """Append relation to JSONL."""
         self.data_dir.mkdir(parents=True, exist_ok=True)
         with open(self.relations_file, "a") as f:
             f.write(json.dumps(relation) + "\n")
 
     def create_entity(
-        self, entity_type: str, properties: Dict, entity_id: Optional[str] = None
-    ) -> tuple[Optional[str], bool, List[str]]:
+        self, entity_type: str, properties: dict, entity_id: str | None = None
+    ) -> tuple[str | None, bool, list[str]]:
         """
         Create typed entity with validation.
         Returns (entity_id, success, errors)
@@ -527,8 +526,8 @@ class TypedEntityStore:
         return entity_id, True, []
 
     def create_relation(
-        self, from_id: str, relation_type: str, to_id: str, properties: Optional[Dict] = None
-    ) -> tuple[bool, List[str]]:
+        self, from_id: str, relation_type: str, to_id: str, properties: dict | None = None
+    ) -> tuple[bool, list[str]]:
         """
         Create relation with validation.
         Returns (success, errors)
@@ -551,9 +550,8 @@ class TypedEntityStore:
 
         # Check acyclic if required
         rel_def = RELATION_TYPES.get(relation_type, {})
-        if rel_def.get("acyclic"):
-            if self._would_create_cycle(from_id, relation_type, to_id):
-                return False, [f"Relation {relation_type} would create cycle (acyclic constraint)"]
+        if rel_def.get("acyclic") and self._would_create_cycle(from_id, relation_type, to_id):
+            return False, [f"Relation {relation_type} would create cycle (acyclic constraint)"]
 
         relation = {
             "from": from_id,
@@ -589,51 +587,49 @@ class TypedEntityStore:
 
         return False
 
-    def get_entity(self, entity_id: str) -> Optional[Dict]:
+    def get_entity(self, entity_id: str) -> dict | None:
         """Get entity by ID."""
         return self._entities.get(entity_id)
 
-    def query_by_type(self, entity_type: str) -> List[Dict]:
+    def query_by_type(self, entity_type: str) -> list[dict]:
         """Query all entities of a type."""
         return [e for e in self._entities.values() if e["type"] == entity_type]
 
-    def query_by_property(self, entity_type: str, property_name: str, value: Any) -> List[Dict]:
+    def query_by_property(self, entity_type: str, property_name: str, value: Any) -> list[dict]:
         """Query entities by property value."""
         results = []
         for entity in self._entities.values():
-            if entity["type"] == entity_type:
-                if entity["properties"].get(property_name) == value:
-                    results.append(entity)
+            if entity["type"] == entity_type and entity["properties"].get(property_name) == value:
+                results.append(entity)
         return results
 
-    def get_related(self, entity_id: str, relation_type: Optional[str] = None) -> List[Dict]:
+    def get_related(self, entity_id: str, relation_type: str | None = None) -> list[dict]:
         """Get related entities."""
         results = []
         for rel in self._relations:
-            if rel["from"] == entity_id:
-                if relation_type is None or rel["rel"] == relation_type:
-                    target = self._entities.get(rel["to"])
-                    if target:
-                        results.append(
-                            {
-                                "relation": rel["rel"],
-                                "entity": target,
-                                "properties": rel.get("properties", {}),
-                            }
-                        )
+            if rel["from"] == entity_id and (relation_type is None or rel["rel"] == relation_type):
+                target = self._entities.get(rel["to"])
+                if target:
+                    results.append(
+                        {
+                            "relation": rel["rel"],
+                            "entity": target,
+                            "properties": rel.get("properties", {}),
+                        }
+                    )
         return results
 
-    def list_types(self) -> List[str]:
+    def list_types(self) -> list[str]:
         """List all entity types in store."""
         return list(set(e["type"] for e in self._entities.values()))
 
 
 # Global singleton
-_ontology_store: Optional[TypedEntityStore] = None
+_ontology_store: TypedEntityStore | None = None
 _ontology_lock = None  # Will be imported
 
 
-def get_ontology_store(data_dir: Optional[str] = None) -> TypedEntityStore:
+def get_ontology_store(data_dir: str | None = None) -> TypedEntityStore:
     """Get global ontology store instance."""
     import threading
 

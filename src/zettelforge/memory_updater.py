@@ -6,7 +6,6 @@ ADD (new), UPDATE (refine), DELETE (contradict), or NOOP (duplicate).
 """
 
 from enum import Enum
-from typing import List, Optional, Tuple
 
 from zettelforge.json_parse import extract_json
 from zettelforge.log import get_logger
@@ -28,12 +27,12 @@ class MemoryUpdater:
         self.model = model
         self.top_s = top_s
 
-    def find_similar(self, fact_text: str, domain: Optional[str] = None) -> List[MemoryNote]:
+    def find_similar(self, fact_text: str, domain: str | None = None) -> list[MemoryNote]:
         return self.mm.retriever.retrieve(
             query=fact_text, domain=domain, k=self.top_s, include_links=False
         )
 
-    def decide(self, fact_text: str, similar_notes: List[MemoryNote]) -> UpdateOperation:
+    def decide(self, fact_text: str, similar_notes: list[MemoryNote]) -> UpdateOperation:
         if not similar_notes:
             return UpdateOperation.ADD
 
@@ -61,9 +60,9 @@ class MemoryUpdater:
         fact_text: str,
         importance: int,
         source_ref: str,
-        similar_notes: List[MemoryNote],
+        similar_notes: list[MemoryNote],
         domain: str = "cti",
-    ) -> Tuple[Optional[MemoryNote], str]:
+    ) -> tuple[MemoryNote | None, str]:
         if operation == UpdateOperation.NOOP:
             return None, "noop"
 
@@ -97,7 +96,7 @@ class MemoryUpdater:
 
         return None, "unknown"
 
-    def _build_decision_prompt(self, fact_text: str, similar_notes: List[MemoryNote]) -> str:
+    def _build_decision_prompt(self, fact_text: str, similar_notes: list[MemoryNote]) -> str:
         existing = "\n".join(f"- [{n.id}] {n.content.raw[:200]}" for n in similar_notes)
         return f"""Compare this new fact against existing memory entries.
 Decide one operation: ADD, UPDATE, DELETE, or NOOP.

@@ -11,7 +11,6 @@ import os
 import sys
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import Optional
 
 import structlog
 
@@ -36,8 +35,8 @@ class _AuditFilter(logging.Filter):
 
 def configure_logging(
     level: str = "INFO",
-    log_file: Optional[str] = None,
-    audit_log_file: Optional[str] = None,
+    log_file: str | None = None,
+    audit_log_file: str | None = None,
     log_to_stderr: bool = True,
     max_bytes: int = 10 * 1024 * 1024,
     backup_count: int = 9,

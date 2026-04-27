@@ -9,8 +9,8 @@
 """
 
 import time
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable, Dict
 
 from zettelforge.log import get_logger
 
@@ -57,7 +57,7 @@ class Observability:
         else:
             self.metrics["cache_misses"] += 1
 
-    def get_metrics(self) -> Dict:
+    def get_metrics(self) -> dict:
         total_ops = self.metrics["operations"]
         avg_latency = self.metrics["total_latency_ms"] / total_ops if total_ops > 0 else 0
         return {

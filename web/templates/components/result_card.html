@@ -1,0 +1,98 @@
+<!-- ResultCard Component -->
+<div class="result-card" data-note-id="{{ note_id }}">
+    <div class="result-header">
+        <span class="note-id font-mono">{{ note_id }}</span>
+        <span class="tier-badge tier-{{ tier|lower }}">{{ tier }}</span>
+        <span class="domain">{{ domain }}</span>
+    </div>
+    <div class="result-content">
+        {{ content }}
+    </div>
+    <div class="result-footer">
+        {% if entities %}
+        <div class="entities">
+            {% for entity in entities %}
+            <span class="entity-tag">{{ entity }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="meta">
+            <span class="confidence">{{ confidence }}% confidence</span>
+            <span class="timestamp">{{ timestamp }}</span>
+        </div>
+    </div>
+</div>
+
+<style>
+.result-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    transition: border-color var(--transition-fast);
+}
+.result-card:hover {
+    border-color: var(--border-hover);
+}
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+}
+.note-id {
+    color: var(--intent-factual);
+    font-size: 12px;
+}
+.tier-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.domain {
+    color: var(--fg-tertiary);
+    font-size: 12px;
+    margin-left: auto;
+    font-family: var(--font-mono);
+}
+.result-content {
+    color: var(--fg-primary);
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.result-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    align-items: center;
+}
+.entities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+}
+.entity-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--bg-surface-hi);
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    color: var(--fg-secondary);
+    font-family: var(--font-mono);
+}
+.meta {
+    display: flex;
+    gap: var(--space-3);
+    margin-left: auto;
+    color: var(--fg-tertiary);
+    font-size: 12px;
+    font-family: var(--font-mono);
+}
+</style>

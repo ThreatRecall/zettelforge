@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ZettelForge{% endblock %}</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Design Tokens -->
+    <link rel="stylesheet" href="/static/css/design_tokens.css">
+    
+    <!-- Base Styles -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-app);
+            color: var(--fg-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+        
+        /* Header */
+        .app-header {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-default);
+            padding: var(--space-3) var(--space-6);
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+        
+        .app-header .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            text-decoration: none;
+        }
+        
+        .app-header .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--fg-primary);
+        }
+        
+        .app-header .logo-accent {
+            color: var(--signal-neon);
+        }
+        
+        .app-header .version {
+            color: var(--fg-tertiary);
+            font-size: 12px;
+            font-family: var(--font-mono);
+        }
+        
+        .app-header .stats {
+            margin-left: auto;
+            color: var(--fg-secondary);
+            font-size: 13px;
+            font-family: var(--font-mono);
+        }
+        
+        .app-header .nav-links {
+            display: flex;
+            gap: var(--space-4);
+            margin-left: var(--space-6);
+        }
+        
+        .app-header .nav-links a {
+            color: var(--fg-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+        
+        .app-header .nav-links a:hover {
+            color: var(--fg-primary);
+            background: var(--bg-surface-hi);
+        }
+        
+        .app-header .nav-links a.active {
+            color: var(--intent-factual);
+            background: var(--bg-surface-hi);
+        }
+        
+        /* Main Content */
+        .app-main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: var(--space-6);
+        }
+        
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-6);
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: var(--space-3) var(--space-4);
+            background: var(--bg-input);
+            border: 1px solid var(--border-default);
+            border-radius: var(--radius-md);
+            color: var(--fg-primary);
+            font-size: 15px;
+            font-family: var(--font-body);
+            outline: none;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        
+        .search-input:focus {
+            border-color: var(--border-focus);
+            box-shadow: var(--shadow-focus);
+        }
+        
+        .search-input::placeholder {
+            color: var(--fg-tertiary);
+        }
+        
+        .search-button {
+            padding: var(--space-3) var(--space-5);
+            background: var(--signal-leaf-deep);
+            border: none;
+            border-radius: var(--radius-md);
+            color: var(--fog-0);
+            font-size: 15px;
+            font-family: var(--font-body);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background var(--transition-fast);
+        }
+        
+        .search-button:hover {
+            background: var(--signal-leaf);
+        }
+        
+        .search-button:active {
+            opacity: 0.85;
+        }
+        
+        /* Footer */
+        .app-footer {
+            text-align: center;
+            padding: var(--space-6);
+            color: var(--fg-tertiary);
+            font-size: 12px;
+            border-top: 1px solid var(--border-default);
+            margin-top: var(--space-12);
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header class="app-header">
+        <a href="/" class="logo">
+            <span class="logo-text">Zettel<span class="logo-accent">Forge</span></span>
+        </a>
+        <span class="version" id="version">v{{ version }}</span>
+        <nav class="nav-links">
+            <a href="/" class="{% if request.url.path == '/' %}active{% endif %}">Search</a>
+            <a href="/config" class="{% if request.url.path == '/config' %}active{% endif %}">Config</a>
+        </nav>
+        <span class="stats" id="stats">{{ stats }}</span>
+    </header>
+    
+    <main class="app-main">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer class="app-footer">
+        ZettelForge v{{ version }} — Agentic Memory for Cyber Threat Intelligence
+    </footer>
+    
+    {% block scripts %}{% endblock %}
+    
+    <script>
+    // Shared API helper — available across all SPA pages
+    function apiHeaders(extra) {
+        const headers = {...(extra || {})};
+        const key = localStorage.getItem('zettelforgeApiKey');
+        if (key) headers['X-API-Key'] = key;
+        return headers;
+    }
+    </script>
+</body>
+</html>

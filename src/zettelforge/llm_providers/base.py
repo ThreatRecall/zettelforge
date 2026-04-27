@@ -16,7 +16,7 @@ so the caller can surface the error instead of silently falling back.
 
 from __future__ import annotations
 
-from typing import Optional, Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable
 
 
 class LLMProviderConfigurationError(Exception):
@@ -46,7 +46,7 @@ class LLMProvider(Protocol):
         prompt: str,
         max_tokens: int = 400,
         temperature: float = 0.1,
-        system: Optional[str] = None,
+        system: str | None = None,
         json_mode: bool = False,
     ) -> str:
         """Generate text from a prompt.

@@ -1,4 +1,13 @@
 # ZettelForge Code Owners
 # These users are automatically requested for review on PRs.
+#
+# Solo-maintainer mode (see governance/controls.yaml GOV-006): the
+# project currently has one human maintainer, so the GOV-006 §"Approval
+# Requirements" two-person rule cannot be physically satisfied. Until a
+# second maintainer is added, the compensating controls declared under
+# GOV-006 in controls.yaml (CI-green required, lint, governance
+# spec-drift, plus GOV-009 SCA/SAST gates) substitute for a second set
+# of human eyes. The audit trail of compensating controls is recoverable
+# from CI logs and branch-protection settings.
 
 * @rolandpg

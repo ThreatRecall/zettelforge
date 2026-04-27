@@ -8,7 +8,7 @@ with new context from the incoming note.
 Based on: A-Mem (arXiv:2502.12110, NeurIPS 2025)
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from zettelforge.json_parse import extract_json
 from zettelforge.llm_client import generate
@@ -56,7 +56,7 @@ class MemoryEvolver:
 
     # ── Candidate discovery ─────────────────────────────────────────────
 
-    def find_evolution_candidates(self, note: MemoryNote) -> List[MemoryNote]:
+    def find_evolution_candidates(self, note: MemoryNote) -> list[MemoryNote]:
         """Find top-k notes similar to *note* that might benefit from evolution.
 
         Uses the memory manager's recall path (vector + entity + reranking)
@@ -80,7 +80,7 @@ class MemoryEvolver:
         self,
         new_note: MemoryNote,
         neighbor: MemoryNote,
-    ) -> Optional[Dict]:
+    ) -> dict | None:
         """Ask the LLM whether *neighbor* should be updated given *new_note*.
 
         Returns a dict with keys ``action``, ``reason``, ``updated_content``
@@ -93,7 +93,7 @@ class MemoryEvolver:
         )
 
         # First attempt
-        output = generate(prompt, max_tokens=1024, temperature=0.2, json_mode=True)
+        output = generate(prompt, max_tokens=2500, temperature=0.2, json_mode=True)
         result = extract_json(output, expect="object")
 
         # Single retry on parse failure (AD-2). Capture what the model
@@ -108,7 +108,7 @@ class MemoryEvolver:
                 raw_chars=len(output or ""),
                 prompt_preview=prompt[:240],
             )
-            output = generate(prompt, max_tokens=1024, temperature=0.1, json_mode=True)
+            output = generate(prompt, max_tokens=2500, temperature=0.1, json_mode=True)
             result = extract_json(output, expect="object")
 
         if result is None:
@@ -206,7 +206,7 @@ class MemoryEvolver:
 
     # ── Main entry point ────────────────────────────────────────────────
 
-    def evolve_neighbors(self, new_note: MemoryNote) -> Dict[str, Any]:
+    def evolve_neighbors(self, new_note: MemoryNote) -> dict[str, Any]:
         """Find candidates and evolve neighbors of *new_note*.
 
         Returns a report dict::
@@ -220,7 +220,7 @@ class MemoryEvolver:
                 "evolved_ids": [str],
             }
         """
-        report: Dict[str, Any] = {
+        report: dict[str, Any] = {
             "candidates_found": 0,
             "evaluated": 0,
             "evolved": 0,

@@ -18,12 +18,12 @@ import random
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
-def _read_telemetry(data_dir: str) -> List[Dict[str, Any]]:
+def _read_telemetry(data_dir: str) -> list[dict[str, Any]]:
     """Read all synthesis events from all daily telemetry JSONL files."""
-    events: List[Dict[str, Any]] = []
+    events: list[dict[str, Any]] = []
     base = Path(data_dir)
     for path in sorted(base.glob("telemetry_*.jsonl")):
         if not path.exists():
@@ -37,10 +37,10 @@ def _read_telemetry(data_dir: str) -> List[Dict[str, Any]]:
     return events
 
 
-def _format_briefing(event: Dict[str, Any], index: int) -> str:
+def _format_briefing(event: dict[str, Any], index: int) -> str:
     """Format a single synthesis event as a reviewable briefing."""
     query = event.get("query", "(no query text)")
-    confidence = event.get("confidence", None)
+    confidence = event.get("confidence")
     sources_count = event.get("result_count", 0)
     duration_ms = event.get("duration_ms", 0)
     cited = event.get("cited_notes", [])
@@ -80,7 +80,7 @@ def _build_rubric_template() -> str:
 
 def main(
     dates_dir: str = str(Path.home() / ".amem" / "telemetry"),
-    date_str: Optional[str] = None,
+    date_str: str | None = None,
     count: int = 20,
     write_events: bool = False,
 ) -> str:

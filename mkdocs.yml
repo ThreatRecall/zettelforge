@@ -70,6 +70,7 @@ nav:
     - Two-Phase Pipeline: explanation/two-phase-pipeline.md
     - STIX in ZettelForge: explanation/stix-in-zettelforge.md
     - Epistemic Tiers: explanation/epistemic-tiers.md
+    - LLM Budgets & Timeouts: explanation/llm-budgets-and-timeouts.md
     - Zettelkasten Philosophy: explanation/zettelkasten-philosophy.md
   - Reference:
     - Memory Manager API: reference/memory-manager-api.md

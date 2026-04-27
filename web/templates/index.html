@@ -1,0 +1,279 @@
+{% extends "base.html" %}
+
+{% block title %}ZettelForge — CTI Memory{% endblock %}
+
+{% block content %}
+<!-- Search Bar -->
+{% include "components/search_bar.html" %}
+
+<!-- Tab Navigation -->
+{% set tabs = [
+    {'id': 'recall', 'label': 'Recall', 'active': true},
+    {'id': 'synthesize', 'label': 'Synthesize', 'active': false},
+    {'id': 'remember', 'label': 'Remember', 'active': false},
+    {'id': 'sync', 'label': 'OpenCTI Sync', 'active': false}
+] %}
+{% include "components/tab_bar.html" %}
+
+<!-- Remember Panel (hidden by default) -->
+<div id="remember-panel" style="display: none;">
+    {% include "components/remember_panel.html" %}
+</div>
+
+<!-- Sync Panel (hidden by default) -->
+<div id="sync-panel" class="sync-panel" style="display: none;">
+    <p class="sync-text">Pull latest from OpenCTI into ZettelForge memory.</p>
+    <button onclick="doSync()" class="sync-button">Sync Now (20 per type)</button>
+</div>
+
+<!-- Meta Status -->
+<div class="meta-bar" id="meta"></div>
+
+<!-- Loading Spinner -->
+<div class="spinner" id="spinner" style="display: none;">Searching...</div>
+
+<!-- Synthesis Results -->
+<div id="synthesis"></div>
+
+<!-- Results List -->
+<div class="results" id="results">
+    <div class="empty-state">
+        <h2>ZettelForge CTI Memory</h2>
+        <p>Search across threat actors, CVEs, tools, campaigns, and reports.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.sync-panel {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+.sync-text {
+    color: var(--fg-secondary);
+    font-size: 14px;
+    margin-bottom: var(--space-3);
+}
+.sync-button {
+    padding: var(--space-2) var(--space-4);
+    background: var(--signal-leaf-deep);
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--fog-0);
+    font-size: 13px;
+    font-family: var(--font-body);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+.sync-button:hover {
+    background: var(--signal-leaf);
+}
+.meta-bar {
+    color: var(--fg-tertiary);
+    font-size: 13px;
+    font-family: var(--font-mono);
+    margin-bottom: var(--space-4);
+    min-height: 20px;
+}
+.spinner {
+    text-align: center;
+    padding: var(--space-6);
+    color: var(--fg-secondary);
+    font-size: 14px;
+}
+.results {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+.empty-state {
+    text-align: center;
+    padding: var(--space-16);
+    color: var(--fg-tertiary);
+}
+.empty-state h2 {
+    font-size: 18px;
+    margin-bottom: var(--space-2);
+    color: var(--fg-secondary);
+    font-weight: 600;
+}
+.empty-state p {
+    font-size: 14px;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let mode = 'recall';
+
+function apiHeaders(extra = {}) {
+    const headers = {...extra};
+    const key = localStorage.getItem('zettelforgeApiKey');
+    if (key) headers['X-API-Key'] = key;
+    return headers;
+}
+
+function escHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+}
+
+function cssToken(s) {
+    return String(s || '').toLowerCase().replace(/[^a-z0-9_-]/g, '');
+}
+
+function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase().includes(m));
+    });
+    document.getElementById('remember-panel').style.display = m === 'remember' ? 'block' : 'none';
+    document.getElementById('sync-panel').style.display = m === 'sync' ? 'block' : 'none';
+    document.getElementById('results').style.display = m === 'remember' || m === 'sync' ? 'none' : 'block';
+    document.getElementById('synthesis').style.display = m === 'synthesize' ? 'block' : 'none';
+}
+
+async function doSearch() {
+    const query = document.getElementById('query').value;
+    if (!query.trim()) return;
+    
+    document.getElementById('spinner').style.display = 'block';
+    document.getElementById('results').innerHTML = '';
+    document.getElementById('synthesis').innerHTML = '';
+    
+    try {
+        let data;
+        if (mode === 'synthesize') {
+            const response = await fetch('/api/synthesize', {
+                method: 'POST',
+                headers: apiHeaders({'Content-Type': 'application/json'}),
+                body: JSON.stringify({query, format: 'synthesized_brief', k: 10})
+            });
+            data = await response.json();
+            if (!response.ok) throw new Error(data.detail || data.error || 'Synthesis failed');
+            renderSynthesis(data);
+        } else {
+            const response = await fetch('/api/recall', {
+                method: 'POST',
+                headers: apiHeaders({'Content-Type': 'application/json'}),
+                body: JSON.stringify({query, k: 10})
+            });
+            data = await response.json();
+            if (!response.ok) throw new Error(data.detail || data.error || 'Recall failed');
+            renderResults(data);
+        }
+    } catch (err) {
+        document.getElementById('meta').textContent = 'Error: ' + err.message;
+    } finally {
+        document.getElementById('spinner').style.display = 'none';
+    }
+}
+
+function renderResults(data) {
+    const container = document.getElementById('results');
+    document.getElementById('meta').textContent = 
+        `${data.count || 0} results in ${data.latency_ms || 0}ms`;
+    
+    if (!data.results?.length) {
+        container.innerHTML = '<div class="empty-state"><h2>No results</h2><p>Try a different query or check your memory index.</p></div>';
+        return;
+    }
+    
+    container.innerHTML = data.results.map(r => `
+        <div class="result-card">
+            <div class="result-header">
+                <span class="note-id font-mono">${escHtml(r.id)}</span>
+                <span class="tier-badge tier-${(r.tier||'').toLowerCase()}">${escHtml(r.tier)}</span>
+                <span class="domain">${escHtml(r.domain)}</span>
+            </div>
+            <div class="result-content">${escHtml(r.content || '')}</div>
+            <div class="result-footer">
+                ${r.entities ? `<div class="entities">${r.entities.map(e => `<span class="entity-tag">${escHtml(e)}</span>`).join('')}</div>` : ''}
+                <div class="meta">
+                    <span class="confidence">${r.confidence || 0}% confidence</span>
+                    <span class="timestamp">${r.created_at || ''}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function renderSynthesis(data) {
+    const syn = data.synthesis || {};
+    const answer = syn.summary || syn.answer || (syn.citations ? syn.citations.map(c => c.text || c).join('\n') : '');
+    const sources = syn.citations || syn.source_ids || [];
+    document.getElementById('synthesis').innerHTML = `
+        <div class="synthesis-block">
+            <h3 class="synthesis-title">Synthesized Answer (${data.latency_ms || 0}ms)</h3>
+            <div class="synthesis-content">${escHtml(answer || 'No synthesis available.')}</div>
+            ${sources.length ? `<div class="synthesis-sources">
+                <span class="sources-label">Sources (${data.sources_count || 0}):</span>
+                ${sources.map(s => `<span class="source-id font-mono">${escHtml(typeof s === 'string' ? s : (s.id || ''))}</span>`).join('')}
+            </div>` : ''}
+        </div>
+    `;
+}
+
+async function doRemember() {
+    const textarea = document.getElementById('remember-content');
+    const content = textarea.value;
+    if (!content.trim()) return;
+    
+    try {
+        const response = await fetch('/api/remember', {
+            method: 'POST',
+            headers: apiHeaders({'Content-Type': 'application/json'}),
+            body: JSON.stringify({content, domain: 'cti'})
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            document.getElementById('meta').textContent = 'Error: ' + (data.detail || data.error || 'Store failed');
+            return;
+        }
+        document.getElementById('meta').textContent = `Stored: ${data.note_id} (${data.status}, ${data.latency_ms}ms, entities: ${(data.entities||[]).join(', ')})`;
+        textarea.value = '';
+    } catch (err) {
+        document.getElementById('meta').textContent = 'Error: ' + err.message;
+    }
+}
+
+async function doSync() {
+    try {
+        const response = await fetch('/api/sync', {
+            method: 'POST',
+            headers: apiHeaders({'Content-Type': 'application/json'}),
+            body: JSON.stringify({limit: 20})
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            document.getElementById('meta').textContent = 'Sync error: ' + (data.detail || data.error || 'Sync failed');
+            return;
+        }
+        document.getElementById('meta').textContent = `Synced ${data.synced || 0} objects, ${data.skipped || 0} skipped, ${data.errors || 0} errors (${data.duration_s || 0}s)`;
+    } catch (err) {
+        document.getElementById('meta').textContent = 'Sync error: ' + err.message;
+    }
+}
+
+// Enter key triggers search
+document.getElementById('query')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') doSearch();
+});
+
+// Load version info
+fetch('/api/version', {headers: apiHeaders()})
+    .then(r => r.json())
+    .then(d => {
+        document.getElementById('version').textContent = `v${d.version}`;
+        document.getElementById('stats').textContent = `${d.notes || 0} notes`;
+    })
+    .catch(() => {});
+</script>
+{% endblock %}

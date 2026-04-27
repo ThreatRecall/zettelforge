@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any
 
 from zettelforge.detection.base import DetectionRule
 from zettelforge.yara.cccs_metadata import ValidationResult, validate_metadata
@@ -31,17 +31,17 @@ from zettelforge.yara.tags import resolve_yara_tag
 class YaraRule(DetectionRule):
     """``DetectionRule`` specialisation for YARA format."""
 
-    cccs_id: Optional[str] = None
-    fingerprint: Optional[str] = None  # SHA-256 over strings + condition
-    category: Optional[str] = None  # INFO | EXPLOIT | TECHNIQUE | TOOL | MALWARE
-    technique_tag: Optional[str] = None  # MITRE technique carried in CCCS meta
-    cccs_version: Optional[str] = None
+    cccs_id: str | None = None
+    fingerprint: str | None = None  # SHA-256 over strings + condition
+    category: str | None = None  # INFO | EXPLOIT | TECHNIQUE | TOOL | MALWARE
+    technique_tag: str | None = None  # MITRE technique carried in CCCS meta
+    cccs_version: str | None = None
     hash_of_sample: list[str] = field(default_factory=list)
-    rule_name: Optional[str] = None
+    rule_name: str | None = None
     is_private: bool = False
     is_global: bool = False
     imports: list[str] = field(default_factory=list)
-    condition: Optional[str] = None
+    condition: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -266,4 +266,4 @@ def _split_mitre(value: Any) -> list[str]:
     return [t.upper() for t in tokens if t]
 
 
-__all__ = ["YaraRule", "rule_to_entities", "from_rule_dict"]
+__all__ = ["YaraRule", "from_rule_dict", "rule_to_entities"]

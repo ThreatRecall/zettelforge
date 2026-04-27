@@ -13,7 +13,6 @@ Task 3: Lightweight intent classifier to weight traversal policy
 """
 
 from enum import Enum
-from typing import Dict, Optional, Tuple
 
 from zettelforge.log import get_logger
 
@@ -115,7 +114,7 @@ class IntentClassifier:
         self.use_llm_fallback = use_llm_fallback
         self._llm_client = None
 
-    def classify(self, query: str) -> Tuple[QueryIntent, Dict]:
+    def classify(self, query: str) -> tuple[QueryIntent, dict]:
         """
         Classify query intent.
         Returns (intent, metadata) where metadata includes confidence and reasoning.
@@ -155,7 +154,7 @@ class IntentClassifier:
 
         return QueryIntent.EXPLORATORY, {"confidence": 0.3, "method": "default", "scores": scores}
 
-    def _classify_llm(self, query: str) -> Tuple[QueryIntent, Dict]:
+    def _classify_llm(self, query: str) -> tuple[QueryIntent, dict]:
         """Use LLM for ambiguous queries."""
         prompt = f"""Classify this query into one of these intents:
 - factual: Entity lookup (CVE, actor, tool, malware)
@@ -181,7 +180,7 @@ Respond with just the intent name (factual, temporal, relational, exploratory, o
 
         return QueryIntent.EXPLORATORY, {"confidence": 0.5, "method": "llm_fallback", "scores": {}}
 
-    def get_traversal_policy(self, intent: QueryIntent) -> Dict:
+    def get_traversal_policy(self, intent: QueryIntent) -> dict:
         """
         Get traversal policy weights based on intent.
         Returns dict of (retriever_weight, graph_weight, temporal_weight)
@@ -235,7 +234,7 @@ Respond with just the intent name (factual, temporal, relational, exploratory, o
 
 
 # Global instance
-_classifier: Optional[IntentClassifier] = None
+_classifier: IntentClassifier | None = None
 
 
 def get_intent_classifier() -> IntentClassifier:

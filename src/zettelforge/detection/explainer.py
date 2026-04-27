@@ -25,7 +25,7 @@ import os
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from zettelforge import llm_client
 from zettelforge.json_parse import extract_json
@@ -139,10 +139,10 @@ def _reset_rate_limiter() -> None:
 
 
 def explain(
-    rule: "DetectionRule",
+    rule: DetectionRule,
     *,
     rule_body: str,
-    provider: Optional[str] = None,
+    provider: str | None = None,
 ) -> RuleExplanation:
     """Generate a semantic explanation of a detection rule.
 

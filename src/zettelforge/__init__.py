@@ -42,10 +42,10 @@ from zettelforge.note_schema import MemoryNote
 from zettelforge.ontology import (
     ENTITY_TYPES,
     RELATION_TYPES,
-    OntologyValidator,  # noqa: F401  (advanced/optional — not in __all__)
-    TypedEntityStore,  # noqa: F401   (advanced/optional — not in __all__)
-    get_ontology_store,  # noqa: F401 (advanced/optional — not in __all__)
-    get_ontology_validator,  # noqa: F401 (advanced/optional — not in __all__)
+    OntologyValidator,
+    TypedEntityStore,
+    get_ontology_store,
+    get_ontology_validator,
 )
 from zettelforge.synthesis_generator import SynthesisGenerator, get_synthesis_generator
 from zettelforge.synthesis_validator import SynthesisValidator, get_synthesis_validator
@@ -57,47 +57,47 @@ from zettelforge.vector_retriever import VectorRetriever
 # importable for advanced use but are not part of the advertised public API
 # and are therefore excluded from __all__ below.
 
-__version__ = "2.4.3"
+__version__ = "2.6.2"
 __all__ = [
-    # Edition
-    "Edition",
-    "get_edition",
-    "is_enterprise",
-    "is_community",
-    "edition_name",
-    "EditionError",
-    # Core
-    "MemoryManager",
-    "get_memory_manager",
-    "MemoryNote",
-    "VectorRetriever",
-    "SynthesisGenerator",
-    "get_synthesis_generator",
-    "SynthesisValidator",
-    "get_synthesis_validator",
-    # Knowledge Graph
-    "KnowledgeGraph",
-    "get_knowledge_graph",
-    # Retrieval
-    "GraphRetriever",
-    "ScoredResult",
-    "BlendedRetriever",
     # Ontology reference tables (TypedEntityStore / OntologyValidator are
     # importable from zettelforge.ontology but are not part of the public API
     # — see the module comment above for details).
     "ENTITY_TYPES",
     "RELATION_TYPES",
-    # Intent Classification
-    "IntentClassifier",
-    "get_intent_classifier",
-    "QueryIntent",
-    # Note Constructor
-    "NoteConstructor",
+    "BlendedRetriever",
+    # Edition
+    "Edition",
+    "EditionError",
+    "ExtractedFact",
     # Two-Phase Pipeline
     "FactExtractor",
-    "ExtractedFact",
+    # Retrieval
+    "GraphRetriever",
+    # Intent Classification
+    "IntentClassifier",
+    # Knowledge Graph
+    "KnowledgeGraph",
+    # Core
+    "MemoryManager",
+    "MemoryNote",
     "MemoryUpdater",
+    # Note Constructor
+    "NoteConstructor",
+    "QueryIntent",
+    "ScoredResult",
+    "SynthesisGenerator",
+    "SynthesisValidator",
     "UpdateOperation",
+    "VectorRetriever",
+    "edition_name",
+    "get_edition",
+    "get_intent_classifier",
+    "get_knowledge_graph",
+    "get_memory_manager",
+    "get_synthesis_generator",
+    "get_synthesis_validator",
+    "is_community",
+    "is_enterprise",
 ]
 
 # ── Enterprise-only imports (conditional) ───────────────────────────────────

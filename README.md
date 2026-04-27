@@ -13,8 +13,9 @@ It extracts CVEs, threat actors, IOCs, and ATT&CK techniques from analyst notes 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/rolandpg/zettelforge/actions/workflows/ci.yml/badge.svg)](https://github.com/rolandpg/zettelforge/actions)
+[![Open Issues](https://img.shields.io/github/issues/rolandpg/zettelforge?color=blue)](https://github.com/rolandpg/zettelforge/issues)
 
-**[⭐ Star](https://github.com/rolandpg/zettelforge) · [📦 `pip install zettelforge`](https://pypi.org/project/zettelforge/) · [📖 Docs](https://docs.threatrecall.ai/) · [🧪 Hosted beta](https://threatrecall.ai)**
+**[⭐ Star](https://github.com/rolandpg/zettelforge) · [📦 `pip install zettelforge`](https://pypi.org/project/zettelforge/) · [📖 Docs](https://docs.threatrecall.ai/) · [🧪 Hosted beta](https://threatrecall.ai) · [🗺️ Roadmap](ROADMAP.md)**
 
 <p align="center">
 <a href="https://www.buymeacoffee.com/xypher22pr0" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me a Coffee" style="height: 60px !important;width: 217px !important;" ></a>

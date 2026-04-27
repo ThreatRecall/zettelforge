@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 760" role="img" aria-labelledby="tt td">
+  <title id="tt">ZettelForge architecture</title>
+  <desc id="td">Four-stage CTI memory pipeline drawn as a neuron-chain: ingestion, enrichment, retrieval, synthesis, with pluggable storage and optional extensions.</desc>
+  <defs>
+    <filter id="pulse" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="b"></feGaussianBlur>
+      <feMerge><feMergeNode in="b"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="680" height="760" fill="#0A0E17"></rect>
+
+  
+  <text x="40" y="42" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#8B949E">ZETTELFORGE / ARCHITECTURE</text>
+  <text x="40" y="64" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="18" font-weight="600" letter-spacing="-0.01em" fill="#C9D1D9">Signal memory — a recall loop</text>
+  <text x="40" y="82" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="12" fill="#8B949E">Four-stage pipeline; each stage is a node, the axon is the dataflow.</text>
+  <line x1="40" y1="98" x2="640" y2="98" stroke="#21262D"></line>
+
+  
+  <text x="40" y="126" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#8B949E">SOURCE</text>
+  <text x="40" y="144" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#C9D1D9">reports · alerts · notes · IOCs</text>
+
+  
+  <path d="M140 196 C 128 182 108 178 96 188" stroke="#484F58" fill="none"></path>
+  <path d="M140 196 C 152 182 172 178 184 188" stroke="#484F58" fill="none"></path>
+  <circle cx="96" cy="188" r="2" fill="#C9D1D9"></circle>
+  <circle cx="184" cy="188" r="2" fill="#C9D1D9"></circle>
+  <circle cx="140" cy="220" r="28" fill="#0D1117" stroke="#484F58" stroke-width="1.25"></circle>
+  <circle cx="140" cy="220" r="6" fill="#C9D1D9"></circle>
+  <text x="140" y="252" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="10.5" font-weight="700" letter-spacing="0.12em" fill="#C9D1D9">01</text>
+  <rect x="196" y="192" width="444" height="72" rx="8" fill="#161B22" stroke="#30363D"></rect>
+  <text x="216" y="218" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="15" font-weight="600" letter-spacing="-0.01em" fill="#C9D1D9">Ingestion</text>
+  <text x="216" y="236" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#6B7280">MemoryManager → FactExtractor</text>
+  <text x="216" y="254" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#C9D1D9">validate → extract entities → resolve aliases</text>
+  <text x="624" y="254" text-anchor="end" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#6B7280">~45ms</text>
+  <path d="M140 252 L140 298" stroke="#484F58" stroke-width="1.5" fill="none" stroke-dasharray="1.5 7" stroke-linecap="round"></path>
+
+  
+  <circle cx="140" cy="330" r="28" fill="#0D1117" stroke="#484F58" stroke-width="1.25"></circle>
+  <circle cx="140" cy="330" r="6" fill="#C9D1D9"></circle>
+  <text x="140" y="362" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="10.5" font-weight="700" letter-spacing="0.12em" fill="#C9D1D9">02</text>
+  <rect x="196" y="302" width="444" height="72" rx="8" fill="#161B22" stroke="#30363D"></rect>
+  <text x="216" y="328" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="15" font-weight="600" letter-spacing="-0.01em" fill="#C9D1D9">Enrichment</text>
+  <text x="216" y="346" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#6B7280">MemoryUpdater · background</text>
+  <text x="216" y="364" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#C9D1D9">causal triples · neighbor refinement · HGAM</text>
+  <path d="M140 358 L140 404" stroke="#484F58" stroke-width="1.5" fill="none" stroke-dasharray="1.5 7" stroke-linecap="round"></path>
+
+  
+  <path d="M140 438 C 116 430 96 432 80 442" stroke="#00FFA3" stroke-width="1.25" fill="none" opacity="0.85"></path>
+  <path d="M140 438 C 164 430 184 432 200 442" stroke="#00FFA3" stroke-width="1.25" fill="none" opacity="0.85"></path>
+  <path d="M140 438 C 118 452 98 460 84 468" stroke="#00FFA3" stroke-width="1.25" fill="none" opacity="0.85"></path>
+  <path d="M140 438 C 162 452 182 460 196 468" stroke="#00FFA3" stroke-width="1.25" fill="none" opacity="0.85"></path>
+  <circle cx="80" cy="442" r="2.25" fill="#00FFA3" filter="url(#pulse)"></circle>
+  <circle cx="200" cy="442" r="2.25" fill="#00FFA3" filter="url(#pulse)"></circle>
+  <circle cx="84" cy="468" r="1.75" fill="#00FFA3"></circle>
+  <circle cx="196" cy="468" r="1.75" fill="#00FFA3"></circle>
+  <circle cx="140" cy="438" r="30" fill="#0D1117" stroke="#00FFA3" stroke-width="1.5" filter="url(#pulse)"></circle>
+  <circle cx="140" cy="438" r="6" fill="#00FFA3" filter="url(#pulse)"></circle>
+  <text x="140" y="472" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="10.5" font-weight="700" letter-spacing="0.12em" fill="#00FFA3">03</text>
+  <rect x="196" y="410" width="444" height="72" rx="8" fill="#161B22" stroke="#00FFA3" stroke-width="1.25"></rect>
+  <text x="216" y="436" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="15" font-weight="600" letter-spacing="-0.01em" fill="#C9D1D9">Retrieval</text>
+  <text x="216" y="454" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#6B7280">BlendedRetriever</text>
+  <text x="216" y="472" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#C9D1D9">intent · vector + graph BFS · temporal · rerank</text>
+  
+  <rect x="568" y="418" width="56" height="18" rx="9" fill="#00FFA3"></rect>
+  <circle cx="578" cy="427" r="2.25" fill="#0A0E17"></circle>
+  <text x="596" y="431" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="10" font-weight="700" letter-spacing="0.14em" fill="#0A0E17">LIVE</text>
+  <path d="M140 468 L140 514" stroke="#00FFA3" stroke-width="1.75" fill="none" stroke-dasharray="1.5 7" stroke-linecap="round"></path>
+
+  
+  <circle cx="140" cy="548" r="28" fill="#0D1117" stroke="#484F58" stroke-width="1.25"></circle>
+  <circle cx="140" cy="548" r="6" fill="#C9D1D9"></circle>
+  <text x="140" y="580" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="10.5" font-weight="700" letter-spacing="0.12em" fill="#C9D1D9">04</text>
+  
+  <line x1="140" y1="576" x2="140" y2="592" stroke="#484F58"></line>
+  <line x1="130" y1="574" x2="122" y2="590" stroke="#484F58"></line>
+  <line x1="150" y1="574" x2="158" y2="590" stroke="#484F58"></line>
+  <rect x="196" y="520" width="444" height="72" rx="8" fill="#161B22" stroke="#30363D"></rect>
+  <text x="216" y="546" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="15" font-weight="600" letter-spacing="-0.01em" fill="#C9D1D9">Synthesis</text>
+  <text x="216" y="564" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#6B7280">ContextInjector → RAG-as-answer</text>
+  <text x="216" y="582" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#C9D1D9">quality-validated · grounded to sources</text>
+  <text x="624" y="582" text-anchor="end" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#6B7280">66.9% LOCOMO · +33%</text>
+
+  
+  <line x1="40" y1="626" x2="640" y2="626" stroke="#21262D"></line>
+  <text x="40" y="648" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#8B949E">PLUGGABLE STORAGE</text>
+  <text x="40" y="664" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#8B949E">StorageBackend ABC · 33 methods · ZETTELFORGE_BACKEND</text>
+  <rect x="40" y="676" width="292" height="48" rx="8" fill="#161B22" stroke="#30363D"></rect>
+  <text x="56" y="698" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="13.5" font-weight="600" fill="#C9D1D9">SQLite</text>
+  <text x="110" y="698" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#6B7280">default</text>
+  <text x="56" y="714" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="12" fill="#8B949E">WAL · ACID · notes, graph, entities</text>
+  <rect x="348" y="676" width="292" height="48" rx="8" fill="#161B22" stroke="#30363D"></rect>
+  <text x="364" y="698" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="13.5" font-weight="600" fill="#C9D1D9">LanceDB</text>
+  <text x="422" y="698" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="11.5" font-weight="500" fill="#6B7280">vectors</text>
+  <text x="364" y="714" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="12" fill="#8B949E">768-dim · nomic-embed-text-v1.5-Q</text>
+  <text x="40" y="744" font-family="Inter, system-ui, -apple-system, &#39;Segoe UI&#39;, sans-serif" font-size="11" font-weight="600" letter-spacing="0.08em" fill="#8B949E">EXTENSIONS</text>
+  <g transform="translate(140, 732)">
+    <rect x="0" y="0" width="98" height="18" rx="9" fill="#21262D" stroke="#30363D"></rect><text x="49" y="12.5" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="12" font-weight="600" fill="#C9D1D9">TypeDB STIX 2.1</text>
+    <rect x="106" y="0" width="80" height="18" rx="9" fill="#21262D" stroke="#30363D"></rect><text x="146" y="12.5" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="12" font-weight="600" fill="#C9D1D9">OAuth/JWT</text>
+    <rect x="194" y="0" width="92" height="18" rx="9" fill="#21262D" stroke="#30363D"></rect><text x="240" y="12.5" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="12" font-weight="600" fill="#C9D1D9">OpenCTI sync</text>
+    <rect x="294" y="0" width="86" height="18" rx="9" fill="#21262D" stroke="#30363D"></rect><text x="337" y="12.5" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="12" font-weight="600" fill="#C9D1D9">Sigma rules</text>
+    <rect x="388" y="0" width="88" height="18" rx="9" fill="#21262D" stroke="#30363D"></rect><text x="432" y="12.5" text-anchor="middle" font-family="&#39;JetBrains Mono&#39;, ui-monospace, Menlo, Consolas, monospace" font-size="12" font-weight="600" fill="#C9D1D9">MCP server</text>
+  </g>
+</svg>

@@ -8,14 +8,13 @@ All structured-output call sites delegate here instead of inline regex+json.load
 import json
 import logging
 import re
-from typing import Optional, Union
 
 _logger = logging.getLogger("zettelforge.json_parse")
 
 _parse_stats = {"success": 0, "failure": 0}
 
 
-def extract_json(raw: Optional[str], expect: str = "object") -> Optional[Union[dict, list]]:
+def extract_json(raw: str | None, expect: str = "object") -> dict | list | None:
     """Extract JSON from LLM output, handling code fences and surrounding text.
 
     Args:
