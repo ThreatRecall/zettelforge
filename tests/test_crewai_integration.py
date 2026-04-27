@@ -57,8 +57,10 @@ class TestRecallFormatter:
                 source_type="report",
                 source_ref="cti/incident-42",
             ),
-            semantic=Semantic(context="APT28 spear-phishing observation",
-                              entities=["APT28", "spear-phishing"]),
+            semantic=Semantic(
+                context="APT28 spear-phishing observation",
+                entities=["APT28", "spear-phishing"],
+            ),
             embedding=Embedding(),
             metadata=Metadata(domain="cti", tier="A", confidence=0.9, importance=3),
         )
@@ -97,14 +99,26 @@ class TestRecallFormatter:
 
 class TestSynthesisFormatter:
     """The synthesis result shape varies by format (direct_answer vs.
-    synthesized_brief vs. timeline_analysis vs. relationship_map). The
-    formatter must surface the answer field for each shape and append
-    sources without losing structure."""
+    synthesized_brief vs. timeline_analysis vs. relationship_map) and the
+    actual MemoryManager.synthesize() wraps it as
+    ``{"query", "format", "synthesis": <inner>, "metadata", "sources"}``.
+    The formatter must read the inner dict for the answer payload, surface
+    top-level sources, and not silently drop entities for relationship_map.
+    Tests use the wrapper shape so a regression to the "look at top-level
+    `answer`" formatter would fail loudly here.
+    """
 
     def test_direct_answer_with_sources(self):
+        # Real MemoryManager.synthesize() wrapper shape — answer is nested.
         result = {
-            "answer": "APT28 used Cobalt Strike for lateral movement.",
-            "confidence": 0.85,
+            "query": "APT28 lateral movement",
+            "format": "direct_answer",
+            "synthesis": {
+                "answer": "APT28 used Cobalt Strike for lateral movement.",
+                "confidence": 0.85,
+                "sources": ["note-1", "note-2"],
+            },
+            "metadata": {"sources_count": 2},
             "sources": [
                 {"id": "note-1", "tier": "A"},
                 {"id": "note-2", "tier": "B"},
@@ -117,23 +131,89 @@ class TestSynthesisFormatter:
         assert "tier=A" in out
 
     def test_summary_field_used_when_answer_absent(self):
-        result = {"summary": "APT28 active throughout 2025.", "sources": []}
-        out = _format_synthesis_result(result)
-        assert "APT28 active throughout 2025." in out
-
-    def test_structured_format_serialized_as_json(self):
+        # synthesized_brief format
         result = {
-            "timeline": [{"date": "2025-01", "event": "initial access"}],
-            "sources": ["note-x"],
+            "query": "APT28 status",
+            "format": "synthesized_brief",
+            "synthesis": {
+                "summary": "APT28 active throughout 2025.",
+                "themes": [],
+                "confidence": 0.7,
+            },
+            "sources": [],
         }
         out = _format_synthesis_result(result)
-        # Structured payloads are coerced to JSON so the agent doesn't lose them
+        assert "APT28 active throughout 2025." in out
+        assert "confidence: 0.7" in out
+
+    def test_timeline_serialized_as_json(self):
+        result = {
+            "query": "APT28 timeline",
+            "format": "timeline_analysis",
+            "synthesis": {
+                "timeline": [{"date": "2025-01", "event": "initial access"}],
+                "confidence": 0.6,
+            },
+            "sources": [{"id": "note-x", "tier": "B"}],
+        }
+        out = _format_synthesis_result(result)
         assert "initial access" in out
         assert "note-x" in out
+
+    def test_relationship_map_preserves_entities_and_relationships(self):
+        # Regression for the bug Codex flagged: the relationship_map format
+        # carries BOTH entities and relationships, and dropping either makes
+        # the structured map incomplete for the consuming agent.
+        result = {
+            "query": "APT28 graph",
+            "format": "relationship_map",
+            "synthesis": {
+                "entities": [
+                    {"name": "APT28", "type": "actor"},
+                    {"name": "Cobalt Strike", "type": "tool"},
+                ],
+                "relationships": [
+                    {"from": "APT28", "to": "Cobalt Strike", "type": "uses"},
+                ],
+            },
+            "sources": [{"id": "note-rm", "tier": "A"}],
+        }
+        out = _format_synthesis_result(result)
+        # Both entities and relationships must round-trip into the agent payload
+        assert "APT28" in out
+        assert "Cobalt Strike" in out
+        assert '"type": "actor"' in out or "actor" in out
+        assert "uses" in out
+        assert "note-rm" in out
 
     def test_empty_synthesis_returns_explanatory_string(self):
         out = _format_synthesis_result({})
         assert "no answer" in out
+
+    def test_falls_back_to_top_level_answer_for_legacy_callers(self):
+        # Backward compat: callers passing a flat synthesis payload directly
+        # (rather than the wrapper) still get a useful render instead of the
+        # "no answer" sentinel.
+        result = {
+            "answer": "Direct flat answer.",
+            "confidence": 0.5,
+            "sources": ["note-flat"],
+        }
+        out = _format_synthesis_result(result)
+        assert "Direct flat answer." in out
+        assert "confidence: 0.5" in out
+        assert "note-flat" in out
+
+    def test_no_blank_line_before_confidence(self):
+        # Regression for the formatting nit: confidence used to be appended
+        # as "\nconfidence: ..." which produced a blank line in the output.
+        result = {
+            "synthesis": {"answer": "X", "confidence": 0.9, "sources": []},
+            "sources": [],
+        }
+        out = _format_synthesis_result(result)
+        assert "\n\nconfidence:" not in out
+        assert "confidence: 0.9" in out
 
 
 # ── Tool wiring tests (no LLM/embedding work) ───────────────────────────────

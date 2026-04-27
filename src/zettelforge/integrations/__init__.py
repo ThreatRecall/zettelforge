@@ -7,9 +7,14 @@ Available integrations:
                  (CrewAI BaseTool subclasses, optional dep —
                  ``pip install zettelforge[crewai]``)
 
-The CrewAI module is intentionally NOT imported here so the integrations
-package never hard-requires the crewai dependency. Import it explicitly:
-    ``from zettelforge.integrations.crewai import ZettelForgeRecallTool``
+Import semantics:
+    - Importing this package (``import zettelforge.integrations``) eagerly
+      imports the langchain module and therefore requires ``langchain-core``
+      to be installed (``pip install zettelforge[langchain]``).
+    - The CrewAI module is intentionally NOT imported here so callers who
+      have not installed crewai can still ``import zettelforge.integrations``
+      to use the LangChain wrapper. Import the CrewAI tools explicitly:
+      ``from zettelforge.integrations.crewai import ZettelForgeRecallTool``.
 """
 
 from zettelforge.integrations.langchain_retriever import ZettelForgeRetriever

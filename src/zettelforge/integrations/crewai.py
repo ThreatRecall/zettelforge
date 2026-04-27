@@ -146,26 +146,59 @@ def _format_recall_result(notes: list[MemoryNote], query: str) -> str:
 def _format_synthesis_result(result: dict[str, Any]) -> str:
     """Render a synthesize() dict into agent-readable text.
 
-    Synthesis returns a heterogenous shape depending on the format requested
-    (direct_answer vs. synthesized_brief vs. timeline_analysis vs.
-    relationship_map). We pick the first populated answer-shaped field and
-    append the source ids so the agent can cite back.
+    ``MemoryManager.synthesize()`` returns a wrapper dict shaped like::
+
+        {"query": ..., "format": ..., "synthesis": <inner>, "metadata": ...,
+         "sources": [<note source dicts>]}
+
+    The actual answer payload lives in ``result["synthesis"]`` and its shape
+    varies by format:
+
+    * ``direct_answer``: ``{"answer", "confidence", "sources"}``
+    * ``synthesized_brief``: ``{"summary", "themes", "confidence"}``
+    * ``timeline_analysis``: ``{"timeline", "confidence"}``
+    * ``relationship_map``: ``{"entities", "relationships"}``
+
+    For backward compatibility (and to keep this formatter useful if a caller
+    hands us a flatter result shape) we also look up the same keys directly on
+    the outer dict.
     """
-    answer = (
-        result.get("answer")
-        or result.get("summary")
-        or result.get("timeline")
-        or result.get("relationships")
-        or "(synthesis returned no answer)"
-    )
+    inner = result.get("synthesis") if isinstance(result.get("synthesis"), dict) else {}
+
+    def _pick(key: str) -> Any:
+        # Inner shape wins; fall through to outer for callers that pass the
+        # flat synthesis payload directly.
+        return inner.get(key) if inner.get(key) is not None else result.get(key)
+
+    answer: Any = _pick("answer") or _pick("summary")
+
+    # relationship_map carries both entities and relationships — both
+    # contribute to the structured payload the agent reasons over. Combine
+    # them into one dict so neither is silently dropped.
+    if answer is None:
+        entities = _pick("entities")
+        relationships = _pick("relationships")
+        if entities is not None or relationships is not None:
+            answer = {"entities": entities, "relationships": relationships}
+
+    if answer is None:
+        answer = _pick("timeline")
+
+    if answer is None:
+        answer = "(synthesis returned no answer)"
+
     if isinstance(answer, (list, dict)):
-        # Coerce structured formats (timeline, relationship_map) to JSON for the
-        # agent to parse downstream rather than dropping the structure entirely.
+        # Coerce structured formats (timeline, relationship_map, brief themes)
+        # to JSON so the agent can parse downstream rather than dropping
+        # structure to str().
         import json
 
         answer = json.dumps(answer, indent=2, default=str)
 
-    sources = result.get("sources") or []
+    # Sources: the wrapper exposes a top-level list of source-note dicts
+    # populated by SynthesisGenerator. direct_answer's inner sources is just
+    # a list of citation strings — surface it only as a fallback.
+    sources = result.get("sources") or inner.get("sources") or []
     source_lines: list[str] = []
     for src in sources[:10]:
         if isinstance(src, dict):
@@ -175,10 +208,14 @@ def _format_synthesis_result(result: dict[str, Any]) -> str:
         else:
             source_lines.append(f"  - {src}")
 
-    confidence = result.get("confidence")
+    # Confidence lives inside the synthesis payload for every format that
+    # reports it; only fall back to top-level for legacy callers.
+    confidence = (
+        inner.get("confidence") if inner.get("confidence") is not None else result.get("confidence")
+    )
     parts = [str(answer).rstrip()]
     if confidence is not None:
-        parts.append(f"\nconfidence: {confidence}")
+        parts.append(f"confidence: {confidence}")
     if source_lines:
         parts.append("sources:")
         parts.extend(source_lines)

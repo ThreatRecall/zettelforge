@@ -100,10 +100,14 @@ langchain = [
     "langchain-core>=0.2.0",
 ]
 
-# CrewAI integration — exposes ZettelForge memory as CrewAI BaseTool subclasses
+# CrewAI integration — exposes ZettelForge memory as CrewAI BaseTool subclasses.
+# Pin to >=1.14.0: the integration imports BaseTool from crewai.tools, a path
+# only guaranteed in CrewAI's 1.x line. Earlier 0.x releases that satisfied a
+# looser pin do not expose that import path and would surface as an obscure
+# ImportError at first use rather than at install time.
 # pip install zettelforge[crewai]
 crewai = [
-    "crewai>=0.80.0",
+    "crewai>=1.14.0",
 ]
 
 dev = [
