@@ -349,11 +349,11 @@ class MemoryManager:
         phase_timings_ms["kg_update"] = (time.perf_counter() - _p) * 1000
 
         # Phase 6b/6c/6d: dispatch background enrichment jobs (causal + NER + evolution).
-        # The dispatch bucket measures job construction + put_nowait() overhead only.
-        # In sync=True mode the LLM work runs inline and is excluded from this bucket —
-        # mixing LLM latency into "dispatch" would corrupt the Phase 0.5 attribution.
-        # Timing starts here (before job construction) so it captures the full dispatch cost.
-        dispatch_start = time.perf_counter()
+        # The dispatch bucket measures job construction + put_nowait() + count_notes()
+        # overhead only. In sync=True mode the LLM work runs inline and is intentionally
+        # EXCLUDED from this bucket — mixing LLM latency into "dispatch" would corrupt
+        # the Phase 0.5 attribution. sync=True is retained for tests/debug.
+        dispatch_start = time.perf_counter() if not sync else None
         job = _EnrichmentJob(
             note_id=note.id,
             domain=domain,
@@ -403,7 +403,8 @@ class MemoryManager:
                     self._pending_enrichment.add(note.id)
                 except queue.Full:
                     self._logger.warning("evolution_queue_full", note_id=note.id)
-        phase_timings_ms["enrichment_dispatch"] = (time.perf_counter() - dispatch_start) * 1000
+        if dispatch_start is not None:
+            phase_timings_ms["enrichment_dispatch"] = (time.perf_counter() - dispatch_start) * 1000
 
         duration_ms = (time.perf_counter() - start) * 1000
         log_api_activity(
