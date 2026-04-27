@@ -6,6 +6,19 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **CrewAI integration** (issue #40). New optional extra
+  `pip install zettelforge[crewai]` exposes `ZettelForgeRecallTool`,
+  `ZettelForgeRememberTool`, and `ZettelForgeSynthesizeTool` as CrewAI
+  `BaseTool` subclasses. CTI-focused crews can now use ZettelForge as a
+  drop-in alternative to CrewAI's existing Mem0 memory tools, with
+  per-tool description copy aimed at routing the LLM to the right tool
+  (recall for lookups, remember for findings, synthesize for final answers).
+  See `examples/crewai_cti_crew.py` for a runnable two-agent demo.
+  Tests gated on `pytest.importorskip("crewai")`; 11 pass against
+  crewai 1.14.x.
+
 ## [2.6.2] - 2026-04-27
 
 UI/UX release. Fixes the `/config` page so the Apply button actually works
