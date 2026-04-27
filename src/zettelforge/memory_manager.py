@@ -795,7 +795,8 @@ class MemoryManager:
         duration_ms = (time.perf_counter() - start) * 1000
 
         # ── RFC-007 US-002: log_recall ─────────────────────────────
-        intent_str = intent.value if hasattr(intent, "value") else str(intent)
+        intent_val = getattr(intent, "value", None)
+        intent_str = intent_val if intent_val is not None else str(intent)
         self._telemetry.log_recall(
             query_id,
             results,
