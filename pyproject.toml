@@ -167,6 +167,9 @@ ignore = [
 "src/zettelforge/__init__.py" = ["F401", "E402"]  # re-exports and conditional imports
 # S104: web host binding to 0.0.0.0 is intentional (RFC-015 web UI)
 "src/zettelforge/config.py" = ["S104"]
+# S101: assert is standard pytest convention in test files
+# RUF012: mutable class attributes (POSITIVE/NEGATIVE lists) are test fixtures, not production bugs
+"tests/*" = ["S101", "RUF012"]
 # T20 (print) is forbidden in production code (GOV-003), but every CLI
 # entrypoint legitimately uses print() for stdout output. The patterns
 # below scope T20 to library code only.
