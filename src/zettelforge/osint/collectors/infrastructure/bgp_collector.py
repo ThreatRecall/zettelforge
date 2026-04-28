@@ -94,13 +94,17 @@ def collect(input_entity_type: str, input_value: str) -> list[CollectorTuple]:
         props: dict[str, Any] = {"cidr": cidr}
         if org:
             props["org"] = org
+        # The ontology declares part_of_as as Netblock -> ASNumber (with
+        # IP families also valid as the ``from`` side). The collector
+        # emits a Netblock entity and links it to the input ASN, so the
+        # edge points FROM the new Netblock TO the input ASN.
         out.append(
             CollectorTuple(
                 output_entity_type="Netblock",
                 output_value=cidr,
                 edge_type="part_of_as",
-                from_entity_type="ASNumber",
-                to_entity_type="Netblock",
+                from_entity_type="Netblock",
+                to_entity_type="ASNumber",
                 output_props=props,
                 edge_props={},
             )
