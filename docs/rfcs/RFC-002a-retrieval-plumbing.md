@@ -81,7 +81,7 @@ class RetrievalPolicy:
 
 ### Prerequisite 3 — MITRE / CVE Validator
 
-**Problem.** CTI-critical identifiers (MITRE technique IDs, CVE IDs) are trivially hallucinated by LLMs. The RFC-002 review flagged this as a safety-critical gap. The repo already contains MITRE data (`benchmarks/enterprise-attack.json`, `mobile-attack.json`, `ics-attack.json`) — it just isn't productionized.
+**Problem.** CTI-critical identifiers (MITRE technique IDs, CVE IDs) are trivially hallucinated by LLMs. The RFC-002 review flagged this as a safety-critical gap. The repo already vendors MITRE ATT&CK enterprise data (`benchmarks/enterprise-attack.json`) — it just isn't productionized yet.
 
 **Fix.** New module `src/zettelforge/cti_validators.py`:
 
