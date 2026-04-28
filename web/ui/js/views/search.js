@@ -161,7 +161,22 @@ window.SearchView = {
 
   runSearch: function() {
     var q = this._state.query.trim();
-    if (!q) return;
+    if (!q) {
+      // Route through state + renderResults() rather than mutating the DOM
+      // inline. Three reasons this matters:
+      //   1. The view re-renders on navigate-away/back; without a state
+      //      entry the error vanishes silently.
+      //   2. renderResults() already owns the error-card styling (single
+      //      source of truth instead of duplicated style strings).
+      //   3. Status-bar text and card text stay in sync (renderResults
+      //      derives the status from the same _state.error value).
+      this._state.error = 'Please enter a query before searching.';
+      this._state.results = [];
+      this._state.synthesis = null;
+      this._state.loading = false;
+      this.renderResults();
+      return;
+    }
     this._state.loading = true;
     this._state.error = '';
     this._state.synthesis = null;
