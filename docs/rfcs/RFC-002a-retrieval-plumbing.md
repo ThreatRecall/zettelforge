@@ -158,7 +158,7 @@ class StageOutput(Generic[T]):
 
 Key requirements:
 
-- Uses existing `llm_client.generate(json_mode=True)` support (`llm_client.py:173`).
+- Uses existing `llm_client.generate(json_mode=True)` support.
 - On validation failure, feeds the Pydantic/dataclass error back into a repair prompt (max 2 retries).
 - Never silently falls through — callers always see `StageOutput.status`.
 - Per-stage latency and attempt metrics emitted for observability.
