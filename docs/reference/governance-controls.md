@@ -9,8 +9,8 @@ tags:
   - validation
   - security
   - audit
-last_updated: "2026-04-16"
-version: "2.2.0"
+last_updated: "2026-04-09"
+version: "2.0.0"
 ---
 
 # Governance Controls Reference
@@ -28,7 +28,7 @@ from zettelforge.governance_validator import GovernanceValidator, GovernanceViol
 | Control ID | Name | Category | Enforcement Point | Validation Rule | Error Type |
 |:-----------|:-----|:---------|:-------------------|:----------------|:-----------|
 | GOV-003 | Python Standards | Code Quality | Build / CI | Type hints required; PEP 8 naming conventions enforced | Static analysis failure |
-| GOV-007 | Testing Standards | Quality Assurance | Build / CI | Test coverage >= 67% required | CI gate failure |
+| GOV-007 | Testing Standards | Quality Assurance | Build / CI | Test coverage >= 80% required | CI gate failure |
 | GOV-011 | Access Control & Input Validation | Security | Runtime (`remember`, `synthesize`) | All inputs validated before storage; no hardcoded secrets | `GovernanceViolationError` |
 | GOV-012 | Audit Logging | Observability | Runtime (`remember`, `recall`, `synthesize`) | All memory operations logged with structured format | Silent (log-only) |
 
@@ -62,7 +62,7 @@ rules["GOV-003"] = {
 
 | Rule | Requirement | Enforcement |
 |:-----|:------------|:------------|
-| Coverage threshold | Minimum 67% line coverage | CI gate (pytest-cov) |
+| Coverage threshold | Minimum 80% line coverage | CI gate (pytest-cov) |
 | Test existence | Every public method must have at least one test | CI gate |
 
 **Loaded rule key:** `testing`, `coverage`
@@ -70,7 +70,7 @@ rules["GOV-003"] = {
 ```python
 rules["GOV-007"] = {
     "testing": True,
-    "coverage": 0.67
+    "coverage": 0.8
 }
 ```
 
@@ -202,19 +202,9 @@ Calls `validate_operation` and raises `GovernanceViolationError` if any violatio
 
 ---
 
-## Spec-Drift Detection
-
-Every `GOV-XXX` label in CI must map to a control declared in `governance/controls.yaml`. The spec-drift test (`tests/test_governance_spec_drift.py`) validates this automatically:
-- No phantom controls (in CI but not in manifest)
-- No orphan controls (in manifest but not enforced)
-- CI step references must exist in the workflow
-- Test file references must exist on disk
-
----
-
 ## LLM Quick Reference
 
-ZettelForge enforces four governance controls at build time and runtime. GOV-003 and GOV-007 are build-time controls enforced through CI: GOV-003 requires type hints and PEP 8 naming; GOV-007 requires 67% test coverage.
+ZettelForge enforces four governance controls at build time and runtime. GOV-003 and GOV-007 are build-time controls enforced through CI: GOV-003 requires type hints and PEP 8 naming; GOV-007 requires 80% test coverage.
 
 GOV-011 is the primary runtime control. The `GovernanceValidator.enforce()` method is called at the start of every `remember()` operation. It validates that the input is a string or has a `.content` attribute. If validation fails, it raises `GovernanceViolationError`, which halts the operation before any data is written. The validator loads its rules from governance documentation files but also has hardcoded rule definitions as fallback.
 

@@ -1,30 +1,43 @@
 {
   "meta": {
-    "date": "2026-04-15T02:50:59.462388",
-    "version": "zettelforge-2.1.1",
+    "date": "2026-04-10T18:04:04.773865",
+    "version": "zettelforge-2.0.0",
     "benchmark": "MemoryAgentBench (ICLR 2026)",
     "splits": [
+      "CR",
       "AR"
     ],
-    "limit": 5
+    "limit": 3
   },
   "by_split": {
+    "CR": {
+      "split": "CR",
+      "n_rows": 3,
+      "n_questions": 300,
+      "f1": 0.0323,
+      "em": 0.0167,
+      "substr_em": 0.0367,
+      "rouge_l": 0.0307,
+      "ingest_time_s": 71.0,
+      "query_time_s": 38.3,
+      "avg_query_ms": 128.0
+    },
     "AR": {
       "split": "AR",
-      "n_rows": 5,
-      "n_questions": 500,
-      "f1": 0.3696,
-      "em": 0.176,
-      "substr_em": 0.316,
-      "rouge_l": 0.3843,
-      "ingest_time_s": 15969.0,
-      "query_time_s": 527.5,
-      "avg_query_ms": 1055.0
+      "n_rows": 3,
+      "n_questions": 300,
+      "f1": 0.3276,
+      "em": 0.1567,
+      "substr_em": 0.4133,
+      "rouge_l": 0.3324,
+      "ingest_time_s": 2312.5,
+      "query_time_s": 99.9,
+      "avg_query_ms": 333.0
     }
   },
   "overall": {
-    "f1": 0.3696,
-    "em": 0.176,
-    "rouge_l": 0.3843
+    "f1": 0.1799,
+    "em": 0.0867,
+    "rouge_l": 0.1815
   }
 }

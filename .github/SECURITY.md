@@ -25,7 +25,7 @@ within 7 days for critical issues.
 ## Scope
 
 This policy covers the ZettelForge open-source codebase. For vulnerabilities
-in ZettelForge extensions or hosted services, contact the same email.
+in ThreatRecall Enterprise or hosted services, contact the same email.
 
 ## Recognition
 

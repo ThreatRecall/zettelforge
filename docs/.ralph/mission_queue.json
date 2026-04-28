@@ -1,0 +1,14 @@
+{
+  "missions": [
+    {"id": "M01", "scope": "index + tutorials/01-quickstart.md", "status": "complete"},
+    {"id": "M02", "scope": "tutorials/02-first-cti-report.md", "status": "complete"},
+    {"id": "M03", "scope": "how-to/ (all 8 files)", "status": "complete"},
+    {"id": "M04", "scope": "reference/ (all 5 files)", "status": "complete"},
+    {"id": "M05", "scope": "explanation/ (all 5 files)", "status": "complete"},
+    {"id": "M06", "scope": "llms.txt + LLM Quick Reference sections", "status": "complete"},
+    {"id": "M07", "scope": "self-audit pass", "status": "complete"}
+  ],
+  "current": null,
+  "started_at": "2026-04-09T19:00:00Z",
+  "completed_at": "2026-04-09T20:15:00Z"
+}

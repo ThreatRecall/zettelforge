@@ -5,6 +5,8 @@ A-MEM Agentic Memory Architecture V1.0
 Retrieves relevant notes based on embedding similarity with domain filtering.
 """
 
+from typing import List, Optional
+
 import numpy as np
 
 from zettelforge.alias_resolver import AliasResolver
@@ -17,7 +19,7 @@ from zettelforge.vector_memory import get_embedding
 _logger = get_logger("zettelforge.retriever")
 
 
-def cosine_similarity(a: list[float], b: list[float]) -> float:
+def cosine_similarity(a: List[float], b: List[float]) -> float:
     """Compute cosine similarity between two vectors."""
     a_arr = np.array(a)
     b_arr = np.array(b)
@@ -38,27 +40,17 @@ class VectorRetriever:
         entity_boost: float = 2.5,
         exact_match_boost: float = 1.0,
         regenerate_invalid_embeddings: bool = True,  # NEW: Regenerate if missing/invalid
-        memory_store: MemoryStore | None = None,
-        note_lookup=None,  # Callable(note_id) -> MemoryNote, for cross-backend lookup
+        memory_store: Optional[MemoryStore] = None,
     ):
         self.similarity_threshold = similarity_threshold
         self.entity_boost = entity_boost
         self.exact_match_boost = exact_match_boost
         self.regenerate_invalid_embeddings = regenerate_invalid_embeddings
         self.store = memory_store or MemoryStore()
-        self._note_lookup = note_lookup
         self.extractor = EntityExtractor()
         self.resolver = AliasResolver()
 
-    def _get_note(self, note_id: str) -> MemoryNote | None:
-        """Look up a note, preferring the cross-backend lookup if available."""
-        if self._note_lookup:
-            result = self._note_lookup(note_id)
-            if result is not None:
-                return result
-        return self.store.get_note_by_id(note_id)
-
-    def _is_valid_embedding(self, vector: list[float] | None) -> bool:
+    def _is_valid_embedding(self, vector: Optional[List[float]]) -> bool:
         """Check if embedding vector is valid (non-None, correct dims, non-zero)."""
         if vector is None:
             return False
@@ -67,12 +59,13 @@ class VectorRetriever:
         # Check if all zeros or all identical (deterministic mock)
         if all(v == 0.0 for v in vector):
             return False
-        # Check variance — real embeddings have variance.
-        # Suspiciously low variance ⇒ likely zero/mock vector.
+        # Check variance - real embeddings have variance
         var = np.var(vector)
-        return var >= 0.001
+        if var < 0.001:  # Suspiciously low variance
+            return False
+        return True
 
-    def _ensure_note_embedding(self, note: MemoryNote) -> list[float] | None:
+    def _ensure_note_embedding(self, note: MemoryNote) -> Optional[List[float]]:
         """Ensure note has valid embedding, regenerating if necessary."""
         if self._is_valid_embedding(note.embedding.vector):
             return note.embedding.vector
@@ -91,7 +84,7 @@ class VectorRetriever:
 
         return note.embedding.vector
 
-    def _get_candidates(self, domain: str | None = None) -> list[MemoryNote]:
+    def _get_candidates(self, domain: Optional[str] = None) -> List[MemoryNote]:
         """Get candidate notes, optionally filtered by domain."""
         all_notes = list(self.store.iterate_notes())
         if domain:
@@ -101,41 +94,30 @@ class VectorRetriever:
     def retrieve(
         self,
         query: str,
-        domain: str | None = None,
+        domain: Optional[str] = None,
         k: int = 10,
         include_links: bool = True,
-        use_lancedb: bool = True,
-        return_scores: bool = False,
-    ) -> list[MemoryNote] | list[tuple]:
+        use_lancedb: bool = True,  # NEW: Enable LanceDB vector search
+    ) -> List[MemoryNote]:
         """
         Retrieve notes relevant to query using LanceDB vector search.
         Falls back to in-memory search if LanceDB unavailable.
-
-        Args:
-            return_scores: If True, returns List[Tuple[MemoryNote, float]] with
-                similarity scores. Enables proper score fusion in BlendedRetriever
-                instead of broken position-rank scoring.
         """
         # Try LanceDB first (IVF_FLAT index, no double-quantization)
         if use_lancedb and self.store.lancedb is not None:
             try:
                 results = self._retrieve_via_lancedb(query, domain, k, include_links)
                 if results:
-                    if return_scores:
-                        return results  # Already (note, score) tuples
-                    return [note for note, _ in results]
+                    return results
             except Exception:
                 _logger.warning("lancedb_retrieval_failed_fallback_memory", exc_info=True)
 
         # Fallback: In-memory cosine similarity (always works)
-        results = self._retrieve_via_memory(query, domain, k, include_links)
-        if return_scores:
-            return results  # Already (note, score) tuples
-        return [note for note, _ in results]
+        return self._retrieve_via_memory(query, domain, k, include_links)
 
     def _retrieve_via_lancedb(
-        self, query: str, domain: str | None, k: int, include_links: bool
-    ) -> list[MemoryNote]:
+        self, query: str, domain: Optional[str], k: int, include_links: bool
+    ) -> List[MemoryNote]:
         """Retrieve using LanceDB vector similarity search."""
 
         query_vector = get_embedding(query)
@@ -173,7 +155,7 @@ class VectorRetriever:
                 for row in search_results:
                     note_id = row.get("id")
                     # Get full note from JSONL for complete data
-                    note = self._get_note(note_id)
+                    note = self.store.get_note_by_id(note_id)
                     if note:
                         score = row.get("_distance", 0)
                         # Convert distance to similarity (LanceDB returns distance, lower is better)
@@ -188,66 +170,20 @@ class VectorRetriever:
 
         # Sort by similarity score (higher is better)
         all_results.sort(key=lambda x: x[1], reverse=True)
-        results = all_results[:k]  # Keep (note, score) tuples
+        results = [note for note, score in all_results[:k]]
 
         # Apply entity boost post-retrieval
-        results = self._apply_entity_boost_scored(results, query)
+        results = self._apply_entity_boost(results, query)
 
         if include_links and results:
-            results = self._expand_via_links_scored(results, k * 2)
+            results = self._expand_via_links(results, k * 2)
 
-        for note, _ in results:
+        for note in results:
             note.increment_access()
 
-        return results  # List[Tuple[MemoryNote, float]]
+        return results
 
-    def _apply_entity_boost_scored(self, results: list[tuple], query: str) -> list[tuple]:
-        """Apply entity boost to (note, score) tuples, multiplying score by boost factor."""
-        raw_query_entities = self.extractor.extract_all(query)
-        query_entities = set()
-        for etype, elist in raw_query_entities.items():
-            for e in elist:
-                query_entities.add(self.resolver.resolve(etype, e))
-
-        if not query_entities:
-            return results
-
-        boosted = []
-        for note, score in results:
-            note_entities = set(note.semantic.entities)
-            overlap = len(query_entities & note_entities)
-            boost = self.entity_boost**overlap if overlap > 0 else 1.0
-
-            # Exact match boost
-            for qe in query_entities:
-                if qe.lower() in note.content.raw.lower():
-                    boost *= self.exact_match_boost
-
-            boosted.append((note, score * boost))
-
-        boosted.sort(key=lambda x: x[1], reverse=True)
-        return boosted
-
-    def _expand_via_links_scored(
-        self, initial_results: list[tuple], max_results: int
-    ) -> list[tuple]:
-        """Expand (note, score) results by including directly linked notes with decayed score."""
-        all_ids = set(n.id for n, _ in initial_results)
-        expanded = list(initial_results)
-
-        for note, score in initial_results:
-            for linked_id in note.links.related:
-                if len(expanded) >= max_results:
-                    break
-                linked_note = self._get_note(linked_id)
-                if linked_note and linked_note.id not in all_ids:
-                    # Linked notes get half the parent's score (hop decay)
-                    expanded.append((linked_note, score * 0.5))
-                    all_ids.add(linked_note.id)
-
-        return expanded[:max_results]
-
-    def _apply_entity_boost(self, results: list[MemoryNote], query: str) -> list[MemoryNote]:
+    def _apply_entity_boost(self, results: List[MemoryNote], query: str) -> List[MemoryNote]:
         """Apply entity boost to retrieved results."""
         raw_query_entities = self.extractor.extract_all(query)
         query_entities = set()
@@ -276,9 +212,9 @@ class VectorRetriever:
         return [note for note, _ in boosted]
 
     def _retrieve_via_memory(
-        self, query: str, domain: str | None, k: int, include_links: bool
-    ) -> list[tuple]:
-        """Fallback: In-memory cosine similarity. Returns List[Tuple[MemoryNote, float]]."""
+        self, query: str, domain: Optional[str], k: int, include_links: bool
+    ) -> List[MemoryNote]:
+        """Fallback: In-memory cosine similarity (original implementation)."""
         query_vector = get_embedding(query)
         candidates = self._get_candidates(domain)
 
@@ -324,19 +260,19 @@ class VectorRetriever:
             _logger.warning("invalid_embeddings_skipped", count=invalid_embeddings)
 
         scored.sort(key=lambda x: x[1], reverse=True)
-        results = scored[:k]  # Keep (note, score) tuples
+        results = [note for note, sim in scored[:k]]
 
         if include_links and results:
-            results = self._expand_via_links_scored(results, k * 2)
+            results = self._expand_via_links(results, k * 2)
 
-        for note, _ in results:
+        for note in results:
             note.increment_access()
 
-        return results  # List[Tuple[MemoryNote, float]]
+        return results
 
     def _expand_via_links(
-        self, initial_results: list[MemoryNote], max_results: int
-    ) -> list[MemoryNote]:
+        self, initial_results: List[MemoryNote], max_results: int
+    ) -> List[MemoryNote]:
         """Expand results by including directly linked notes"""
         all_ids = set(n.id for n in initial_results)
         expanded = list(initial_results)
@@ -345,7 +281,7 @@ class VectorRetriever:
             for linked_id in note.links.related:
                 if len(expanded) >= max_results:
                     break
-                linked_note = self._get_note(linked_id)
+                linked_note = self.store.get_note_by_id(linked_id)
                 if linked_note and linked_note.id not in all_ids:
                     expanded.append(linked_note)
                     all_ids.add(linked_note.id)
@@ -353,7 +289,7 @@ class VectorRetriever:
         return expanded[:max_results]
 
     def get_memory_context(
-        self, query: str, domain: str | None = None, k: int = 10, token_budget: int = 4000
+        self, query: str, domain: Optional[str] = None, k: int = 10, token_budget: int = 4000
     ) -> str:
         """
         Format retrieved notes for injection into agent prompt.

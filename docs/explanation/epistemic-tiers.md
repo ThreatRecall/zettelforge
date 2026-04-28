@@ -1,6 +1,6 @@
 ---
 title: "Epistemic Tiers and Confidence"
-description: "ZettelForge's model for tracking intelligence quality and confidence decay"
+description: "ThreatRecall's model for tracking intelligence quality and confidence decay"
 diataxis_type: explanation
 audience: "Senior CTI Practitioner"
 tags: [confidence, epistemic, tiers, quality, intelligence-lifecycle]
@@ -10,11 +10,11 @@ version: "2.0.0"
 
 # Epistemic Tiers and Confidence
 
-Not all intelligence is created equal. A verified CISA advisory carries more weight than an anonymous forum post, which carries more weight than an LLM's speculation. ZettelForge tracks this through two complementary mechanisms: epistemic tiers and confidence scores.
+Not all intelligence is created equal. A verified CISA advisory carries more weight than an anonymous forum post, which carries more weight than an LLM's speculation. ThreatRecall tracks this through two complementary mechanisms: epistemic tiers and confidence scores.
 
 ## Epistemic Tiers (A / B / C)
 
-Every note and entity in ZettelForge carries a `tier` classification:
+Every note and entity in ThreatRecall carries a `tier` classification:
 
 | Tier | Label | Meaning | Typical Sources |
 |:-----|:------|:--------|:----------------|
@@ -50,7 +50,7 @@ This means the `BlendedRetriever` can weight results not just by relevance but b
 
 ### Confidence Decay
 
-ZettelForge's `MemoryNote` tracks `evolution_count` — how many times a note has been superseded or evolved. Each evolution event reduces confidence:
+ThreatRecall's `MemoryNote` tracks `evolution_count` — how many times a note has been superseded or evolved. Each evolution event reduces confidence:
 
 ```python
 def increment_evolution(self, evolved_by_note_id: str):
@@ -80,10 +80,10 @@ The default filter is `["A", "B"]` — operational quality. This means LLM-extra
 
 ## The Diamond Model Connection
 
-CTI practitioners will recognize ZettelForge's confidence model as complementary to the Diamond Model of Intrusion Analysis. Where the Diamond Model describes relationships between adversary, capability, infrastructure, and victim, ZettelForge's epistemic tiers address the meta-question: how much do we trust each relationship?
+CTI practitioners will recognize ThreatRecall's confidence model as complementary to the Diamond Model of Intrusion Analysis. Where the Diamond Model describes relationships between adversary, capability, infrastructure, and victim, ThreatRecall's epistemic tiers address the meta-question: how much do we trust each relationship?
 
-A Diamond Model analysis might state "Adversary X uses Capability Y targeting Victim Z." ZettelForge stores this as three typed relationships, each with independent confidence scores and temporal validity. The adversary-capability link might be confidence 0.9 (observed in multiple incidents), while the adversary-victim link might be confidence 0.4 (single report, unconfirmed).
+A Diamond Model analysis might state "Adversary X uses Capability Y targeting Victim Z." ThreatRecall stores this as three typed relationships, each with independent confidence scores and temporal validity. The adversary-capability link might be confidence 0.9 (observed in multiple incidents), while the adversary-victim link might be confidence 0.4 (single report, unconfirmed).
 
 ## LLM Quick Reference
 
-ZettelForge uses a two-layer quality model. Epistemic tiers (A/B/C) classify intelligence by source reliability: A=authoritative (CISA, MITRE, vendor-confirmed), B=operational (threat reports, incident notes, default for remember()), C=support (LLM-extracted causal triples, unverified correlations). Confidence scores (0.0-1.0) provide continuous quality measurement on every note, entity, and TypeDB relationship — a uses relation between APT28 and Cobalt Strike might carry confidence 0.85 while a speculative attribution carries 0.3. Confidence decays on evolution: each time a note is superseded, confidence caps at 0.95 and evolution_count increments; notes with evolution_count >= 5 trigger should_flag_for_review(). The synthesize() method accepts tier_filter (default ["A", "B"]) controlling which quality tiers contribute to RAG answers — tier C is excluded by default, meaning LLM-extracted inferences don't appear in synthesis unless explicitly requested. The BlendedRetriever can weight results by confidence in addition to relevance, ensuring high-confidence direct relationships rank above low-confidence inferred ones. Configuration: default tier for new notes is B (Metadata.tier default), configurable per note. Confidence on TypeDB relations is a double attribute constrained to 0.0-1.0 in the STIX schema.
+ThreatRecall uses a two-layer quality model. Epistemic tiers (A/B/C) classify intelligence by source reliability: A=authoritative (CISA, MITRE, vendor-confirmed), B=operational (threat reports, incident notes, default for remember()), C=support (LLM-extracted causal triples, unverified correlations). Confidence scores (0.0-1.0) provide continuous quality measurement on every note, entity, and TypeDB relationship — a uses relation between APT28 and Cobalt Strike might carry confidence 0.85 while a speculative attribution carries 0.3. Confidence decays on evolution: each time a note is superseded, confidence caps at 0.95 and evolution_count increments; notes with evolution_count >= 5 trigger should_flag_for_review(). The synthesize() method accepts tier_filter (default ["A", "B"]) controlling which quality tiers contribute to RAG answers — tier C is excluded by default, meaning LLM-extracted inferences don't appear in synthesis unless explicitly requested. The BlendedRetriever can weight results by confidence in addition to relevance, ensuring high-confidence direct relationships rank above low-confidence inferred ones. Configuration: default tier for new notes is B (Metadata.tier default), configurable per note. Confidence on TypeDB relations is a double attribute constrained to 0.0-1.0 in the STIX schema.

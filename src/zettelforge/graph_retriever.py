@@ -7,6 +7,7 @@ Score formula: 1 / (1 + hop_distance)
 """
 
 from dataclasses import dataclass, field
+from typing import Dict, List, Set
 
 from zettelforge.knowledge_graph import KnowledgeGraph
 
@@ -18,7 +19,7 @@ class ScoredResult:
     note_id: str
     score: float
     hops: int
-    path: list[str] = field(default_factory=list)
+    path: List[str] = field(default_factory=list)
 
 
 class GraphRetriever:
@@ -29,13 +30,13 @@ class GraphRetriever:
 
     def retrieve_note_ids(
         self,
-        query_entities: dict[str, list[str]],
+        query_entities: Dict[str, List[str]],
         max_depth: int = 2,
-    ) -> list[ScoredResult]:
+    ) -> List[ScoredResult]:
         if not query_entities:
             return []
 
-        best: dict[str, ScoredResult] = {}
+        best: Dict[str, ScoredResult] = {}
 
         for entity_type, values in query_entities.items():
             for entity_value in values:
@@ -50,14 +51,14 @@ class GraphRetriever:
         start_type: str,
         start_value: str,
         max_depth: int,
-        best: dict[str, ScoredResult],
+        best: Dict[str, ScoredResult],
     ):
         start_node = self.kg.get_node(start_type, start_value)
         if not start_node:
             return
 
         start_node_id = start_node["node_id"]
-        visited: set[str] = set()
+        visited: Set[str] = set()
         queue = [(start_node_id, 0, [f"{start_type}:{start_value}"])]
 
         while queue:
@@ -90,4 +91,4 @@ class GraphRetriever:
                 to_node = self.kg.get_node_by_id(to_id)
                 if to_node and to_id not in visited:
                     step_label = f"{to_node['entity_type']}:{to_node['entity_value']}"
-                    queue.append((to_id, depth + 1, [*path, step_label]))
+                    queue.append((to_id, depth + 1, path + [step_label]))

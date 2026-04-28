@@ -1,18 +1,16 @@
 ---
-title: "Why SQLite + LanceDB"
-description: "ZettelForge architecture: SQLite + LanceDB hybrid storage, dual-stream write pipeline, blended retrieval with intent classification, and the data model for CTI memory."
+title: "Why TypeDB + LanceDB"
+description: "Architectural rationale for ThreatRecall's hybrid two-database design"
 diataxis_type: explanation
 audience: "Senior CTI Practitioner"
-tags: [architecture, sqlite, lancedb, design-decisions]
-last_updated: "2026-04-16"
-version: "2.2.0"
+tags: [architecture, typedb, lancedb, design-decisions]
+last_updated: "2026-04-09"
+version: "2.0.0"
 ---
 
-# Why SQLite + LanceDB (Not One or the Other)
+# Why TypeDB + LanceDB (Not One or the Other)
 
-ZettelForge uses two storage engines where most systems use one. SQLite handles structured data (notes, knowledge graph, entity index) with ACID guarantees. LanceDB handles vector search. This is a deliberate architectural choice, not accidental complexity.
-
-> **Note:** The optional `zettelforge-enterprise` extension replaces SQLite with TypeDB for teams needing STIX 2.1 schema enforcement and inference rules. The architecture rationale below applies to both backends — only the ontology layer implementation differs.
+ThreatRecall v2.0.0 uses two databases where most systems use one. This is a deliberate architectural choice, not accidental complexity.
 
 ## The Problem with One Database
 
@@ -89,7 +87,7 @@ LanceDB was chosen for the vector layer because:
 
 ## In-Process AI: fastembed + llama-cpp-python
 
-ZettelForge v2.0.0 runs all AI inference in-process by default, with no external service dependencies:
+ThreatRecall v2.0.0 runs all AI inference in-process by default, with no external service dependencies:
 
 - **Embeddings**: fastembed runs nomic-embed-text-v1.5-Q as an in-process ONNX model (768-dim, ~130 MB, ~7ms/embed). This eliminates the latency and operational overhead of an embedding server.
 - **LLM**: llama-cpp-python loads Qwen2.5-3B-Instruct (Q4_K_M GGUF, ~2.0 GB) directly into the Python process (~15.6 tok/s on CPU). This handles fact extraction, intent classification, causal triple extraction, and synthesis.
@@ -105,34 +103,8 @@ The hybrid architecture adds operational complexity:
 - The `mentioned-in` bridge can become inconsistent if one database is modified without the other
 - Cache invalidation spans both systems
 
-ZettelForge mitigates this with automatic fallback — if TypeDB is unreachable, `get_knowledge_graph()` returns the JSONL backend transparently. The system degrades to vector-only retrieval rather than failing.
-
-## Intent-Guided Graph Traversal
-
-The `BlendedRetriever` does not run the graph retriever at a fixed weight. It consults the `IntentClassifier` first, then applies an intent-specific traversal policy that controls how much each retrieval source contributes to the final blended score.
-
-### The Five Query Intents and Their Traversal Policies
-
-| Intent | Graph weight | Primary source | Typical CTI query |
-|:-------|:------------|:---------------|:------------------|
-| `FACTUAL` | 0.2 | entity index (0.7) | "What CVE was used in the SolarWinds attack?" |
-| `TEMPORAL` | 0.2 | temporal (0.5) | "What changed since the last incident?" |
-| `RELATIONAL` | 0.5 | graph (0.5) | "What infrastructure does APT28 use?" |
-| `CAUSAL` | 0.6 | graph (0.6) | "Why did the attacker pivot to the domain controller?" |
-| `EXPLORATORY` | 0.2 | vector (0.5) | "Tell me about APT28" |
-
-A `graph` weight of `0.0` means the graph retriever runs but its results are multiplied by zero before accumulating into the blended score — effectively silencing it. This is why intent classification accuracy directly determines whether graph traversal contributes to retrieval at all.
-
-### Why FACTUAL Queries Carry a Non-Zero Graph Weight
-
-FACTUAL queries are entity lookups, and a zero graph weight seems intuitive: if you want to know a specific fact, why traverse the graph? In practice, CTI factual queries frequently span a graph hop. "What CVE does APT28 exploit?" is factual in intent but requires an `(APT28) -[targets]-> (CVE)` traversal to answer correctly. Setting `graph=0.2` for FACTUAL allows graph results to contribute without dominating — the entity index (0.7) still provides the primary answer, and the graph supplements it.
-
-### Classification Accuracy as a Retrieval Quality Gate
-
-The classifier uses two-tier classification: keyword matching (primary) and LLM fallback (when keyword score < 2). A misclassification does not produce a wrong answer — it produces a degraded answer, because the wrong retrieval policy routes the query to the wrong combination of retrievers. A CTI relational query misclassified as FACTUAL will return entity index results rather than graph traversal results. The answer may be plausible but incomplete.
-
-For details on keyword lists, policy weights, and the merge algorithm, see the [Retrieval Policies Reference](../reference/retrieval-policies.md).
+ThreatRecall mitigates this with automatic fallback — if TypeDB is unreachable, `get_knowledge_graph()` returns the JSONL backend transparently. The system degrades to vector-only retrieval rather than failing.
 
 ## LLM Quick Reference
 
-ZettelForge v2.0.0 uses a hybrid two-database architecture. TypeDB (Apache-2.0, STIX 2.1 schema) serves as the ontology layer owning structured threat intelligence: 9 entity types (threat-actor, malware, tool, attack-pattern, vulnerability, campaign, indicator, infrastructure, zettel-note), 8 relation types (uses, targets, attributed-to, indicates, mitigates, mentioned-in, supersedes, alias-of), inference functions for transitive alias resolution and campaign tool attribution, confidence scoring on every relation, and temporal validity via valid-from/valid-until attributes. LanceDB serves as the conversational layer owning unstructured context: Zettelkasten-style atomic notes with 768-dimensional vector embeddings (fastembed nomic-embed-text-v1.5-Q by default, IVF_PQ index with 256 partitions and 16 sub-vectors), raw text, metadata, and links. Embeddings and LLM inference run in-process by default via fastembed (ONNX) and llama-cpp-python (Qwen2.5-3B-Instruct Q4_K_M GGUF). Ollama is available as an optional fallback provider. The bridge between the two layers is the mentioned-in relation in TypeDB which stores (entity → note-id) mappings. During recall(), the BlendedRetriever queries both layers — VectorRetriever computes cosine similarity with entity boost, GraphRetriever runs BFS from query entities with hop-distance scoring — and merges results using intent-based policy weights (factual queries weight entity index 0.7, relational queries weight graph 0.5, exploratory queries weight vector 0.5). The fallback mechanism returns JSONL KnowledgeGraph if TypeDB is unreachable, degrading to vector-only retrieval. This architecture was chosen because CTI analysis requires both typed structured relationships (which TypeDB handles with schema enforcement and inference) and semantic unstructured text retrieval (which LanceDB handles with vector similarity). Neither database alone covers both needs.
+ThreatRecall v2.0.0 uses a hybrid two-database architecture. TypeDB (Apache-2.0, STIX 2.1 schema) serves as the ontology layer owning structured threat intelligence: 9 entity types (threat-actor, malware, tool, attack-pattern, vulnerability, campaign, indicator, infrastructure, zettel-note), 8 relation types (uses, targets, attributed-to, indicates, mitigates, mentioned-in, supersedes, alias-of), inference functions for transitive alias resolution and campaign tool attribution, confidence scoring on every relation, and temporal validity via valid-from/valid-until attributes. LanceDB serves as the conversational layer owning unstructured context: Zettelkasten-style atomic notes with 768-dimensional vector embeddings (fastembed nomic-embed-text-v1.5-Q by default, IVF_PQ index with 256 partitions and 16 sub-vectors), raw text, metadata, and links. Embeddings and LLM inference run in-process by default via fastembed (ONNX) and llama-cpp-python (Qwen2.5-3B-Instruct Q4_K_M GGUF). Ollama is available as an optional fallback provider. The bridge between the two layers is the mentioned-in relation in TypeDB which stores (entity → note-id) mappings. During recall(), the BlendedRetriever queries both layers — VectorRetriever computes cosine similarity with entity boost, GraphRetriever runs BFS from query entities with hop-distance scoring — and merges results using intent-based policy weights (factual queries weight entity index 0.7, relational queries weight graph 0.5, exploratory queries weight vector 0.5). The fallback mechanism returns JSONL KnowledgeGraph if TypeDB is unreachable, degrading to vector-only retrieval. This architecture was chosen because CTI analysis requires both typed structured relationships (which TypeDB handles with schema enforcement and inference) and semantic unstructured text retrieval (which LanceDB handles with vector similarity). Neither database alone covers both needs.

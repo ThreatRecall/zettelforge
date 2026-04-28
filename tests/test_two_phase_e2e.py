@@ -1,5 +1,4 @@
 """End-to-end tests for Mem0-style two-phase pipeline."""
-
 import pytest
 import tempfile
 from unittest.mock import patch
@@ -44,16 +43,11 @@ class TestRememberWithExtraction:
     def test_update_supersedes_old_note(self, mock_generate, fresh_mm):
         old_note, _ = fresh_mm.remember("APT28 uses DROPBEAR malware", domain="cti")
 
-        # Prompt-aware mock: responds based on prompt content rather than call order.
-        # This is robust to call count drift (retries, background enrichment workers).
-        def _route(prompt, *args, **kwargs):
-            if "Extract the most important facts" in prompt:
-                return '[{"fact": "APT28 no longer uses DROPBEAR", "importance": 9}]'
-            if "Compare this new fact" in prompt:
-                return '{"operation": "UPDATE", "reason": "refines old intel"}'
-            return ""
-
-        mock_generate.side_effect = _route
+        # First call = extraction, second call = update decision
+        mock_generate.side_effect = [
+            '[{"fact": "APT28 no longer uses DROPBEAR", "importance": 9}]',
+            '{"operation": "UPDATE", "reason": "refines old intel"}',
+        ]
         results = fresh_mm.remember_with_extraction(
             "APT28 has dropped DROPBEAR from their toolkit.",
             domain="cti",
@@ -69,14 +63,10 @@ class TestRememberWithExtraction:
         fresh_mm.remember("APT28 targets NATO", domain="cti")
         initial_count = fresh_mm.store.count_notes()
 
-        def _route(prompt, *args, **kwargs):
-            if "Extract the most important facts" in prompt:
-                return '[{"fact": "APT28 targets NATO", "importance": 6}]'
-            if "Compare this new fact" in prompt:
-                return '{"operation": "NOOP", "reason": "already stored"}'
-            return ""
-
-        mock_generate.side_effect = _route
+        mock_generate.side_effect = [
+            '[{"fact": "APT28 targets NATO", "importance": 6}]',
+            '{"operation": "NOOP", "reason": "already stored"}',
+        ]
         results = fresh_mm.remember_with_extraction(
             "APT28 targets NATO allies.",
             domain="cti",

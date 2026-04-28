@@ -1,6 +1,6 @@
 ---
 name: zettelforge
-description: "ZettelForge v2.0.0 — CTI agentic memory system. Hybrid TypeDB (STIX 2.1) + LanceDB (vectors). Zero external AI. 75% CTI accuracy, 111ms p50. Use for: storing/recalling threat intel, entity extraction, graph traversal, RAG synthesis, OpenCTI sync."
+description: "ZettelForge v2.0.0 (ThreatRecall) — CTI agentic memory system. Hybrid TypeDB (STIX 2.1) + LanceDB (vectors). Zero external AI. 75% CTI accuracy, 111ms p50. Use for: storing/recalling threat intel, entity extraction, graph traversal, RAG synthesis, OpenCTI sync."
 ---
 
 # ZettelForge v2.0.0: CTI Agentic Memory

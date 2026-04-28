@@ -1,16 +1,7 @@
 """Shared test fixtures for ZettelForge test suite."""
-
 import os
 import pytest
 from zettelforge.edition import reset_edition
-
-
-# Skip native libraries in CI to prevent SIGSEGV/SIGABRT on GitHub Actions runners:
-# - fastembed/ONNX Runtime segfaults on runner CPU → use deterministic mock embeddings
-# - llama-cpp-python aborts when model not available → use ollama (fails gracefully to "")
-if os.environ.get("CI") or not os.environ.get("ZETTELFORGE_EMBEDDING_PROVIDER"):
-    os.environ.setdefault("ZETTELFORGE_EMBEDDING_PROVIDER", "mock")
-    os.environ.setdefault("ZETTELFORGE_LLM_PROVIDER", "ollama")
 
 
 @pytest.fixture

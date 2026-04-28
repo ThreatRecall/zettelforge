@@ -8,12 +8,11 @@ Causal Triple Extension (2026-04-06):
 - Relations: causes, enables, targets, uses, exploits, attributed_to
 """
 
+import json
 import re
 from datetime import datetime
-from typing import ClassVar
+from typing import Dict, List
 
-from zettelforge.alias_resolver import AliasResolver
-from zettelforge.json_parse import extract_json
 from zettelforge.log import get_logger
 
 _logger = get_logger("zettelforge.constructor")
@@ -26,7 +25,7 @@ from zettelforge.vector_memory import get_embedding
 class NoteConstructor:
     """Construct enriched memory notes from raw content"""
 
-    def extract_entities(self, text: str) -> dict[str, list[str]]:
+    def extract_entities(self, text: str) -> Dict[str, List[str]]:
         """Extract entities from text using the shared EntityExtractor."""
         from zettelforge.entity_indexer import EntityExtractor
 
@@ -79,7 +78,7 @@ class NoteConstructor:
             return context
         return text[:100]
 
-    def _extract_keywords(self, text: str) -> list[str]:
+    def _extract_keywords(self, text: str) -> List[str]:
         """Extract keywords from text."""
         # Simple keyword extraction
         words = re.findall(r"\b[a-zA-Z]{4,}\b", text.lower())
@@ -93,7 +92,7 @@ class NoteConstructor:
 
     # ===== Causal Triple Extraction (MAGMA-style) =====
 
-    CAUSAL_RELATIONS: ClassVar[list[str]] = [
+    CAUSAL_RELATIONS = [
         "causes",
         "enables",
         "targets",
@@ -103,7 +102,7 @@ class NoteConstructor:
         "related_to",
     ]
 
-    def extract_causal_triples(self, text: str, note_id: str = "") -> list[dict[str, str]]:
+    def extract_causal_triples(self, text: str, note_id: str = "") -> List[Dict[str, str]]:
         """
         Use LLM to extract causal triples from text.  [Enterprise]
         Returns list of {subject, relation, object, note_id}
@@ -122,20 +121,25 @@ JSON:"""
         try:
             from zettelforge.llm_client import generate
 
-            # 8000 tokens for causal extraction — the highest cap in the
-            # codebase. This prompt asks the model to enumerate every causal
-            # relation in a passage, which triggers the longest reasoning
-            # chains anywhere in the system. Empirical: qwen3.5:9b at
-            # num_predict=4000 was *stochastically* sufficient (~70% success
-            # rate), eval_count varied between 2.8k (success) and 4k+ (still
-            # in <think> tags when budget exhausted). 8000 keeps the
-            # success rate >95% on the same model. v2.5.2 CHANGELOG.
-            output = generate(prompt, max_tokens=8000, temperature=0.1)
+            output = generate(prompt, max_tokens=300, temperature=0.1)
 
-            parsed = extract_json(output, expect="array")
-            if parsed is None:
-                _logger.warning("parse_failed", schema="causal_triples", raw=(output or "")[:200])
-                return []
+            # Handle various response formats
+            # 1. Markdown code blocks
+            if output.startswith("```"):
+                parts = output.split("```")
+                for part in parts:
+                    if part.strip().startswith("[") or part.strip().startswith("{"):
+                        output = part.strip()
+                        break
+
+            # 2. Find JSON array in output
+            import re
+
+            json_match = re.search(r"\[.*\]", output, re.DOTALL)
+            if json_match:
+                output = json_match.group(0)
+
+            parsed = json.loads(output)
 
             # Normalize to list of dicts (handle array-of-arrays or array-of-objects)
             triples = []
@@ -145,21 +149,6 @@ JSON:"""
                     triples.append({"subject": item[0], "relation": item[1], "object": item[2]})
                 elif isinstance(item, dict):
                     triples.append(item)
-
-            # Validate relations against allowlist
-            valid_relations = set(self.CAUSAL_RELATIONS)
-            validated = []
-            for triple in triples:
-                relation = triple.get("relation", "").strip().lower()
-                if relation not in valid_relations:
-                    _logger.warning(
-                        "invalid_causal_relation",
-                        relation=relation,
-                        triple=str(triple)[:100],
-                    )
-                    continue
-                validated.append(triple)
-            triples = validated
 
             # Add note_id to each triple
             for t in triples:
@@ -171,20 +160,15 @@ JSON:"""
             _logger.warning("causal_extraction_failed", error=str(e))
             return []
 
-    def store_causal_edges(self, triples: list[dict], note_id: str = "", backend=None) -> int:
+    def store_causal_edges(self, triples: List[Dict], note_id: str = "") -> int:
         """
         Store causal triples as edges in KnowledgeGraph.
         Returns number of edges added.
-
-        Args:
-            triples: List of causal triple dicts.
-            note_id: Source note ID for provenance.
-            backend: Optional StorageBackend; falls back to JSONL KG singleton.
         """
         if not triples:
             return 0
 
-        resolver = AliasResolver()
+        kg = get_knowledge_graph()
         edges_added = 0
 
         for triple in triples:
@@ -198,36 +182,14 @@ JSON:"""
                     from_type = self._infer_entity_type(subject)
                     to_type = self._infer_entity_type(obj)
 
-                    # Resolve aliases before storing to prevent duplicate nodes
-                    subject = resolver.resolve(from_type, subject)
-                    obj = resolver.resolve(to_type, obj)
-
-                    edge_props = {
-                        "note_id": note_id,
-                        "source": "llm_extraction",
-                        "edge_type": "causal",
-                    }
-
-                    if backend is not None:
-                        backend.add_kg_edge(
-                            from_type=from_type,
-                            from_value=subject,
-                            to_type=to_type,
-                            to_value=obj,
-                            relationship=relation,
-                            note_id=note_id,
-                            properties=edge_props,
-                        )
-                    else:
-                        kg = get_knowledge_graph()
-                        kg.add_edge(
-                            from_type=from_type,
-                            from_value=subject,
-                            to_type=to_type,
-                            to_value=obj,
-                            relationship=relation,
-                            properties=edge_props,
-                        )
+                    kg.add_edge(
+                        from_type=from_type,
+                        from_value=subject,
+                        to_type=to_type,
+                        to_value=obj,
+                        relationship=relation,
+                        properties={"note_id": note_id, "source": "llm_extraction"},
+                    )
                     edges_added += 1
                 except Exception as e:
                     _logger.warning(
@@ -264,32 +226,18 @@ JSON:"""
         if "cve-" in entity_lower or re.match(r"cve-\d{4}-\d+", entity_lower, re.I):
             return "cve"
 
-        # STIX 2.1 intrusion sets: named adversary groups such as APT28,
-        # UNC/TA/FIN clusters, and common group aliases.
-        intrusion_set_patterns = [
-            r"\bapt\d+\b",
-            r"\bunc\d+\b",
-            r"\bta\d+\b",
-            r"\bfin\d+\b",
+        # Threat actor patterns
+        actor_patterns = [
+            "apt",
             "lazarus",
             "sandworm",
             "fancy bear",
             "cozy bear",
             "volt typhoon",
-        ]
-        if any(re.search(pat, entity_lower) for pat in intrusion_set_patterns):
-            return "intrusion_set"
-
-        # STIX 2.1 threat actors are individuals or loosely scoped actor
-        # categories, not named intrusion sets.
-        actor_patterns = [
             "north korea",
-            "russian threat actor",
-            "iranian threat actor",
-            "chinese threat actor",
         ]
         if any(pat in entity_lower for pat in actor_patterns):
-            return "threat_actor"
+            return "actor"
 
         # Tool patterns
         tool_patterns = [

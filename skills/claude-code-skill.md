@@ -1,17 +1,17 @@
 ---
-name: zettelforge
-description: "ZettelForge CTI Memory — Store, recall, and synthesize threat intelligence. Use when agents need persistent CTI memory, threat actor attribution, CVE lookups, STIX graph traversal, or RAG synthesis over threat reports. Triggers on: remember intel, recall threats, what tools does X use, CVE lookup, threat actor research, synthesize brief."
+name: threatrecall
+description: "ThreatRecall CTI Memory — Store, recall, and synthesize threat intelligence. Use when agents need persistent CTI memory, threat actor attribution, CVE lookups, STIX graph traversal, or RAG synthesis over threat reports. Triggers on: remember intel, recall threats, what tools does X use, CVE lookup, threat actor research, synthesize brief."
 tools:
-  - zettelforge_remember
-  - zettelforge_recall
-  - zettelforge_synthesize
-  - zettelforge_entity
-  - zettelforge_graph
-  - zettelforge_stats
-  - zettelforge_sync
+  - threatrecall_remember
+  - threatrecall_recall
+  - threatrecall_synthesize
+  - threatrecall_entity
+  - threatrecall_graph
+  - threatrecall_stats
+  - threatrecall_sync
 ---
 
-# ZettelForge: CTI Agentic Memory
+# ThreatRecall: CTI Agentic Memory
 
 Persistent memory system for cyber threat intelligence. 75% accuracy on CTI queries, 111ms p50 latency.
 
@@ -78,17 +78,17 @@ stats = sync_opencti(mm, limit=50)  # Pull latest from OpenCTI
 
 ## MCP tools available
 
-If the ZettelForge MCP server is configured, use these tools directly:
+If the ThreatRecall MCP server is configured, use these tools directly:
 
 | Tool | What it does |
 |------|-------------|
-| `zettelforge_remember` | Store CTI text (extracts entities, updates graph) |
-| `zettelforge_recall` | Blended search (vector + graph + reranking) |
-| `zettelforge_synthesize` | RAG synthesis in 4 formats |
-| `zettelforge_entity` | Fast entity lookup by type + value |
-| `zettelforge_graph` | STIX knowledge graph traversal |
-| `zettelforge_stats` | Memory system statistics |
-| `zettelforge_sync` | Pull from OpenCTI |
+| `threatrecall_remember` | Store CTI text (extracts entities, updates graph) |
+| `threatrecall_recall` | Blended search (vector + graph + reranking) |
+| `threatrecall_synthesize` | RAG synthesis in 4 formats |
+| `threatrecall_entity` | Fast entity lookup by type + value |
+| `threatrecall_graph` | STIX knowledge graph traversal |
+| `threatrecall_stats` | Memory system statistics |
+| `threatrecall_sync` | Pull from OpenCTI |
 
 ## Architecture
 

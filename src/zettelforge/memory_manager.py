@@ -4,30 +4,25 @@ A-MEM Agentic Memory Architecture V1.0
 
 Main interface for agent memory operations.
 
-Core: vector search, JSONL graph, entity extraction, blended retrieval.
-With zettelforge-enterprise: TypeDB backend, deeper traversal, extended synthesis.
+Community edition: vector search, JSONL graph, basic entity extraction.
+Enterprise edition: blended retrieval, cross-encoder reranking, report ingestion.
 """
 
 import atexit
-import concurrent.futures
 import queue
 import threading
 import time
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any
-
-import structlog
+from typing import Any, Dict, List, Optional, Tuple
 
 from zettelforge.alias_resolver import AliasResolver
-from zettelforge.backend_factory import get_storage_backend
-from zettelforge.config import get_config
-from zettelforge.consolidation import ConsolidationMiddleware
+from zettelforge.edition import is_enterprise
 from zettelforge.entity_indexer import EntityIndexer
-from zettelforge.extensions import has_extension
 from zettelforge.fact_extractor import FactExtractor
 from zettelforge.governance_validator import GovernanceValidator, GovernanceViolationError
+from zettelforge.knowledge_graph import get_knowledge_graph
 from zettelforge.log import get_logger
 from zettelforge.memory_store import MemoryStore, get_default_data_dir
 from zettelforge.memory_updater import MemoryUpdater
@@ -40,11 +35,8 @@ from zettelforge.ocsf import (
     log_api_activity,
     log_authorization,
 )
-from zettelforge.storage_backend import BackendClosedError
 from zettelforge.synthesis_generator import get_synthesis_generator
 from zettelforge.synthesis_validator import get_synthesis_validator
-from zettelforge.telemetry import get_telemetry
-from zettelforge.vector_memory import preload_embedding_model
 from zettelforge.vector_retriever import VectorRetriever
 
 # ── Reranker singleton ───────────────────────────────────────────────────────
@@ -72,8 +64,6 @@ class _EnrichmentJob:
     domain: str
     content_len: int
     resolved_entities: dict = field(default_factory=dict)
-    job_type: str = "causal_extraction"  # or "neighbor_evolution" or "llm_ner"
-    defer: bool = False  # If True, skip processing (used for batch-defer in remember_report)
 
 
 class MemoryManager:
@@ -81,66 +71,16 @@ class MemoryManager:
     Main interface for agent memory operations.
     """
 
-    def __init__(self, jsonl_path: str | None = None, lance_path: str | None = None):
-        # Derive data_dir from jsonl_path if provided (tests pass custom paths)
-        _data_dir = None
-        if jsonl_path:
-            from pathlib import Path
-
-            _data_dir = str(Path(jsonl_path).parent)
-
-        # Primary storage: SQLite backend for notes, KG, and entities
-        self.store = get_storage_backend(data_dir=_data_dir)
-        self.store.initialize()
-
-        # Backward-compat alias: callers (evolver, updater, consolidation) use
-        # store._rewrite_note() -- delegate to the public rewrite_note() method.
-        if not hasattr(self.store, "_rewrite_note"):
-            self.store._rewrite_note = self.store.rewrite_note
-
-        # LanceDB access: keep a MemoryStore for vector indexing only
-        self._lance_store = MemoryStore(jsonl_path=jsonl_path, lance_path=lance_path)
-
-        # [RFC-009 Phase 0.5 / task #39] Force fastembed to load now so the
-        # first remember() doesn't pay the ~800ms model-load cost in its
-        # construct phase. Best-effort: failures are swallowed by preload.
-        preload_embedding_model()
-
-        # Legacy EntityIndexer kept for extractor, stats(), and build() compatibility
-        self.indexer = EntityIndexer()
-
+    def __init__(self, jsonl_path: Optional[str] = None, lance_path: Optional[str] = None):
+        self.store = MemoryStore(jsonl_path=jsonl_path, lance_path=lance_path)
         self.constructor = NoteConstructor()
-        self.retriever = VectorRetriever(
-            memory_store=self._lance_store,
-            note_lookup=lambda nid: self.store.get_note_by_id(nid),
-        )
-        self.governance = GovernanceValidator(
-            pii_config=get_config().governance.pii,
-            limits_config=get_config().governance.limits,
-        )
+        self.indexer = EntityIndexer()
+        self.retriever = VectorRetriever(memory_store=self.store)
+        self.governance = GovernanceValidator()
         self.resolver = AliasResolver()
-        self.consolidation = ConsolidationMiddleware(self)
 
         self._logger = get_logger("zettelforge.memory")
-        self.stats = {
-            "notes_created": 0,
-            "retrievals": 0,
-            "entity_index_hits": 0,
-            "consolidations_triggered": 0,
-            # LLM NER observability (RFC-001 amendment)
-            "llm_ner_success": 0,
-            "llm_ner_failure": 0,
-            "llm_ner_no_new": 0,
-            "llm_ner_total_new_entities": 0,
-            "llm_ner_total_duration_ms": 0.0,
-        }
-
-        # Operational telemetry (RFC-007 / US-002)
-        self._telemetry = get_telemetry()
-        # Correlation slot — recall stores its query_id/results here so
-        # synthesize() can attach synthesis telemetry to the same query_id.
-        self._telemetry_query_id: str | None = None
-        self._telemetry_retrieved_notes: list | None = None
+        self.stats = {"notes_created": 0, "retrievals": 0, "entity_index_hits": 0}
 
         # Dual-stream enrichment: background worker for LLM causal extraction
         self._enrichment_queue: queue.Queue = queue.Queue(maxsize=500)
@@ -152,7 +92,6 @@ class MemoryManager:
         )
         self._enrichment_worker.start()
         atexit.register(self._drain_enrichment_queue)
-        atexit.register(self.store.close)
 
     def remember(
         self,
@@ -162,7 +101,7 @@ class MemoryManager:
         domain: str = "general",
         evolve: bool = False,
         sync: bool = False,
-    ) -> tuple[MemoryNote, str]:
+    ) -> Tuple[MemoryNote, str]:
         """
         Create a new memory note from content.
 
@@ -188,45 +127,9 @@ class MemoryManager:
         request_id = uuid.uuid4().hex
         start = time.perf_counter()
 
-        # Bind request_id to structlog context so every downstream log line
-        # (fact extraction, entity indexing, evolution, LLM calls, KG writes)
-        # carries this trace_id automatically. Cleared at function exit so it
-        # doesn't leak across sequential remember() calls.
-        structlog.contextvars.bind_contextvars(
-            trace_id=request_id,
-            domain=domain,
-            source_type=source_type,
-        )
-
+        # Governance validation
         try:
-            return self._remember_inner(
-                content=content,
-                source_type=source_type,
-                source_ref=source_ref,
-                domain=domain,
-                evolve=evolve,
-                sync=sync,
-                request_id=request_id,
-                start=start,
-            )
-        finally:
-            structlog.contextvars.unbind_contextvars("trace_id", "domain", "source_type")
-
-    def _remember_inner(
-        self,
-        content: str,
-        source_type: str,
-        source_ref: str,
-        domain: str,
-        evolve: bool,
-        sync: bool,
-        request_id: str,
-        start: float,
-    ) -> tuple[MemoryNote, str]:
-        """Inner body of remember(); split out so trace_id binding can wrap it."""
-        # Governance validation (may return redacted content when PII is enabled)
-        try:
-            content = self.governance.enforce("remember", content)
+            self.governance.enforce("remember", content)
             log_authorization(
                 actor="system",
                 resource="remember",
@@ -278,33 +181,14 @@ class MemoryManager:
             )
 
         # Direct store path
-        # [RFC-009 Phase 0.5] Per-phase timings to attribute remember() latency.
-        # Emitted in ocsf_api_activity.phase_timings_ms so the RFC-007 aggregator
-        # can bucket them without schema changes.
-        phase_timings_ms: dict[str, float] = {}
-
-        _p = time.perf_counter()
         note = self.constructor.construct(
             raw_content=content, source_type=source_type, source_ref=source_ref, domain=domain
         )
-        phase_timings_ms["construct"] = (time.perf_counter() - _p) * 1000
 
-        _p = time.perf_counter()
         self.store.write_note(note)
-        phase_timings_ms["write_note"] = (time.perf_counter() - _p) * 1000
         self.stats["notes_created"] += 1
 
-        # Keep LanceDB in sync for vector retrieval
-        if self._lance_store.lancedb is not None:
-            _p = time.perf_counter()
-            try:
-                self._lance_store._index_in_lance(note)
-            except Exception:
-                self._logger.warning("lance_index_sync_failed", note_id=note.id, exc_info=True)
-            phase_timings_ms["lance_index"] = (time.perf_counter() - _p) * 1000
-
         # Alias resolution and indexing (regex-only for speed; LLM NER runs on recall)
-        _p = time.perf_counter()
         raw_entities = self.indexer.extractor.extract_all(note.content.raw, use_llm=False)
 
         resolved_entities = {}
@@ -313,47 +197,13 @@ class MemoryManager:
 
         self.indexer.add_note(note.id, resolved_entities)
 
-        # Write entity mappings to SQLite backend
-        for etype, elist in resolved_entities.items():
-            for evalue in elist:
-                self.store.add_entity_mapping(etype, evalue, note.id)
-        phase_timings_ms["entity_index"] = (time.perf_counter() - _p) * 1000
-
-        # GAM consolidation: observe note for semantic shift detection
-        _p = time.perf_counter()
-        try:
-            is_shift, shift_meta = self.consolidation.before_write(
-                note_entities=resolved_entities,
-                note_domain=domain,
-            )
-            if is_shift:
-                self.stats["consolidations_triggered"] += 1
-                self._logger.info(
-                    "semantic_shift_detected",
-                    note_id=note.id,
-                    signals=shift_meta.get("shift_signals", []),
-                    epg_count=shift_meta.get("epg_count", 0),
-                )
-        except Exception as e:
-            self._logger.warning("consolidation_observe_failed", error=str(e))
-        phase_timings_ms["consolidation_observe"] = (time.perf_counter() - _p) * 1000
-
         # Phase 3: Check supersession
-        _p = time.perf_counter()
         self._check_supersession(note, resolved_entities)
-        phase_timings_ms["supersession"] = (time.perf_counter() - _p) * 1000
 
         # Phase 6: Knowledge Graph Update (heuristic edges — fast path)
-        _p = time.perf_counter()
         self._update_knowledge_graph(note, resolved_entities)
-        phase_timings_ms["kg_update"] = (time.perf_counter() - _p) * 1000
 
-        # Phase 6b/6c/6d: dispatch background enrichment jobs (causal + NER + evolution).
-        # The dispatch bucket measures job construction + put_nowait() + count_notes()
-        # overhead only. In sync=True mode the LLM work runs inline and is intentionally
-        # EXCLUDED from this bucket — mixing LLM latency into "dispatch" would corrupt
-        # the Phase 0.5 attribution. sync=True is retained for tests/debug.
-        dispatch_start = time.perf_counter() if not sync else None
+        # Phase 6b: LLM causal enrichment (slow path — background worker)
         job = _EnrichmentJob(
             note_id=note.id,
             domain=domain,
@@ -369,43 +219,6 @@ class MemoryManager:
             except queue.Full:
                 self._logger.warning("enrichment_queue_full", note_id=note.id)
 
-        # Phase 6c: LLM NER enrichment (always-on, background — RFC-001 amendment)
-        if get_config().llm_ner.enabled:
-            ner_job = _EnrichmentJob(
-                note_id=note.id,
-                domain=domain,
-                content_len=len(content),
-                resolved_entities=resolved_entities,
-                job_type="llm_ner",
-            )
-            if sync:
-                self._run_llm_ner(ner_job)
-            else:
-                try:
-                    self._enrichment_queue.put_nowait(ner_job)
-                except queue.Full:
-                    self._logger.warning("llm_ner_queue_full", note_id=note.id)
-
-        # Phase 6d: Neighbor evolution (A-Mem inspired — background worker)
-        # Skip if fewer than 3 notes exist — not enough neighbors to evolve against
-        if self.store.count_notes() >= 3:
-            evolution_job = _EnrichmentJob(
-                note_id=note.id,
-                domain=domain,
-                content_len=len(content),
-                job_type="neighbor_evolution",
-            )
-            if sync:
-                self._run_evolution(evolution_job)
-            else:
-                try:
-                    self._enrichment_queue.put_nowait(evolution_job)
-                    self._pending_enrichment.add(note.id)
-                except queue.Full:
-                    self._logger.warning("evolution_queue_full", note_id=note.id)
-        if dispatch_start is not None:
-            phase_timings_ms["enrichment_dispatch"] = (time.perf_counter() - dispatch_start) * 1000
-
         duration_ms = (time.perf_counter() - start) * 1000
         log_api_activity(
             operation="remember",
@@ -415,7 +228,6 @@ class MemoryManager:
             duration_ms=duration_ms,
             request_id=request_id,
             evolve=False,
-            phase_timings_ms={k: round(v, 2) for k, v in phase_timings_ms.items()},
         )
         return note, "created"
 
@@ -428,7 +240,7 @@ class MemoryManager:
         context: str = "",
         min_importance: int = 3,
         max_facts: int = 5,
-    ) -> list[tuple[MemoryNote | None, str]]:
+    ) -> List[Tuple[Optional[MemoryNote], str]]:
         """
         Mem0-style two-phase pipeline: extract salient facts, then decide ADD/UPDATE/DELETE/NOOP.
 
@@ -486,9 +298,9 @@ class MemoryManager:
         min_importance: int = 3,
         max_facts: int = 10,
         chunk_size: int = 3000,
-    ) -> list[tuple[MemoryNote | None, str]]:
+    ) -> List[Tuple[Optional[MemoryNote], str]]:
         """
-        Ingest a news report or threat report.
+        Ingest a news report or threat report.  [Enterprise]
 
         Chunks long content, runs two-phase extraction on each chunk,
         and stores published_date as temporal metadata.
@@ -504,7 +316,18 @@ class MemoryManager:
 
         Returns:
             List of (MemoryNote or None, status) tuples across all chunks.
+
+        Raises:
+            EditionError: If called in Community edition.
         """
+        if not is_enterprise():
+            from zettelforge.edition import EditionError
+
+            raise EditionError(
+                "'remember_report' (report ingestion with auto-chunking) requires "
+                "ThreatRecall Enterprise. Set THREATENGRAM_LICENSE_KEY or visit "
+                "https://threatengram.com/enterprise"
+            )
         source_ref = source_url or "report"
 
         # Chunk long content on sentence boundaries
@@ -545,91 +368,27 @@ class MemoryManager:
     def recall(
         self,
         query: str,
-        domain: str | None = None,
+        domain: Optional[str] = None,
         k: int = 10,
         include_links: bool = True,
         exclude_superseded: bool = True,
-        include_expired: bool = False,
-        actor: str | None = None,
-    ) -> list[MemoryNote]:
+    ) -> List[MemoryNote]:
         """
         Retrieve memories relevant to query using blended vector + graph retrieval.
 
         Uses intent classifier to determine retrieval strategy weights,
         then combines vector similarity and graph traversal results
         with cross-encoder reranking.
-
-        If governance.limits.recall_timeout_seconds is set (> 0), the
-        retrieval pipeline is capped by a wall-clock timeout. Exceeding
-        the timeout logs a warning and returns an empty list. This is a
-        defense-in-depth control for D-03 (deep graph traversal DoS) per
-        RFC-014.
         """
-        timeout = get_config().governance.limits.recall_timeout_seconds
-        if timeout > 0:
-            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
-                future = pool.submit(
-                    self._recall_inner,
-                    query,
-                    domain,
-                    k,
-                    include_links,
-                    exclude_superseded,
-                    include_expired,
-                    actor,
-                )
-                try:
-                    return future.result(timeout=timeout)
-                except concurrent.futures.TimeoutError:
-                    self._logger.warning(
-                        "recall_timed_out",
-                        timeout_seconds=timeout,
-                        query=query[:100],
-                    )
-                    log_api_activity(
-                        operation="recall",
-                        status_id=STATUS_FAILURE,
-                        query=query[:200],
-                        domain=domain,
-                        k=k,
-                        result_count=0,
-                        duration_ms=timeout * 1000,
-                        request_id=uuid.uuid4().hex,
-                    )
-                    return []
-        return self._recall_inner(
-            query,
-            domain,
-            k,
-            include_links,
-            exclude_superseded,
-            include_expired,
-            actor,
-        )
-
-    def _recall_inner(
-        self,
-        query: str,
-        domain: str | None = None,
-        k: int = 10,
-        include_links: bool = True,
-        exclude_superseded: bool = True,
-        include_expired: bool = False,
-        actor: str | None = None,
-    ) -> list[MemoryNote]:
         request_id = uuid.uuid4().hex
         start = time.perf_counter()
         self.stats["retrievals"] += 1
-
-        # ── RFC-007 US-002: telemetry ─────────────────────────────────
-        query_id = self._telemetry.start_query(query, actor=actor)
-        self._telemetry_query_id = query_id
 
         # Classify query intent
         from zettelforge.intent_classifier import get_intent_classifier
 
         classifier = get_intent_classifier()
-        intent, _intent_meta = classifier.classify(query)
+        intent, intent_meta = classifier.classify(query)
         policy = classifier.get_traversal_policy(intent)
 
         # Extract entities from query for graph traversal
@@ -638,26 +397,18 @@ class MemoryManager:
         for etype, elist in query_entities.items():
             resolved[etype] = [self.resolver.resolve(etype, e) for e in elist]
 
-        # Vector retrieval (Community + Enterprise).
-        # Request (note, score) tuples — BlendedRetriever's _normalize_scores
-        # requires real similarity scores for min-max fusion. Without this,
-        # commit 0e1c73 fails with ValueError: too many values to unpack.
-        _vector_start = time.perf_counter()
-        vector_scored: list[tuple] = self.retriever.retrieve(
-            query=query,
-            domain=domain,
-            k=k,
-            include_links=include_links,
-            return_scores=True,
+        # Vector retrieval (Community + Enterprise)
+        vector_results = self.retriever.retrieve(
+            query=query, domain=domain, k=k, include_links=include_links
         )
-        _vector_latency_ms = (time.perf_counter() - _vector_start) * 1000
 
         # Temporal boost: for temporal queries, prioritize notes containing dates from the query
         if intent.value == "temporal":
-            import importlib.util
-            import re as _re
+            try:
+                import re as _re
 
-            if importlib.util.find_spec("dateparser") is not None:
+                import dateparser  # noqa: F401
+
                 # Extract date-like strings from query
                 date_patterns = _re.findall(
                     r"\b(?:january|february|march|april|may|june|july|august|september|"
@@ -666,74 +417,40 @@ class MemoryManager:
                     _re.IGNORECASE,
                 )
                 if date_patterns:
-                    # Boost notes containing any of the extracted dates;
-                    # preserve the (note, score) shape for the blender.
+                    # Boost notes containing any of the extracted dates
                     date_lower = [d.lower() for d in date_patterns]
                     boosted = []
                     rest = []
-                    for note, score in vector_scored:
+                    for note in vector_results:
                         content_lower = note.content.raw.lower()
                         if any(d in content_lower for d in date_lower):
-                            boosted.append((note, score))
+                            boosted.append(note)
                         else:
-                            rest.append((note, score))
-                    vector_scored = boosted + rest
+                            rest.append(note)
+                    vector_results = boosted + rest
+            except ImportError:
+                pass
 
         # Blended retrieval: combine vector similarity with graph traversal
         from zettelforge.blended_retriever import BlendedRetriever
         from zettelforge.graph_retriever import GraphRetriever
-        from zettelforge.knowledge_graph import get_knowledge_graph
 
         kg = get_knowledge_graph()
         graph_retriever = GraphRetriever(kg)
-        _graph_start = time.perf_counter()
         graph_results = graph_retriever.retrieve_note_ids(query_entities=resolved, max_depth=2)
-        _graph_latency_ms = (time.perf_counter() - _graph_start) * 1000
 
         blender = BlendedRetriever()
         results = blender.blend(
-            vector_results=vector_scored,
+            vector_results=vector_results,
             graph_results=graph_results,
             policy=policy,
             note_lookup=lambda nid: self.store.get_note_by_id(nid),
             k=k,
         )
 
-        # Fallback: if blending produced fewer results than vector alone, use
-        # the bare-note projection of the scored list.
-        if len(results) < len(vector_scored):
-            results = [note for note, _ in vector_scored[:k]]
-
-        # Causal retrieval boost: traverse causal edges when intent is CAUSAL
-        if intent.value == "causal":
-            result_ids_causal = {n.id for n in results}
-            for etype, elist in resolved.items():
-                for evalue in elist:
-                    # Forward (what does X cause?) + backward (why did X happen?)
-                    all_causal = []
-                    all_causal.extend(
-                        self.store.get_causal_edges(etype, evalue, max_depth=3, max_visited=50)
-                    )
-                    all_causal.extend(
-                        self.store.get_incoming_causal(etype, evalue, max_depth=3, max_visited=50)
-                    )
-                    for edge in all_causal:
-                        # Check both endpoints for note references
-                        for endpoint in ("to_node_id", "from_node_id"):
-                            node = self.store.get_kg_node_by_id(edge.get(endpoint, ""))
-                            if node and node.get("entity_type") == "note":
-                                nid = node.get("entity_value")
-                                note = self.store.get_note_by_id(nid)
-                                if note and note.id not in result_ids_causal:
-                                    results.append(note)
-                                    result_ids_causal.add(note.id)
-                        # Also pull notes via the edge's source note_id
-                        src_note_id = edge.get("properties", {}).get("note_id", "")
-                        if src_note_id and src_note_id not in result_ids_causal:
-                            note = self.store.get_note_by_id(src_note_id)
-                            if note:
-                                results.append(note)
-                                result_ids_causal.add(note.id)
+        # Fallback: if blending produced fewer results than vector alone, use vector
+        if len(results) < len(vector_results):
+            results = vector_results[:k]
 
         # Entity-augmented recall: also pull notes via entity index for query entities
         # This ensures multi-entity answers (e.g., "tools used by APT28") include all
@@ -755,15 +472,7 @@ class MemoryManager:
                 if reranker is not None:
                     docs = [n.content.raw[:512] for n in results]
                     scores = list(reranker.rerank(query, docs))
-                    # B905: strict=True — scores and results have identical
-                    # length by construction (one score per doc), so a length
-                    # mismatch would be a programming error, not a silent
-                    # truncation bug.
-                    paired = sorted(
-                        zip(scores, results, strict=True),
-                        key=lambda x: x[0],
-                        reverse=True,
-                    )
+                    paired = sorted(zip(scores, results), key=lambda x: x[0], reverse=True)
                     results = [note for _, note in paired]
             except Exception:
                 self._logger.warning("reranking_failed_using_original_order", exc_info=True)
@@ -771,14 +480,6 @@ class MemoryManager:
         # Filter superseded notes
         if exclude_superseded:
             results = [n for n in results if not n.links.superseded_by]
-
-        # Filter expired notes (persistence semantics)
-        if not include_expired:
-            pre_filter_count = len(results)
-            results = [n for n in results if not n.is_expired()]
-            filtered_count = pre_filter_count - len(results)
-            if filtered_count > 0:
-                self._logger.info("expired_notes_filtered", count=filtered_count, query=query[:50])
 
         # Cap at k after entity augmentation and reranking
         results = results[:k]
@@ -788,23 +489,7 @@ class MemoryManager:
             note.increment_access()
             self.store.mark_access_dirty(note.id)
 
-        # ── RFC-007 US-002: telemetry correlation slot ──────────────
-        self._telemetry_query_id = query_id
-        self._telemetry_retrieved_notes = list(results)
-
         duration_ms = (time.perf_counter() - start) * 1000
-
-        # ── RFC-007 US-002: log_recall ─────────────────────────────
-        intent_val = getattr(intent, "value", None)
-        intent_str = intent_val if intent_val is not None else str(intent)
-        self._telemetry.log_recall(
-            query_id,
-            results,
-            intent=intent_str,
-            vector_latency_ms=int(_vector_latency_ms),
-            graph_latency_ms=int(_graph_latency_ms),
-        )
-
         log_api_activity(
             operation="recall",
             status_id=STATUS_SUCCESS,
@@ -814,23 +499,16 @@ class MemoryManager:
             result_count=len(results),
             duration_ms=duration_ms,
             request_id=request_id,
-            telemetry_query_id=query_id,
-            telemetry_actor=actor,
         )
         return results
 
-    def recall_entity(self, entity_type: str, entity_value: str, k: int = 5) -> list[MemoryNote]:
+    def recall_entity(self, entity_type: str, entity_value: str, k: int = 5) -> List[MemoryNote]:
         """
         Fast lookup by entity type and value.
-        entity_type: 'cve', 'actor', 'threat_actor', 'intrusion_set', 'tool',
-        'campaign', 'person', 'location', 'organization', 'event', 'activity',
-        'temporal'
+        entity_type: 'cve', 'actor', 'tool', 'campaign', 'person', 'location', 'organization', 'event', 'activity', 'temporal'
         """
         self.stats["entity_index_hits"] += 1
-        note_ids = self.store.get_note_ids_for_entity(entity_type, entity_value.lower())
-        # Fall back to legacy JSON indexer if backend returns nothing
-        if not note_ids:
-            note_ids = self.indexer.get_note_ids(entity_type, entity_value.lower())
+        note_ids = self.indexer.get_note_ids(entity_type, entity_value.lower())
         notes = []
         for nid in note_ids[:k]:
             note = self.store.get_note_by_id(nid)
@@ -838,39 +516,20 @@ class MemoryManager:
                 notes.append(note)
         return notes
 
-    def recall_cve(self, cve_id: str, k: int = 5) -> list[MemoryNote]:
+    def recall_cve(self, cve_id: str, k: int = 5) -> List[MemoryNote]:
         """Fast lookup by CVE-ID (case-insensitive)"""
         return self.recall_entity("cve", cve_id.upper(), k)
 
-    def recall_actor(self, actor_name: str, k: int = 5) -> list[MemoryNote]:
-        """Fast lookup by threat actor name.
+    def recall_actor(self, actor_name: str, k: int = 5) -> List[MemoryNote]:
+        """Fast lookup by threat actor name"""
+        return self.recall_entity("actor", actor_name.lower(), k)
 
-        Searches legacy 'actor', STIX 'threat_actor', and STIX
-        'intrusion_set' entity types. APT/UNC/FIN-style designations are
-        extracted as intrusion_set, but older stores may still have actor.
-        """
-        results = []
-        seen = set()
-        for entity_type in ("actor", "threat_actor", "intrusion_set"):
-            if len(results) >= k:
-                break
-            entity_results = self.recall_entity(entity_type, actor_name.lower(), k - len(results))
-            for note in entity_results:
-                if note.id not in seen:
-                    results.append(note)
-                    seen.add(note.id)
-        return results
-
-    def recall_technique(self, technique_id: str, k: int = 25) -> list[MemoryNote]:
-        """Fast lookup by MITRE ATT&CK technique ID (e.g., T1059)."""
-        return self.recall_entity("attack_pattern", technique_id.upper(), k)
-
-    def recall_tool(self, tool_name: str, k: int = 5) -> list[MemoryNote]:
+    def recall_tool(self, tool_name: str, k: int = 5) -> List[MemoryNote]:
         """Fast lookup by tool name"""
         return self.recall_entity("tool", tool_name.lower(), k)
 
     def get_context(
-        self, query: str, domain: str | None = None, k: int = 10, token_budget: int = 4000
+        self, query: str, domain: Optional[str] = None, k: int = 10, token_budget: int = 4000
     ) -> str:
         """
         Get formatted memory context for agent prompt injection.
@@ -879,7 +538,7 @@ class MemoryManager:
             query=query, domain=domain, k=k, token_budget=token_budget
         )
 
-    def get_stats(self) -> dict:
+    def get_stats(self) -> Dict:
         """Get memory system statistics"""
         return {
             **self.stats,
@@ -887,12 +546,13 @@ class MemoryManager:
             "entity_index": self.indexer.stats(),
         }
 
-    def _update_knowledge_graph(self, note: MemoryNote, resolved_entities: dict[str, list[str]]):
+    def _update_knowledge_graph(self, note: MemoryNote, resolved_entities: Dict[str, List[str]]):
+        kg = get_knowledge_graph()
         now = datetime.now().isoformat()
         edge_props = {"first_observed": now, "confidence": note.metadata.confidence}
 
         # 1. Add Note node
-        self.store.add_kg_node(
+        kg.add_node(
             "note", note.id, {"content": note.content.raw[:200], "domain": note.metadata.domain}
         )
 
@@ -901,74 +561,41 @@ class MemoryManager:
         for etype, elist in resolved_entities.items():
             for evalue in elist:
                 all_entities.append((etype, evalue))
-                self.store.add_kg_edge(
-                    etype, evalue, "note", note.id, "MENTIONED_IN", properties=edge_props
-                )
+                kg.add_edge(etype, evalue, "note", note.id, "MENTIONED_IN", edge_props)
 
         # 3. Inferred Entity-to-Entity Relationships (Heuristic)
 
         # --- CTI relationships ---
-        actors = []
-        for actor_type in ("actor", "threat_actor", "intrusion_set"):
-            actors.extend((actor_type, value) for value in resolved_entities.get(actor_type, []))
+        actors = resolved_entities.get("actor", [])
         tools = resolved_entities.get("tool", [])
         cves = resolved_entities.get("cve", [])
         assets = resolved_entities.get("asset", [])
         campaigns = resolved_entities.get("campaign", [])
 
-        for actor_type, actor_value in actors:
+        for a in actors:
             for t in tools:
-                self.store.add_kg_edge(
-                    actor_type, actor_value, "tool", t, "USES_TOOL", properties=edge_props
-                )
+                kg.add_edge("actor", a, "tool", t, "USES_TOOL", edge_props)
             for c in cves:
-                self.store.add_kg_edge(
-                    actor_type, actor_value, "cve", c, "EXPLOITS_CVE", properties=edge_props
-                )
+                kg.add_edge("actor", a, "cve", c, "EXPLOITS_CVE", edge_props)
             for asset in assets:
-                self.store.add_kg_edge(
-                    actor_type,
-                    actor_value,
-                    "asset",
-                    asset,
-                    "TARGETS_ASSET",
-                    properties=edge_props,
-                )
+                kg.add_edge("actor", a, "asset", asset, "TARGETS_ASSET", edge_props)
             for camp in campaigns:
-                self.store.add_kg_edge(
-                    actor_type,
-                    actor_value,
-                    "campaign",
-                    camp,
-                    "CONDUCTS_CAMPAIGN",
-                    properties=edge_props,
-                )
+                kg.add_edge("actor", a, "campaign", camp, "CONDUCTS_CAMPAIGN", edge_props)
 
         for t in tools:
             for asset in assets:
-                self.store.add_kg_edge(
-                    "tool", t, "asset", asset, "TARGETS_ASSET", properties=edge_props
-                )
+                kg.add_edge("tool", t, "asset", asset, "TARGETS_ASSET", edge_props)
             for c in cves:
-                self.store.add_kg_edge("tool", t, "cve", c, "EXPLOITS_CVE", properties=edge_props)
+                kg.add_edge("tool", t, "cve", c, "EXPLOITS_CVE", edge_props)
 
         attack_patterns = resolved_entities.get("attack_pattern", [])
-        for actor_type, actor_value in actors:
+        for a in actors:
             for ap in attack_patterns:
-                self.store.add_kg_edge(
-                    actor_type,
-                    actor_value,
-                    "attack_pattern",
-                    ap,
-                    "USES_TECHNIQUE",
-                    properties=edge_props,
-                )
+                kg.add_edge("actor", a, "attack_pattern", ap, "USES_TECHNIQUE", edge_props)
         malwares = resolved_entities.get("malware", [])
         for m in malwares:
             for ap in attack_patterns:
-                self.store.add_kg_edge(
-                    "malware", m, "attack_pattern", ap, "IMPLEMENTS", properties=edge_props
-                )
+                kg.add_edge("malware", m, "attack_pattern", ap, "IMPLEMENTS", edge_props)
 
         # --- Conversational relationships (RFC-001) ---
         persons = resolved_entities.get("person", [])
@@ -980,65 +607,39 @@ class MemoryManager:
 
         for p in persons:
             for org in organizations:
-                self.store.add_kg_edge(
-                    "person", p, "organization", org, "AFFILIATED_WITH", properties=edge_props
-                )
+                kg.add_edge("person", p, "organization", org, "AFFILIATED_WITH", edge_props)
             for ev in events:
-                self.store.add_kg_edge("person", p, "event", ev, "ATTENDED", properties=edge_props)
+                kg.add_edge("person", p, "event", ev, "ATTENDED", edge_props)
             for loc in locations:
-                self.store.add_kg_edge(
-                    "person", p, "location", loc, "LOCATED_AT", properties=edge_props
-                )
+                kg.add_edge("person", p, "location", loc, "LOCATED_AT", edge_props)
             for act in activities:
-                self.store.add_kg_edge(
-                    "person", p, "activity", act, "PARTICIPATES_IN", properties=edge_props
-                )
+                kg.add_edge("person", p, "activity", act, "PARTICIPATES_IN", edge_props)
 
         for ev in events:
             for loc in locations:
-                self.store.add_kg_edge(
-                    "event", ev, "location", loc, "HELD_AT", properties=edge_props
-                )
+                kg.add_edge("event", ev, "location", loc, "HELD_AT", edge_props)
             for org in organizations:
-                self.store.add_kg_edge(
-                    "event", ev, "organization", org, "ORGANIZED_BY", properties=edge_props
-                )
+                kg.add_edge("event", ev, "organization", org, "ORGANIZED_BY", edge_props)
             for tmp in temporals:
-                self.store.add_kg_edge(
-                    "event", ev, "temporal", tmp, "OCCURRED_ON", properties=edge_props
-                )
+                kg.add_edge("event", ev, "temporal", tmp, "OCCURRED_ON", edge_props)
 
         for org in organizations:
             for loc in locations:
-                self.store.add_kg_edge(
-                    "organization", org, "location", loc, "BASED_IN", properties=edge_props
-                )
+                kg.add_edge("organization", org, "location", loc, "BASED_IN", edge_props)
 
         # NOTE: LLM causal triple extraction moved to _run_enrichment() (slow path)
 
     # ── Dual-stream: slow path enrichment worker ──────────────────────────
 
     def _enrichment_loop(self) -> None:
-        """Background worker: process enrichment jobs until process exits."""
+        """Background worker: process causal enrichment jobs until process exits."""
         while True:
             try:
                 job = self._enrichment_queue.get(timeout=1.0)
-                if job.defer:
-                    # Batch-deferred job — skip for now, will be swept later
-                    self._enrichment_queue.task_done()
-                    continue
-                if job.job_type == "neighbor_evolution":
-                    self._run_evolution(job)
-                elif job.job_type == "llm_ner":
-                    self._run_llm_ner(job)
-                else:
-                    self._run_enrichment(job)
+                self._run_enrichment(job)
                 self._enrichment_queue.task_done()
             except queue.Empty:
                 continue
-            except BackendClosedError:
-                # Storage backend has shut down — exit the worker cleanly.
-                return
             except Exception:
                 self._logger.error("enrichment_worker_error", exc_info=True)
 
@@ -1057,102 +658,12 @@ class MemoryManager:
         try:
             triples = self.constructor.extract_causal_triples(note.content.raw, note.id)
             if triples:
-                edges = self.constructor.store_causal_edges(triples, note.id, backend=self.store)
+                edges = self.constructor.store_causal_edges(triples, note.id)
                 self._logger.info(
                     "causal_triples_stored", note_id=note.id, triples=len(triples), edges=edges
                 )
         except Exception:
             self._logger.warning("enrichment_failed", note_id=note.id, exc_info=True)
-        finally:
-            self._pending_enrichment.discard(job.note_id)
-
-    def _run_llm_ner(self, job: _EnrichmentJob) -> None:
-        """Execute slow-path LLM NER entity extraction for one note.
-
-        Runs LLM-based NER, merges new entities with existing regex-extracted
-        entities (extend, not overwrite), and persists the amended entity index.
-        """
-        note = self.store.get_note_by_id(job.note_id)
-        if note is None:
-            self._pending_enrichment.discard(job.note_id)
-            return
-
-        start = time.perf_counter()
-        try:
-            from zettelforge.entity_indexer import EntityExtractor
-
-            extractor = EntityExtractor()
-            llm_entities = extractor.extract_llm(note.content.raw)
-
-            if not any(llm_entities.values()):
-                # LLM found nothing new — skip
-                self._pending_enrichment.discard(job.note_id)
-                return
-
-            # Merge with existing entities (extend, don't overwrite)
-            existing = note.semantic.entities if note.semantic.entities else []
-            new_flat = []
-            for etype, values in llm_entities.items():
-                for v in values:
-                    tag = f"{etype}:{v}"
-                    if tag not in existing:
-                        new_flat.append(tag)
-
-            duration_ms = (time.perf_counter() - start) * 1000
-            self.stats["llm_ner_total_duration_ms"] += duration_ms
-
-            if new_flat:
-                # Update entity index in storage backend
-                for etype, values in llm_entities.items():
-                    for v in values:
-                        self.store.add_entity_mapping(etype, v, note.id)
-
-                # Update legacy EntityIndexer (JSON)
-                self.indexer.add_note(note.id, llm_entities)
-
-                self.stats["llm_ner_success"] += 1
-                self.stats["llm_ner_total_new_entities"] += len(new_flat)
-                self._logger.info(
-                    "llm_ner_complete",
-                    note_id=note.id,
-                    new_entities=len(new_flat),
-                    duration_ms=round(duration_ms, 1),
-                )
-            else:
-                self.stats["llm_ner_no_new"] += 1
-                self._logger.debug(
-                    "llm_ner_no_new_entities",
-                    note_id=note.id,
-                    duration_ms=round(duration_ms, 1),
-                )
-        except Exception:
-            self.stats["llm_ner_failure"] += 1
-            self._logger.warning("llm_ner_failed", note_id=job.note_id, exc_info=True)
-        finally:
-            self._pending_enrichment.discard(job.note_id)
-
-    def _run_evolution(self, job: _EnrichmentJob) -> None:
-        """Execute neighbor evolution for one note."""
-        note = self.store.get_note_by_id(job.note_id)
-        if note is None:
-            self._pending_enrichment.discard(job.note_id)
-            return
-
-        try:
-            from zettelforge.memory_evolver import MemoryEvolver
-
-            evolver = MemoryEvolver(self)
-            report = evolver.evolve_neighbors(note)
-            self._logger.info(
-                "neighbor_evolution_complete",
-                note_id=job.note_id,
-                candidates_found=report["candidates_found"],
-                evolved=report["evolved"],
-                kept=report["kept"],
-                errors=report["errors"],
-            )
-        except Exception:
-            self._logger.warning("neighbor_evolution_failed", note_id=job.note_id, exc_info=True)
         finally:
             self._pending_enrichment.discard(job.note_id)
 
@@ -1162,60 +673,12 @@ class MemoryManager:
         while not self._enrichment_queue.empty() and time.monotonic() < deadline:
             try:
                 job = self._enrichment_queue.get_nowait()
-                if job.defer:
-                    self._enrichment_queue.task_done()
-                    continue
-                if job.job_type == "neighbor_evolution":
-                    self._run_evolution(job)
-                elif job.job_type == "llm_ner":
-                    self._run_llm_ner(job)
-                else:
-                    self._run_enrichment(job)
+                self._run_enrichment(job)
                 self._enrichment_queue.task_done()
             except queue.Empty:
                 break
-            except BackendClosedError:
-                # Backend already closed — nothing left to drain against.
-                return
             except Exception:
                 self._logger.warning("enrichment_drain_failed", exc_info=True)
-
-    def evolve_note(self, note_id: str, sync: bool = False) -> dict | None:
-        """Trigger neighbor evolution for an existing note.
-
-        Intended for manual or MCP invocation.
-
-        Args:
-            note_id: The note to evolve neighbors around.
-            sync: If True, run inline (blocking). Otherwise queue to background worker.
-
-        Returns:
-            Evolution report dict when sync=True, None when queued or note not found.
-        """
-        note = self.store.get_note_by_id(note_id)
-        if note is None:
-            self._logger.warning("evolve_note_not_found", note_id=note_id)
-            return None
-
-        job = _EnrichmentJob(
-            note_id=note_id,
-            domain=note.metadata.domain,
-            content_len=len(note.content.raw),
-            job_type="neighbor_evolution",
-        )
-
-        if sync:
-            from zettelforge.memory_evolver import MemoryEvolver
-
-            evolver = MemoryEvolver(self)
-            return evolver.evolve_neighbors(note)
-
-        try:
-            self._enrichment_queue.put_nowait(job)
-            self._pending_enrichment.add(note_id)
-        except queue.Full:
-            self._logger.warning("evolution_queue_full", note_id=note_id)
-        return None
 
     def mark_note_superseded(self, note_id: str, superseded_by_id: str) -> bool:
         old_note = self.store.get_note_by_id(note_id)
@@ -1227,15 +690,15 @@ class MemoryManager:
         if note_id not in new_note.links.supersedes:
             new_note.links.supersedes.append(note_id)
 
-        self.store.rewrite_note(old_note)
-        self.store.rewrite_note(new_note)
+        self.store._rewrite_note(old_note)
+        self.store._rewrite_note(new_note)
 
         # Remove superseded note from entity index so recall_entity() won't return it
         self.indexer.remove_note(note_id)
-        self.store.remove_entity_mappings_for_note(note_id)
 
         # Add temporal edge to knowledge graph (Task 2)
-        self.store.add_temporal_edge(
+        kg = get_knowledge_graph()
+        kg.add_temporal_edge(
             from_type="note",
             from_value=superseded_by_id,
             to_type="note",
@@ -1248,8 +711,8 @@ class MemoryManager:
         return True
 
     def _check_supersession(
-        self, new_note: MemoryNote, resolved_entities: dict[str, list[str]]
-    ) -> MemoryNote | None:
+        self, new_note: MemoryNote, resolved_entities: Dict[str, List[str]]
+    ) -> Optional[MemoryNote]:
         from datetime import datetime
 
         _entity_keys = [
@@ -1267,7 +730,7 @@ class MemoryManager:
         ]
 
         # Build the new note's normalised entity sets once.
-        new_entities: dict[str, set] = {
+        new_entities: Dict[str, set] = {
             k: set(e.lower() for e in resolved_entities.get(k, [])) for k in _entity_keys
         }
 
@@ -1275,13 +738,10 @@ class MemoryManager:
         # least one entity value with the new note — O(E) instead of O(N).
         # Also pre-compute per-candidate overlap counts while traversing the index
         # so we never need to re-extract entities from raw content.
-        candidate_overlap: dict[str, int] = {}
+        candidate_overlap: Dict[str, int] = {}
         for key in _entity_keys:
             for evalue in new_entities[key]:
-                nids = self.store.get_note_ids_for_entity(key, evalue)
-                if not nids:
-                    nids = self.indexer.get_note_ids(key, evalue)
-                for nid in nids:
+                for nid in self.indexer.get_note_ids(key, evalue):
                     if nid == new_note.id:
                         continue
                     candidate_overlap[nid] = candidate_overlap.get(nid, 0) + 1
@@ -1341,7 +801,7 @@ class MemoryManager:
         to_type: str,
         to_value: str,
         relationship: str,
-        properties: dict | None = None,
+        properties: Optional[Dict] = None,
     ) -> None:
         """Ingest a STIX relationship into the knowledge graph.
 
@@ -1358,104 +818,48 @@ class MemoryManager:
             relationship: Relationship label (e.g. "USES_TOOL", "TARGETS_ASSET").
             properties: Optional dict of edge properties (confidence, timestamps, …).
         """
-        self.store.add_kg_edge(
-            from_type,
-            from_value,
-            to_type,
-            to_value,
-            relationship,
-            properties=properties or {},
-        )
-        # Also write to legacy JSONL KG for backward compatibility
-        from zettelforge.knowledge_graph import get_knowledge_graph
-
         kg = get_knowledge_graph()
         kg.add_edge(from_type, from_value, to_type, to_value, relationship, properties or {})
 
-    def provenance_chain(
-        self,
-        entity_type: str,
-        entity_value: str,
-        max_depth: int = 3,
-        direction: str = "forward",
-    ) -> list[dict]:
-        """Trace causal provenance chain from an entity.
-
-        Args:
-            direction: "forward" = what does X cause/enable? (outgoing causal edges)
-                       "backward" = why did X happen? (incoming causal edges)
-
-        Returns list of steps:
-            [{from_entity, relationship, to_entity, edge_type, note_id}]
-        """
-        canonical = self.resolver.resolve(entity_type, entity_value)
-
-        if direction not in ("forward", "backward"):
-            raise ValueError(f"direction must be 'forward' or 'backward', got '{direction}'")
-
-        if direction == "backward":
-            causal_edges = self.store.get_incoming_causal(
-                entity_type, canonical, max_depth=max_depth
-            )
-        else:
-            causal_edges = self.store.get_causal_edges(entity_type, canonical, max_depth=max_depth)
-
-        chain = []
-        for edge in causal_edges:
-            from_node = self.store.get_kg_node_by_id(edge.get("from_node_id", "")) or {}
-            to_node = self.store.get_kg_node_by_id(edge.get("to_node_id", "")) or {}
-            chain.append(
-                {
-                    "from_entity": (
-                        f"{from_node.get('entity_type')}:{from_node.get('entity_value')}"
-                    ),
-                    "relationship": edge.get("relationship"),
-                    "to_entity": (f"{to_node.get('entity_type')}:{to_node.get('entity_value')}"),
-                    "edge_type": edge.get("edge_type", "unknown"),
-                    "note_id": edge.get("properties", {}).get("note_id", ""),
-                }
-            )
-        return chain
-
-    def get_entity_relationships(self, entity_type: str, entity_value: str) -> list[dict]:
+    def get_entity_relationships(self, entity_type: str, entity_value: str) -> List[Dict]:
         """Get direct relationships for an entity from the knowledge graph."""
+        kg = get_knowledge_graph()
+
         # Resolve alias if necessary
         canonical = self.resolver.resolve(entity_type, entity_value)
 
-        return self.store.get_kg_neighbors(entity_type, canonical)
+        return kg.get_neighbors(entity_type, canonical)
 
-    def traverse_graph(self, start_type: str, start_value: str, max_depth: int = 2) -> list[dict]:
-        """Traverse relationships from a starting entity.
+    def traverse_graph(self, start_type: str, start_value: str, max_depth: int = 2) -> List[Dict]:
+        """Traverse relationships from a starting entity.  [Enterprise]
 
-        Depth is capped at 2 without the enterprise extension.
-        Install zettelforge-enterprise for deeper TypeDB traversal.
+        Multi-hop graph traversal requires Enterprise edition.
+        Community users can use get_entity_relationships() for direct neighbors.
         """
-        if max_depth > 2 and not has_extension("enterprise"):
-            max_depth = 2
-            self._logger.info(
-                "traverse_depth_capped",
-                max_depth=2,
-                reason="Install zettelforge-enterprise for deeper TypeDB traversal",
+        if not is_enterprise():
+            from zettelforge.edition import EditionError
+
+            raise EditionError(
+                "'traverse_graph' (multi-hop BFS traversal) requires ThreatRecall Enterprise. "
+                "Use get_entity_relationships() for direct neighbors in Community edition. "
+                "https://threatengram.com/enterprise"
             )
+        kg = get_knowledge_graph()
         canonical = self.resolver.resolve(start_type, start_value)
 
-        return self.store.traverse_kg(start_type, canonical, max_depth)
+        return kg.traverse(start_type, canonical, max_depth)
 
     # === Phase 7: Synthesis Layer ===
 
     def synthesize(
-        self,
-        query: str,
-        format: str = "direct_answer",
-        k: int = 10,
-        tier_filter: list[str] | None = None,
-        actor: str | None = None,
-    ) -> dict[str, Any]:
+        self, query: str, format: str = "direct_answer", k: int = 10, tier_filter: List[str] = None
+    ) -> Dict[str, Any]:
         """
         Synthesize an answer from retrieved memories (Phase 7 RAG-as-Answer).
 
-        Extended formats ("synthesized_brief", "timeline_analysis", "relationship_map")
-        require the enterprise extension; without it they fall back to "direct_answer".
+        Community: "direct_answer" format only.
+        Enterprise: All formats — "direct_answer", "synthesized_brief",
+                    "timeline_analysis", "relationship_map".
 
         Args:
             query: The question to answer
@@ -1465,22 +869,22 @@ class MemoryManager:
 
         Returns:
             Dictionary with synthesis result, metadata, and sources
+
+        Raises:
+            EditionError: If an advanced format is used in Community edition.
         """
-        _extended_formats = {"synthesized_brief", "timeline_analysis", "relationship_map"}
-        if format in _extended_formats and not has_extension("enterprise"):
-            self._logger.info("synthesis_format_fallback", requested=format, using="direct_answer")
-            format = "direct_answer"
+        _enterprise_formats = {"synthesized_brief", "timeline_analysis", "relationship_map"}
+        if format in _enterprise_formats and not is_enterprise():
+            from zettelforge.edition import EditionError
+
+            raise EditionError(
+                f"Synthesis format '{format}' requires ThreatRecall Enterprise. "
+                f"Community edition supports 'direct_answer'. "
+                f"Set THREATENGRAM_LICENSE_KEY or visit https://threatengram.com/enterprise"
+            )
 
         request_id = uuid.uuid4().hex
         start = time.perf_counter()
-
-        # Reuse query_id from the last recall() so synthesis telemetry
-        # correlates to the same query.  If the caller passed actor directly
-        # without a preceding recall() call, start a fresh query.
-        query_id = self._telemetry_query_id or self._telemetry.start_query(query, actor=actor)
-        if query_id and self._telemetry_query_id is None:
-            # Fresh query started here — keep the id for consistency
-            self._telemetry_query_id = query_id
 
         gen = get_synthesis_generator()
         result = gen.synthesize(
@@ -1488,20 +892,7 @@ class MemoryManager:
         )
 
         duration_ms = (time.perf_counter() - start) * 1000
-        synthesis_latency_ms = (
-            time.perf_counter() - start
-        ) * 1000  # gen.synthesize is the synthesis work
         source_count = len(result.get("sources", []))
-
-        # ── RFC-007 US-002: log_synthesis ─────────────────────────────
-        if query_id is not None:
-            self._telemetry.log_synthesis(
-                query_id, result, synthesis_latency_ms=int(synthesis_latency_ms)
-            )
-            # Auto-feedback is DEBUG-only inside the collector
-            retrieved = self._telemetry_retrieved_notes or []
-            self._telemetry.auto_feedback_from_synthesis(query_id, retrieved, result)
-
         log_api_activity(
             operation="synthesize",
             status_id=STATUS_SUCCESS,
@@ -1510,12 +901,10 @@ class MemoryManager:
             source_count=source_count,
             duration_ms=duration_ms,
             request_id=request_id,
-            telemetry_query_id=query_id,
-            telemetry_actor=actor,
         )
         return result
 
-    def validate_synthesis(self, response: dict) -> tuple[bool, list[str]]:
+    def validate_synthesis(self, response: Dict) -> Tuple[bool, List[str]]:
         """
         Validate a synthesis response for quality.
 
@@ -1525,7 +914,7 @@ class MemoryManager:
         validator = get_synthesis_validator()
         return validator.validate_response(response)
 
-    def check_synthesis_quality(self, response: dict) -> dict:
+    def check_synthesis_quality(self, response: Dict) -> Dict:
         """
         Compute quality score for a synthesis response.
 
@@ -1536,7 +925,7 @@ class MemoryManager:
 
 
 # Global memory manager instance
-_memory_manager: MemoryManager | None = None
+_memory_manager: Optional[MemoryManager] = None
 
 
 def get_memory_manager() -> MemoryManager:

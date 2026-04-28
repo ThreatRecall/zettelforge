@@ -4,7 +4,6 @@ A-MEM Agentic Memory Architecture V1.0
 """
 
 import atexit
-import contextlib
 import fcntl
 import glob
 import hashlib
@@ -13,9 +12,9 @@ import os
 import tempfile
 import threading
 import time
-from collections.abc import Iterator
 from datetime import datetime
 from pathlib import Path
+from typing import Dict, Iterator, List, Optional
 
 from zettelforge.log import get_logger
 from zettelforge.note_schema import MemoryNote
@@ -42,9 +41,9 @@ class MemoryStore:
 
     def __init__(
         self,
-        jsonl_path: str | None = None,
-        lance_path: str | None = None,
-        embedding_dim: int | None = None,
+        jsonl_path: Optional[str] = None,
+        lance_path: Optional[str] = None,
+        embedding_dim: Optional[int] = None,
     ):
         data_dir = get_default_data_dir()
 
@@ -66,44 +65,13 @@ class MemoryStore:
         self.jsonl_path.parent.mkdir(parents=True, exist_ok=True)
         self.lance_path.mkdir(parents=True, exist_ok=True)
         self._lancedb = None
-        self._note_cache: dict[str, MemoryNote] | None = None
-        self._source_ref_index: dict[str, str] | None = None  # source_ref -> note_id
+        self._note_cache: Optional[Dict[str, MemoryNote]] = None
+        self._source_ref_index: Optional[Dict[str, str]] = None  # source_ref -> note_id
 
         self._dirty_access: set = set()  # note IDs with unsaved access updates
-        self._access_flush_timer: threading.Timer | None = None
+        self._access_flush_timer: Optional[threading.Timer] = None
         self._access_flush_lock = threading.Lock()
         atexit.register(self._flush_access)
-
-        # RFC-009 Phase 1.5: periodic LanceDB version cleanup.
-        # Lazy: the maintenance daemon binds to this MemoryStore but the
-        # threads themselves only start on first .start() call (deferred
-        # below). Importing `LanceVersionMaintenance` here is safe — it
-        # has no lancedb-at-import dependency.
-        from zettelforge.lance_maintenance import LanceVersionMaintenance
-
-        def _interval_min() -> int:
-            from zettelforge.config import get_config
-
-            try:
-                return int(get_config().lance.cleanup_interval_minutes)
-            except Exception:
-                return 60
-
-        def _older_than_s() -> int:
-            from zettelforge.config import get_config
-
-            try:
-                return int(get_config().lance.cleanup_older_than_seconds)
-            except Exception:
-                return 3600
-
-        self._lance_maintenance = LanceVersionMaintenance(
-            db=None,  # bound on first lancedb access
-            interval_minutes_provider=_interval_min,
-            older_than_seconds_provider=_older_than_s,
-            table_root=self.lance_path,
-        )
-        self._lance_maintenance_started = False
 
         # Clean orphaned temp files from crashed _rewrite_note() calls
         for tmp in glob.glob(str(self.jsonl_path.parent / "tmp*.jsonl")):
@@ -141,9 +109,7 @@ class MemoryStore:
         ts = datetime.now().strftime("%Y%m%d_%H%M%S")
         import random
 
-        # Note IDs are not security-sensitive; collisions are tolerated
-        # (timestamp-prefixed → vanishing collision probability per second).
-        suffix = str(random.randint(0, 9999)).zfill(4)  # noqa: S311
+        suffix = str(random.randint(0, 9999)).zfill(4)
         return f"note_{ts}_{suffix}"
 
     def _ensure_cache(self):
@@ -154,7 +120,7 @@ class MemoryStore:
         self._source_ref_index = {}
         if not self.jsonl_path.exists():
             return
-        with open(self.jsonl_path) as f:
+        with open(self.jsonl_path, "r") as f:
             for line in f:
                 if line.strip():
                     try:
@@ -195,11 +161,6 @@ class MemoryStore:
         """Index note in LanceDB vector store"""
         start = time.perf_counter()
         table_name = f"notes_{note.metadata.domain}"
-        # RFC-009 Phase 1.5: bind the maintenance daemon to this lancedb
-        # connection on first use, then register the (possibly new) table
-        # idempotently. Late-bound so domains created lazily get coverage.
-        self._ensure_lance_maintenance_started()
-        self._lance_maintenance.register_table(table_name)
         try:
             import pyarrow as pa
 
@@ -250,10 +211,11 @@ class MemoryStore:
                 activity = "Create"
             else:
                 tbl = self.lancedb.open_table(table_name)
-                # Remove existing row if present (prevents ghost duplicates).
-                # Table may be empty or ID may not exist — both are fine.
-                with contextlib.suppress(Exception):
+                # Remove existing row if present (prevents ghost duplicates)
+                try:
                     tbl.delete(f"id = '{note.id}'")
+                except Exception:
+                    pass  # Table may be empty or ID may not exist
                 tbl.add([note_data])
                 activity = "Update"
 
@@ -285,13 +247,13 @@ class MemoryStore:
                 duration_ms=duration_ms,
             )
 
-    def read_all_notes(self) -> list[MemoryNote]:
+    def read_all_notes(self) -> List[MemoryNote]:
         """Read all notes from JSONL store"""
         notes = []
         if not self.jsonl_path.exists():
             return notes
 
-        with open(self.jsonl_path) as f:
+        with open(self.jsonl_path, "r") as f:
             for line in f:
                 if line.strip():
                     try:
@@ -309,7 +271,7 @@ class MemoryStore:
         # Dead code below — kept for reference of old disk-based path
         if not self.jsonl_path.exists():
             return
-        with open(self.jsonl_path) as f:
+        with open(self.jsonl_path, "r") as f:
             for line in f:
                 if line.strip():
                     try:
@@ -318,12 +280,12 @@ class MemoryStore:
                     except Exception as e:
                         _logger.warning("note_parse_failed", error=str(e))
 
-    def get_note_by_id(self, note_id: str) -> MemoryNote | None:
+    def get_note_by_id(self, note_id: str) -> Optional[MemoryNote]:
         """Retrieve a specific note by ID. O(1) via cache."""
         self._ensure_cache()
         return self._note_cache.get(note_id)
 
-    def get_note_by_source_ref(self, source_ref: str) -> MemoryNote | None:
+    def get_note_by_source_ref(self, source_ref: str) -> Optional[MemoryNote]:
         """Find a note by its source_ref field. O(1) via index. Returns None if not found."""
         self._ensure_cache()
         note_id = self._source_ref_index.get(source_ref)
@@ -331,11 +293,11 @@ class MemoryStore:
             return None
         return self._note_cache.get(note_id)
 
-    def get_notes_by_domain(self, domain: str) -> list[MemoryNote]:
+    def get_notes_by_domain(self, domain: str) -> List[MemoryNote]:
         """Retrieve all notes for a specific domain"""
         return [n for n in self.iterate_notes() if n.metadata.domain == domain]
 
-    def get_recent_notes(self, limit: int = 10) -> list[MemoryNote]:
+    def get_recent_notes(self, limit: int = 10) -> List[MemoryNote]:
         """Get most recent notes"""
         notes = list(self.iterate_notes())
         notes.sort(key=lambda n: n.created_at, reverse=True)
@@ -345,7 +307,7 @@ class MemoryStore:
         """Count total notes"""
         if not self.jsonl_path.exists():
             return 0
-        with open(self.jsonl_path) as f:
+        with open(self.jsonl_path, "r") as f:
             return sum(1 for line in f if line.strip())
 
     def _rewrite_note(self, note: MemoryNote) -> None:
@@ -354,7 +316,7 @@ class MemoryStore:
             return
 
         # Hold an exclusive lock on the canonical file for the entire read-write-replace cycle
-        with open(self.jsonl_path) as lock_fh:
+        with open(self.jsonl_path, "r") as lock_fh:
             fcntl.flock(lock_fh, fcntl.LOCK_EX)
             try:
                 # Read all notes under the lock
@@ -369,7 +331,7 @@ class MemoryStore:
                                 updated = True
                             else:
                                 notes.append(data)
-                        except Exception:  # noqa: S110 — corrupt JSONL lines are dropped
+                        except Exception:
                             pass
 
                 if not updated:
@@ -386,30 +348,12 @@ class MemoryStore:
                     # Update cache
                     if self._note_cache is not None:
                         self._note_cache[note.id] = note
-                except Exception:
-                    # GOV-003: never bare-except. Catches all real write
-                    # failures while letting KeyboardInterrupt / SystemExit
-                    # propagate normally.
+                except:
                     if os.path.exists(tmp_path):
                         os.unlink(tmp_path)
                     raise
             finally:
                 fcntl.flock(lock_fh, fcntl.LOCK_UN)
-
-    def _ensure_lance_maintenance_started(self) -> None:
-        """Bind the maintenance daemon to the live lancedb connection.
-
-        Deferred until the first ``_index_in_lance`` call so that
-        ``MemoryStore.__init__`` does not pay the lancedb-connect cost
-        for read-only stores.
-        """
-        if self._lance_maintenance_started:
-            return
-        if self.lancedb is None:
-            return
-        self._lance_maintenance._db = self.lancedb
-        self._lance_maintenance.start()
-        self._lance_maintenance_started = True
 
     def mark_access_dirty(self, note_id: str) -> None:
         """Mark a note's access stats as needing persistence."""

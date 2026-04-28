@@ -10,7 +10,7 @@ import json
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, List, Optional
 
 import yaml
 
@@ -119,88 +119,6 @@ ENTITY_TYPES = {
         "optional": ["name", "tactic", "platform", "description", "references"],
         "properties": {},
     },
-    # Detection rules (Phase 1c: first-class Sigma + YARA memory)
-    "DetectionRule": {
-        "required": ["rule_id", "title", "source_format", "content_sha256"],
-        "optional": [
-            "description",
-            "author",
-            "date",
-            "modified",
-            "references",
-            "tags",
-            "level",
-            "status",
-            "tlp",
-            "license",
-            "source_repo",
-            "source_path",
-        ],
-        "properties": {},
-    },
-    "SigmaRule": {
-        "required": ["rule_id", "title", "source_format", "content_sha256"],
-        "optional": [
-            "description",
-            "author",
-            "date",
-            "modified",
-            "references",
-            "tags",
-            "level",
-            "status",
-            "tlp",
-            "license",
-            "source_repo",
-            "source_path",
-            "logsource_product",
-            "logsource_service",
-            "logsource_category",
-            "rule_level",
-            "rule_status",
-            "sigma_format_version",
-        ],
-        "properties": {},
-    },
-    "YaraRule": {
-        "required": ["rule_id", "title", "source_format", "content_sha256"],
-        "optional": [
-            "description",
-            "author",
-            "date",
-            "modified",
-            "references",
-            "tags",
-            "level",
-            "status",
-            "tlp",
-            "license",
-            "source_repo",
-            "source_path",
-            "cccs_id",
-            "fingerprint",
-            "category",
-            "technique_tag",
-            "cccs_version",
-            "hash_of_sample",
-        ],
-        "properties": {},
-    },
-    "SigmaTag": {
-        "required": ["namespace", "name"],
-        "optional": [],
-        "properties": {},
-    },
-    "YaraTag": {
-        "required": ["namespace", "name"],
-        "optional": [],
-        "properties": {},
-    },
-    "LogSource": {
-        "required": [],
-        "optional": ["product", "service", "category"],
-        "properties": {},
-    },
     # IOC / STIX Cyber Observables
     "IPv4Address": {
         "required": ["value"],
@@ -271,16 +189,8 @@ RELATION_TYPES = {
         "cardinality": "many_to_one",
     },
     "attributed_to": {
-        "from_types": [
-            "Incident",
-            "Campaign",
-            "Malware",
-            "IntrusionSet",
-            "DetectionRule",
-            "SigmaRule",
-            "YaraRule",
-        ],
-        "to_types": ["ThreatActor", "IntrusionSet"],
+        "from_types": ["Incident", "Campaign", "Malware", "IntrusionSet"],
+        "to_types": ["ThreatActor"],
         "cardinality": "many_to_one",
     },
     "uses": {
@@ -314,45 +224,10 @@ RELATION_TYPES = {
         "cardinality": "many_to_many",
     },
     "superseded_by": {
-        "from_types": [
-            "Note",
-            "Document",
-            "Policy",
-            "DetectionRule",
-            "SigmaRule",
-            "YaraRule",
-        ],
-        "to_types": [
-            "Note",
-            "Document",
-            "Policy",
-            "DetectionRule",
-            "SigmaRule",
-            "YaraRule",
-        ],
+        "from_types": ["Note", "Document", "Policy"],
+        "to_types": ["Note", "Document", "Policy"],
         "cardinality": "many_to_one",
         "acyclic": True,
-    },
-    # Detection-rule relations (Phase 1c)
-    "detects": {
-        "from_types": ["DetectionRule", "SigmaRule", "YaraRule"],
-        "to_types": ["AttackPattern"],
-        "cardinality": "many_to_many",
-    },
-    "references_cve": {
-        "from_types": ["DetectionRule", "SigmaRule", "YaraRule"],
-        "to_types": ["Vulnerability"],
-        "cardinality": "many_to_many",
-    },
-    "tagged_with": {
-        "from_types": ["DetectionRule", "SigmaRule", "YaraRule"],
-        "to_types": ["SigmaTag", "YaraTag"],
-        "cardinality": "many_to_many",
-    },
-    "applies_to": {
-        "from_types": ["SigmaRule", "DetectionRule"],
-        "to_types": ["LogSource"],
-        "cardinality": "many_to_many",
     },
 }
 
@@ -362,7 +237,7 @@ class OntologyValidator:
     Validates entity and relation operations against type constraints.
     """
 
-    def __init__(self, schema_path: str | None = None):
+    def __init__(self, schema_path: Optional[str] = None):
         self.schema_path = schema_path
         self.custom_types = {}
         self.custom_relations = {}
@@ -377,11 +252,11 @@ class OntologyValidator:
             self.custom_types = schema.get("types", {})
             self.custom_relations = schema.get("relations", {})
 
-    def get_type_definition(self, type_name: str) -> dict:
+    def get_type_definition(self, type_name: str) -> Dict:
         """Get type definition, falling back to defaults."""
         return self.custom_types.get(type_name, ENTITY_TYPES.get(type_name, {}))
 
-    def validate_entity(self, entity_type: str, properties: dict) -> tuple[bool, list[str]]:
+    def validate_entity(self, entity_type: str, properties: Dict) -> tuple[bool, List[str]]:
         """
         Validate entity against type constraints.
         Returns (is_valid, error_messages)
@@ -417,8 +292,9 @@ class OntologyValidator:
                     "end >= start" in validate_expr
                     and "end" in properties
                     and "start" in properties
-                ) and properties["end"] < properties["start"]:
-                    errors.append("End time must be >= start time")
+                ):
+                    if properties["end"] < properties["start"]:
+                        errors.append("End time must be >= start time")
             except Exception as e:
                 errors.append(f"Validation error: {e}")
 
@@ -426,7 +302,7 @@ class OntologyValidator:
 
     def validate_relation(
         self, from_type: str, relation_type: str, to_type: str
-    ) -> tuple[bool, list[str]]:
+    ) -> tuple[bool, List[str]]:
         """
         Validate relation is allowed between types.
         Returns (is_valid, error_messages)
@@ -455,15 +331,15 @@ class TypedEntityStore:
     Integrates with ZettelForge KnowledgeGraph.
     """
 
-    def __init__(self, data_dir: str, validator: OntologyValidator | None = None):
+    def __init__(self, data_dir: str, validator: Optional[OntologyValidator] = None):
         self.data_dir = Path(data_dir)
         self.entities_file = self.data_dir / "ontology_entities.jsonl"
         self.relations_file = self.data_dir / "ontology_relations.jsonl"
         self.validator = validator or OntologyValidator()
 
         # In-memory cache
-        self._entities: dict[str, dict] = {}
-        self._relations: list[dict] = []
+        self._entities: Dict[str, Dict] = {}
+        self._relations: List[Dict] = []
 
         self._load()
 
@@ -483,21 +359,21 @@ class TypedEntityStore:
                         rel = json.loads(line)
                         self._relations.append(rel)
 
-    def _save_entity(self, entity: dict):
+    def _save_entity(self, entity: Dict):
         """Append entity to JSONL."""
         self.data_dir.mkdir(parents=True, exist_ok=True)
         with open(self.entities_file, "a") as f:
             f.write(json.dumps(entity) + "\n")
 
-    def _save_relation(self, relation: dict):
+    def _save_relation(self, relation: Dict):
         """Append relation to JSONL."""
         self.data_dir.mkdir(parents=True, exist_ok=True)
         with open(self.relations_file, "a") as f:
             f.write(json.dumps(relation) + "\n")
 
     def create_entity(
-        self, entity_type: str, properties: dict, entity_id: str | None = None
-    ) -> tuple[str | None, bool, list[str]]:
+        self, entity_type: str, properties: Dict, entity_id: Optional[str] = None
+    ) -> tuple[Optional[str], bool, List[str]]:
         """
         Create typed entity with validation.
         Returns (entity_id, success, errors)
@@ -526,8 +402,8 @@ class TypedEntityStore:
         return entity_id, True, []
 
     def create_relation(
-        self, from_id: str, relation_type: str, to_id: str, properties: dict | None = None
-    ) -> tuple[bool, list[str]]:
+        self, from_id: str, relation_type: str, to_id: str, properties: Optional[Dict] = None
+    ) -> tuple[bool, List[str]]:
         """
         Create relation with validation.
         Returns (success, errors)
@@ -550,8 +426,9 @@ class TypedEntityStore:
 
         # Check acyclic if required
         rel_def = RELATION_TYPES.get(relation_type, {})
-        if rel_def.get("acyclic") and self._would_create_cycle(from_id, relation_type, to_id):
-            return False, [f"Relation {relation_type} would create cycle (acyclic constraint)"]
+        if rel_def.get("acyclic"):
+            if self._would_create_cycle(from_id, relation_type, to_id):
+                return False, [f"Relation {relation_type} would create cycle (acyclic constraint)"]
 
         relation = {
             "from": from_id,
@@ -587,49 +464,51 @@ class TypedEntityStore:
 
         return False
 
-    def get_entity(self, entity_id: str) -> dict | None:
+    def get_entity(self, entity_id: str) -> Optional[Dict]:
         """Get entity by ID."""
         return self._entities.get(entity_id)
 
-    def query_by_type(self, entity_type: str) -> list[dict]:
+    def query_by_type(self, entity_type: str) -> List[Dict]:
         """Query all entities of a type."""
         return [e for e in self._entities.values() if e["type"] == entity_type]
 
-    def query_by_property(self, entity_type: str, property_name: str, value: Any) -> list[dict]:
+    def query_by_property(self, entity_type: str, property_name: str, value: Any) -> List[Dict]:
         """Query entities by property value."""
         results = []
         for entity in self._entities.values():
-            if entity["type"] == entity_type and entity["properties"].get(property_name) == value:
-                results.append(entity)
+            if entity["type"] == entity_type:
+                if entity["properties"].get(property_name) == value:
+                    results.append(entity)
         return results
 
-    def get_related(self, entity_id: str, relation_type: str | None = None) -> list[dict]:
+    def get_related(self, entity_id: str, relation_type: Optional[str] = None) -> List[Dict]:
         """Get related entities."""
         results = []
         for rel in self._relations:
-            if rel["from"] == entity_id and (relation_type is None or rel["rel"] == relation_type):
-                target = self._entities.get(rel["to"])
-                if target:
-                    results.append(
-                        {
-                            "relation": rel["rel"],
-                            "entity": target,
-                            "properties": rel.get("properties", {}),
-                        }
-                    )
+            if rel["from"] == entity_id:
+                if relation_type is None or rel["rel"] == relation_type:
+                    target = self._entities.get(rel["to"])
+                    if target:
+                        results.append(
+                            {
+                                "relation": rel["rel"],
+                                "entity": target,
+                                "properties": rel.get("properties", {}),
+                            }
+                        )
         return results
 
-    def list_types(self) -> list[str]:
+    def list_types(self) -> List[str]:
         """List all entity types in store."""
         return list(set(e["type"] for e in self._entities.values()))
 
 
 # Global singleton
-_ontology_store: TypedEntityStore | None = None
+_ontology_store: Optional[TypedEntityStore] = None
 _ontology_lock = None  # Will be imported
 
 
-def get_ontology_store(data_dir: str | None = None) -> TypedEntityStore:
+def get_ontology_store(data_dir: Optional[str] = None) -> TypedEntityStore:
     """Get global ontology store instance."""
     import threading
 

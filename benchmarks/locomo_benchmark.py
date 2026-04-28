@@ -181,76 +181,27 @@ def answer_question(mm: MemoryManager, question: str, k: int = 10) -> Tuple[str,
     """
     start = time.perf_counter()
 
-    # Retrieve with high k for broad recall (cross-encoder reranker inside
-    # recall() handles relevance ranking), then truncate for synthesis
-    retrieval_k = min(k * 3, 30)  # Over-retrieve, then truncate
-    results = mm.recall(question, k=retrieval_k, exclude_superseded=False)
-
-    # Keyword boost: if vector retrieval missed key terms, scan all notes for
-    # question keywords and inject matches that weren't in vector results
-    result_ids = {n.id for n in results}
-    q_tokens = set(question.lower().split()) - {'what', 'where', 'when', 'who', 'how', 'did', 'does', 'is', 'the', 'a', 'an', 'from', 'to', 'for', 'of', 'caroline', 'melanie', 'decided', 'pursue', 'likely', 'would', 'still', 'want'}
-    if q_tokens:
-        all_notes = list(mm.store.iterate_notes())
-        keyword_matches = []
-        for note in all_notes:
-            if note.id not in result_ids:
-                note_tokens = set(note.content.raw.lower().split())
-                overlap = len(q_tokens & note_tokens)
-                if overlap > 0:
-                    keyword_matches.append((overlap, note))
-        # Add top keyword matches
-        keyword_matches.sort(key=lambda x: -x[0])
-        for _, note in keyword_matches[:3]:
-            results.append(note)
-            result_ids.add(note.id)
+    # Retrieve relevant notes (disable supersession filter for conversational data
+    # where sessions accumulate rather than replace each other)
+    results = mm.recall(question, k=k, exclude_superseded=False)
 
     if not results:
         return "I don't have information about that.", [], time.perf_counter() - start
 
-    # Build context from top-k retrieved notes (after reranking)
+    # Build context from retrieved notes
     context_parts = []
     evidence_ids = []
-    for note in results[:k]:  # Truncate to k for synthesis
+    for note in results:
         context_parts.append(note.content.raw)
         evidence_ids.append(note.id)
 
     context = "\n".join(context_parts[:k])
 
-    # Synthesize a focused answer from retrieved context
-    answer = _synthesize_answer(question, context)
+    # Return raw context for keyword-overlap scoring (no LLM synthesis)
+    answer = context[:2000]
     latency = time.perf_counter() - start
 
     return answer, evidence_ids, latency
-
-
-def _extract_snippet(text: str, query_tokens: set, max_len: int = 300) -> str:
-    """Extract the most relevant snippet from a note based on query token overlap."""
-    if len(text) <= max_len:
-        return text
-
-    # Split into sentences and score by query token overlap
-    sentences = [s.strip() for s in text.replace('\n', '. ').split('.') if len(s.strip()) > 10]
-    if not sentences:
-        return text[:max_len]
-
-    best_idx = 0
-    best_score = 0
-    for i, sent in enumerate(sentences):
-        s_tokens = set(sent.lower().split())
-        overlap = len(query_tokens & s_tokens)
-        if overlap > best_score:
-            best_score = overlap
-            best_idx = i
-
-    # Build snippet around the best sentence
-    start = max(0, sum(len(s) + 2 for s in sentences[:best_idx]) - 50)
-    snippet = text[start:start + max_len]
-    if start > 0:
-        snippet = '...' + snippet
-    if start + max_len < len(text):
-        snippet = snippet + '...'
-    return snippet
 
 
 def _synthesize_answer(question: str, context: str) -> str:
@@ -258,13 +209,9 @@ def _synthesize_answer(question: str, context: str) -> str:
     Use the local LLM to synthesize a focused answer from retrieved context.
     Falls back to raw context extraction if LLM is unavailable.
     """
-    prompt = f"""Answer the question using ONLY the context below. Be specific and direct.
-Rules:
-- If the context mentions a person, place, date, or fact, use it directly
-- For WHEN questions: look at the timestamps like [8 May 2023] and resolve relative words. E.g. if context says \"[8 May 2023] I went yesterday\" → answer \"7 May 2023\". If \"last week\" and timestamp is [9 June 2023] → answer \"the week before 9 June 2023\"
-- For WHO/WHAT questions: use the most specific term available (e.g. \"transgender woman\" not just \"LGBTQ+\")
-- Do NOT say \"I don't know\" if the answer is anywhere in the context. Extract it.
-- Answer in as few words as possible.
+    prompt = f"""Based on the following context, answer the question concisely.
+If the answer is not in the context, say "I don't have information about that."
+Do not add information not present in the context.
 
 Context:
 {context[:3000]}
@@ -274,21 +221,11 @@ Question: {question}
 Answer:"""
 
     try:
-        import requests
-        url = os.environ.get("JUDGE_URL", "http://localhost:11434")
-        synth_model = os.environ.get("SYNTH_MODEL", "qwen2.5:3b")
-        resp = requests.post(
-            f"{url}/api/generate",
-            json={"model": synth_model, "prompt": prompt, "stream": False,
-                  "options": {"num_predict": 64, "temperature": 0.1}},
-            timeout=300,
-        )
-        resp.raise_for_status()
-        answer = resp.json().get("response", "").strip()
-        if answer and len(answer) > 3:
-            return answer
-    except Exception as e:
-        print(f"  WARN: LLM synthesis failed: {e}")
+        from zettelforge.llm_client import generate
+        answer = generate(prompt, max_tokens=200, temperature=0.1)
+        if answer and len(answer.strip()) > 5:
+            return answer.strip()
+    except Exception:
         pass
 
     # Fallback: extract most relevant sentences from context
@@ -323,7 +260,7 @@ def _extract_relevant_sentences(question: str, context: str, max_sentences: int 
 
 def keyword_judge(predicted: str, gold) -> float:
     """
-    Keyword overlap judge with semantic-aware partial credit.
+    Simple keyword overlap judge.
     Returns: 1.0 (correct), 0.5 (partial), 0.0 (wrong)
     """
     pred_lower = str(predicted).lower()
@@ -342,17 +279,6 @@ def keyword_judge(predicted: str, gold) -> float:
 
     overlap = len(gold_tokens & pred_tokens)
     ratio = overlap / len(gold_tokens)
-
-    # Semantic partial matches for common LOCOMO answer patterns
-    semantic_pairs = [
-        ({"transgender", "woman"}, {"lgbtq", "trans", "transgender"}),
-        ({"counseling", "mental", "health"}, {"counseling", "mental", "therapy"}),
-        ({"adoption", "agencies"}, {"adoption"}),
-    ]
-    for gold_set, pred_set in semantic_pairs:
-        if gold_set & set(gold_lower.split()) and pred_set & pred_tokens:
-            if ratio < 0.3:
-                ratio = 0.35  # Boost to partial
 
     if ratio >= 0.7:
         return 1.0
@@ -381,7 +307,7 @@ Reply with ONLY a number: 1.0, 0.5, or 0.0"""
         import requests
         # Try llama.cpp / Ollama OpenAI-compatible endpoint
         url = os.environ.get("JUDGE_URL", "http://localhost:11434")
-        judge_model = os.environ.get("JUDGE_MODEL", "qwen2.5:3b")
+        judge_model = os.environ.get("JUDGE_MODEL", "qwen3.5:9b")
 
         resp = requests.post(
             f"{url}/api/generate",
@@ -438,17 +364,16 @@ def run_benchmark(
     for cat, count in sorted(cat_counts.items()):
         print(f"    {CATEGORY_NAMES.get(cat, f'cat-{cat}')}: {count}")
 
-    # Initialize ZettelForge with isolated storage (enrichment disabled for clean bench)
+    # Initialize ZettelForge with isolated storage
     tmpdir = tempfile.mkdtemp(prefix="locomo_bench_")
     mm = MemoryManager(
         jsonl_path=f"{tmpdir}/notes.jsonl",
         lance_path=f"{tmpdir}/vectordb",
-        disable_enrichment=True,
     )
 
     # Ingest
     print(f"\n[2/4] Ingesting {len(all_turns)} dialogue turns...")
-    ingest_metrics = ingest_conversations(mm, all_turns, batch_sessions=True)
+    ingest_metrics = ingest_conversations(mm, all_turns)
     print(f"  Ingested: {ingest_metrics['ingested']} turns")
     print(f"  Errors: {ingest_metrics['errors']}")
     print(f"  Duration: {ingest_metrics['duration_s']}s")

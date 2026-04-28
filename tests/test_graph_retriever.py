@@ -1,5 +1,4 @@
 """Tests for GraphRetriever - graph-based note retrieval."""
-
 import pytest
 import tempfile
 from datetime import datetime
@@ -26,9 +25,7 @@ def kg_with_data():
 
 class TestScoredResult:
     def test_creation(self):
-        sr = ScoredResult(
-            note_id="note_001", score=0.5, hops=2, path=["apt28", "cobalt-strike", "note_001"]
-        )
+        sr = ScoredResult(note_id="note_001", score=0.5, hops=2, path=["apt28", "cobalt-strike", "note_001"])
         assert sr.note_id == "note_001"
         assert sr.score == 0.5
         assert sr.hops == 2
@@ -61,9 +58,7 @@ class TestGraphRetrieverTraverse:
 
     def test_unknown_entity_returns_empty(self, kg_with_data):
         retriever = GraphRetriever(kg_with_data)
-        results = retriever.retrieve_note_ids(
-            query_entities={"actor": ["nonexistent"]}, max_depth=2
-        )
+        results = retriever.retrieve_note_ids(query_entities={"actor": ["nonexistent"]}, max_depth=2)
         assert results == []
 
     def test_max_depth_limits_hops(self, kg_with_data):

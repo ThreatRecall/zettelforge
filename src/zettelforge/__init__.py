@@ -8,18 +8,21 @@ A production-grade memory system for AI agents with:
 - RAG-as-answer synthesis
 - Intent-based query routing
 
-Usage:
+Community edition (MIT):
     >>> from zettelforge import MemoryManager
     >>> mm = MemoryManager()
     >>> mm.remember("Important information")
     >>> results = mm.recall("query")
     >>> synthesis = mm.synthesize("What do we know?")
 
-Optional extensions (e.g. zettelforge-enterprise) add:
+Enterprise edition (ThreatRecall by Threatengram) adds:
     - STIX 2.1 TypeDB ontology
-    - Deeper graph traversal
-    - Extended synthesis formats
+    - Blended retrieval (vector + graph)
     - OpenCTI integration
+    - Sigma rule generation
+    - Advanced synthesis formats
+    - Multi-tenant auth
+    See https://threatengram.com/enterprise
 """
 
 from zettelforge.blended_retriever import BlendedRetriever
@@ -51,53 +54,49 @@ from zettelforge.synthesis_generator import SynthesisGenerator, get_synthesis_ge
 from zettelforge.synthesis_validator import SynthesisValidator, get_synthesis_validator
 from zettelforge.vector_retriever import VectorRetriever
 
-# Note on the ontology module above: ENTITY_TYPES and RELATION_TYPES are
-# reference tables consumers use directly. TypedEntityStore / OntologyValidator
-# are a parallel store not wired into MemoryManager as of v2.2.0 — they remain
-# importable for advanced use but are not part of the advertised public API
-# and are therefore excluded from __all__ below.
-
-__version__ = "2.6.2"
+__version__ = "2.1.1"
 __all__ = [
-    # Ontology reference tables (TypedEntityStore / OntologyValidator are
-    # importable from zettelforge.ontology but are not part of the public API
-    # — see the module comment above for details).
-    "ENTITY_TYPES",
-    "RELATION_TYPES",
-    "BlendedRetriever",
     # Edition
     "Edition",
+    "get_edition",
+    "is_enterprise",
+    "is_community",
+    "edition_name",
     "EditionError",
-    "ExtractedFact",
-    # Two-Phase Pipeline
-    "FactExtractor",
-    # Retrieval
-    "GraphRetriever",
-    # Intent Classification
-    "IntentClassifier",
-    # Knowledge Graph
-    "KnowledgeGraph",
     # Core
     "MemoryManager",
+    "get_memory_manager",
     "MemoryNote",
-    "MemoryUpdater",
+    "VectorRetriever",
+    "SynthesisGenerator",
+    "get_synthesis_generator",
+    "SynthesisValidator",
+    "get_synthesis_validator",
+    # Knowledge Graph
+    "KnowledgeGraph",
+    "get_knowledge_graph",
+    # Retrieval
+    "GraphRetriever",
+    "ScoredResult",
+    "BlendedRetriever",
+    # Ontology
+    "TypedEntityStore",
+    "OntologyValidator",
+    "get_ontology_store",
+    "get_ontology_validator",
+    "ENTITY_TYPES",
+    "RELATION_TYPES",
+    # Intent Classification
+    "IntentClassifier",
+    "get_intent_classifier",
+    "QueryIntent",
     # Note Constructor
     "NoteConstructor",
-    "QueryIntent",
-    "ScoredResult",
-    "SynthesisGenerator",
-    "SynthesisValidator",
+    # Two-Phase Pipeline
+    "FactExtractor",
+    "ExtractedFact",
+    "MemoryUpdater",
     "UpdateOperation",
-    "VectorRetriever",
-    "edition_name",
-    "get_edition",
-    "get_intent_classifier",
-    "get_knowledge_graph",
-    "get_memory_manager",
-    "get_synthesis_generator",
-    "get_synthesis_validator",
-    "is_community",
-    "is_enterprise",
 ]
 
 # ── Enterprise-only imports (conditional) ───────────────────────────────────

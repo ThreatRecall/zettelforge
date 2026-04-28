@@ -4,8 +4,8 @@ description: "Walk through ingesting a threat intelligence report into ZettelFor
 diataxis_type: "tutorial"
 audience: "L1/L2 SOC Analyst"
 tags: [tutorial, stix, cti, ingestion]
-last_updated: "2026-04-16"
-version: "2.2.0"
+last_updated: "2026-04-09"
+version: "2.0.0"
 ---
 
 # Ingest Your First CTI Report
@@ -14,7 +14,7 @@ version: "2.2.0"
 
 **Time estimate**: 15 minutes
 
-**Prerequisites**: You have completed the [Quickstart (Tutorial 01)](01-quickstart.md) and ZettelForge is installed. ZettelForge uses SQLite by default -- no external services required. Embedding and LLM models download automatically on first use.
+**Prerequisites**: You have completed the [Quickstart (Tutorial 01)](01-quickstart.md). TypeDB is running on `localhost:1729` and ZettelForge v2.0.0 is installed. Embedding and LLM models download automatically on first use -- no separate setup is required.
 
 ```mermaid
 flowchart LR
@@ -412,7 +412,7 @@ You ingested a raw threat intelligence report and turned it into structured, que
 
 - [How to ingest STIX 2.1 bundles from TAXII feeds](../how-to/ingest-news-report.md)
 - [How to generate Sigma detection rules from ingested intel](../how-to/store-threat-actor.md)
-- [How to set up proactive context injection for your SOC agent](../how-to/integrate-llm-agent.md)
+- [How to set up proactive context injection for your SOC agent](../how-to/integrate-nexus-agent.md)
 - [API Reference: MemoryManager](../reference/memory-manager-api.md)
 
 ---

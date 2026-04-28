@@ -5,9 +5,11 @@ Extracts salient facts from raw content using LLM, with importance scoring.
 Only the important facts proceed to storage, reducing redundancy and noise.
 """
 
+import json
+import re
 from dataclasses import dataclass
+from typing import List
 
-from zettelforge.json_parse import extract_json
 from zettelforge.log import get_logger
 
 _logger = get_logger("zettelforge.fact_extractor")
@@ -36,15 +38,13 @@ class FactExtractor:
         self,
         content: str,
         context: str = "",
-    ) -> list[ExtractedFact]:
+    ) -> List[ExtractedFact]:
         prompt = self._build_prompt(content, context)
 
         try:
             from zettelforge.llm_client import generate
 
-            # 2500-token budget for reasoning-model headroom (see v2.5.2
-            # CHANGELOG; pre-fix 400 was exhausted by qwen3.5+ <think> tokens).
-            raw_output = generate(prompt, max_tokens=2500, temperature=0.1)
+            raw_output = generate(prompt, max_tokens=400, temperature=0.1)
             return self._parse_extraction_response(raw_output)
         except Exception:
             _logger.warning("llm_fact_extraction_failed", exc_info=True)
@@ -62,27 +62,28 @@ class FactExtractor:
         parts.append("\nJSON:")
         return "\n".join(parts)
 
-    def _parse_extraction_response(self, raw: str) -> list[ExtractedFact]:
+    def _parse_extraction_response(self, raw: str) -> List[ExtractedFact]:
         if not raw:
-            # Was previously a silent return — empty completions vanished
-            # entirely from the audit trail, undercounting LLM failures.
-            _logger.warning(
-                "parse_failed",
-                schema="fact_extraction",
-                reason="empty_completion",
-                raw="",
-            )
             return []
 
-        parsed = extract_json(raw, expect="array")
-        if parsed is None:
-            _logger.warning(
-                "parse_failed",
-                schema="fact_extraction",
-                reason="json_decode",
-                raw=raw[:240],
-                raw_chars=len(raw),
-            )
+        # Strip markdown code fences
+        if raw.startswith("```"):
+            parts = raw.split("```")
+            for part in parts:
+                stripped = part.strip()
+                if stripped.startswith("json"):
+                    stripped = stripped[4:].strip()
+                if stripped.startswith("["):
+                    raw = stripped
+                    break
+
+        match = re.search(r"\[.*\]", raw, re.DOTALL)
+        if not match:
+            return []
+
+        try:
+            parsed = json.loads(match.group(0))
+        except json.JSONDecodeError:
             return []
 
         facts = []

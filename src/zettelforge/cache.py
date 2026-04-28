@@ -1,14 +1,10 @@
-"""Intelligent caching layer for ZettelForge.
-
-.. note::
-   As of v2.2.0 this module is **not wired into** ``MemoryManager`` or any
-   of the retrievers. ``config.cache.*`` values are parsed but not consumed.
-   Kept for future integration (e.g. recall-result caching) and may be
-   removed if the direction changes.
+"""
+Intelligent caching layer for ZettelForge
+Complies with GOV-003 (Python standards) and GOV-012 (observability)
 """
 
 import time
-from typing import Any
+from typing import Any, Dict, Optional
 
 
 class SmartCache:
@@ -19,12 +15,12 @@ class SmartCache:
     def __init__(self, maxsize: int = 10000, ttl_seconds: int = 3600):
         self.maxsize = maxsize
         self.ttl_seconds = ttl_seconds
-        self._cache: dict = {}
+        self._cache: Dict = {}
         self._hits = 0
         self._misses = 0
         self._last_cleanup = time.time()
 
-    def get(self, key: str) -> Any | None:
+    def get(self, key: str) -> Optional[Any]:
         """Get item from cache with TTL check."""
         self._cleanup_if_needed()
 
@@ -64,7 +60,7 @@ class SmartCache:
         for k in expired:
             del self._cache[k]
 
-    def get_stats(self) -> dict:
+    def get_stats(self) -> Dict:
         """Return cache performance metrics."""
         total = self._hits + self._misses
         hit_rate = self._hits / total if total > 0 else 0

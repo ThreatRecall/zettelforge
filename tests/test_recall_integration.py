@@ -1,5 +1,4 @@
 """Integration tests for recall() with blended vector + graph retrieval."""
-
 import pytest
 import tempfile
 import time
@@ -45,9 +44,7 @@ class TestRecallWithGraph:
     def test_recall_excludes_superseded(self, mm_with_graph):
         note_old, _ = mm_with_graph.remember("Server ALPHA compromised", domain="incident")
         time.sleep(0.1)
-        note_new, _ = mm_with_graph.remember(
-            "Server ALPHA remediated and patched", domain="incident"
-        )
+        note_new, _ = mm_with_graph.remember("Server ALPHA remediated and patched", domain="incident")
         mm_with_graph.mark_note_superseded(note_old.id, note_new.id)
         results = mm_with_graph.recall("Server ALPHA status", k=10, exclude_superseded=True)
         result_ids = [r.id for r in results]

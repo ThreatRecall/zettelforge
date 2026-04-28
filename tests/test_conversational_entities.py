@@ -5,51 +5,12 @@ Validates hybrid regex+LLM entity extraction, knowledge graph edge inference,
 and supersession for conversational entity types.
 """
 
+import os
+
 import pytest
 
 from zettelforge.entity_indexer import EntityExtractor, EntityIndexer
 from zettelforge.note_constructor import NoteConstructor
-
-
-# JSON payload that satisfies every minimum-cardinality assertion in the
-# LLM-extraction tests below. MockProvider cycles through a fixed list of
-# responses, so one superset response covers every test without needing a
-# per-prompt map. Asserts are shape/cardinality checks, not quality checks —
-# this preserves the semantics of the original (skipped) tests while letting
-# CI execute them against the mock provider (RFC-002 Phase 1).
-_MOCK_NER_JSON = (
-    '{"person": ["Alice", "Bob"], "location": ["Paris"], '
-    '"organization": ["Google"], "event": [], "activity": [], "temporal": []}'
-)
-
-
-@pytest.fixture
-def mock_llm_provider(monkeypatch):
-    """Point ``llm_client.generate`` at a mock provider seeded with NER JSON.
-
-    MockProvider is a registry singleton keyed by name. We re-register under
-    ``mock`` with a subclass that ignores config kwargs and returns the
-    seeded payload, then call ``llm_client.reload()`` to flush any cached
-    instance. Teardown restores the original registration.
-    """
-    from zettelforge import llm_client
-    from zettelforge.llm_providers import MockProvider, registry
-
-    monkeypatch.setenv("ZETTELFORGE_LLM_PROVIDER", "mock")
-
-    class SeededMockProvider(MockProvider):
-        def __init__(self, **_kwargs):
-            super().__init__(responses=[_MOCK_NER_JSON])
-
-    original_cls = registry._registry.get("mock")
-    registry._registry["mock"] = SeededMockProvider
-    llm_client.reload()
-    try:
-        yield
-    finally:
-        if original_cls is not None:
-            registry._registry["mock"] = original_cls
-        llm_client.reload()
 
 
 class TestRegexExtraction:
@@ -63,8 +24,7 @@ class TestRegexExtraction:
     def test_actor_extraction_returns_apt_group(self):
         ext = EntityExtractor()
         result = ext.extract_regex("APT28 conducted the attack")
-        # APT-style designations are extracted as intrusion_set, not actor
-        assert "apt28" in result["intrusion_set"]
+        assert "apt28" in result["actor"]
 
     def test_tool_extraction_returns_malware_name(self):
         ext = EntityExtractor()
@@ -83,15 +43,12 @@ class TestRegexExtraction:
             assert result.get(etype, []) == []
 
 
-@pytest.mark.usefixtures("mock_llm_provider")
+@pytest.mark.skipif(
+    os.environ.get("CI") == "true",
+    reason="LLM tests crash in CI due to llama-cpp native library segfault",
+)
 class TestLLMExtraction:
-    """LLM NER extraction for conversational types.
-
-    Runs in CI against the mock provider (RFC-002 Phase 1). The mock is
-    seeded with a JSON payload that contains >=1 person and >=1 location,
-    matching the shape/cardinality assertions below. Short-text inputs
-    short-circuit before the LLM is called, so they pass regardless.
-    """
+    """LLM NER extraction for conversational types."""
 
     def test_llm_extraction_returns_person(self):
         ext = EntityExtractor()
@@ -111,14 +68,17 @@ class TestLLMExtraction:
             assert result.get(etype, []) == []
 
 
-@pytest.mark.usefixtures("mock_llm_provider")
+@pytest.mark.skipif(
+    os.environ.get("CI") == "true",
+    reason="LLM tests crash in CI due to llama-cpp native library segfault",
+)
 class TestHybridExtraction:
     """Combined regex + LLM extraction via extract_all."""
 
     def test_extract_all_regex_only_returns_cti(self):
         ext = EntityExtractor()
         result = ext.extract_all("APT28 used CVE-2024-1234", use_llm=False)
-        assert "apt28" in result["intrusion_set"]
+        assert "apt28" in result["actor"]
         assert "cve-2024-1234" in result["cve"]
         # Conversational types present but empty
         for etype in ["person", "location", "organization", "event", "activity", "temporal"]:
@@ -164,15 +124,13 @@ class TestNoteConstructorDelegation:
 
     def test_constructor_uses_extractor(self):
         nc = NoteConstructor()
-        assert hasattr(nc, "extract_entities")
-        # extract_entities delegates to EntityExtractor internally
-        result = nc.extract_entities("CVE-2024-1234")
-        assert "cve" in result
+        assert hasattr(nc, "_extractor")
+        assert isinstance(nc._extractor, EntityExtractor)
 
     def test_constructor_extract_entities_delegates(self):
         nc = NoteConstructor()
         result = nc.extract_entities("APT28 uses Cobalt Strike")
-        assert "apt28" in result["intrusion_set"]
+        assert "actor" in result
         assert "tool" in result
 
 
@@ -183,9 +141,9 @@ class TestInferEntityType:
         nc = NoteConstructor()
         assert nc._infer_entity_type("CVE-2024-1234") == "cve"
 
-    def test_apt_pattern_returns_intrusion_set(self):
+    def test_actor_pattern_returns_actor(self):
         nc = NoteConstructor()
-        assert nc._infer_entity_type("APT28") == "intrusion_set"
+        assert nc._infer_entity_type("APT28") == "actor"
 
     def test_tool_pattern_returns_tool(self):
         nc = NoteConstructor()

@@ -5,9 +5,8 @@ Implements resilient patterns per GOV-011 (Security & Reliability)
 
 import random
 import time
-from collections.abc import Callable
 from functools import wraps
-from typing import TypeVar
+from typing import Callable, TypeVar
 
 from zettelforge.log import get_logger
 from zettelforge.observability import Observability
@@ -56,8 +55,7 @@ def with_retry(config: RetryConfig = None, observability: Observability = None):
                 except Exception as e:
                     last_exception = e
                     delay = min(config.base_delay * (2 ** (attempt - 1)), config.max_delay)
-                    # Backoff jitter — non-cryptographic.
-                    jitter = random.uniform(0, 0.1 * delay)  # noqa: S311
+                    jitter = random.uniform(0, 0.1 * delay)
                     sleep_time = delay + jitter
 
                     observability.log_operation(

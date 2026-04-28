@@ -1,6 +1,6 @@
 ---
 title: "MemoryManager API Reference"
-description: "Full API reference for ZettelForge MemoryManager: remember(), recall(), synthesize(), entity extraction, knowledge graph queries, and configuration options."
+description: "Complete API surface for the MemoryManager class and MemoryNote schema. All public methods, parameters, return types, and usage examples."
 diataxis_type: "reference"
 audience: "Senior CTI Practitioner"
 tags:

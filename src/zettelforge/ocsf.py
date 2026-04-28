@@ -16,45 +16,13 @@ Event classes:
 """
 
 from datetime import datetime, timezone
-from importlib.metadata import PackageNotFoundError, version
-from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from zettelforge.log import get_logger
 
 logger = get_logger("zettelforge.ocsf")
 
-
-def _resolve_product_version() -> str:
-    """Resolve the package version for OCSF event metadata.
-
-    Editable installs hit a stale-metadata trap: ``git checkout vX.Y.Z`` updates
-    the source but not the ``importlib.metadata`` record (that only refreshes
-    when ``pip install -e .`` runs). Vigil exhibited this on 2026-04-24 — v2.4.2
-    code was emitting ``phase_timings_ms`` (proving the source was bumped) while
-    OCSF events still reported ``product.version=2.4.1``. We prefer the source
-    ``pyproject.toml`` when it's reachable from ``__file__`` and fall back to
-    installed metadata otherwise (the standard wheel-install case).
-    """
-    try:
-        # zettelforge/ocsf.py → zettelforge/ → src/ → repo root
-        repo_root = Path(__file__).resolve().parent.parent.parent
-        pyproject = repo_root / "pyproject.toml"
-        if pyproject.is_file():
-            for line in pyproject.read_text(encoding="utf-8").splitlines():
-                stripped = line.strip()
-                if stripped.startswith("version") and "=" in stripped:
-                    return stripped.split("=", 1)[1].strip().strip('"').strip("'")
-    except Exception:  # pragma: no cover  # noqa: S110 — defensive; fall through to metadata
-        pass
-
-    try:
-        return version("zettelforge")
-    except PackageNotFoundError:
-        return "0.0.0+unknown"
-
-
-_PRODUCT_VERSION = _resolve_product_version()
+_PRODUCT_VERSION = "2.1.1"
 
 # OCSF severity mapping
 SEVERITY_UNKNOWN = 0
@@ -101,16 +69,11 @@ def _base_fields(
         "status_id": status_id,
         "status": "Success" if status_id == STATUS_SUCCESS else "Failure",
         "time": datetime.now(timezone.utc).isoformat(),
-        # GOV-012 §"Required OCSF Base Fields" lists timezone_offset alongside
-        # `time`. We always emit UTC, so this is constant; surfacing it lets
-        # OCSF-strict downstream validators (Sentinel custom-log tables) accept
-        # the events without an ingest-time transform.
-        "timezone_offset": 0,
         "metadata": {
             "version": "1.3.0",
             "product": {
                 "name": "zettelforge",
-                "vendor_name": "zettelforge",
+                "vendor_name": "threatengram",
                 "version": _PRODUCT_VERSION,
             },
             "log_name": "application",
@@ -126,9 +89,9 @@ def log_api_activity(
     operation: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    actor: str | None = None,
-    resource: str | None = None,
-    duration_ms: float | None = None,
+    actor: Optional[str] = None,
+    resource: Optional[str] = None,
+    duration_ms: Optional[float] = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF API Activity event (class 6002).
@@ -163,7 +126,7 @@ def log_authentication(
     auth_protocol: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    src_endpoint: str | None = None,
+    src_endpoint: Optional[str] = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF Authentication event (class 3001).
@@ -196,8 +159,8 @@ def log_authorization(
     resource: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    privileges: str | None = None,
-    policy: str | None = None,
+    privileges: Optional[str] = None,
+    policy: Optional[str] = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF Authorization event (class 3003).
@@ -231,9 +194,9 @@ def log_config_change(
     resource: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    actor: str | None = None,
-    prev_value: str | None = None,
-    new_value: str | None = None,
+    actor: Optional[str] = None,
+    prev_value: Optional[str] = None,
+    new_value: Optional[str] = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF Configuration Change event (class 5002).
@@ -269,8 +232,8 @@ def log_file_activity(
     activity: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    actor: str | None = None,
-    duration_ms: float | None = None,
+    actor: Optional[str] = None,
+    duration_ms: Optional[float] = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF File Activity event (class 1001).
@@ -336,8 +299,8 @@ def log_account_change(
     activity: str,
     status_id: int = STATUS_SUCCESS,
     severity_id: int = SEVERITY_INFO,
-    prev_value: str | None = None,
-    new_value: str | None = None,
+    prev_value: Optional[str] = None,
+    new_value: Optional[str] = None,
     **details: Any,
 ) -> None:
     """Emit an OCSF Account Change event (class 3005).

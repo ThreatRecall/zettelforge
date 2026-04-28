@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "zettelforge"
-version = "2.6.2"
+version = "2.1.1"
 description = "ZettelForge: Agentic Memory System with vector search, knowledge graph, and synthesis"
 readme = "README.md"
 license = "MIT"
@@ -12,19 +12,16 @@ requires-python = ">=3.10"
 authors = [
     {name = "Patrick Roland", email = "patrick@groland.com"}
 ]
-keywords = ["cybersecurity", "threat-intelligence", "cti", "stix", "agentic-memory", "knowledge-graph", "mcp-server", "ai-agent", "rag", "llm-memory"]
+keywords = ["memory", "rag", "agent", "vector-search", "knowledge-graph", "ai"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Security",
-    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 # Core dependencies (Community edition — MIT licensed)
@@ -36,78 +33,23 @@ dependencies = [
     "requests>=2.31.0",
     "tantivy>=0.11.0",
     "fastembed>=0.8.0",
+    "llama-cpp-python>=0.3.0",
     "httpx>=0.25.0",
     "structlog>=24.0.0",
-    # Detection rules (Phase 1c): Sigma + YARA first-class
-    "PyYAML>=6.0",
-    "jsonschema>=4.0",
-    "plyara>=2.0",
 ]
 
 [project.optional-dependencies]
 
-# Local LLM: in-process llama-cpp-python (GGUF models)
-# pip install zettelforge[local]
-local = [
-    "llama-cpp-python>=0.3.0",
-]
-
-# Local LLM: in-process ONNX Runtime GenAI (ONNX models, RFC-011)
-# pip install zettelforge[local-onnx]
-local-onnx = [
-    "onnxruntime-genai>=0.4.0",
-]
-
-# All local backends combined (convenience)
-# pip install zettelforge[local-all]
-local-all = [
-    "zettelforge[local]",
-    "zettelforge[local-onnx]",
-]
-
-# LiteLLM — unified routing to 100+ LLM providers (RFC-012)
-# pip install zettelforge[litellm]
-litellm = [
-    "litellm>=1.60.0",
-]
-
-# PII detection via Microsoft Presidio (RFC-013, optional)
-# pip install zettelforge[pii]
-# Enables governance.pii section in config. Automatically downloads
-# a spaCy model (~12MB) on first use.
-pii = [
-    "presidio-analyzer>=2.2.0",
-    "presidio-anonymizer>=2.2.0",
-    "spacy>=3.5.0",
-]
-
-# Extensions: install the separate zettelforge-enterprise package
+# Enterprise: install the separate zettelforge-enterprise package
 # pip install zettelforge-enterprise
-extensions = [
+enterprise = [
     "zettelforge-enterprise>=2.1.0",
 ]
 
-# Web UI (ZettelForge)
+# Web UI (ThreatRecall)
 web = [
     "fastapi>=0.100.0",
     "uvicorn>=0.20.0",
-    "psutil>=5.9.0",
-    "jinja2>=3.0.0",
-]
-
-# LangChain integration
-langchain = [
-    "langchain-core>=0.2.0",
-]
-
-# CrewAI integration — exposes ZettelForge memory as CrewAI BaseTool subclasses.
-# Pin to >=1.14.0: the integration imports BaseTool from crewai.tools, a path
-# only guaranteed in CrewAI's 1.x line. Earlier 0.x releases that satisfied a
-# looser pin do not expose that import path and would surface as an obscure
-# ImportError at first use rather than at install time.
-# pip install zettelforge[crewai]
-crewai = [
-    "crewai>=1.14.0",
 ]
 
 dev = [
@@ -116,23 +58,13 @@ dev = [
     "pytest-cov>=4.0.0",
     "mypy>=1.0.0",
     "ruff>=0.4.0",
-    "langchain-core>=0.2.0",
-    "fastapi>=0.100.0",     # for test_web_api.py
-    "uvicorn>=0.20.0",      # for test_web_api.py
-    "psutil>=5.9.0",        # for test_web_api.py
-    "jinja2>=3.0.0",        # for test_web_api.py
 ]
 
 [project.urls]
 Homepage = "https://github.com/rolandpg/zettelforge"
-Documentation = "https://docs.threatrecall.ai"
+Documentation = "https://github.com/rolandpg/zettelforge/blob/main/docs/"
 Repository = "https://github.com/rolandpg/zettelforge"
 Issues = "https://github.com/rolandpg/zettelforge/issues"
-Changelog = "https://github.com/rolandpg/zettelforge/blob/master/CHANGELOG.md"
-
-[project.scripts]
-zettelforge = "zettelforge.__main__:main"
-zettelforge-mcp = "zettelforge.mcp.server:run_stdio"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/zettelforge"]
@@ -148,34 +80,14 @@ disallow_untyped_defs = true
 line-length = 100
 
 [tool.ruff.lint]
-# GOV-003 §"Tooling and Automation" mandates the full set
-# {E, F, I, S, B, UP, SIM, RUF, N, ANN, T20}. We ratchet incrementally:
-# T20 + B + UP + SIM + RUF added earlier 2026-04-25; S (bandit-ish
-# security) added in this batch. Per-line `# noqa: SXXX` annotations
-# document each accepted exception (best-effort fallbacks, non-crypto
-# RNG, ?-bound SQL with constant column lists). Only ANN remains; it
-# will be ratcheted per-module to avoid a 1000+ finding flood.
-select = ["E", "F", "I", "W", "N", "T20", "B", "UP", "SIM", "RUF", "S"]
+select = ["E", "F", "I", "W", "N"]
 ignore = [
     "E501",   # line too long — handled by formatter
     "E402",   # module-level import not at top — needed for conditional imports
-    "RUF002", # ambiguous unicode in docstrings — en-dash and × are intentional
-    "RUF003", # ambiguous unicode in comments — en-dash and × are intentional
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "src/zettelforge/__init__.py" = ["F401", "E402"]  # re-exports and conditional imports
-# S104: web host binding to 0.0.0.0 is intentional (RFC-015 web UI)
-"src/zettelforge/config.py" = ["S104"]
-# T20 (print) is forbidden in production code (GOV-003), but every CLI
-# entrypoint legitimately uses print() for stdout output. The patterns
-# below scope T20 to library code only.
-"src/zettelforge/__main__.py" = ["T20"]
-"src/zettelforge/demo.py" = ["T20"]
-"src/zettelforge/scripts/*.py" = ["T20"]
-"src/zettelforge/sigma/cli.py" = ["T20"]
-"src/zettelforge/yara/cli.py" = ["T20"]
-"src/zettelforge/vector_memory.py" = ["T20"]  # has argparse CLI at module bottom
 
 [tool.ruff.format]
 quote-style = "double"

@@ -5,9 +5,11 @@ Compares new facts against existing notes and decides:
 ADD (new), UPDATE (refine), DELETE (contradict), or NOOP (duplicate).
 """
 
+import json
+import re
 from enum import Enum
+from typing import List, Optional, Tuple
 
-from zettelforge.json_parse import extract_json
 from zettelforge.log import get_logger
 from zettelforge.note_schema import MemoryNote
 
@@ -27,12 +29,12 @@ class MemoryUpdater:
         self.model = model
         self.top_s = top_s
 
-    def find_similar(self, fact_text: str, domain: str | None = None) -> list[MemoryNote]:
+    def find_similar(self, fact_text: str, domain: Optional[str] = None) -> List[MemoryNote]:
         return self.mm.retriever.retrieve(
             query=fact_text, domain=domain, k=self.top_s, include_links=False
         )
 
-    def decide(self, fact_text: str, similar_notes: list[MemoryNote]) -> UpdateOperation:
+    def decide(self, fact_text: str, similar_notes: List[MemoryNote]) -> UpdateOperation:
         if not similar_notes:
             return UpdateOperation.ADD
 
@@ -42,14 +44,7 @@ class MemoryUpdater:
             from zettelforge.llm_client import generate
 
             raw = generate(prompt, max_tokens=150, temperature=0.1)
-            parsed = extract_json(raw, expect="object")
-            if parsed is None and raw and raw.strip():
-                # Retry once with format hint and higher temperature
-                _logger.info("retry_parse", site="memory_updater", attempt=2)
-                retry_prompt = prompt + "\n\nRespond with valid JSON only."
-                raw = generate(retry_prompt, max_tokens=150, temperature=0.3, json_mode=True)
-                parsed = extract_json(raw, expect="object")
-            return self._parse_operation_from_parsed(parsed, raw)
+            return self._parse_operation_response(raw)
         except Exception:
             _logger.warning("llm_update_decision_failed_defaulting_add", exc_info=True)
             return UpdateOperation.ADD
@@ -60,9 +55,9 @@ class MemoryUpdater:
         fact_text: str,
         importance: int,
         source_ref: str,
-        similar_notes: list[MemoryNote],
+        similar_notes: List[MemoryNote],
         domain: str = "cti",
-    ) -> tuple[MemoryNote | None, str]:
+    ) -> Tuple[Optional[MemoryNote], str]:
         if operation == UpdateOperation.NOOP:
             return None, "noop"
 
@@ -96,7 +91,7 @@ class MemoryUpdater:
 
         return None, "unknown"
 
-    def _build_decision_prompt(self, fact_text: str, similar_notes: list[MemoryNote]) -> str:
+    def _build_decision_prompt(self, fact_text: str, similar_notes: List[MemoryNote]) -> str:
         existing = "\n".join(f"- [{n.id}] {n.content.raw[:200]}" for n in similar_notes)
         return f"""Compare this new fact against existing memory entries.
 Decide one operation: ADD, UPDATE, DELETE, or NOOP.
@@ -118,16 +113,23 @@ JSON:"""
         if not raw:
             return UpdateOperation.ADD
 
-        parsed = extract_json(raw, expect="object")
-        return self._parse_operation_from_parsed(parsed, raw)
+        if raw.startswith("```"):
+            parts = raw.split("```")
+            for part in parts:
+                stripped = part.strip()
+                if stripped.startswith("json"):
+                    stripped = stripped[4:].strip()
+                if stripped.startswith("{"):
+                    raw = stripped
+                    break
 
-    def _parse_operation_from_parsed(self, parsed, raw: str) -> UpdateOperation:
-        if parsed is None:
-            _logger.warning("parse_failed", schema="update_operation", raw=(raw or "")[:200])
+        match = re.search(r"\{.*\}", raw, re.DOTALL)
+        if not match:
             return UpdateOperation.ADD
 
         try:
+            parsed = json.loads(match.group(0))
             op_str = parsed.get("operation", "ADD").upper()
             return UpdateOperation(op_str)
-        except (ValueError, AttributeError):
+        except (json.JSONDecodeError, ValueError):
             return UpdateOperation.ADD

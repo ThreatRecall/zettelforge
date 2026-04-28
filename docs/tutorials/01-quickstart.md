@@ -1,16 +1,16 @@
 ---
 title: "Quickstart: Your First Memory"
-description: "Get started with ZettelForge in 5 minutes. Install via pip, store your first threat intel, and recall with alias resolution — no cloud or API keys required."
+description: Store, recall, and synthesize threat intelligence with ThreatRecall in under 5 minutes.
 diataxis_type: "tutorial"
 audience: "L1/L2 SOC Analyst"
 tags: [tutorial, quickstart, getting-started]
-last_updated: "2026-04-16"
-version: "2.2.0"
+last_updated: "2026-04-09"
+version: "2.0.0"
 ---
 
 # Quickstart: Your First Memory
 
-**What you will build**: A working ZettelForge instance that stores threat intelligence about APT28 and Lazarus Group, recalls it by name, and synthesizes a brief from memory.
+**What you will build**: A working ThreatRecall instance that stores threat intelligence about APT28 and Lazarus Group, recalls it by name, and synthesizes a brief from memory.
 
 **What you will learn**:
 
@@ -21,6 +21,7 @@ version: "2.2.0"
 **Prerequisites**:
 
 - [ ] [Python 3.10+](https://www.python.org/downloads/) installed
+- [ ] [Docker](https://docs.docker.com/get-docker/) installed and running
 
 ---
 
@@ -52,10 +53,36 @@ Successfully installed zettelforge-2.0.0
 > [!NOTE]
 > If you see permission errors, use `pip install --user -e .` or activate a virtual environment first with `python -m venv venv && source venv/bin/activate`.
 
-## Step 3: Store Your First Memories
+## Step 3: Start TypeDB
+
+```bash
+docker compose -f docker/docker-compose.yml up -d
+```
+
+Expected output:
+
+```
+[+] Running 1/1
+ ✔ Container docker-typedb-1  Started
+```
+
+Wait a few seconds for TypeDB to finish its health check. Verify it is running:
+
+```bash
+docker compose -f docker/docker-compose.yml ps
+```
+
+Expected output:
+
+```
+NAME                STATUS
+docker-typedb-1     running (healthy)
+```
+
+## Step 4: Store Your First Memories
 
 > [!NOTE]
-> ZettelForge runs embeddings and LLM inference in-process by default. The embedding model (~130 MB) and LLM (~2.0 GB) download automatically on first use. No Ollama setup is required. If you prefer Ollama or a cloud provider, see the options below.
+> ZettelForge runs embeddings and LLM inference in-process by default. The embedding model (~130 MB) and LLM (~2.0 GB) download automatically on first use. No Ollama setup is required. If you prefer to use Ollama as an optional fallback, see [Configuration Reference](../reference/configuration.md).
 
 Open a Python shell or create a file called `quickstart.py`. Paste the following code and run it.
 
@@ -173,7 +200,7 @@ The SynthesisGenerator retrieved relevant notes, built a context window, and pro
 
 ## What You Built
 
-You now have a working ZettelForge instance with:
+You now have a working ThreatRecall instance with:
 
 - **3 stored notes** about APT28 and Lazarus Group activity
 - **Entity index entries** for actors (APT28, Lazarus), tools (X-Agent, Cobalt Strike), CVEs (CVE-2025-21298), and campaigns (Operation DreamJob)
@@ -182,22 +209,12 @@ You now have a working ZettelForge instance with:
 
 ## Next Steps
 
-- [How-To: Ingest a Threat Report](../how-to/ingest-news-report.md) -- Use `remember_report()` to chunk and store long-form CTI documents.
-- [Reference: Python API](../reference/memory-manager-api.md) -- Full documentation for `MemoryManager`, `BlendedRetriever`, and all public classes.
-- [Explanation: Two-Phase Extraction Pipeline](../explanation/two-phase-pipeline.md) -- Understand why FactExtractor + MemoryUpdater prevents duplicate and stale notes.
+- [How-To: Ingest a Threat Report](../how-to/) -- Use `remember_report()` to chunk and store long-form CTI documents.
+- [Reference: Python API](../reference/) -- Full documentation for `MemoryManager`, `BlendedRetriever`, and all public classes.
+- [Explanation: Two-Phase Extraction Pipeline](../explanation/) -- Understand why FactExtractor + MemoryUpdater prevents duplicate and stale notes.
 
 ---
 
 ## LLM Quick Reference
 
-This tutorial demonstrated the core ZettelForge (v2.5.0) workflow: `remember()` stores text as a MemoryNote, runs entity extraction (actors, tools, CVEs, campaigns), resolves aliases (e.g. "Fancy Bear" to canonical "apt28" using 36 seeded alias mappings), writes to LanceDB (768-dim nomic-embed-text-v1.5-Q vectors, IVF_PQ index) and TypeDB (STIX 2.1 entities and relations), checks for note supersession, and extracts causal triples for graph edges. `recall(query)` classifies intent (factual/temporal/relational/causal/exploratory) via IntentClassifier, then BlendedRetriever merges vector similarity from LanceDB with graph BFS from TypeDB using policy-weighted scores. `recall_actor(name)` (also `recall_cve(id)`, `recall_tool(name)`) performs direct entity-index lookup bypassing vector search. `synthesize(query, format)` retrieves notes and produces an LLM answer in one of four formats: direct_answer, synthesized_brief, timeline_analysis, relationship_map.
-
-**Installation options:** Core install is `pip install -e .` from the repo root. Optional extras add LLM provider backends: `pip install zettelforge[local]` for in-process GGUF (llama-cpp-python), `pip install zettelforge[local-onnx]` for in-process ONNX (onnxruntime-genai), `pip install zettelforge[litellm]` for LiteLLM routing to 100+ cloud providers (OpenAI, Anthropic, Google, Groq, etc.).
-
-**Provider configuration** via `config.yaml` `llm:` section:
-- `provider: local` + `local_backend: llama-cpp-python` -- fully offline GGUF inference (default for new offline installs)
-- `provider: local` + `local_backend: onnxruntime-genai` -- ONNX models with AMD ROCm / Intel OpenVINO / Apple CoreML
-- `provider: ollama` -- requires running `ollama serve` at `http://localhost:11434` (default for new installs)
-- `provider: litellm` -- set `model: gpt-4o` (or any LiteLLM model name) and API key; routes to correct provider automatically
-
-Prerequisites are Python 3.10+ and Docker (for TypeDB 3.x on port 1729). Embeddings run in-process via fastembed (nomic-embed-text-v1.5-Q, 768-dim). Models download automatically on first use. Ollama is optional as a fallback provider. TypeDB starts via `docker compose -f docker/docker-compose.yml up -d`. The MemoryManager constructor accepts optional `jsonl_path` and `lance_path` arguments; defaults store data in `~/.amem`. Governance policies (GOV-003, GOV-007, GOV-011, GOV-012) are enforced automatically on every `remember()` and `synthesize()` call.
+This tutorial demonstrated the core ThreatRecall (ZettelForge v2.0.0) workflow: `remember()` stores text as a MemoryNote, runs entity extraction (actors, tools, CVEs, campaigns), resolves aliases (e.g. "Fancy Bear" to canonical "apt28" using 36 seeded alias mappings), writes to LanceDB (768-dim nomic-embed-text-v2-moe vectors, IVF_PQ index) and TypeDB (STIX 2.1 entities and relations), checks for note supersession, and extracts causal triples for graph edges. `recall(query)` classifies intent (factual/temporal/relational/causal/exploratory) via IntentClassifier, then BlendedRetriever merges vector similarity from LanceDB with graph BFS from TypeDB using policy-weighted scores. `recall_actor(name)` (also `recall_cve(id)`, `recall_tool(name)`) performs direct entity-index lookup bypassing vector search. `synthesize(query, format)` retrieves notes and produces an LLM answer in one of four formats: direct_answer, synthesized_brief, timeline_analysis, relationship_map. Prerequisites are Python 3.10+ and Docker (for TypeDB 3.x on port 1729). Embeddings run in-process via fastembed (nomic-embed-text-v1.5-Q, 768-dim) and LLM runs in-process via llama-cpp-python (Qwen2.5-3B-Instruct Q4_K_M). Models download automatically on first use. Ollama is optional as a fallback provider. Install with `pip install -e .` from the repo root. TypeDB starts via `docker compose -f docker/docker-compose.yml up -d`. The MemoryManager constructor accepts optional `jsonl_path` and `lance_path` arguments; defaults store data in `~/.amem`. Governance policies (GOV-003, GOV-007, GOV-011, GOV-012) are enforced automatically on every `remember()` and `synthesize()` call.

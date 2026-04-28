@@ -1,8 +1,4 @@
-# Default rule: require @rolandpg for all changes
-* @rolandpg
+# CODEOWNERS — GOV-006 compliance
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
-# Critical security-sensitive paths
-.github/workflows/ @rolandpg
-.github/ @rolandpg
-pyproject.toml @rolandpg
-setup.py @rolandpg
+* @rolandpg

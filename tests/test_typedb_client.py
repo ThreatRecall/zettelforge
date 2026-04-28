@@ -2,16 +2,9 @@
 Tests for TypeDB Knowledge Graph client.
 Requires TypeDB running on localhost:1729.
 """
-
-import uuid
-
 import pytest
-
-typedb_client = pytest.importorskip(
-    "zettelforge_enterprise.typedb_client",
-    reason="zettelforge-enterprise not installed",
-)
-TypeDBKnowledgeGraph = typedb_client.TypeDBKnowledgeGraph
+import uuid
+from zettelforge.typedb_client import TypeDBKnowledgeGraph
 
 
 @pytest.fixture
@@ -118,20 +111,23 @@ class TestTypeDBTraversal:
 class TestTypeDBTemporal:
     def test_add_temporal_edge(self, kg):
         edge_id = kg.add_temporal_edge(
-            "note", "note_002", "note", "note_001", "SUPERSEDES", "2026-04-09T10:00:00"
+            "note", "note_002", "note", "note_001",
+            "SUPERSEDES", "2026-04-09T10:00:00"
         )
         assert edge_id != ""
 
     def test_get_entity_timeline(self, kg):
         kg.add_temporal_edge(
-            "note", "note_002", "note", "note_001", "SUPERSEDES", "2026-04-09T10:00:00"
+            "note", "note_002", "note", "note_001",
+            "SUPERSEDES", "2026-04-09T10:00:00"
         )
         timeline = kg.get_entity_timeline("note", "note_002")
         assert len(timeline) >= 1
 
     def test_get_changes_since(self, kg):
         kg.add_temporal_edge(
-            "note", "note_002", "note", "note_001", "SUPERSEDES", "2026-04-09T10:00:00"
+            "note", "note_002", "note", "note_001",
+            "SUPERSEDES", "2026-04-09T10:00:00"
         )
         changes = kg.get_changes_since("2026-04-09T00:00:00")
         assert len(changes) >= 1

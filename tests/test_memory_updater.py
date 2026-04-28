@@ -1,5 +1,4 @@
 """Tests for MemoryUpdater - Phase 2 of Mem0-style pipeline."""
-
 import pytest
 import tempfile
 from unittest.mock import patch, MagicMock
@@ -40,9 +39,7 @@ class TestMemoryUpdaterParsing:
 
     def test_parse_update(self):
         updater = MemoryUpdater.__new__(MemoryUpdater)
-        op = updater._parse_operation_response(
-            '{"operation": "UPDATE", "reason": "refines existing"}'
-        )
+        op = updater._parse_operation_response('{"operation": "UPDATE", "reason": "refines existing"}')
         assert op == UpdateOperation.UPDATE
 
     def test_parse_delete(self):
@@ -62,9 +59,7 @@ class TestMemoryUpdaterParsing:
 
     def test_parse_markdown_wrapped(self):
         updater = MemoryUpdater.__new__(MemoryUpdater)
-        op = updater._parse_operation_response(
-            '```json\n{"operation": "DELETE", "reason": "old"}\n```'
-        )
+        op = updater._parse_operation_response('```json\n{"operation": "DELETE", "reason": "old"}\n```')
         assert op == UpdateOperation.DELETE
 
 

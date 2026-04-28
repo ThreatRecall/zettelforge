@@ -11,6 +11,7 @@ import os
 import sys
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from typing import Optional
 
 import structlog
 
@@ -35,8 +36,8 @@ class _AuditFilter(logging.Filter):
 
 def configure_logging(
     level: str = "INFO",
-    log_file: str | None = None,
-    audit_log_file: str | None = None,
+    log_file: Optional[str] = None,
+    audit_log_file: Optional[str] = None,
     log_to_stderr: bool = True,
     max_bytes: int = 10 * 1024 * 1024,
     backup_count: int = 9,
@@ -114,15 +115,6 @@ def configure_logging(
         force=True,
     )
 
-    # Suppress noisy DEBUG-level traffic loggers from HTTP transport stacks.
-    # Without this, when ZF runs at DEBUG (RFC-007 telemetry pilot), httpcore
-    # and httpx emit ~3 lines per LLM/embedding call (connect_tcp.started,
-    # send_request_headers, etc.), drowning the actual application events.
-    # In one 17-min test run these accounted for >1,600 log lines for zero
-    # diagnostic value.
-    for noisy in ("httpcore", "httpcore.http11", "httpcore.connection", "httpx"):
-        logging.getLogger(noisy).setLevel(logging.WARNING)
-
     # structlog: JSON to log file (not stdout/stderr)
     # Use stdlib integration so structlog events flow through the handlers above
     structlog.configure(
@@ -164,18 +156,5 @@ def get_logger(name: str) -> structlog.stdlib.BoundLogger:
         logs_dir = Path(data_dir) / "logs"
         log_file = str(logs_dir / "zettelforge.log")
         audit_log_file = str(logs_dir / "audit.log")
-        # Resolution order: ZETTELFORGE_LOG_LEVEL env var > config.yaml log
-        # level > INFO. Env var wins so operators can flip DEBUG without
-        # editing config or restarting agents. config.yaml is the persistent
-        # default (RFC-007 telemetry support).
-        level = os.environ.get("ZETTELFORGE_LOG_LEVEL", "").strip()
-        if not level:
-            try:
-                from zettelforge.config import get_config
-
-                cfg = get_config()
-                level = cfg.logging.level if hasattr(cfg, "logging") else "INFO"
-            except Exception:
-                level = "INFO"
-        configure_logging(level=level, log_file=log_file, audit_log_file=audit_log_file)
+        configure_logging(log_file=log_file, audit_log_file=audit_log_file)
     return structlog.get_logger(name)

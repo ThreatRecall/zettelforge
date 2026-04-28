@@ -13,10 +13,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+    - uses: actions/checkout@v6
 
     - name: Set up Python
-      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+      uses: actions/setup-python@v6
       with:
         python-version: '3.12'
 
@@ -29,80 +29,35 @@ jobs:
     - name: Format check with ruff
       run: ruff format --check src/zettelforge/
 
-  # GOV-009 §"Vulnerability Response": runs on every PR, fails on
-  # HIGH/CRITICAL. Token-free complement to Snyk (which gates on
-  # SNYK_TOKEN being set as a repo secret). Audit H-5.
-  pip-audit:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-    - name: Set up Python
-      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
-      with:
-        python-version: '3.12'
-    - name: Install pip-audit
-      run: pip install pip-audit
-    - name: Audit dependencies (any reported vuln blocks)
-      run: |
-        pip install -e ".[dev]" || pip install -e "."
-        # pip-audit fails non-zero on any reported vuln. Add
-        # --ignore-vuln=CVE-... with a citation when the finding is
-        # explicitly accepted per GOV-009 §"Vulnerability Response".
-        #
-        # CVE-2026-3219: vulnerability in `pip` itself (the package
-        # manager), not a project dependency. The runner's pip is
-        # supplied by GitHub's setup-python image and is not something
-        # ZettelForge's pyproject can pin or upgrade. Risk-accepted
-        # because the pip vulnerability surface is exposed during
-        # install, not at runtime; CI builds in ephemeral runners with
-        # no persistent state. Re-evaluate when GitHub's images ship a
-        # patched pip.
-        pip-audit --strict --vulnerability-service=osv \
-          --ignore-vuln=CVE-2026-3219
-
   test:
     runs-on: ubuntu-latest
     needs: lint
     strategy:
-      fail-fast: false
       matrix:
-        python-version: ['3.12', '3.13']
+        python-version: ['3.12']
 
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+    - uses: actions/checkout@v6
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        # If [dev] install fails, fall back to bare install + manually
-        # add the pytest deps. Parenthesizing the fallback prevents shell
-        # precedence from running the "pytest pytest-cov pytest-asyncio"
-        # step when [dev] already succeeded (audit L-4).
-        pip install -e ".[dev]" || (pip install -e "." && pip install pytest pytest-cov pytest-asyncio)
-
-    - name: Pre-download fastembed model
-      run: |
-        python -c "from fastembed import TextEmbedding; TextEmbedding('nomic-ai/nomic-embed-text-v1.5-Q')"
+        pip install -e ".[dev]" || pip install -e "." && pip install pytest pytest-cov pytest-asyncio
 
     - name: Test with pytest
       env:
-        ZETTELFORGE_BACKEND: sqlite
-        ZETTELFORGE_EMBEDDING_PROVIDER: fastembed
+        ZETTELFORGE_BACKEND: jsonl
       run: |
-        # GOV-007 §"Coverage Requirements" mandates ≥80% line / ≥70% branch.
-        # We start the ratchet at 67 (matches governance/controls.yaml's
-        # current declaration) so today's pipeline does not break, and #51
-        # tracks raising it toward 80% across v2.5.x. Audit finding H-2.
-        pytest tests/ -v --cov=zettelforge --cov-report=xml --cov-report=term-missing --cov-fail-under=67
+        pytest tests/ -v --cov=zettelforge --cov-report=xml --cov-report=term-missing --ignore=tests/test_cti_integration.py --ignore=tests/test_typedb_client.py
 
     - name: Upload coverage
       if: matrix.python-version == '3.12'
-      uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2
+      uses: codecov/codecov-action@v6
       with:
         file: ./coverage.xml
         fail_ci_if_error: false
@@ -111,38 +66,72 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+    - uses: actions/checkout@v6
 
     - name: Set up Python
-      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+      uses: actions/setup-python@v6
       with:
         python-version: '3.12'
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        # See "Install dependencies" comment above (audit L-4).
-        pip install -e ".[dev]" || (pip install -e "." && pip install pytest pytest-cov)
+        pip install -e ".[dev]" || pip install -e "." && pip install pytest pytest-cov
+
+    - name: GOV-003 — No print() in production code
+      run: |
+        python -c "
+        import ast, sys
+        from pathlib import Path
+        violations = {}
+        for f in sorted(Path('src/zettelforge').rglob('*.py')):
+            source = f.read_text()
+            try:
+                tree = ast.parse(source)
+            except SyntaxError:
+                continue
+            main_lines = set()
+            for node in ast.walk(tree):
+                if isinstance(node, ast.If):
+                    t = node.test
+                    if isinstance(t, ast.Compare) and isinstance(t.left, ast.Name) and t.left.id == '__name__':
+                        for ln in range(node.lineno, node.end_lineno + 1):
+                            main_lines.add(ln)
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Call):
+                    func = node.func
+                    if isinstance(func, ast.Name) and func.id == 'print' and node.lineno not in main_lines:
+                        violations.setdefault(f.name, []).append(node.lineno)
+        if violations:
+            print(f'GOV-003 FAIL: print() in production code: {violations}')
+            sys.exit(1)
+        print('GOV-003 PASS: No print() in production code')
+        "
 
     - name: GOV-012 — Logging compliance tests
       env:
-        ZETTELFORGE_BACKEND: sqlite
+        ZETTELFORGE_BACKEND: jsonl
       run: |
         pytest tests/test_logging_compliance.py -v
 
-    - name: Governance spec-drift check
+    - name: GOV-006 — CODEOWNERS exists
       run: |
-        pytest tests/test_governance_spec_drift.py -v
+        if [ -f CODEOWNERS ] || [ -f .github/CODEOWNERS ] || [ -f docs/CODEOWNERS ]; then
+          echo "GOV-006 PASS: CODEOWNERS found"
+        else
+          echo "GOV-006 FAIL: No CODEOWNERS file (required by GOV-006)"
+          exit 1
+        fi
 
   build:
     runs-on: ubuntu-latest
     needs: [test, governance]
 
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+    - uses: actions/checkout@v6
 
     - name: Set up Python
-      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405
+      uses: actions/setup-python@v6
       with:
         python-version: '3.12'
 

@@ -76,7 +76,7 @@ Each intent maps to a retrieval policy that controls how results from different 
 
 | Intent | `vector` | `entity_index` | `graph` | `temporal` | `top_k` |
 |:-------|:---------|:----------------|:--------|:-----------|:--------|
-| `FACTUAL` | 0.3 | 0.7 | 0.2 | 0.0 | 3 |
+| `FACTUAL` | 0.3 | 0.7 | 0.0 | 0.0 | 3 |
 | `TEMPORAL` | 0.2 | 0.1 | 0.2 | 0.5 | 5 |
 | `RELATIONAL` | 0.2 | 0.2 | 0.5 | 0.1 | 10 |
 | `CAUSAL` | 0.1 | 0.1 | 0.6 | 0.2 | 10 |
@@ -293,9 +293,9 @@ List[MemoryNote]
 
 ZettelForge's retrieval pipeline classifies query intent, then routes through parallel vector and graph retrievers before blending results with intent-specific policy weights.
 
-**Intent classification** uses a two-tier approach: keyword matching first (counting hits against predefined keyword lists per intent). Queries with a clear keyword winner can be classified directly, including the `keyword_unambiguous` case where `best_score == 1` and no competing intent is present. LLM fallback is used for ambiguous or otherwise unresolved low-signal queries rather than for all score-1 queries. Six intent types exist: FACTUAL (entity lookup), TEMPORAL (time-based), RELATIONAL (graph traversal), CAUSAL (cause-effect), EXPLORATORY (broad context), and UNKNOWN (fallback).
+**Intent classification** uses a two-tier approach: keyword matching first (counting hits against predefined keyword lists per intent), with LLM fallback for ambiguous queries (score < 2). Six intent types exist: FACTUAL (entity lookup), TEMPORAL (time-based), RELATIONAL (graph traversal), CAUSAL (cause-effect), EXPLORATORY (broad context), and UNKNOWN (fallback).
 
-**Policy weights** control retriever contribution per intent. FACTUAL queries weight entity_index at 0.7, vector at 0.3, and graph at 0.2 with top_k=3 for precise lookups. Graph weight is non-zero for FACTUAL because many CTI factual queries require a single graph hop to answer (e.g., "What CVE does APT28 exploit?" traverses a `targets` edge). RELATIONAL and CAUSAL queries weight graph at 0.5--0.6 for relationship traversal with top_k=10. EXPLORATORY queries weight vector at 0.5 for broad semantic search. TEMPORAL queries weight the temporal channel at 0.5.
+**Policy weights** control retriever contribution per intent. FACTUAL queries weight entity_index at 0.7 and vector at 0.3 with top_k=3 for precise lookups. RELATIONAL and CAUSAL queries weight graph at 0.5--0.6 for relationship traversal with top_k=10. EXPLORATORY queries weight vector at 0.5 for broad semantic search. TEMPORAL queries weight the temporal channel at 0.5.
 
 **VectorRetriever** computes cosine similarity between the query embedding and note embeddings (nomic-embed-text-v2-moe, 768 dims). Scores are boosted multiplicatively by `entity_boost^overlap_count` (default 2.5x per overlapping entity). Notes below the similarity threshold (0.15 runtime default) are excluded. LanceDB is preferred; in-memory cosine similarity is the fallback.
 

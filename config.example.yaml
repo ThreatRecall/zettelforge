@@ -12,15 +12,19 @@
 # ============================================================================
 
 
-# ── Scenario 1: Default (zero-config, SQLite + LanceDB) ──────────────────
+# ── Scenario 1: Homelab (default, minimal changes needed) ──────────────────
 #
-# Everything works out of the box. SQLite for notes/KG/entities,
-# LanceDB for vector search. No Docker, no external services.
+# TypeDB running in Docker, Ollama on same machine.
+# This is what you get out of the box — uncomment only to change defaults.
 #
 # storage:
 #   data_dir: ~/.amem
 #
-# backend: sqlite
+# typedb:
+#   host: localhost
+#   port: 1729
+#
+# backend: typedb
 #
 # embedding:
 #   url: http://127.0.0.1:11434
@@ -30,10 +34,12 @@
 #   model: qwen2.5:3b
 
 
-# ── Scenario 2: Air-gapped / offline ──────────────────────────────────────
+# ── Scenario 2: Air-gapped / no Docker ─────────────────────────────────────
 #
-# No network access. Ollama runs locally with pre-downloaded models.
-# SQLite backend (default) needs no external services.
+# No TypeDB available. Uses JSONL knowledge graph (file-based, no server).
+# Ollama runs locally with pre-downloaded models.
+#
+# backend: jsonl
 #
 # storage:
 #   data_dir: /opt/zettelforge/data
@@ -43,12 +49,10 @@
 #   model: nomic-embed-text
 
 
-# ── Scenario 3: Team server (TypeDB via zettelforge-enterprise) ───────────
+# ── Scenario 3: Team server (TypeDB on separate host) ──────────────────────
 #
-# Requires `pip install zettelforge-enterprise`.
-# TypeDB on a dedicated server, Ollama on a GPU box.
-#
-# backend: typedb
+# TypeDB on a dedicated server, Ollama on a GPU box, ZettelForge on analysts'
+# workstations. All machines on same network.
 #
 # typedb:
 #   host: typedb.internal.lan
@@ -68,8 +72,14 @@
 
 # ── Scenario 4: Azure deployment ───────────────────────────────────────────
 #
-# ZettelForge as App Service, SQLite on Azure Files mount.
-# Optional: TypeDB as Azure Container Instance (requires enterprise extension).
+# TypeDB as Azure Container Instance, ZettelForge as App Service.
+# Secrets managed via Azure Key Vault (loaded as env vars).
+#
+# typedb:
+#   host: zettelforge-typedb.eastus2.azurecontainer.io
+#   port: 1729
+#   database: zettelforge
+#   # username/password from Key Vault → App Service env vars
 #
 # storage:
 #   data_dir: /home/site/data    # Azure Files mount
