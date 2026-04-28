@@ -151,7 +151,9 @@ class SynthesisGenerator:
             # 800-token cap was exhausted by qwen3.5+/qwen3.6/nemotron-3
             # thinking tokens before any JSON answer was emitted, dropping
             # synthesis to its empty-result fallback on every call.
-            raw = generate(full_prompt, max_tokens=max_tokens, temperature=0.1, system=system_prompt)
+            raw = generate(
+                full_prompt, max_tokens=max_tokens, temperature=0.1, system=system_prompt
+            )
             result = extract_json(raw, expect="object")
             if result is None:
                 _logger.warning("parse_failed", schema="synthesis", raw=(raw or "")[:200])

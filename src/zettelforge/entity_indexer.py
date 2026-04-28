@@ -290,7 +290,9 @@ class EntityExtractor:
             if parsed is None and output and output.strip():
                 _logger.info("retry_parse", site="entity_indexer_ner", attempt=2)
                 retry_prompt = prompt + "\n\nRespond with valid JSON only."
-                output = generate(retry_prompt, max_tokens=max_tokens, temperature=0.3, json_mode=True)
+                output = generate(
+                    retry_prompt, max_tokens=max_tokens, temperature=0.3, json_mode=True
+                )
                 parsed = extract_json(output, expect="object")
             return self._parse_ner_output_from_parsed(parsed, output, conversational_types)
 

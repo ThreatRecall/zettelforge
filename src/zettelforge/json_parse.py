@@ -28,7 +28,9 @@ def strip_thinking_tags(text: str) -> str:
     Returns:
         Cleaned text with **thinking**/** and <thinking>/** blocks removed.
     """
-    return re.sub(r"(?:\*\*thinking\*\*.*?\*\*|<think(?:ing)?>.*?</think(?:ing)?>)", "", text, flags=re.DOTALL)
+    return re.sub(
+        r"(?:\*\*thinking\*\*.*?\*\*|<think(?:ing)?>.*?</think(?:ing)?>)", "", text, flags=re.DOTALL
+    )
 
 
 def extract_json(raw: str | None, expect: str = "object") -> dict | list | None:
