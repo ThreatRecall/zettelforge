@@ -1,0 +1,121 @@
+{
+  "response": [
+    {
+      "Event": {
+        "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "info": "Suspicious activity related to APT28 infrastructure",
+        "analysis": "2",
+        "threat_level_id": "2",
+        "date": "2025-04-01",
+        "Tag": [
+          {"name": "tlp:amber"},
+          {"name": "osint:source-type=\"dark-web\""}
+        ],
+        "Attribute": [
+          {
+            "type": "ip-src",
+            "value": "185.220.101.1",
+            "category": "Network activity",
+            "Tag": []
+          },
+          {
+            "type": "domain",
+            "value": "malicious-evil-domain.xyz",
+            "category": "Network activity",
+            "Tag": [{"name": "osint:confidence=\"high\""}]
+          },
+          {
+            "type": "url",
+            "value": "https://malicious-evil-domain.xyz/beacon",
+            "category": "Network activity",
+            "Tag": []
+          },
+          {
+            "type": "md5",
+            "value": "d41d8cd98f00b204e9800998ecf8427e",
+            "category": "Payload delivery",
+            "Tag": []
+          },
+          {
+            "type": "email-src",
+            "value": "phisher@evil-domain.xyz",
+            "category": "Payload delivery",
+            "Tag": []
+          }
+        ]
+      }
+    },
+    {
+      "Event": {
+        "uuid": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+        "info": "Lazarus Group macro-based malware delivery",
+        "analysis": "2",
+        "threat_level_id": "1",
+        "date": "2025-04-15",
+        "Tag": [
+          {"name": "tlp:red"},
+          {"name": "osint:confidence=\"medium\""}
+        ],
+        "Attribute": [
+          {
+            "type": "sha256",
+            "value": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "category": "Payload delivery",
+            "Tag": []
+          },
+          {
+            "type": "ip-dst",
+            "value": "10.0.0.5",
+            "category": "Network activity",
+            "Tag": [{"name": "osint:source=\"internal\""}]
+          },
+          {
+            "type": "email",
+            "value": "recruiter@linkedin-malicious.com",
+            "category": "Payload delivery",
+            "Tag": []
+          },
+          {
+            "type": "filename|sha256",
+            "value": "Invoice.doc|a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a",
+            "category": "Artifacts dropped",
+            "Tag": []
+          }
+        ]
+      }
+    },
+    {
+      "Event": {
+        "uuid": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+        "info": "CVE-2024-3094 exploitation campaign (XZ Utils backdoor)",
+        "analysis": "0",
+        "threat_level_id": "1",
+        "date": "2025-05-01",
+        "Tag": [
+          {"name": "tlp:red"},
+          {"name": "circl:vetting-level=\"1\""}
+        ],
+        "Attribute": [
+          {
+            "type": "sha1",
+            "value": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+            "category": "Payload delivery",
+            "Tag": []
+          },
+          {
+            "type": "domain",
+            "value": "xz-mirror.xyz",
+            "category": "Network activity",
+            "Tag": [{"name": "osint:confidence=\"high\""}]
+          },
+          {
+            "type": "hostname",
+            "value": "download.xz-mirror.xyz",
+            "category": "Network activity",
+            "Tag": []
+          }
+        ]
+      }
+    }
+  ]
+}
