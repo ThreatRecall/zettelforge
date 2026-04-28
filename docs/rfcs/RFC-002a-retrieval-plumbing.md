@@ -200,7 +200,7 @@ This harness is what RFC-002b's five stages will be built on. It is also reusabl
 - **RFC-003 (Read-Path Depth Routing)** competes for the same retrieval-pipeline surface area. Both touch `BlendedRetriever`, the policy plumbing, and depth-traversal semantics. A sequence-decision is required before this RFC starts implementation: either (a) land RFC-002a's `RetrievalPolicy` first and have RFC-003 consume it as the policy carrier for depth routing, or (b) merge the two RFCs into one. Recommendation: option (a) — `RetrievalPolicy` is foundational and useful beyond depth routing.
 - **RFC-009 (Enrichment Pipeline v2)** already shipped `VulnerabilityMeta` (see Prerequisite 2). RFC-002b consumers should use the shipped field names.
 - **RFC-002b** is hard-blocked on this RFC. Do not start RFC-002b implementation work until Prerequisites 1, 3, 4, and 5 have landed and their acceptance criteria pass in CI.
-- **In-flight 7B fine-tune** (separate project, see local memory `memory/project_finetune_7b.md`): not a dependency, but a sequencing input to Prerequisite 4. See that section's Future Model Option note.
+- **In-flight 7B fine-tune** (separate project, tracked outside this repository): not a dependency, but a sequencing input to Prerequisite 4. See that section's Future Model Option note.
 - **v2.7.0 release** (target 2026-05-09 per ROADMAP): scope is frozen at issues #125, #73, #72. This RFC targets v2.7.1 or later.
 
 ## References
