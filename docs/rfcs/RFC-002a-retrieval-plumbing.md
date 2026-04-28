@@ -33,7 +33,7 @@ This RFC covers plumbing only. No user-facing synthesis behavior changes here.
 
 ### Prerequisite 1 — Retrieval Policy Object
 
-**Problem.** `BlendedRetriever.blend()` (`src/zettelforge/blended_retriever.py:59-60`, verified v2.6.2) reads only `policy["vector"]` and `policy["graph"]`. `IntentClassifier.get_traversal_policy()` (`src/zettelforge/intent_classifier.py:183-233`, verified v2.6.2) produces additional keys (`entity_index`, `temporal`, `depth`, `recency_boost`) that are silently dropped. Any future policy knob added to the classifier is a no-op at the retriever. The bug is unchanged across v2.5.x and v2.6.x.
+**Problem.** `BlendedRetriever.blend()` (`src/zettelforge/blended_retriever.py:59-60`, verified v2.6.2) reads only `policy["vector"]` and `policy["graph"]`. `IntentClassifier.get_traversal_policy()` (`src/zettelforge/intent_classifier.py:183-233`, verified v2.6.2) produces additional keys (`entity_index`, `temporal`, `top_k`) that are silently dropped. Any future policy knob added to the classifier is a no-op at the retriever. The bug is unchanged across v2.5.x and v2.6.x.
 
 **Fix.** Introduce a typed `RetrievalPolicy` dataclass that the retriever consumes and validates:
 
