@@ -54,14 +54,33 @@ def _lookup_domain(domain: str) -> Any | None:
 
 
 def _lookup_ip(ip: str) -> dict | None:
-    """Run an IP WHOIS via ``ipwhois``. Returns the RDAP-shaped dict."""
+    """Run an IP WHOIS via ``ipwhois``. Returns the RDAP-shaped dict.
+
+    Returns None on:
+    - ipwhois library missing,
+    - reserved / non-routable IPs (RFC 5735 / 5737 / 6890 ranges that
+      ipwhois rejects with IPDefinedError),
+    - any other ipwhois failure (network, parse, etc.).
+
+    AGENTS.OE Override 4 applies: surface failures, no silent retry.
+    Reserved-IP cases are logged at debug; real network failures at warning.
+    """
     try:
         from ipwhois import IPWhois
+        from ipwhois.exceptions import BaseIpwhoisException, IPDefinedError
     except ImportError:
         _logger.warning("whois_collector_missing_ipwhois", ip=ip)
         return None
-    obj = IPWhois(ip)
-    return obj.lookup_rdap(depth=0)
+    try:
+        obj = IPWhois(ip)
+        return obj.lookup_rdap(depth=0)
+    except IPDefinedError as exc:
+        # 192.0.2.x (TEST-NET-1), 10.0.0.x (private), 127.0.0.1, etc.
+        _logger.debug("whois_ip_reserved", ip=ip, error=str(exc))
+        return None
+    except BaseIpwhoisException as exc:
+        _logger.warning("whois_ip_lookup_failed", ip=ip, error=str(exc))
+        return None
 
 
 # ---------------------------------------------------------------------------
