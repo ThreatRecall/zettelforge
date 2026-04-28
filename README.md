@@ -16,13 +16,9 @@ It extracts CVEs, threat actors, IOCs, and ATT&CK techniques from analyst notes 
 [![CI](https://github.com/rolandpg/zettelforge/actions/workflows/ci.yml/badge.svg)](https://github.com/rolandpg/zettelforge/actions)
 [![Open Issues](https://img.shields.io/github/issues/rolandpg/zettelforge?color=blue)](https://github.com/rolandpg/zettelforge/issues)
 
-**[Star](https://github.com/rolandpg/zettelforge) · [`pip install zettelforge`](https://pypi.org/project/zettelforge/) · [Docs](https://docs.threatrecall.ai/) · [Hosted beta](https://threatrecall.ai) · [Roadmap](ROADMAP.md)**
+**[Star](https://github.com/rolandpg/zettelforge) · [`pip install zettelforge`](https://pypi.org/project/zettelforge/) · [Docs](https://docs.threatrecall.ai/) · [ThreatRecall (hosted)](https://threatrecall.ai) · [Changelog](CHANGELOG.md)**
 
-<p align="center">
-<a href="https://www.buymeacoffee.com/xypher22pr0" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me a Coffee" style="height: 60px !important;width: 217px !important;" ></a>
-</p>
-
-> **What's new in v2.6.2** (2026-04-27): the `/config` web editor now ships with working dropdowns for all enum fields (LLM provider, embedding provider, log level, governance PII action, synthesis format) and an Apply button that builds nested payloads against `/api/config`. Plus a new `[crewai]` extra exposes ZettelForge memory as CrewAI tools -- `pip install zettelforge[crewai]` and see [`examples/crewai_cti_crew.py`](examples/crewai_cti_crew.py). [Full changelog](CHANGELOG.md)
+> **v2.6.2** (2026-04-27): Config web editor ships with working dropdowns for all enum fields (LLM/embedding provider, log level, PII action, synthesis format) and a working Apply button. New `[crewai]` extra exposes ZettelForge as CrewAI tools -- `pip install zettelforge[crewai]`. [Full changelog](CHANGELOG.md)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/rolandpg/zettelforge/master/docs/assets/demo.gif" width="720" alt="ZettelForge demo -- CTI agentic memory in action">
@@ -38,7 +34,7 @@ General-purpose AI memory systems don't fix this for security teams. They can't 
 
 ZettelForge was built for analysts who think in threat graphs. It extracts CVEs, threat actors, IOCs, and ATT&CK techniques automatically, resolves aliases across naming conventions, builds a knowledge graph with causal relationships, and retrieves memories using intent-aware blended search -- all in-process, with no external API dependency.
 
->"Memory augmentation closes 33% of the gap between small and large models on CTI tasks (CTI-REALM, Microsoft 2026)." [1]
+> Memory augmentation closes 33% of the gap between small and large models on CTI tasks ([CTI-REALM, Microsoft 2026](https://www.microsoft.com/en-us/security/blog/2026/03/20/cti-realm-a-new-benchmark-for-end-to-end-detection-rule-generation-with-ai-agents/), using GPT-4 as the large-model baseline). See [full benchmark report](benchmarks/BENCHMARK_REPORT.md) for methodology and comparisons.
 
 | Capability | ZettelForge | Mem0 | Graphiti | Cognee |
 |---|---|---|---|---|
@@ -195,11 +191,11 @@ Evaluated against published academic benchmarks:
 
 | Benchmark | What it measures | Score |
 |---|---|---|
-| **CTI Retrieval** | Attribution, CVE linkage, multi-hop | **75.0%** |
+| **CTI Retrieval** (CTIBench subset) | Attribution, CVE linkage, multi-hop | **75.0%** |
 | **RAGAS** | Retrieval quality (keyword presence) | **78.1%** |
-| **LOCOMO** (ACL 2024) | Conversational memory recall | **22.0%** *(with Ollama cloud models)* |
+| **LOCOMO** (ACL 2024) | Conversational memory recall | **22.0%** |
 
-See the [full benchmark report](benchmarks/BENCHMARK_REPORT.md) for methodology and analysis.
+The **Score** column reports ZettelForge measurements run with Ollama-hosted models, with one exception: the LOCOMO row was re-measured at v2.1.1 using an Ollama cloud judge for evaluation grading (not local generation). See the [full benchmark report](benchmarks/BENCHMARK_REPORT.md) for benchmark-specific methodology, version history, and per-suite judge configuration.
 
 ## Detection Rules as Memory (Sigma + YARA)
 
@@ -245,26 +241,18 @@ python examples/athf_bridge.py /path/to/hunts/
 See [examples/athf_bridge.py](examples/athf_bridge.py).
 
 
-## Extensions
+## ThreatRecall (Hosted)
 
-ZettelForge ships a complete agentic memory core. Everything documented above works from a single `pip install`.
+[ThreatRecall](https://threatrecall.ai) is the commercial distribution of ZettelForge with enterprise extensions enabled. It is offered as managed SaaS by default, with optional self-hosted on-prem and air-gapped deployments for classified environments. Enterprise add-ons:
 
-For teams that want TypeDB-scale graph storage, OpenCTI integration, or multi-tenant deployment, optional extensions are available:
+- **TypeDB STIX 2.1 backend** -- schema-enforced ontology with inference rules
+- **OpenCTI sync** -- bi-directional sync with your OpenCTI instance
+- **Multi-tenant auth** -- OAuth/JWT with per-tenant data isolation
+- **Sigma rule generation** -- detection rules from extracted IOCs (upcoming)
 
-| Extension | What it adds |
-|---|---|
-| TypeDB STIX 2.1 backend | Schema-enforced ontology with inference rules |
-| OpenCTI sync | Bi-directional sync with OpenCTI instances |
-| Multi-tenant auth | OAuth/JWT with per-tenant isolation |
-| Sigma rule generation | Detection rules from extracted IOCs |
+SaaS deploys in minutes with no infrastructure to maintain. Self-hosted ships as a deployable bundle for environments where outbound network egress is restricted or prohibited.
 
-Extensions install separately:
-
-```bash
-pip install zettelforge-enterprise
-```
-
-**Hosted (private beta):** [ThreatRecall](https://threatrecall.ai) is the managed SaaS version of ZettelForge with enterprise extensions enabled. Currently accepting waitlist signups and a limited number of design partners.
+**[Join the waitlist](https://threatrecall.ai)** -- currently onboarding design partners.
 
 ## Configuration
 
@@ -284,15 +272,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup.
 
 MIT -- See [LICENSE](LICENSE).
 
-## About the author
-
-Built by **Patrick Roland** -- Director of SOC Services at Summit 7 Systems, where he built the Vigilance MxDR practice from the ground up. Navy nuclear veteran, CISSP, CCP (CMMC 2.0 Professional). [LinkedIn](https://www.linkedin.com/in/patrickgroland/).
+Built by **Patrick Roland** -- [LinkedIn](https://www.linkedin.com/in/patrickgroland/) | Director of SOC Services, Summit 7 Systems | Navy nuclear veteran | CISSP, CCP (CMMC 2.0 Professional)
 
 ## Support the Project
 
-ZettelForge is MIT-licensed. If it's useful in your workflow and you'd like to help keep it maintained:
-
-<a href="https://www.buymeacoffee.com/xypher22pr0" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me a Coffee" style="height: 40px !important;width: 145px !important;" ></a>
+ZettelForge is MIT-licensed. Star the repo, open issues, and submit PRs — all contributions are welcome.
 
 ## Acknowledgments
 
@@ -302,4 +286,3 @@ ZettelForge is MIT-licensed. If it's useful in your workflow and you'd like to h
 - Benchmarked against [LOCOMO](https://snap-research.github.io/locomo/) (ACL 2024) and [CTIBench](https://arxiv.org/abs/2406.07599) (NeurIPS 2024)
 - [LanceDB](https://lancedb.com) | [fastembed](https://github.com/qdrant/fastembed) | [Pydantic](https://pydantic.dev) | [TypeDB](https://typedb.com)
 
-[1]: https://www.microsoft.com/en-us/security/blog/2026/03/20/cti-realm-a-new-benchmark-for-end-to-end-detection-rule-generation-with-ai-agents/
