@@ -241,6 +241,15 @@ def _load_yaml(path: Path) -> dict:
         return {}
 
 
+def _save_yaml(data: dict, path: Path):
+    """Save dict as YAML to path (used by config PUT endpoint)."""
+    import yaml
+
+    with open(path, "w") as f:
+        yaml.safe_dump(data, f, default_flow_style=False, sort_keys=False)
+
+
+
 def _parse_simple_yaml(path: Path) -> dict:
     """Minimal YAML parser for flat key: value pairs (no PyYAML dependency)."""
     result = {}
@@ -343,6 +352,26 @@ def _apply_yaml(cfg: ZettelForgeConfig, data: dict):
         for k, v in data["opencti"].items():
             if hasattr(cfg.opencti, k):
                 setattr(cfg.opencti, k, v)
+
+    if "salience" in data and isinstance(data["salience"], dict):
+        for k, v in data["salience"].items():
+            if hasattr(cfg.salience, k):
+                setattr(cfg.salience, k, v)
+
+    if "spacing" in data and isinstance(data["spacing"], dict):
+        for k, v in data["spacing"].items():
+            if hasattr(cfg.spacing, k):
+                setattr(cfg.spacing, k, v)
+
+    if "decay" in data and isinstance(data["decay"], dict):
+        for k, v in data["decay"].items():
+            if hasattr(cfg.decay, k):
+                setattr(cfg.decay, k, v)
+
+    if "retrieval_weights" in data and isinstance(data["retrieval_weights"], dict):
+        for k, v in data["retrieval_weights"].items():
+            if hasattr(cfg.retrieval_weights, k):
+                setattr(cfg.retrieval_weights, k, v)
 
 
 def _apply_env(cfg: ZettelForgeConfig):

@@ -157,6 +157,166 @@ async def stats(request: Request):
     }
 
 
+
+@app.get("/api/config")
+async def get_config(request: Request):
+    """Return current config as nested dict for the settings panel."""
+    from zettelforge.config import get_config
+    cfg = get_config()
+    return {
+        "backend": cfg.backend,
+        "storage": {"data_dir": cfg.storage.data_dir},
+        "embedding": {
+            "provider": cfg.embedding.provider,
+            "model": cfg.embedding.model,
+            "url": cfg.embedding.url,
+            "dimensions": cfg.embedding.dimensions,
+        },
+        "llm": {
+            "provider": cfg.llm.provider,
+            "model": cfg.llm.model,
+            "url": cfg.llm.url,
+            "temperature": cfg.llm.temperature,
+        },
+        "extraction": {
+            "max_facts": cfg.extraction.max_facts,
+            "min_importance": cfg.extraction.min_importance,
+        },
+        "retrieval": {
+            "default_k": cfg.retrieval.default_k,
+            "similarity_threshold": cfg.retrieval.similarity_threshold,
+            "entity_boost": cfg.retrieval.entity_boost,
+            "max_graph_depth": cfg.retrieval.max_graph_depth,
+        },
+        "synthesis": {
+            "max_context_tokens": cfg.synthesis.max_context_tokens,
+            "default_format": cfg.synthesis.default_format,
+            "tier_filter": cfg.synthesis.tier_filter,
+        },
+        "governance": {
+            "enabled": cfg.governance.enabled,
+            "min_content_length": cfg.governance.min_content_length,
+        },
+        "cache": {
+            "ttl_seconds": cfg.cache.ttl_seconds,
+            "max_entries": cfg.cache.max_entries,
+        },
+        "logging": {
+            "level": cfg.logging.level,
+            "log_to_stdout": cfg.logging.log_to_stdout,
+            "log_file": cfg.logging.log_file,
+        },
+        "enterprise": {
+            "license_key": cfg.enterprise.license_key,
+        },
+        "opencti": {
+            "url": cfg.opencti.url,
+            "token": cfg.opencti.token,
+            "sync_interval": cfg.opencti.sync_interval,
+        },
+        # RFC-008 salience/spacing/decay/retrieval_weights
+        "salience": {
+            "enabled": cfg.salience.enabled,
+            "distinctiveness_weight": cfg.salience.distinctiveness_weight,
+            "signal_weight": cfg.salience.signal_weight,
+            "isolation_weight": cfg.salience.isolation_weight,
+            "recompute_interval_days": cfg.salience.recompute_interval_days,
+        },
+        "spacing": {
+            "enabled": cfg.spacing.enabled,
+            "half_life_days": cfg.spacing.half_life_days,
+            "reinforcement_factor": cfg.spacing.reinforcement_factor,
+            "decay_rate": cfg.spacing.decay_rate,
+            "implicit_confirm_window_hours": cfg.spacing.implicit_confirm_window_hours,
+            "reinforcement_threshold": cfg.spacing.reinforcement_threshold,
+            "max_strength": cfg.spacing.max_strength,
+        },
+        "decay": {
+            "enabled": cfg.decay.enabled,
+            "hot_threshold": cfg.decay.hot_threshold,
+            "hot_max_age_days": cfg.decay.hot_max_age_days,
+            "warm_threshold_days": cfg.decay.warm_threshold_days,
+            "frozen_threshold_days": cfg.decay.frozen_threshold_days,
+            "relevance_freeze_threshold": cfg.decay.relevance_freeze_threshold,
+        },
+        "retrieval_weights": {
+            "salience_weight": cfg.retrieval_weights.salience_weight,
+            "tier_hot_multiplier": cfg.retrieval_weights.tier_hot_multiplier,
+            "tier_warm_multiplier": cfg.retrieval_weights.tier_warm_multiplier,
+            "tier_cold_multiplier": cfg.retrieval_weights.tier_cold_multiplier,
+            "tier_frozen_multiplier": cfg.retrieval_weights.tier_frozen_multiplier,
+        },
+    }
+
+
+RESTART_FIELDS = {
+    "backend", "embedding.provider", "embedding.url", "llm.provider",
+    "llm.model", "llm.url", "storage.data_dir", "logging.log_file",
+    "logging.level",
+}
+
+
+@app.get("/api/config/meta")
+async def config_meta():
+    """Return schema metadata: restart-required fields, available enums."""
+    return {
+        "restart_required_fields": list(RESTART_FIELDS),
+        "enums": {
+            "backend": ["sqlite", "lance"],
+            "embedding.provider": ["fastembed", "ollama"],
+            "llm.provider": ["ollama", "local", "mock", "litellm"],
+            "llm.local_backend": ["llama-cpp-python", "onnxruntime-genai"],
+            "logging.level": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+            "synthesis.default_format": ["direct_answer", "synthesized_brief"],
+            "governance.pii.action": ["log", "redact", "block"],
+        },
+    }
+
+
+@app.put("/api/config")
+async def put_config(request: Request):
+    """Apply a nested dict payload to the live config (env vars win on reload)."""
+    from zettelforge.config import get_config, reload_config
+    data = await request.json()
+    cfg = get_config()
+    applied = []
+    pending_restart = []
+
+    def apply_nested(obj, prefix, section):
+        for k, v in (obj or {}).items():
+            path = f"{prefix}.{k}" if prefix else k
+            if isinstance(v, dict):
+                apply_nested(v, path, section)
+            elif hasattr(section, k):
+                setattr(section, k, v)
+                applied.append(path)
+                if path in RESTART_FIELDS:
+                    pending_restart.append(path)
+
+    apply_nested(data, "", cfg)
+
+    # Persist to yaml file so reload() picks it up next start
+    from zettelforge.config import _find_config_file, _load_yaml, _save_yaml
+    import yaml
+    config_file = _find_config_file()
+    if config_file and config_file.exists():
+        file_data = _load_yaml(config_file)
+    else:
+        file_data = {}
+
+    def merge_into(target, source):
+        for k, v in (source or {}).items():
+            if isinstance(v, dict) and k in target and isinstance(target[k], dict):
+                merge_into(target[k], v)
+            else:
+                target[k] = v
+
+    merge_into(file_data, data)
+    _save_yaml(file_data, config_file or Path("config.yaml"))
+
+    return {"applied": applied, "pending_restart": pending_restart}
+
+
 @app.get("/api/edition")
 async def edition_info():
     """Return current edition and available features."""
@@ -247,6 +407,19 @@ HTML_PAGE = """<!DOCTYPE html>
         .tabs { display: flex; gap: 4px; margin-bottom: 16px; }
         .tabs button { padding: 8px 16px; background: transparent; border: 1px solid #30363d; border-radius: 6px; color: #8b949e; cursor: pointer; font-size: 13px; }
         .tabs button.active { background: #21262d; color: #c9d1d9; border-color: #58a6ff; }
+        .settings-group { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
+        .settings-group h3 { color: #58a6ff; font-size: 14px; margin-bottom: 12px; font-weight: 600; }
+        .settings-group h4 { color: #8b949e; font-size: 12px; margin-top: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .settings-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .settings-row label { color: #c9d1d9; font-size: 13px; min-width: 180px; }
+        .settings-row input[type="range"] { flex: 1; accent-color: #58a6ff; }
+        .settings-row .val { color: #58a6ff; font-size: 12px; min-width: 40px; text-align: right; font-family: monospace; }
+        .settings-row input[type="number"] { width: 80px; padding: 4px 8px; background: #0d1117; border: 1px solid #30363d; border-radius: 4px; color: #c9d1d9; font-size: 13px; }
+        .settings-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: #238636; }
+        .settings-toggle { display: flex; align-items: center; gap: 8px; }
+        .settings-toggle span { font-size: 13px; color: #8b949e; }
+        .settings-divider { border: none; border-top: 1px solid #30363d; margin: 12px 0; }
+
         .meta { color: #8b949e; font-size: 13px; margin-bottom: 16px; }
         .results { display: flex; flex-direction: column; gap: 12px; }
         .result { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
@@ -286,6 +459,7 @@ HTML_PAGE = """<!DOCTYPE html>
             <button onclick="setMode('synthesize')">Synthesize</button>
             <button onclick="setMode('remember')">Remember</button>
             <button onclick="setMode('sync')">OpenCTI Sync</button>
+            <button onclick="setMode('settings')">Settings</button>
         </div>
         <div id="remember-section" class="input-section" style="display:none;">
             <textarea id="remember-content" placeholder="Paste threat intelligence to store..."></textarea>
@@ -297,6 +471,19 @@ HTML_PAGE = """<!DOCTYPE html>
             <p style="color:#8b949e;margin-bottom:12px;">Pull latest from OpenCTI into ThreatRecall memory.</p>
             <div class="actions">
                 <button onclick="doSync()">Sync Now (20 per type)</button>
+            </div>
+        </div>
+        <div id="settings-section" style="display:none;">
+            <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+                <button onclick="applyPreset('purist')" style="padding:6px 14px;background:#1a472a;border:1px solid #3fb950;border-radius:4px;color:#3fb950;font-size:12px;cursor:pointer;">Cognitive Purist</button>
+                <button onclick="applyPreset('conservative')" style="padding:6px 14px;background:#2a1a47;border:1px solid #a371f7;border-radius:4px;color:#a371f7;font-size:12px;cursor:pointer;">Conservative</button>
+                <button onclick="applyPreset('minimal')" style="padding:6px 14px;background:#21262d;border:1px solid #8b949e;border-radius:4px;color:#8b949e;font-size:12px;cursor:pointer;">Minimal</button>
+                <button onclick="applyPreset('off')" style="padding:6px 14px;background:#2d1a1a;border:1px solid #f85149;border-radius:4px;color:#f85149;font-size:12px;cursor:pointer;">Off</button>
+            </div>
+            <div id="settings-form" style="display:flex;flex-direction:column;gap:20px;"></div>
+            <div style="margin-top:16px;display:flex;gap:8px;align-items:center;">
+                <button onclick="saveSettings()" style="padding:8px 20px;background:#238636;border:none;border-radius:6px;color:#fff;cursor:pointer;font-size:14px;">Save Settings</button>
+                <span id="settings-status" style="color:#8b949e;font-size:13px;"></span>
             </div>
         </div>
         <div class="meta" id="meta"></div>
@@ -313,9 +500,11 @@ HTML_PAGE = """<!DOCTYPE html>
         let mode = 'recall';
         function setMode(m) {
             mode = m;
-            document.querySelectorAll('.tabs button').forEach((b,i) => b.classList.toggle('active', ['recall','synthesize','remember','sync'][i] === m));
+            document.querySelectorAll('.tabs button').forEach((b,i) => b.classList.toggle('active', ['recall','synthesize','remember','sync','settings'][i] === m));
             document.getElementById('remember-section').style.display = m === 'remember' ? 'block' : 'none';
             document.getElementById('sync-section').style.display = m === 'sync' ? 'block' : 'none';
+            document.getElementById('settings-section').style.display = m === 'settings' ? 'block' : 'none';
+            if (m === 'settings') loadSettings();
         }
         async function doSearch() {
             const q = document.getElementById('query').value.trim();
@@ -367,6 +556,207 @@ HTML_PAGE = """<!DOCTYPE html>
                 const data = await res.json();
                 document.getElementById('meta').textContent = `Synced ${data.synced || 0} objects, ${data.skipped || 0} skipped, ${data.errors || 0} errors (${data.duration_s || 0}s)`;
             } catch(e) { document.getElementById('meta').textContent = `Sync error: ${e.message}`; }
+        }
+        async function loadSettings() {
+            try {
+                const [cfgRes, metaRes] = await Promise.all([
+                    fetch('/api/config'),
+                    fetch('/api/config/meta'),
+                ]);
+                const cfg = await cfgRes.json();
+                const meta = await metaRes.json();
+                window._cfg = cfg;
+                window._meta = meta;
+                buildSettingsForm(cfg, meta);
+            } catch(e) { console.error('Failed to load settings:', e); }
+        }
+        function buildSettingsForm(cfg, meta) {
+            const el = document.getElementById('settings-form');
+            const restartFields = new Set(meta.restart_required_fields);
+            function section(title, rows) {
+                const div = document.createElement('div');
+                div.className = 'settings-group';
+                const h = document.createElement('h3');
+                h.textContent = title;
+                div.appendChild(h);
+                rows.forEach(row => div.appendChild(row));
+                return div;
+            }
+            function row(label, field, control, restart) {
+                const d = document.createElement('div');
+                d.className = 'settings-row';
+                const lbl = document.createElement('label');
+                lbl.textContent = label;
+                d.appendChild(lbl);
+                d.appendChild(control);
+                if (restart) {
+                    const badge = document.createElement('span');
+                    badge.textContent = '↺ restart required';
+                    badge.style.cssText = 'color:#d29922;font-size:11px;margin-left:8px;';
+                    d.appendChild(badge);
+                }
+                return d;
+            }
+            function slider(path, min, max, step, label) {
+                const val = getVal(cfg, path);
+                const wrapper = document.createElement('div');
+                wrapper.style.cssText = 'display:flex;align-items:center;gap:8px;flex:1;';
+                const input = document.createElement('input');
+                input.type = 'range'; input.min = min; input.max = max; input.step = step;
+                input.value = val;
+                input.style.flex = '1';
+                input.id = 'cfg_' + path.replace(/\./g, '__');
+                input.onchange = () => document.getElementById('cfg_val_' + path.replace(/\./g, '__')).textContent = input.value;
+                const displayVal = document.createElement('span');
+                displayVal.id = 'cfg_val_' + path.replace(/\./g, '__');
+                displayVal.className = 'val';
+                displayVal.textContent = val;
+                wrapper.appendChild(input);
+                wrapper.appendChild(displayVal);
+                return row(label, path, wrapper, restartFields.has(path));
+            }
+            function toggle(path, label) {
+                const val = getVal(cfg, path);
+                const wrapper = document.createElement('div');
+                wrapper.className = 'settings-toggle';
+                const cb = document.createElement('input');
+                cb.type = 'checkbox'; cb.checked = val;
+                cb.id = 'cfg_' + path.replace(/\./g, '__');
+                const sp = document.createElement('span');
+                sp.textContent = val ? 'ON' : 'OFF';
+                cb.onchange = () => { sp.textContent = cb.checked ? 'ON' : 'OFF'; };
+                wrapper.appendChild(cb);
+                wrapper.appendChild(sp);
+                return row(label, path, wrapper, restartFields.has(path));
+            }
+            function number(path, label) {
+                const val = getVal(cfg, path);
+                const input = document.createElement('input');
+                input.type = 'number'; input.value = val;
+                input.id = 'cfg_' + path.replace(/\./g, '__');
+                input.min = 0; input.style.width = '70px';
+                return row(label, path, input, restartFields.has(path));
+            }
+            function hr() {
+                const r = document.createElement('hr');
+                r.className = 'settings-divider';
+                return r;
+            }
+            el.innerHTML = '';
+            // Salience
+            el.appendChild(section('Salience Scoring (Von Restorff)', [
+                toggle('salience.enabled', 'Enable salience scoring'),
+                hr(),
+                slider('salience.distinctiveness_weight', 0, 1, 0.05, 'Distinctiveness weight'),
+                slider('salience.signal_weight', 0, 1, 0.05, 'Signal weight'),
+                slider('salience.isolation_weight', 0, 1, 0.05, 'Isolation weight'),
+            ]));
+            // Spacing
+            el.appendChild(section('Spacing Effect', [
+                toggle('spacing.enabled', 'Enable spacing effect'),
+                hr(),
+                number('spacing.half_life_days', 'Half-life (days)'),
+                number('spacing.reinforcement_threshold', 'Reinforcement threshold'),
+                slider('spacing.reinforcement_factor', 0, 0.5, 0.05, 'Reinforcement factor'),
+                slider('spacing.decay_rate', 0, 0.1, 0.01, 'Decay rate'),
+            ]));
+            // Decay
+            el.appendChild(section('Tiered Decay', [
+                toggle('decay.enabled', 'Enable tiered decay'),
+                hr(),
+                number('decay.hot_threshold', 'HOT threshold (min confirmations)'),
+                number('decay.hot_max_age_days', 'HOT max age (days)'),
+                number('decay.warm_threshold_days', 'WARM→COLD after (days)'),
+                number('decay.frozen_threshold_days', 'COLD→FROZEN after (days)'),
+                number('decay.relevance_freeze_threshold', 'Freeze if relevance below'),
+            ]));
+            // Retrieval weights
+            el.appendChild(section('Retrieval Weights', [
+                slider('retrieval_weights.salience_weight', 0, 2, 0.1, 'Salience weight'),
+                slider('retrieval_weights.tier_hot_multiplier', 0, 2, 0.1, 'HOT tier multiplier'),
+                slider('retrieval_weights.tier_warm_multiplier', 0, 1, 0.1, 'WARM tier multiplier'),
+                slider('retrieval_weights.tier_cold_multiplier', 0, 1, 0.1, 'COLD tier multiplier'),
+                slider('retrieval_weights.tier_frozen_multiplier', 0, 1, 0.1, 'FROZEN tier multiplier'),
+            ]));
+            // General config
+            el.appendChild(section('General', [
+                toggle('governance.enabled', 'Governance checks'),
+                toggle('extraction.intent_adaptive_routing', 'Intent-adaptive routing'),
+                number('retrieval.default_k', 'Default recall k'),
+                number('extraction.max_facts', 'Max facts per note'),
+                number('synthesis.max_context_tokens', 'Max context tokens'),
+            ]));
+        }
+        function getVal(obj, path) {
+            return path.split('.').reduce((o, k) => (o && o[k] !== undefined ? o[k] : undefined), obj);
+        }
+        function applyPreset(name) {
+            const presets = {
+                purist: {
+                    salience: { enabled: true, distinctiveness_weight: 0.4, signal_weight: 0.4, isolation_weight: 0.2 },
+                    spacing: { enabled: true, half_life_days: 30, reinforcement_threshold: 3, reinforcement_factor: 0.1, decay_rate: 0.02 },
+                    decay: { enabled: true, hot_threshold: 3, hot_max_age_days: 7, warm_threshold_days: 30, frozen_threshold_days: 90, relevance_freeze_threshold: 0.1 },
+                    retrieval_weights: { salience_weight: 0.5, tier_hot_multiplier: 1.0, tier_warm_multiplier: 0.5, tier_cold_multiplier: 0.1, tier_frozen_multiplier: 0.0 },
+                },
+                conservative: {
+                    salience: { enabled: true, distinctiveness_weight: 0.2, signal_weight: 0.6, isolation_weight: 0.2 },
+                    spacing: { enabled: true, half_life_days: 60, reinforcement_threshold: 5, reinforcement_factor: 0.08, decay_rate: 0.015 },
+                    decay: { enabled: true, hot_threshold: 5, hot_max_age_days: 14, warm_threshold_days: 60, frozen_threshold_days: 180, relevance_freeze_threshold: 0.15 },
+                    retrieval_weights: { salience_weight: 0.3, tier_hot_multiplier: 1.0, tier_warm_multiplier: 0.6, tier_cold_multiplier: 0.15, tier_frozen_multiplier: 0.0 },
+                },
+                minimal: {
+                    salience: { enabled: false, distinctiveness_weight: 0.4, signal_weight: 0.4, isolation_weight: 0.2 },
+                    spacing: { enabled: true, half_life_days: 30, reinforcement_threshold: 3, reinforcement_factor: 0.1, decay_rate: 0.02 },
+                    decay: { enabled: false, hot_threshold: 3, hot_max_age_days: 7, warm_threshold_days: 30, frozen_threshold_days: 90, relevance_freeze_threshold: 0.1 },
+                    retrieval_weights: { salience_weight: 0.5, tier_hot_multiplier: 1.0, tier_warm_multiplier: 0.5, tier_cold_multiplier: 0.1, tier_frozen_multiplier: 0.0 },
+                },
+                off: {
+                    salience: { enabled: false, distinctiveness_weight: 0.4, signal_weight: 0.4, isolation_weight: 0.2 },
+                    spacing: { enabled: false, half_life_days: 30, reinforcement_threshold: 3, reinforcement_factor: 0.1, decay_rate: 0.02 },
+                    decay: { enabled: false, hot_threshold: 3, hot_max_age_days: 7, warm_threshold_days: 30, frozen_threshold_days: 90, relevance_freeze_threshold: 0.1 },
+                    retrieval_weights: { salience_weight: 0.0, tier_hot_multiplier: 1.0, tier_warm_multiplier: 0.5, tier_cold_multiplier: 0.1, tier_frozen_multiplier: 0.0 },
+                },
+            };
+            if (presets[name]) {
+                window._cfg = { ...window._cfg, ...presets[name] };
+                buildSettingsForm(window._cfg, window._meta || {});
+            }
+        }
+        async function saveSettings() {
+            const status = document.getElementById('settings-status');
+            status.textContent = 'Saving...';
+            status.style.color = '#8b949e';
+            try {
+                // Collect all input values from the form
+                const data = {};
+                document.querySelectorAll('#settings-form input').forEach(input => {
+                    const path = input.id.replace(/^cfg_/, '').replace(/__/g, '.');
+                    const parts = path.split('.');
+                    let obj = data;
+                    for (let i = 0; i < parts.length - 1; i++) {
+                        if (!obj[parts[i]]) obj[parts[i]] = {};
+                        obj = obj[parts[i]];
+                    }
+                    if (input.type === 'checkbox') {
+                        obj[parts[parts.length - 1]] = input.checked;
+                    } else if (input.type === 'range' || input.type === 'number') {
+                        obj[parts[parts.length - 1]] = parseFloat(input.value);
+                    }
+                });
+                const res = await fetch('/api/config', {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
+                const result = await res.json();
+                if (result.pending_restart && result.pending_restart.length > 0) {
+                    status.textContent = `Saved ✓  ↺ restart required: ${result.pending_restart.join(', ')}`;
+                    status.style.color = '#d29922';
+                } else {
+                    status.textContent = 'Saved ✓';
+                    status.style.color = '#3fb950';
+                }
+                setTimeout(() => { status.textContent = ''; }, 4000);
+            } catch(e) {
+                status.textContent = 'Error: ' + e.message;
+                status.style.color = '#f85149';
+            }
         }
         function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
         document.getElementById('query').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
