@@ -22,6 +22,10 @@ Optional extensions (e.g. zettelforge-enterprise) add:
     - OpenCTI integration
 """
 
+# RFC-016 OSINT layer (Phase 1, Infrastructure tier).
+# Side-effect import: merges OSINT entity / edge types into the global
+# ontology and registers Phase 1 collectors with TRANSFORM_REGISTRY.
+from zettelforge import osint
 from zettelforge.blended_retriever import BlendedRetriever
 from zettelforge.edition import (
     Edition,

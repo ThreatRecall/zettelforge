@@ -207,6 +207,11 @@ ENTITY_TYPES = {
         "optional": ["belongs_to_ref", "resolves_to_refs"],
         "properties": {},
     },
+    "IPv6Address": {
+        "required": ["value"],
+        "optional": ["belongs_to_ref", "resolves_to_refs"],
+        "properties": {},
+    },
     "DomainName": {
         "required": ["value"],
         "optional": ["resolves_to_refs"],
