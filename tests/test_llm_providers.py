@@ -460,6 +460,103 @@ class TestLiteLLMProvider:
         result = provider.generate("hello")
         assert result == "lorem ipsum"
 
+    def test_generate_silences_litellm_debug_banner_during_call(self, monkeypatch):
+        """Regression: LiteLLM's ``get_llm_provider`` helper writes a coloured
+        ``Provider List: ...`` banner to stderr via raw ``print()`` whenever
+        it cannot resolve a provider from the model name. That banner
+        bypasses Python logging and pollutes stderr for every operator
+        running ``recall()`` (background LLM-NER hits the litellm path).
+        ``litellm.suppress_debug_info`` is the documented escape hatch.
+        We set it just around the ``litellm.completion()`` call and
+        restore the previous value in ``finally`` so we don't permanently
+        mutate a litellm global that other code in the same process may
+        rely on. This test snapshots the flag at completion-call time
+        rather than after ``generate()`` returns, because after-return
+        the flag is restored to its original value.
+        """
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        import sys
+        import types
+
+        observed: dict[str, object] = {}
+
+        def _spy_completion(**kw: object) -> dict:
+            # Capture the litellm.suppress_debug_info value at the moment
+            # the completion call would have triggered the banner. This is
+            # the only point that actually matters for noise suppression.
+            observed["suppress_during_call"] = sys.modules["litellm"].suppress_debug_info
+            return {"choices": [{"message": {"content": "ok"}}]}
+
+        mock_module = types.ModuleType("litellm")
+        mock_module.suppress_debug_info = False  # litellm's default
+        mock_module.completion = _spy_completion
+        monkeypatch.setitem(sys.modules, "litellm", mock_module)
+
+        provider = LiteLLMProvider(model="gpt-4o-mini")
+        provider.generate("hello")
+
+        assert observed["suppress_during_call"] is True, (
+            "LiteLLMProvider must set litellm.suppress_debug_info=True "
+            "BEFORE calling litellm.completion() so the raw 'Provider List' "
+            "stderr banner can never fire"
+        )
+        # Restoration: after generate() returns, the flag is back to the
+        # caller's original value (False here, litellm's default).
+        assert mock_module.suppress_debug_info is False, (
+            "LiteLLMProvider must restore litellm.suppress_debug_info to its "
+            "pre-call value so the change is scoped to a single completion() "
+            "and does not leak to other code in the same Python process"
+        )
+
+    def test_generate_preserves_existing_suppress_value(self, monkeypatch):
+        """If the caller has already opted in to ``suppress_debug_info=True``
+        (e.g. CrewAI sets it globally), restoration must keep it True after
+        ``generate()`` returns rather than reset it to False."""
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        import sys
+        import types
+
+        mock_module = types.ModuleType("litellm")
+        mock_module.suppress_debug_info = True  # caller opted in already
+        mock_module.completion = _FakeLiteLLM.completion
+        monkeypatch.setitem(sys.modules, "litellm", mock_module)
+
+        provider = LiteLLMProvider(model="gpt-4o-mini")
+        provider.generate("hello")
+
+        assert mock_module.suppress_debug_info is True, (
+            "Restoration must preserve the pre-call value, not hardcode False"
+        )
+
+    def test_generate_restores_suppress_flag_on_completion_exception(self, monkeypatch):
+        """Even when ``litellm.completion()`` raises, the ``finally`` block
+        must restore the prior ``suppress_debug_info`` value so an exception
+        inside the call cannot leak the flag mutation to the rest of the
+        process."""
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        import sys
+        import types
+
+        def _raises(**kw: object) -> dict:
+            raise RuntimeError("litellm boom")
+
+        mock_module = types.ModuleType("litellm")
+        mock_module.suppress_debug_info = False
+        mock_module.completion = _raises
+        monkeypatch.setitem(sys.modules, "litellm", mock_module)
+
+        provider = LiteLLMProvider(model="gpt-4o-mini")
+        with pytest.raises(RuntimeError, match="litellm boom"):
+            provider.generate("hello")
+
+        assert mock_module.suppress_debug_info is False, (
+            "Even on exception, the finally block must restore the pre-call "
+            "value of litellm.suppress_debug_info"
+        )
+
     def test_generate_passes_api_key(self, monkeypatch):
         from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
 
