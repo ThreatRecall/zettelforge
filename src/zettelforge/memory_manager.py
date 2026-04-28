@@ -440,12 +440,29 @@ class MemoryManager:
         graph_results = graph_retriever.retrieve_note_ids(query_entities=resolved, max_depth=2)
 
         blender = BlendedRetriever()
+
+        # ── RFC-008 Phase 3: Build salience + tier boost maps from config ───
+        cfg = self.store.config
+        salience_weight = cfg.retrieval_weights.salience_weight
+        tier_multipliers = {
+            "hot": cfg.retrieval_weights.tier_hot_multiplier,
+            "warm": cfg.retrieval_weights.tier_warm_multiplier,
+            "cold": cfg.retrieval_weights.tier_cold_multiplier,
+            "frozen": cfg.retrieval_weights.tier_frozen_multiplier,
+        }
+        salience_scores = {
+            n.id: n.metadata.salience_score for n in vector_results
+        }
+
         results = blender.blend(
             vector_results=vector_results,
             graph_results=graph_results,
             policy=policy,
             note_lookup=lambda nid: self.store.get_note_by_id(nid),
             k=k,
+            salience_scores=salience_scores,
+            tier_multipliers=tier_multipliers,
+            salience_weight=salience_weight,
         )
 
         # Fallback: if blending produced fewer results than vector alone, use vector
