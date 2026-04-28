@@ -205,7 +205,7 @@ This harness is what RFC-002b's five stages will be built on. It is also reusabl
 
 ## References
 
-- RFC-002 (original cascading-synthesis spec, superseded 2026-04-20). The file was deleted from `docs/rfcs/` to resolve a number collision with the shipped `RFC-002-universal-llm-provider.md`. Supersession is preserved here and in `RFC-002b-cascading-synthesis.md`. Original content is recoverable from git history.
+- RFC-002 (original cascading-synthesis spec, superseded 2026-04-20). The file was deleted from `docs/rfcs/` to resolve a number collision with the shipped `RFC-002-universal-llm-provider.md`. Supersession is preserved in this RFC; `RFC-002b-cascading-synthesis.md` is forthcoming and is not yet checked into `docs/rfcs/`. Original content is recoverable from git history.
 - RFC-002 review findings, 2026-04-20 (AI Engineer + Backend Architect).
 - RFC-002a v2.6.2 audit, 2026-04-27 (Software Architect).
 - RFC-009 (Enrichment Pipeline v2) — shipped `VulnerabilityMeta`.
