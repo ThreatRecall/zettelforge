@@ -80,7 +80,9 @@ _ACTOR_TYPE_REGEXES = _allowed_regexes("actor_types")
 _HASH_REGEXES = _allowed_regexes("hash_types")
 
 # From CCCS_YARA.yml: author's own regexExpression.
-_AUTHOR_REGEX = re.compile(r"^[a-zA-Z]+\@[A-Z]+$|^[A-Z\s._\-]+$|^.*$")
+# SEC-7: Tightened from ^[a-zA-Z]+\@[A-Z]+$|^[A-Z\s._\-]+$|^.*$ to
+# only permit safe printable ASCII characters.
+_AUTHOR_REGEX = re.compile(r"^[A-Za-z0-9_.@+-]+$")
 _VERSION_REGEX = re.compile(r"^\d+\.\d+$")
 _DATE_REGEX = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _UUID_REGEX = re.compile(r"^[0-9A-Za-z]{16,}$")  # base62 UUID, generous lower bound.
@@ -131,9 +133,15 @@ REQUIRED_FIELDS: list[str] = _required_fields()
 
 
 def _regex_match(value: Any, patterns: list[re.Pattern[str]]) -> bool:
+    """Check value against a list of compiled regexes using fullmatch.
+
+    SEC-6: Uses ``p.fullmatch(value)`` instead of ``p.search(value)`` to
+    prevent multiline injection bypass (e.g. "TLP:WHITE\nid: hostile_id"
+    can no longer match a sharing regex by substring).
+    """
     if not isinstance(value, str):
         return False
-    return any(p.search(value) is not None for p in patterns)
+    return any(p.fullmatch(value) is not None for p in patterns)
 
 
 def _validate_field(name: str, value: Any) -> str | None:

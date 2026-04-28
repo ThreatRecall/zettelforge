@@ -268,15 +268,20 @@ class EntityExtractor:
             return empty
 
         try:
+            from zettelforge.config import get_config
+
+            cfg = get_config()
+            max_tokens = cfg.llm.max_tokens_ner
+
             from zettelforge.llm_client import generate
 
             prompt = f"Extract named entities from this text:\n\n{text[:2000]}\n\nJSON:"
             # 2500-token budget for reasoning-model headroom (v2.5.2; pre-fix
-            # 300 was exhausted by qwen3.5+ <think> tokens, leaving the NER
+            # 300 was exhausted by qwen3.5+ thinking tokens, leaving the NER
             # JSON empty and entity extraction silently no-opping).
             output = generate(
                 prompt,
-                max_tokens=2500,
+                max_tokens=max_tokens,
                 temperature=0.0,
                 system=self.NER_SYSTEM_PROMPT,
             )
@@ -285,7 +290,7 @@ class EntityExtractor:
             if parsed is None and output and output.strip():
                 _logger.info("retry_parse", site="entity_indexer_ner", attempt=2)
                 retry_prompt = prompt + "\n\nRespond with valid JSON only."
-                output = generate(retry_prompt, max_tokens=2500, temperature=0.3, json_mode=True)
+                output = generate(retry_prompt, max_tokens=max_tokens, temperature=0.3, json_mode=True)
                 parsed = extract_json(output, expect="object")
             return self._parse_ner_output_from_parsed(parsed, output, conversational_types)
 

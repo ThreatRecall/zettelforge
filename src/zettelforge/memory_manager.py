@@ -1180,6 +1180,37 @@ class MemoryManager:
             except Exception:
                 self._logger.warning("enrichment_drain_failed", exc_info=True)
 
+    def flush(self) -> None:
+        """Process all pending enrichment jobs synchronously (blocking).
+
+        Intended for bulk-ingest callers that passed ``sync=False`` to
+        :meth:`remember` and want to guarantee all enrichment work is
+        complete before returning (e.g. before exiting a CLI command or
+        integration test).
+
+        This is identical to the atexit drain but without a deadline — it
+        blocks until the queue is empty.
+        """
+        while not self._enrichment_queue.empty():
+            try:
+                job = self._enrichment_queue.get_nowait()
+                if job.defer:
+                    self._enrichment_queue.task_done()
+                    continue
+                if job.job_type == "neighbor_evolution":
+                    self._run_evolution(job)
+                elif job.job_type == "llm_ner":
+                    self._run_llm_ner(job)
+                else:
+                    self._run_enrichment(job)
+                self._enrichment_queue.task_done()
+            except queue.Empty:
+                break
+            except BackendClosedError:
+                return
+            except Exception:
+                self._logger.warning("enrichment_flush_failed", exc_info=True)
+
     def evolve_note(self, note_id: str, sync: bool = False) -> dict | None:
         """Trigger neighbor evolution for an existing note.
 

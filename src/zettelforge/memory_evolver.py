@@ -87,13 +87,18 @@ class MemoryEvolver:
         when the LLM responds with valid JSON, or ``None`` on parse failure
         (after one retry).
         """
+        from zettelforge.config import get_config
+
+        cfg = get_config()
+        max_tokens = cfg.llm.max_tokens_evolve
+
         prompt = EVOLUTION_PROMPT.format(
             neighbor_content=neighbor.content.raw[:1000],
             new_content=new_note.content.raw[:1000],
         )
 
         # First attempt
-        output = generate(prompt, max_tokens=2500, temperature=0.2, json_mode=True)
+        output = generate(prompt, max_tokens=max_tokens, temperature=0.2, json_mode=True)
         result = extract_json(output, expect="object")
 
         # Single retry on parse failure (AD-2). Capture what the model
@@ -108,7 +113,7 @@ class MemoryEvolver:
                 raw_chars=len(output or ""),
                 prompt_preview=prompt[:240],
             )
-            output = generate(prompt, max_tokens=2500, temperature=0.1, json_mode=True)
+            output = generate(prompt, max_tokens=max_tokens, temperature=0.1, json_mode=True)
             result = extract_json(output, expect="object")
 
         if result is None:

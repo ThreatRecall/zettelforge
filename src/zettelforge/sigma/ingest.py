@@ -42,24 +42,27 @@ def ingest_rule(
     *,
     domain: str = "detection",
     source_ref: str | None = None,
+    sync: bool = True,
 ) -> tuple[Any, list[dict[str, Any]]]:
     """Ingest a single Sigma rule.
 
     Args:
-        rule: Parsed dict, raw YAML string, or ``Path`` to a ``.yml`` file.
-        mm: A :class:`zettelforge.memory_manager.MemoryManager` instance.
-        domain: Memory domain for the note (default ``"detection"``).
-        source_ref: Override ``source_ref`` on the note (defaults to the
+        rule: Parsed dict, raw YAML string, or Path to a .yml file.
+        mm: A MemoryManager instance.
+        domain: Memory domain for the note (default "detection").
+        source_ref: Override source_ref on the note (defaults to the
             rule id for dict/str input, or the file path for Path input).
+        sync: Passed through to mm.remember(). When False, enrichment
+            is deferred to background threads. Defaults to True.
 
     Returns:
-        ``(note, relations)`` — the :class:`MemoryNote` persisted and the
+        (note, relations) - the MemoryNote persisted and the
         list of emitted relation dicts.
 
     Raises:
         SigmaParseError: YAML could not be parsed.
         SigmaValidationError: rule failed JSON-schema validation.
-        ValueError: ``mm`` was ``None`` — caller must pass a real manager
+        ValueError: mm was None - caller must pass a real manager
             so rules are not silently dropped. Matches YARA parity.
     """
     if mm is None:
@@ -86,7 +89,7 @@ def ingest_rule(
         source_type="sigma_rule",
         source_ref=effective_source_ref,
         domain=domain,
-        sync=True,
+        sync=sync,
     )
 
     _persist_relations(mm, relations, note_id=note.id)
@@ -99,8 +102,14 @@ def ingest_rules_dir(
     *,
     glob: str = "**/*.yml",
     domain: str = "detection",
+    bulk: bool = False,
 ) -> tuple[int, int]:
     """Walk a directory, ingesting every matching Sigma rule.
+
+    Args:
+        bulk: When True, passes ``sync=False`` to each ``remember()`` call
+            and calls ``mm.flush()`` once after all rules.  Significantly
+            faster for large rule sets.
 
     Returns ``(ingested, skipped)`` — the skip count covers per-file parse
     or validation errors, which are logged but do not abort the walk.
@@ -142,7 +151,7 @@ def ingest_rules_dir(
             skipped += 1
             continue
         try:
-            ingest_rule(fpath, mm, domain=domain)
+            ingest_rule(fpath, mm, domain=domain, sync=not bulk)
             ingested += 1
         except (SigmaParseError, SigmaValidationError) as exc:
             _log.warning("sigma_ingest_skip path=%s reason=%s", fpath, exc)
@@ -150,6 +159,11 @@ def ingest_rules_dir(
         except Exception as exc:  # pragma: no cover — defensive
             _log.warning("sigma_ingest_error path=%s reason=%s", fpath, exc)
             skipped += 1
+
+    if bulk:
+        flush_f = getattr(mm, "flush", None)
+        if callable(flush_f):
+            flush_f()
     return ingested, skipped
 
 

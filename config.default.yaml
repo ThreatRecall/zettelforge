@@ -207,6 +207,12 @@ embedding:
 #   ZETTELFORGE_LLM_MAX_RETRIES=2
 #   ZETTELFORGE_LLM_FALLBACK=ollama
 #   ZETTELFORGE_LLM_LOCAL_BACKEND=onnxruntime-genai   # only when provider=local
+#   ZETTELFORGE_LLM_MAX_TOKENS_CAUSAL=8000
+#   ZETTELFORGE_LLM_MAX_TOKENS_SYNTHESIS=2500
+#   ZETTELFORGE_LLM_MAX_TOKENS_EXTRACTION=2500
+#   ZETTELFORGE_LLM_MAX_TOKENS_NER=2500
+#   ZETTELFORGE_LLM_MAX_TOKENS_EVOLVE=2500
+#   ZETTELFORGE_LLM_REASONING_MODEL=false
 #
 llm:
   provider: ollama
@@ -218,6 +224,12 @@ llm:
   max_retries: 2
   fallback: ""
   local_backend: llama-cpp-python  # used when provider=local (RFC-011)
+  max_tokens_causal: 8000          # note_constructor.extract_causal_triples
+  max_tokens_synthesis: 2500       # synthesis_generator._generate_synthesis
+  max_tokens_extraction: 2500      # fact_extractor.extract
+  max_tokens_ner: 2500             # entity_indexer.extract_llm
+  max_tokens_evolve: 2500          # memory_evolver.evaluate_evolution
+  reasoning_model: false           # auto-scale timeout + budgets for thinking models
   extra: {}
 
 

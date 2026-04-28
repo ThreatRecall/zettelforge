@@ -107,6 +107,17 @@ class LLMConfig:
     max_retries: int = 2
     fallback: str = ""  # empty preserves implicit local→ollama fallback
     local_backend: str = "llama-cpp-python"  # RFC-011: "llama-cpp-python" or "onnxruntime-genai"
+    # Per-call-site max_tokens budgets (RFC-125). Each maps to a specific
+    # generate() call site so operators can tune without editing source.
+    max_tokens_causal: int = 8000  # note_constructor.extract_causal_triples
+    max_tokens_synthesis: int = 2500  # synthesis_generator._generate_synthesis
+    max_tokens_extraction: int = 2500  # fact_extractor.extract
+    max_tokens_ner: int = 2500  # entity_indexer.extract_llm
+    max_tokens_evolve: int = 2500  # memory_evolver.evaluate_evolution
+    # RFC-125: reasoning-model auto-scaling flag. When True, timeout is
+    # auto-scaled to >= 180s and each per-call-site budget is bumped so
+    #  thinking tokens do not exhaust the limit before JSON output.
+    reasoning_model: bool = False
     extra: dict[str, Any] = field(default_factory=dict)
 
     # Keys under ``extra`` that are commonly used for secrets. Matched
@@ -125,6 +136,33 @@ class LLMConfig:
                 redacted[k] = v
         return redacted
 
+    def _apply_reasoning_model_scaling(self) -> None:
+        """When ``reasoning_model`` is True, auto-scale timeout and budgets.
+
+        Reasoning models (``deepseek-r1``, ``qwq-32b``, etc.) emit long
+         thinking chains before JSON output, easily exhausting default
+        budgets. This method bumps both ``timeout`` and each per-call-site
+        ``max_tokens_*`` to reasoning-safe tiers so callers don't need
+        to manually configure six knobs.
+        """
+        if not self.reasoning_model:
+            return
+        # Ensure timeout is at least 180s for long  thinking chains
+        if self.timeout < 180.0:
+            self.timeout = 180.0
+        # Bump each per-call-site budget to a reasoning-safe tier
+        # (double the default, minimum 4000)
+        for attr in (
+            "max_tokens_causal",
+            "max_tokens_synthesis",
+            "max_tokens_extraction",
+            "max_tokens_ner",
+            "max_tokens_evolve",
+        ):
+            current = getattr(self, attr, 4000)
+            bumped = max(current * 2, 4000)
+            setattr(self, attr, bumped)
+
     def __repr__(self) -> str:
         # Redact api_key plus any sensitive-looking keys inside ``extra`` so
         # secrets resolved via ``${ENV_VAR}`` refs don't leak into structured
@@ -136,7 +174,13 @@ class LLMConfig:
             f"temperature={self.temperature}, timeout={self.timeout}, "
             f"max_retries={self.max_retries}, fallback={self.fallback!r}, "
             f"local_backend={self.local_backend!r}, "
-            f"extra={self._redact_extra()!r})"
+            f"extra={self._redact_extra()!r}, "
+            f"max_tokens_causal={self.max_tokens_causal}, "
+            f"max_tokens_synthesis={self.max_tokens_synthesis}, "
+            f"max_tokens_extraction={self.max_tokens_extraction}, "
+            f"max_tokens_ner={self.max_tokens_ner}, "
+            f"max_tokens_evolve={self.max_tokens_evolve}, "
+            f"reasoning_model={self.reasoning_model})"
         )
 
 
@@ -523,6 +567,46 @@ def _apply_env(cfg: ZettelForgeConfig):
     if v := os.environ.get("ZETTELFORGE_LLM_LOCAL_BACKEND"):
         cfg.llm.local_backend = v
 
+    # RFC-125: per-call-site max_tokens budgets
+    if v := os.environ.get("ZETTELFORGE_LLM_MAX_TOKENS_CAUSAL"):
+        try:
+            cfg.llm.max_tokens_causal = int(v)
+        except ValueError:
+            get_logger("zettelforge.config").warning(
+                "invalid_max_tokens_causal", value=v, hint="Must be an int"
+            )
+    if v := os.environ.get("ZETTELFORGE_LLM_MAX_TOKENS_SYNTHESIS"):
+        try:
+            cfg.llm.max_tokens_synthesis = int(v)
+        except ValueError:
+            get_logger("zettelforge.config").warning(
+                "invalid_max_tokens_synthesis", value=v, hint="Must be an int"
+            )
+    if v := os.environ.get("ZETTELFORGE_LLM_MAX_TOKENS_EXTRACTION"):
+        try:
+            cfg.llm.max_tokens_extraction = int(v)
+        except ValueError:
+            get_logger("zettelforge.config").warning(
+                "invalid_max_tokens_extraction", value=v, hint="Must be an int"
+            )
+    if v := os.environ.get("ZETTELFORGE_LLM_MAX_TOKENS_NER"):
+        try:
+            cfg.llm.max_tokens_ner = int(v)
+        except ValueError:
+            get_logger("zettelforge.config").warning(
+                "invalid_max_tokens_ner", value=v, hint="Must be an int"
+            )
+    if v := os.environ.get("ZETTELFORGE_LLM_MAX_TOKENS_EVOLVE"):
+        try:
+            cfg.llm.max_tokens_evolve = int(v)
+        except ValueError:
+            get_logger("zettelforge.config").warning(
+                "invalid_max_tokens_evolve", value=v, hint="Must be an int"
+            )
+    # RFC-125: reasoning_model flag
+    if v := os.environ.get("ZETTELFORGE_LLM_REASONING_MODEL"):
+        cfg.llm.reasoning_model = v.lower() in ("true", "1", "yes")
+
     # LLM NER
     if v := os.environ.get("ZETTELFORGE_LLM_NER_ENABLED"):
         cfg.llm_ner.enabled = v.lower() in ("true", "1", "yes")
@@ -582,6 +666,9 @@ def get_config() -> ZettelForgeConfig:
 
         # Layer 2: environment variables (override)
         _apply_env(_config)
+
+        # Layer 3: reasoning-model auto-scaling (RFC-125)
+        _config.llm._apply_reasoning_model_scaling()
 
     return _config
 

@@ -14,6 +14,23 @@ _logger = logging.getLogger("zettelforge.json_parse")
 _parse_stats = {"success": 0, "failure": 0}
 
 
+def strip_thinking_tags(text: str) -> str:
+    """Strip  ********  ******** thinking tags from LLM output.
+
+    Reasoning models wrap internal reasoning in  ******** ...  ********
+    tags.  These must be removed before JSON extraction, otherwise the
+    regex searches match the  ******** tag text instead of the JSON
+    payload.
+
+    Args:
+        text: Raw LLM output that may contain  ******** ...  ******** tags.
+
+    Returns:
+        Cleaned text with **thinking**/** and <thinking>/** blocks removed.
+    """
+    return re.sub(r"(?:\*\*thinking\*\*.*?\*\*|<think(?:ing)?>.*?</think(?:ing)?>)", "", text, flags=re.DOTALL)
+
+
 def extract_json(raw: str | None, expect: str = "object") -> dict | list | None:
     """Extract JSON from LLM output, handling code fences and surrounding text.
 
@@ -28,7 +45,10 @@ def extract_json(raw: str | None, expect: str = "object") -> dict | list | None:
         _parse_stats["failure"] += 1
         return None
 
-    text = _strip_code_fences(raw)
+    # Strip  ******** ...  ******** tags before fence-stripping so the regex
+    # searches operate on clean text (RFC-125).
+    text = strip_thinking_tags(raw)
+    text = _strip_code_fences(text)
 
     # Try to find JSON in the text
     if expect == "array":

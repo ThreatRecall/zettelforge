@@ -113,8 +113,15 @@ def ingest_rules_dir(
     glob: str = "**/*.yar",
     tier: str = "warn",
     domain: str = "detection",
+    bulk: bool = False,
 ) -> dict[str, Any]:
     """Walk a directory tree and ingest every YARA rule file.
+
+    Args:
+        bulk: When True, passes ``sync=False`` to each ``remember()`` call
+            (deferring enrichment to background threads) and calls
+            ``mm.flush()`` once after all rules.  Significantly faster for
+            large rule sets.
 
     Returns:
         ``{"ingested": int, "skipped": int, "errors": list[str]}``
@@ -182,6 +189,7 @@ def ingest_rules_dir(
                         domain=domain,
                         tier=tier,
                         source_path=str(yar_path),
+                        sync=not bulk,
                     )
                 except Exception as exc:  # pragma: no cover — defensive
                     errors.append(f"{yar_path}:{rule_dict.get('rule_name')}: {exc}")
@@ -195,6 +203,9 @@ def ingest_rules_dir(
                 else:
                     # Already present (idempotent hit).
                     skipped += 1
+
+    if bulk and mm is not None:
+        mm.flush()
 
     return {"ingested": ingested, "skipped": skipped, "errors": errors}
 
@@ -230,11 +241,17 @@ def _ingest_single(
     domain: str,
     tier: str,
     source_path: str | None = None,
+    sync: bool = True,
 ) -> tuple[MemoryNote | None, list[dict[str, Any]], bool]:
     """Ingest one rule. Returns ``(note_or_None, relations, is_new)``.
 
     ``is_new`` is ``False`` when the rule was already present and we hit
     the idempotent shortcut; ``True`` on first-time ingest.
+
+    Args:
+        sync: Passed through to ``mm.remember()``.  When False, enrichment
+            is deferred to background threads.  Defaults to True for
+            backward compatibility.
     """
     entity, relations = rule_to_entities(rule_dict, tier=tier)
 
@@ -263,7 +280,7 @@ def _ingest_single(
         source_type="yara",
         source_ref=source_ref,
         domain=domain,
-        sync=True,
+        sync=sync,
     )
 
     # CR-B1: persist every relation as a KG edge keyed on the YaraRule's
