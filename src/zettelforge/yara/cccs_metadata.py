@@ -83,11 +83,11 @@ _HASH_REGEXES = _allowed_regexes("hash_types")
 # SEC-7: Tightened from ^[a-zA-Z]+\@[A-Z]+$|^[A-Z\s._\-]+$|^.*$ to
 # only permit safe printable ASCII characters.
 _AUTHOR_REGEX = re.compile(r"^[A-Za-z0-9_.@+-]+$")
-_VERSION_REGEX = re.compile(r"^\d+\.\d+$")
-_DATE_REGEX = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-_UUID_REGEX = re.compile(r"^[0-9A-Za-z]{16,}$")  # base62 UUID, generous lower bound.
-_FINGERPRINT_REGEX = re.compile(r"^[a-fA-F0-9]{40,64}$")  # SHA-1 / SHA-256-ish.
-_MITRE_ATT_REGEX = re.compile(r"^(TA|T|M|G|S)\d{4}(\.\d{3})?$")
+_VERSION_REGEX = re.compile(r"^\d+\.\d+\Z")
+_DATE_REGEX = re.compile(r"^\d{4}-\d{2}-\d{2}\Z")
+_UUID_REGEX = re.compile(r"^[0-9A-Za-z]{16,}\Z")  # base62 UUID, generous lower bound.
+_FINGERPRINT_REGEX = re.compile(r"^[a-fA-F0-9]{40,64}\Z")  # SHA-1 / SHA-256-ish.
+_MITRE_ATT_REGEX = re.compile(r"^(TA|T|M|G|S)\d{4}(\.\d{3})?\Z")
 
 
 # Fields whose ``optional: No`` makes them required under CCCS-strict.
