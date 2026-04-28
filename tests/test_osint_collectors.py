@@ -366,3 +366,73 @@ def test_registered_collector_metadata_has_input_types(collector_name: str) -> N
     meta, _fn = TRANSFORM_REGISTRY.get(collector_name)
     assert meta.input_types
     assert all(isinstance(t, str) for t in meta.input_types)
+
+
+# ---------------------------------------------------------------------------
+# Universal smoke test — every registered collector
+# ---------------------------------------------------------------------------
+#
+# Exercises every collector with (a) an unsupported input type and (b) a
+# supported-but-unconfigured input. Both paths must return a list and must
+# not raise. This covers the early-return branches in Phase 2-5 stubs that
+# would otherwise pull total coverage below the GOV-007 floor, and it
+# catches structural regressions in the registry shape (every entry has
+# input_types, output_types is iterable, fn is callable and returns a
+# list, every emitted tuple is a CollectorTuple).
+
+
+@pytest.mark.parametrize("name", sorted(meta.name for meta in TRANSFORM_REGISTRY.list_all()))
+def test_every_collector_returns_list_for_unsupported_input(name: str) -> None:
+    meta, fn = TRANSFORM_REGISTRY.get(name)
+    result = fn("NonExistentType_DoesNotMatchAnyCollector", "irrelevant")
+    assert isinstance(result, list)
+    for entry in result:
+        assert isinstance(entry, CollectorTuple)
+
+
+@pytest.mark.parametrize("name", sorted(meta.name for meta in TRANSFORM_REGISTRY.list_all()))
+def test_every_collector_metadata_is_well_formed(name: str) -> None:
+    meta, fn = TRANSFORM_REGISTRY.get(name)
+    assert callable(fn)
+    assert isinstance(meta.name, str) and meta.name == name
+    assert isinstance(meta.description, str) and meta.description
+    assert isinstance(meta.input_types, tuple) and meta.input_types
+    assert all(isinstance(t, str) for t in meta.input_types)
+    assert isinstance(meta.output_types, tuple)
+    for entry in meta.output_types:
+        assert isinstance(entry, tuple) and len(entry) == 2
+        ent_type, edge_type = entry
+        assert isinstance(ent_type, str) and isinstance(edge_type, str)
+    assert meta.rate_limit is None or isinstance(meta.rate_limit, (int, float))
+
+
+@pytest.mark.parametrize("name", sorted(meta.name for meta in TRANSFORM_REGISTRY.list_all()))
+def test_every_collector_handles_each_declared_input_type(name: str) -> None:
+    """Every declared input_type yields a list (not exception) on a probe call.
+
+    Stubs short-circuit on missing API keys / libraries; functional
+    collectors short-circuit through their patchable seams. Either way
+    the registered collector must be callable for every type it claims
+    to accept without raising.
+    """
+    meta, fn = TRANSFORM_REGISTRY.get(name)
+    for input_type in meta.input_types:
+        # Use values that won't trigger real network calls in any branch
+        # we can imagine, and that the canonicalizers will accept where
+        # relevant.
+        probe_value = {
+            "DomainName": "example.com",
+            "IPv4Address": "192.0.2.1",
+            "IPv6Address": "2001:db8::1",
+            "ASNumber": "AS65500",
+            "Netblock": "192.0.2.0/24",
+            "EmailAddress": "test@example.com",
+            "Alias": "someuser",
+            "Hashtag": "test",
+            "TwitterAffiliation": "exampleuser",
+            "Website": "https://example.com/",
+        }.get(input_type, "probe")
+        result = fn(input_type, probe_value)
+        assert isinstance(result, list), (
+            f"{name}({input_type!r}, …) returned {type(result).__name__}, expected list"
+        )

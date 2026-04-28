@@ -110,6 +110,17 @@ crewai = [
     "crewai>=1.14.0",
 ]
 
+# RFC-016 OSINT layer runtime deps. Phase 1 collectors (DNS, WHOIS,
+# crt.sh) need these to function; tests need them to construct realistic
+# mocks (e.g. raise dns.resolver.NXDOMAIN). Optional so non-OSINT users
+# don't pay the cost. CI's [dev] install pulls these in via the line
+# below.
+osint = [
+    "dnspython>=2.4.0",
+    "python-whois>=0.9.0",
+    "ipwhois>=1.2.0",
+]
+
 dev = [
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
@@ -121,6 +132,7 @@ dev = [
     "uvicorn>=0.20.0",      # for test_web_api.py
     "psutil>=5.9.0",        # for test_web_api.py
     "jinja2>=3.0.0",        # for test_web_api.py
+    "zettelforge[osint]",   # OSINT collectors need dnspython etc. for tests
 ]
 
 [project.urls]
