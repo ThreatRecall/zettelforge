@@ -26,6 +26,25 @@ _PREVIEW_CHARS = 240
 _logger = get_logger("zettelforge.llm.litellm")
 
 
+def _import_litellm() -> Any:
+    """Import litellm or raise an actionable ImportError.
+
+    Side-effect-free; suppression of the noisy ``Provider List`` banner is
+    scoped to the duration of each ``litellm.completion()`` call inside
+    :meth:`LiteLLMProvider.generate`, not done here, so we never permanently
+    mutate ``litellm.suppress_debug_info`` for any other code in the same
+    Python process.
+    """
+    try:
+        import litellm
+    except ImportError as exc:
+        raise ImportError(
+            "LiteLLM provider requires the litellm package. "
+            "Install with: pip install zettelforge[litellm]"
+        ) from exc
+    return litellm
+
+
 class LiteLLMProvider:
     """LiteLLM routing provider.
 
@@ -70,13 +89,7 @@ class LiteLLMProvider:
         system: str | None = None,
         json_mode: bool = False,
     ) -> str:
-        try:
-            import litellm
-        except ImportError as exc:
-            raise ImportError(
-                "LiteLLM provider requires the litellm package. "
-                "Install with: pip install zettelforge[litellm]"
-            ) from exc
+        litellm = _import_litellm()
 
         messages: list[dict[str, str]] = []
         if system:
@@ -102,6 +115,20 @@ class LiteLLMProvider:
         system_chars = len(system) if system else 0
         start = time.perf_counter()
 
+        # ── Scoped suppression of litellm's "Provider List" stderr banner ──
+        # litellm/litellm_core_utils/get_llm_provider_logic.py prints a
+        # coloured banner via raw ``print()`` whenever the model name
+        # lacks a recognised provider prefix. The print bypasses Python
+        # logging, so structlog can't intercept it and operators running
+        # ``recall()`` (background LLM-NER hits this code path) see the
+        # banner ~40× per call on stderr. ``litellm.suppress_debug_info``
+        # is the documented escape hatch. We save→set→restore around the
+        # one call that triggers it instead of mutating the litellm global
+        # for the lifetime of the process, so any other code using litellm
+        # in the same process (CrewAI's own callbacks, user code) gets to
+        # decide its own debug-info preference.
+        prev_suppress = getattr(litellm, "suppress_debug_info", False)
+        litellm.suppress_debug_info = True
         try:
             response = litellm.completion(**kwargs)
         except Exception as exc:
@@ -115,6 +142,8 @@ class LiteLLMProvider:
                 error_msg=str(exc)[:_PREVIEW_CHARS],
             )
             raise
+        finally:
+            litellm.suppress_debug_info = prev_suppress
 
         duration_ms = (time.perf_counter() - start) * 1000
         raw_response = str(response["choices"][0]["message"]["content"])
