@@ -27,7 +27,7 @@ def test_vector_memory_init_creates_table():
         assert vm.db is not None
         assert vm.table is not None
         # Table should exist
-        assert "memories" in vm.db.table_names()
+        assert "memories" in vm.db.list_tables()
 
 
 def test_vector_memory_add_and_search():
