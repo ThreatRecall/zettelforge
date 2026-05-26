@@ -202,11 +202,28 @@ class LimitsConfig:
 
 
 @dataclass
+class MemoryDefenseConfig:
+    """Write-time memory poisoning defense settings (SEC-011 / MemSAD)."""
+
+    enabled: bool = True
+    mode: str = "audit"  # audit | block | quarantine
+    min_calibration_notes: int = 50
+    max_reference_notes: int = 50
+    kappa: float = 2.0
+    lexical_weight: float = 0.25
+    ngram_size: int = 3
+    monitored_domains: list[str] = field(default_factory=list)  # empty = all domains
+    quarantine_path: str = ""
+    quarantine_raw_content: bool = True
+
+
+@dataclass
 class GovernanceConfig:
     enabled: bool = True
     min_content_length: int = 1
     pii: PIIConfig = field(default_factory=PIIConfig)
     limits: LimitsConfig = field(default_factory=LimitsConfig)
+    memory_defense: MemoryDefenseConfig = field(default_factory=MemoryDefenseConfig)
 
 
 @dataclass
@@ -251,6 +268,15 @@ class ExtensionsConfig:
 
 
 @dataclass
+class TelemetryConfig:
+    """RFC-007 Operational Telemetry settings."""
+
+    enabled: bool = True
+    data_dir: str = "~/.amem/telemetry"  # Shared fleet-wide telemetry
+    debug: bool = False
+
+
+@dataclass
 class OpenCTIConfig:
     """OpenCTI integration settings (Enterprise edition only)."""
 
@@ -288,6 +314,7 @@ class ZettelForgeConfig:
     lance: LanceConfig = field(default_factory=LanceConfig)
     logging: LoggingConfig = field(default_factory=LoggingConfig)
     enterprise: ExtensionsConfig = field(default_factory=ExtensionsConfig)
+    telemetry: TelemetryConfig = field(default_factory=TelemetryConfig)
     opencti: OpenCTIConfig = field(default_factory=OpenCTIConfig)
     web: WebConfig = field(default_factory=WebConfig)
 
@@ -427,6 +454,10 @@ def _apply_yaml(cfg: ZettelForgeConfig, data: dict):
                 for lk, lv in v.items():
                     if hasattr(cfg.governance.limits, lk):
                         setattr(cfg.governance.limits, lk, lv)
+            elif k == "memory_defense" and isinstance(v, dict):
+                for mk, mv in v.items():
+                    if hasattr(cfg.governance.memory_defense, mk):
+                        setattr(cfg.governance.memory_defense, mk, mv)
             else:
                 setattr(cfg.governance, k, v)
 
@@ -492,6 +523,12 @@ def _apply_env(cfg: ZettelForgeConfig):
     if v := os.environ.get("AMEM_EMBEDDING_MODEL"):
         cfg.embedding.model = v
 
+    # Telemetry (RFC-007)
+    if v := os.environ.get("ZETTELFORGE_TELEMETRY_DIR"):
+        cfg.telemetry.data_dir = v
+    if v := os.environ.get("ZETTELFORGE_TELEMETRY_DEBUG"):
+        cfg.telemetry.debug = v.lower() in ("1", "true", "yes")
+
     # LLM
     if v := os.environ.get("ZETTELFORGE_LLM_PROVIDER"):
         cfg.llm.provider = v
@@ -538,6 +575,16 @@ def _apply_env(cfg: ZettelForgeConfig):
         cfg.governance.limits.max_content_length = int(v)
     if v := os.environ.get("ZETTELFORGE_LIMITS_RECALL_TIMEOUT"):
         cfg.governance.limits.recall_timeout_seconds = float(v)
+
+    # SEC-011 / MemSAD write-time memory defense
+    if v := os.environ.get("ZETTELFORGE_MEMORY_DEFENSE_ENABLED"):
+        cfg.governance.memory_defense.enabled = v.lower() in ("true", "1", "yes")
+    if v := os.environ.get("ZETTELFORGE_MEMORY_DEFENSE_MODE"):
+        cfg.governance.memory_defense.mode = v
+    if v := os.environ.get("ZETTELFORGE_MEMORY_DEFENSE_MIN_CALIBRATION"):
+        cfg.governance.memory_defense.min_calibration_notes = int(v)
+    if v := os.environ.get("ZETTELFORGE_MEMORY_DEFENSE_KAPPA"):
+        cfg.governance.memory_defense.kappa = float(v)
 
     # Extensions license key (used by zettelforge-enterprise fallback path)
     if v := os.environ.get("THREATENGRAM_LICENSE_KEY"):

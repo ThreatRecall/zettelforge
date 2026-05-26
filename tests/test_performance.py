@@ -13,10 +13,14 @@ import statistics
 from zettelforge import MemoryManager
 from zettelforge.note_schema import MemoryNote, Content, Semantic, Embedding, Metadata
 
-# Performance tests are sensitive to runner hardware; skip in CI.
+# Performance tests are sensitive to runner hardware and persistent local
+# configuration. Keep them opt-in so the default regression suite is bounded.
 pytestmark = pytest.mark.skipif(
-    os.environ.get("CI") == "true",
-    reason="Performance tests require dedicated hardware, not CI runners",
+    os.environ.get("ZETTELFORGE_RUN_PERFORMANCE_TESTS") != "1",
+    reason=(
+        "Performance tests require dedicated hardware; set "
+        "ZETTELFORGE_RUN_PERFORMANCE_TESTS=1 to run them"
+    ),
 )
 
 

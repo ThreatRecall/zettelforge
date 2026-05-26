@@ -27,6 +27,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from zettelforge.config import get_config
+
 _QUERY_TTL_SECONDS = 3600  # evict tracked queries older than this on start_query
 
 
@@ -35,9 +37,14 @@ class _QueryContext:
     """In-memory bookkeeping for an active query. Not persisted."""
 
     query: str
-    actor: str | None
+    caller: str | None
     start_ts: float
     results: list[Any] = field(default_factory=list)
+
+    @property
+    def actor(self) -> str | None:
+        """Backward-compatible alias for the pre-caller telemetry field."""
+        return self.caller
 
 
 class TelemetryCollector:
@@ -45,7 +52,7 @@ class TelemetryCollector:
 
     Typical flow from ``MemoryManager``::
 
-        qid = telemetry.start_query(query, actor="vigil")
+        qid = telemetry.start_query(query, caller="vigil")
         results = run_retrieval(...)
         telemetry.log_recall(qid, results, intent="factual", ...)
         result = run_synthesis(...)
@@ -66,15 +73,22 @@ class TelemetryCollector:
 
     # ── Query lifecycle ────────────────────────────────────────────────
 
-    def start_query(self, query: str, actor: str | None = None) -> str:
+    def start_query(
+        self,
+        query: str,
+        caller: str | None = None,
+        actor: str | None = None,
+    ) -> str:
         """Begin tracking a query. Returns ``query_id`` (UUID4 hex) for correlation.
 
         Evicts tracked queries older than 1 hour on each call so memory use
         stays bounded even if callers never call ``log_synthesis``.
         """
+        if caller is None:
+            caller = actor
         query_id = uuid.uuid4().hex
         now = time.time()
-        ctx = _QueryContext(query=query, actor=actor, start_ts=now)
+        ctx = _QueryContext(query=query, caller=caller, start_ts=now)
         with self._queries_lock:
             self._queries[query_id] = ctx
             # Evict stale contexts
@@ -109,13 +123,14 @@ class TelemetryCollector:
         ctx = self._get_context(query_id)
         duration_ms = self._duration_ms(ctx)
         query_text = self._truncate_query(ctx.query if ctx else "", debug)
-        actor = ctx.actor if ctx else None
+        caller = ctx.caller if ctx else None
 
         event: dict[str, Any] = {
             "event_type": "recall",
             "timestamp": time.time(),
             "query_id": query_id,
-            "actor": actor,
+            "actor": caller,
+            "caller": caller,
             "query": query_text,
             "result_count": len(results),
             "duration_ms": duration_ms,
@@ -153,7 +168,7 @@ class TelemetryCollector:
         ctx = self._get_context(query_id)
         duration_ms = self._duration_ms(ctx)
         query_text = self._truncate_query(ctx.query if ctx else "", debug)
-        actor = ctx.actor if ctx else None
+        caller = ctx.caller if ctx else None
 
         cited_notes = _cited_note_ids(result)
         sources_count = _sources_count(result)
@@ -162,7 +177,8 @@ class TelemetryCollector:
             "event_type": "synthesis",
             "timestamp": time.time(),
             "query_id": query_id,
-            "actor": actor,
+            "actor": caller,
+            "caller": caller,
             "query": query_text,
             "result_count": sources_count,
             "duration_ms": duration_ms,
@@ -183,16 +199,20 @@ class TelemetryCollector:
         query_id: str,
         note_id: str,
         utility: int,
+        caller: str | None = None,
         agent: str | None = None,
     ) -> None:
         """Write an explicit feedback event. Utility is 1–5."""
+        if caller is None:
+            caller = agent
         event = {
             "event_type": "feedback",
             "timestamp": time.time(),
             "query_id": query_id,
             "note_id": note_id,
             "utility": int(utility),
-            "agent": agent,
+            "agent": caller,
+            "caller": caller,
         }
         self._append(event)
 
@@ -212,18 +232,28 @@ class TelemetryCollector:
             return
         cited = set(_cited_note_ids(synthesis_result))
         ctx = self._get_context(query_id)
-        agent = ctx.actor if ctx else None
+        caller = ctx.caller if ctx else None
         for note in retrieved_notes:
             nid = _note_id(note)
             if nid is None:
                 continue
             utility = 4 if nid in cited else 2
-            self.log_feedback(query_id, nid, utility, agent=agent)
+            self.log_feedback(query_id, nid, utility, caller=caller)
 
     # ── Internals ──────────────────────────────────────────────────────
 
     def _debug_enabled(self) -> bool:
-        return logging.getLogger(self._logger_name).isEnabledFor(logging.DEBUG)
+        logger = logging.getLogger(self._logger_name)
+        while logger and (
+            logger.name == "zettelforge.telemetry"
+            or logger.name.startswith("zettelforge.telemetry.")
+        ):
+            if logger.level != logging.NOTSET:
+                return logger.level <= logging.DEBUG
+            if logger.name == "zettelforge.telemetry":
+                break
+            logger = logger.parent
+        return False
 
     def _duration_ms(self, ctx: _QueryContext | None) -> int:
         if ctx is None:
@@ -324,12 +354,18 @@ _telemetry_singleton_lock = threading.Lock()
 
 
 def get_telemetry() -> TelemetryCollector:
-    """Return the process-wide TelemetryCollector instance (lazy singleton)."""
+    """Return the process-wide TelemetryCollector instance (lazy singleton).
+
+    data_dir is sourced from ZETTELFORGE_TELEMETRY_DIR env > config.yaml >
+    ~/.amem/telemetry default.
+    """
     global _telemetry_instance
     if _telemetry_instance is None:
         with _telemetry_singleton_lock:
             if _telemetry_instance is None:
-                _telemetry_instance = TelemetryCollector()
+                cfg = get_config()
+                data_dir = cfg.telemetry.data_dir
+                _telemetry_instance = TelemetryCollector(data_dir=data_dir)
     return _telemetry_instance
 
 

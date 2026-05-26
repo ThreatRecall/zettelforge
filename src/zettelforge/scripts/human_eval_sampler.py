@@ -44,12 +44,12 @@ def _format_briefing(event: dict[str, Any], index: int) -> str:
     sources_count = event.get("result_count", 0)
     duration_ms = event.get("duration_ms", 0)
     cited = event.get("cited_notes", [])
-    actor = event.get("actor", "unknown")
+    caller = event.get("caller") or event.get("actor", "unknown")
     ts = event.get("ts", event.get("timestamp", "unknown"))
 
     lines = [f"### Briefing #{index}\n"]
     lines.append(f"- **Query:** `{query}`")
-    lines.append(f"- **Agent:** {actor}")
+    lines.append(f"- **Agent:** {caller}")
     lines.append(f"- **Sources:** {sources_count}")
     lines.append(f"- **Cited Notes:** {len(cited)}")
     lines.append(f"- **Confidence:** {confidence}")
