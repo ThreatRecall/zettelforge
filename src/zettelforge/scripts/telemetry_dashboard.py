@@ -80,7 +80,7 @@ def to_dataframe(events: list[dict[str, Any]]) -> pd.DataFrame:
                 "date": date_str,
                 "duration_ms": ev.get("duration_ms"),
                 "confidence": ev.get("confidence"),
-                "actor": ev.get("actor"),
+                "caller": ev.get("caller") or ev.get("actor"),
                 "query_id": ev.get("query_id"),
                 "result_count": ev.get("result_count"),
                 "utility": ev.get("utility"),

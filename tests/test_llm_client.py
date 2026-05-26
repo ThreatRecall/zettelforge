@@ -7,9 +7,13 @@ import pytest
 
 from zettelforge.llm_client import _get_local_llm, generate
 
+_RUN_LLM_INTEGRATION = os.environ.get("ZETTELFORGE_RUN_LLM_INTEGRATION") == "1"
 _SKIP_INTEGRATION = pytest.mark.skipif(
-    os.environ.get("CI") == "true",
-    reason="LLM integration tests require local model or Ollama",
+    not _RUN_LLM_INTEGRATION,
+    reason=(
+        "LLM integration tests require an explicitly configured local model "
+        "or Ollama; set ZETTELFORGE_RUN_LLM_INTEGRATION=1 to run them"
+    ),
 )
 
 

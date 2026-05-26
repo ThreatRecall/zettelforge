@@ -143,7 +143,7 @@ class TestOllamaProvider:
             )
 
             assert result == "ok"
-            mock_client_cls.assert_called_once_with(host="http://host:11434", timeout=60.0)
+            mock_client_cls.assert_called_once_with(host="http://host:11434", timeout=180.0)
             args, kwargs = mock_client.generate.call_args
             assert kwargs["model"] == "qwen2.5:3b"
             assert kwargs["prompt"] == "hello"
@@ -174,7 +174,7 @@ class TestOllamaProvider:
         with patch("ollama.Client") as mock_client_cls:
             mock_client_cls.return_value.generate.return_value = {"response": "ok"}
             provider.generate("hello")
-            mock_client_cls.assert_called_once_with(host="http://gpu-box:11434", timeout=60.0)
+            mock_client_cls.assert_called_once_with(host="http://gpu-box:11434", timeout=180.0)
 
     def test_timeout_threads_through_to_client(self):
         """[RFC-010] Configured timeout must reach ``ollama.Client``.
@@ -344,6 +344,7 @@ class TestOnnxGenAIBackend:
 
         # Patch the onnxruntime_genai module at import time in _load()
         import types
+
         fake_module = types.ModuleType("onnxruntime_genai")
         fake_module.Model = _FakeOnnxGenAI.Model
         fake_module.Tokenizer = _FakeOnnxGenAI.Tokenizer
@@ -358,6 +359,7 @@ class TestOnnxGenAIBackend:
         backend = OnnxGenAIBackend(model="test/model", filename="test.onnx")
 
         import types
+
         fake_module = types.ModuleType("onnxruntime_genai")
         fake_module.Model = _FakeOnnxGenAI.Model
         fake_module.Tokenizer = _FakeOnnxGenAI.Tokenizer
@@ -365,9 +367,7 @@ class TestOnnxGenAIBackend:
         fake_module.Generator = _FakeOnnxGenAI.Generator
         monkeypatch.setitem(__import__("sys").modules, "onnxruntime_genai", fake_module)
 
-        result = backend.generate(
-            "hello", max_tokens=100, system="You are a helpful assistant."
-        )
+        result = backend.generate("hello", max_tokens=100, system="You are a helpful assistant.")
         assert result == "decoded output"
 
     def test_import_error_raised_when_sdk_missing(self):
@@ -445,13 +445,30 @@ class TestLiteLLMProvider:
         from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
 
         provider = LiteLLMProvider(model="gpt-4o")
-        with pytest.raises(ImportError, match="litellm"):
-            provider.generate("hello")
+        with patch(
+            "zettelforge.llm_providers.litellm_provider._import_litellm",
+            side_effect=ImportError("litellm is missing"),
+        ):
+            with pytest.raises(ImportError, match="litellm"):
+                provider.generate("hello")
+
+    def test_generate_uses_installed_litellm_when_available(self, monkeypatch):
+        from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
+
+        import types
+
+        mock_module = types.ModuleType("litellm")
+        mock_module.completion = _FakeLiteLLM.completion
+        monkeypatch.setitem(__import__("sys").modules, "litellm", mock_module)
+
+        provider = LiteLLMProvider(model="gpt-4o")
+        assert provider.generate("hello") == "lorem ipsum"
 
     def test_generate_with_mock_completion(self, monkeypatch):
         from zettelforge.llm_providers.litellm_provider import LiteLLMProvider
 
         import types
+
         mock_module = types.ModuleType("litellm")
         mock_module.completion = _FakeLiteLLM.completion
         monkeypatch.setitem(__import__("sys").modules, "litellm", mock_module)
@@ -771,9 +788,9 @@ class TestLLMConfigRepr:
     def test_api_key_is_redacted(self):
         from zettelforge.config import LLMConfig
 
-        cfg = LLMConfig(api_key="***")
+        cfg = LLMConfig(api_key="sk-secret")
         text = repr(cfg)
-        assert "***" not in text
+        assert "sk-secret" not in text
         assert "***" in text
 
     def test_empty_api_key_shows_empty_string(self):

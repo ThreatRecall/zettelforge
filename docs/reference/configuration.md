@@ -8,8 +8,8 @@ tags:
   - environment-variables
   - settings
   - deployment
-last_updated: "2026-04-25"
-version: "2.6.0"
+last_updated: "2026-05-26"
+version: "2.7.0"
 ---
 
 # Configuration Reference
@@ -264,6 +264,8 @@ class GovernanceConfig:
     enabled: bool = True
     min_content_length: int = 1
     pii: PIIConfig = field(default_factory=PIIConfig)
+    limits: LimitsConfig = field(default_factory=LimitsConfig)
+    memory_defense: MemoryDefenseConfig = field(default_factory=MemoryDefenseConfig)
 ```
 
 | Key | Type | Default | Env Override | Description |
@@ -308,6 +310,36 @@ class LimitsConfig:
 |:----|:-----|:--------|:-------------|:------------|
 | `governance.limits.max_content_length` | `int` | `52428800` | `ZETTELFORGE_LIMITS_MAX_CONTENT_LENGTH` | Maximum content length in bytes for `remember()`. 0 = unlimited. 50 MB default. |
 | `governance.limits.recall_timeout_seconds` | `float` | `30.0` | `ZETTELFORGE_LIMITS_RECALL_TIMEOUT` | Maximum seconds for a recall() query. 0 = unlimited. |
+
+#### governance.memory_defense (SEC-011 / MemSAD)
+
+```python
+@dataclass
+class MemoryDefenseConfig:
+    enabled: bool = True
+    mode: str = "audit"
+    min_calibration_notes: int = 50
+    max_reference_notes: int = 50
+    kappa: float = 2.0
+    lexical_weight: float = 0.25
+    ngram_size: int = 3
+    monitored_domains: list[str] = field(default_factory=list)
+    quarantine_path: str = ""
+    quarantine_raw_content: bool = True
+```
+
+| Key | Type | Default | Env Override | Description |
+|:----|:-----|:--------|:-------------|:------------|
+| `governance.memory_defense.enabled` | `bool` | `True` | `ZETTELFORGE_MEMORY_DEFENSE_ENABLED` | Enable write-time memory-poisoning anomaly evaluation before notes are persisted or indexed. |
+| `governance.memory_defense.mode` | `str` | `audit` | `ZETTELFORGE_MEMORY_DEFENSE_MODE` | Policy for flagged writes: `audit` logs only, `block` rejects the write, `quarantine` writes a forensic JSONL record and rejects the write. |
+| `governance.memory_defense.min_calibration_notes` | `int` | `50` | `ZETTELFORGE_MEMORY_DEFENSE_MIN_CALIBRATION` | Minimum same-domain reference notes required before thresholding. Below this count, writes are allowed with `calibration_insufficient` audit metadata. |
+| `governance.memory_defense.max_reference_notes` | `int` | `50` | -- | Maximum recent same-domain reference notes used for calibration and scoring. |
+| `governance.memory_defense.kappa` | `float` | `2.0` | `ZETTELFORGE_MEMORY_DEFENSE_KAPPA` | Threshold multiplier: `mean + kappa * stddev` over calibration scores. |
+| `governance.memory_defense.lexical_weight` | `float` | `0.25` | -- | Weight applied to character n-gram Jensen-Shannon divergence, complementing embedding similarity against synonym/paraphrase evasion. |
+| `governance.memory_defense.ngram_size` | `int` | `3` | -- | Character n-gram size for lexical divergence. |
+| `governance.memory_defense.monitored_domains` | `list[str]` | `[]` | -- | Domains to evaluate. Empty list means every domain. |
+| `governance.memory_defense.quarantine_path` | `str` | `""` | -- | JSONL quarantine path. Empty uses `<storage.data_dir>/quarantine/memory_anomalies.jsonl`. |
+| `governance.memory_defense.quarantine_raw_content` | `bool` | `True` | -- | Include raw rejected content in quarantine records. Disable if quarantine storage is not approved for raw content. |
 
 ---
 

@@ -6,8 +6,31 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-05-26
+
+Security and OSINT release. Adds the RFC-016 OSINT layer and the first
+SEC-011 / MemSAD-inspired write-time memory-poisoning defense. No data
+migration is required. The new memory defense ships in audit mode by default.
+
 ### Added
 
+- **OSINT layer scaffold and Phase 1 collectors** (RFC-016). Adds
+  `zettelforge.osint` with infrastructure, breach, people, social, and
+  technology collector packages; OSINT ontology and relation extensions;
+  entity canonicalization helpers; collector registry; and tests covering
+  DNS, WHOIS, certificates, BGP, ports, breach, people, social, and tech
+  collector contracts. Optional runtime dependencies are available with
+  `pip install zettelforge[osint]`.
+- **Write-time memory anomaly defense** (SEC-011 / MemSAD). New
+  `MemoryAnomalyGate` scores candidate notes before persistence using
+  MemSAD-style max/mean embedding similarity against recent domain
+  calibration notes plus character n-gram Jensen-Shannon divergence to
+  reduce synonym/paraphrase evasion. Config lives under
+  `governance.memory_defense`; default mode is `audit`, with `block` and
+  `quarantine` available once a deployment has a clean calibration corpus.
+- **Quarantine path for rejected memory writes.** In `quarantine` mode,
+  flagged notes are written to JSONL forensic quarantine and are not exposed
+  to recall, entity lookup, LanceDB, or graph traversal.
 - **CrewAI integration** (issue #40). New optional extra
   `pip install zettelforge[crewai]` exposes `ZettelForgeRecallTool`,
   `ZettelForgeRememberTool`, and `ZettelForgeSynthesizeTool` as CrewAI
@@ -18,6 +41,23 @@ Versioning follows [Semantic Versioning](https://semver.org/).
   See `examples/crewai_cti_crew.py` for a runnable two-agent demo.
   Tests gated on `pytest.importorskip("crewai")`; 11 pass against
   crewai 1.14.x.
+
+### Changed
+
+- **Telemetry attribution compatibility.** `caller` is now supported in
+  telemetry events while the previous `actor` field and method arguments
+  remain backward-compatible for existing dashboards and tests.
+- **Real LLM integration and performance tests are explicit opt-in.**
+  Set `ZETTELFORGE_RUN_LLM_INTEGRATION=1` or
+  `ZETTELFORGE_RUN_PERFORMANCE_TESTS=1` to run environment-sensitive suites.
+  The default regression suite is now deterministic on machines without
+  local LLM credentials or dedicated benchmark hardware.
+
+### Tests
+
+- Added focused memory-defense tests for insufficient calibration, audit-mode
+  anomaly detection, and quarantine writes.
+- Default regression gate: `742 passed, 13 skipped`.
 
 ## [2.6.2] - 2026-04-27
 
