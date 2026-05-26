@@ -41,7 +41,7 @@ jobs:
       with:
         python-version: '3.12'
     - name: Install pip-audit
-      run: pip install pip-audit
+      run: pip install pip-audit==2.9.0
     - name: Audit dependencies (any reported vuln blocks)
       run: |
         pip install -e ".[dev]" || pip install -e "."
@@ -57,7 +57,7 @@ jobs:
         # install, not at runtime; CI builds in ephemeral runners with
         # no persistent state. Re-evaluate when GitHub's images ship a
         # patched pip.
-        pip-audit --strict --vulnerability-service=osv \
+        pip-audit --strict \
           --ignore-vuln=CVE-2026-3219
 
   test:
@@ -102,10 +102,12 @@ jobs:
 
     - name: Upload coverage
       if: matrix.python-version == '3.12'
-      uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: false
+      continue-on-error: true
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      run: |
+        python -m pip install codecov-cli
+        codecovcli upload-process -f ./coverage.xml
 
   governance:
     runs-on: ubuntu-latest
