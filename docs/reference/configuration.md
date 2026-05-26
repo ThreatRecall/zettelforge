@@ -8,8 +8,8 @@ tags:
   - environment-variables
   - settings
   - deployment
-last_updated: "2026-04-25"
-version: "2.6.0"
+last_updated: "2026-05-26"
+version: "2.7.0"
 ---
 
 # Configuration Reference
@@ -129,6 +129,13 @@ class LLMConfig:
     max_retries: int = 2
     fallback: str = ""             # "" preserves implicit local->ollama fallback
     local_backend: str = "llama-cpp-python"  # RFC-011
+    max_tokens: int = 400
+    max_tokens_causal: int = 8000
+    max_tokens_synthesis: int = 2500
+    max_tokens_extraction: int = 2500
+    max_tokens_ner: int = 2500
+    max_tokens_evolve: int = 2500
+    reasoning_model: bool = False
     extra: dict = field(default_factory=dict)
 ```
 
@@ -143,6 +150,13 @@ class LLMConfig:
 | `llm.max_retries` | `int` | `2` | `ZETTELFORGE_LLM_MAX_RETRIES` | Number of retries on transient failure. Applied by `litellm` (via `num_retries` kwarg). |
 | `llm.fallback` | `str` | `""` | `ZETTELFORGE_LLM_FALLBACK` | Backup provider invoked when the primary fails with a non-configuration error. Empty string preserves the implicit `local -> ollama` fallback for backward compatibility; set explicitly to any other registered provider to route elsewhere. |
 | `llm.local_backend` | `str` | `llama-cpp-python` | `ZETTELFORGE_LLM_LOCAL_BACKEND` | In-process inference engine when `provider: local`. Options: `llama-cpp-python` (GGUF, default, requires `zettelforge[local]`), `onnxruntime-genai` (ONNX, requires `zettelforge[local-onnx]`). Ignored for all other providers. |
+| `llm.max_tokens` | `int` | `400` | `ZETTELFORGE_LLM_MAX_TOKENS` | Default generation budget when a caller does not pass an explicit `max_tokens`. |
+| `llm.max_tokens_causal` | `int` | `8000` | `ZETTELFORGE_LLM_MAX_TOKENS_CAUSAL` | Budget for causal triple extraction. |
+| `llm.max_tokens_synthesis` | `int` | `2500` | `ZETTELFORGE_LLM_MAX_TOKENS_SYNTHESIS` | Budget for RAG synthesis JSON output. |
+| `llm.max_tokens_extraction` | `int` | `2500` | `ZETTELFORGE_LLM_MAX_TOKENS_EXTRACTION` | Budget for two-phase fact extraction. |
+| `llm.max_tokens_ner` | `int` | `2500` | `ZETTELFORGE_LLM_MAX_TOKENS_NER` | Budget for conversational LLM NER and its retry path. |
+| `llm.max_tokens_evolve` | `int` | `2500` | `ZETTELFORGE_LLM_MAX_TOKENS_EVOLVE` | Budget for memory evolution decisions and retry path. |
+| `llm.reasoning_model` | `bool` | `false` | `ZETTELFORGE_LLM_REASONING_MODEL` | Raises timeout and per-call-site budgets to the known-good reasoning-model floors without lowering already larger operator overrides. |
 | `llm.extra` | `dict` | `{}` | -- | Provider-specific kwargs forwarded to the constructor. String values inside `extra` also honour `${ENV_VAR}` resolution. Common uses: `{filename: qwen2.5-3b-instruct-q4_k_m.gguf, n_ctx: 4096}` for `local` provider; `{provider: rocm}` for `onnxruntime-genai` execution provider selection; `{drop_params: true}` for `litellm`. |
 
 #### Provider quick-reference
@@ -264,6 +278,8 @@ class GovernanceConfig:
     enabled: bool = True
     min_content_length: int = 1
     pii: PIIConfig = field(default_factory=PIIConfig)
+    limits: LimitsConfig = field(default_factory=LimitsConfig)
+    memory_defense: MemoryDefenseConfig = field(default_factory=MemoryDefenseConfig)
 ```
 
 | Key | Type | Default | Env Override | Description |
@@ -308,6 +324,36 @@ class LimitsConfig:
 |:----|:-----|:--------|:-------------|:------------|
 | `governance.limits.max_content_length` | `int` | `52428800` | `ZETTELFORGE_LIMITS_MAX_CONTENT_LENGTH` | Maximum content length in bytes for `remember()`. 0 = unlimited. 50 MB default. |
 | `governance.limits.recall_timeout_seconds` | `float` | `30.0` | `ZETTELFORGE_LIMITS_RECALL_TIMEOUT` | Maximum seconds for a recall() query. 0 = unlimited. |
+
+#### governance.memory_defense (SEC-011 / MemSAD)
+
+```python
+@dataclass
+class MemoryDefenseConfig:
+    enabled: bool = True
+    mode: str = "audit"
+    min_calibration_notes: int = 50
+    max_reference_notes: int = 50
+    kappa: float = 2.0
+    lexical_weight: float = 0.25
+    ngram_size: int = 3
+    monitored_domains: list[str] = field(default_factory=list)
+    quarantine_path: str = ""
+    quarantine_raw_content: bool = True
+```
+
+| Key | Type | Default | Env Override | Description |
+|:----|:-----|:--------|:-------------|:------------|
+| `governance.memory_defense.enabled` | `bool` | `True` | `ZETTELFORGE_MEMORY_DEFENSE_ENABLED` | Enable write-time memory-poisoning anomaly evaluation before notes are persisted or indexed. |
+| `governance.memory_defense.mode` | `str` | `audit` | `ZETTELFORGE_MEMORY_DEFENSE_MODE` | Policy for flagged writes: `audit` logs only, `block` rejects the write, `quarantine` writes a forensic JSONL record and rejects the write. |
+| `governance.memory_defense.min_calibration_notes` | `int` | `50` | `ZETTELFORGE_MEMORY_DEFENSE_MIN_CALIBRATION` | Minimum same-domain reference notes required before thresholding. Below this count, writes are allowed with `calibration_insufficient` audit metadata. |
+| `governance.memory_defense.max_reference_notes` | `int` | `50` | -- | Maximum recent same-domain reference notes used for calibration and scoring. |
+| `governance.memory_defense.kappa` | `float` | `2.0` | `ZETTELFORGE_MEMORY_DEFENSE_KAPPA` | Threshold multiplier: `mean + kappa * stddev` over calibration scores. |
+| `governance.memory_defense.lexical_weight` | `float` | `0.25` | -- | Weight applied to character n-gram Jensen-Shannon divergence, complementing embedding similarity against synonym/paraphrase evasion. |
+| `governance.memory_defense.ngram_size` | `int` | `3` | -- | Character n-gram size for lexical divergence. |
+| `governance.memory_defense.monitored_domains` | `list[str]` | `[]` | -- | Domains to evaluate. Empty list means every domain. |
+| `governance.memory_defense.quarantine_path` | `str` | `""` | -- | JSONL quarantine path. Empty uses `<storage.data_dir>/quarantine/memory_anomalies.jsonl`. |
+| `governance.memory_defense.quarantine_raw_content` | `bool` | `True` | -- | Include raw rejected content in quarantine records. Disable if quarantine storage is not approved for raw content. |
 
 ---
 
@@ -463,6 +509,13 @@ See [Configure OpenCTI Integration](../how-to/configure-opencti.md) for setup st
 | `ZETTELFORGE_LLM_MAX_RETRIES` | `llm.max_retries` | `2` |
 | `ZETTELFORGE_LLM_FALLBACK` | `llm.fallback` | `ollama` |
 | `ZETTELFORGE_LLM_LOCAL_BACKEND` | `llm.local_backend` | `onnxruntime-genai` |
+| `ZETTELFORGE_LLM_MAX_TOKENS` | `llm.max_tokens` | `400` |
+| `ZETTELFORGE_LLM_MAX_TOKENS_CAUSAL` | `llm.max_tokens_causal` | `8000` |
+| `ZETTELFORGE_LLM_MAX_TOKENS_SYNTHESIS` | `llm.max_tokens_synthesis` | `2500` |
+| `ZETTELFORGE_LLM_MAX_TOKENS_EXTRACTION` | `llm.max_tokens_extraction` | `2500` |
+| `ZETTELFORGE_LLM_MAX_TOKENS_NER` | `llm.max_tokens_ner` | `2500` |
+| `ZETTELFORGE_LLM_MAX_TOKENS_EVOLVE` | `llm.max_tokens_evolve` | `2500` |
+| `ZETTELFORGE_LLM_REASONING_MODEL` | `llm.reasoning_model` | `true` |
 
 ### Web UI configuration (RFC-015)
 

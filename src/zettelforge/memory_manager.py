@@ -29,6 +29,7 @@ from zettelforge.extensions import has_extension
 from zettelforge.fact_extractor import FactExtractor
 from zettelforge.governance_validator import GovernanceValidator, GovernanceViolationError
 from zettelforge.log import get_logger
+from zettelforge.memory_defense import MemoryAnomalyError, MemoryAnomalyGate
 from zettelforge.memory_store import MemoryStore, get_default_data_dir
 from zettelforge.memory_updater import MemoryUpdater
 from zettelforge.note_constructor import NoteConstructor
@@ -120,6 +121,7 @@ class MemoryManager:
         )
         self.resolver = AliasResolver()
         self.consolidation = ConsolidationMiddleware(self)
+        self.memory_defense = MemoryAnomalyGate()
 
         self._logger = get_logger("zettelforge.memory")
         self.stats = {
@@ -288,6 +290,52 @@ class MemoryManager:
             raw_content=content, source_type=source_type, source_ref=source_ref, domain=domain
         )
         phase_timings_ms["construct"] = (time.perf_counter() - _p) * 1000
+
+        _p = time.perf_counter()
+        try:
+            reference_notes = self.store.get_notes_by_domain(domain)
+            self.memory_defense.enforce(
+                note,
+                reference_notes,
+                domain=domain,
+                source_type=source_type,
+                source_ref=source_ref,
+                request_id=request_id,
+            )
+        except MemoryAnomalyError as exc:
+            phase_timings_ms["memory_defense"] = (time.perf_counter() - _p) * 1000
+            decision = exc.decision
+            log_authorization(
+                actor="system",
+                resource="remember",
+                status_id=STATUS_FAILURE,
+                severity_id=SEVERITY_HIGH,
+                policy="SEC-011",
+                request_id=request_id,
+                violation="memory_anomaly",
+                action=decision.action,
+                score=decision.score,
+                threshold=decision.threshold,
+                content_hash=decision.content_hash,
+            )
+            log_api_activity(
+                operation="remember",
+                status_id=STATUS_FAILURE,
+                severity_id=SEVERITY_HIGH,
+                note_id=note.id,
+                domain=domain,
+                duration_ms=(time.perf_counter() - start) * 1000,
+                request_id=request_id,
+                memory_defense_action=decision.action,
+                memory_defense_score=decision.score,
+                memory_defense_threshold=decision.threshold,
+                memory_defense_content_hash=decision.content_hash,
+                phase_timings_ms=phase_timings_ms,
+            )
+            raise
+        except Exception:
+            self._logger.warning("memory_defense_eval_failed", request_id=request_id, exc_info=True)
+        phase_timings_ms["memory_defense"] = (time.perf_counter() - _p) * 1000
 
         _p = time.perf_counter()
         self.store.write_note(note)
@@ -550,6 +598,7 @@ class MemoryManager:
         include_links: bool = True,
         exclude_superseded: bool = True,
         include_expired: bool = False,
+        caller: str | None = None,
         actor: str | None = None,
     ) -> list[MemoryNote]:
         """
@@ -565,6 +614,7 @@ class MemoryManager:
         defense-in-depth control for D-03 (deep graph traversal DoS) per
         RFC-014.
         """
+        telemetry_caller = caller if caller is not None else actor
         timeout = get_config().governance.limits.recall_timeout_seconds
         if timeout > 0:
             with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
@@ -576,7 +626,7 @@ class MemoryManager:
                     include_links,
                     exclude_superseded,
                     include_expired,
-                    actor,
+                    telemetry_caller,
                 )
                 try:
                     return future.result(timeout=timeout)
@@ -604,7 +654,7 @@ class MemoryManager:
             include_links,
             exclude_superseded,
             include_expired,
-            actor,
+            telemetry_caller,
         )
 
     def _recall_inner(
@@ -615,14 +665,16 @@ class MemoryManager:
         include_links: bool = True,
         exclude_superseded: bool = True,
         include_expired: bool = False,
+        caller: str | None = None,
         actor: str | None = None,
     ) -> list[MemoryNote]:
+        caller = caller if caller is not None else actor
         request_id = uuid.uuid4().hex
         start = time.perf_counter()
         self.stats["retrievals"] += 1
 
         # ── RFC-007 US-002: telemetry ─────────────────────────────────
-        query_id = self._telemetry.start_query(query, actor=actor)
+        query_id = self._telemetry.start_query(query, caller=caller)
         self._telemetry_query_id = query_id
 
         # Classify query intent
@@ -815,7 +867,7 @@ class MemoryManager:
             duration_ms=duration_ms,
             request_id=request_id,
             telemetry_query_id=query_id,
-            telemetry_actor=actor,
+            telemetry_caller=caller,
         )
         return results
 
@@ -1021,11 +1073,11 @@ class MemoryManager:
     def _enrichment_loop(self) -> None:
         """Background worker: process enrichment jobs until process exits."""
         while True:
+            job = None
             try:
                 job = self._enrichment_queue.get(timeout=1.0)
                 if job.defer:
                     # Batch-deferred job — skip for now, will be swept later
-                    self._enrichment_queue.task_done()
                     continue
                 if job.job_type == "neighbor_evolution":
                     self._run_evolution(job)
@@ -1033,7 +1085,6 @@ class MemoryManager:
                     self._run_llm_ner(job)
                 else:
                     self._run_enrichment(job)
-                self._enrichment_queue.task_done()
             except queue.Empty:
                 continue
             except BackendClosedError:
@@ -1041,6 +1092,27 @@ class MemoryManager:
                 return
             except Exception:
                 self._logger.error("enrichment_worker_error", exc_info=True)
+            finally:
+                if job is not None:
+                    self._enrichment_queue.task_done()
+
+    def flush(self, timeout: float | None = None) -> bool:
+        """Wait until queued and in-flight enrichment jobs complete.
+
+        Returns ``True`` when all jobs are done. If ``timeout`` is provided
+        and expires first, returns ``False``.
+        """
+        deadline = None if timeout is None else time.monotonic() + timeout
+        with self._enrichment_queue.all_tasks_done:
+            while self._enrichment_queue.unfinished_tasks:
+                if deadline is None:
+                    self._enrichment_queue.all_tasks_done.wait()
+                    continue
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    return False
+                self._enrichment_queue.all_tasks_done.wait(remaining)
+        return True
 
     def _run_enrichment(self, job: _EnrichmentJob) -> None:
         """Execute slow-path LLM causal triple extraction for one note."""
@@ -1160,10 +1232,10 @@ class MemoryManager:
         """atexit: process remaining enrichment jobs within a 10-second window."""
         deadline = time.monotonic() + 10.0
         while not self._enrichment_queue.empty() and time.monotonic() < deadline:
+            job = None
             try:
                 job = self._enrichment_queue.get_nowait()
                 if job.defer:
-                    self._enrichment_queue.task_done()
                     continue
                 if job.job_type == "neighbor_evolution":
                     self._run_evolution(job)
@@ -1171,7 +1243,6 @@ class MemoryManager:
                     self._run_llm_ner(job)
                 else:
                     self._run_enrichment(job)
-                self._enrichment_queue.task_done()
             except queue.Empty:
                 break
             except BackendClosedError:
@@ -1179,6 +1250,9 @@ class MemoryManager:
                 return
             except Exception:
                 self._logger.warning("enrichment_drain_failed", exc_info=True)
+            finally:
+                if job is not None:
+                    self._enrichment_queue.task_done()
 
     def evolve_note(self, note_id: str, sync: bool = False) -> dict | None:
         """Trigger neighbor evolution for an existing note.
@@ -1449,6 +1523,7 @@ class MemoryManager:
         format: str = "direct_answer",
         k: int = 10,
         tier_filter: list[str] | None = None,
+        caller: str | None = None,
         actor: str | None = None,
     ) -> dict[str, Any]:
         """
@@ -1466,6 +1541,7 @@ class MemoryManager:
         Returns:
             Dictionary with synthesis result, metadata, and sources
         """
+        telemetry_caller = caller if caller is not None else actor
         _extended_formats = {"synthesized_brief", "timeline_analysis", "relationship_map"}
         if format in _extended_formats and not has_extension("enterprise"):
             self._logger.info("synthesis_format_fallback", requested=format, using="direct_answer")
@@ -1475,9 +1551,11 @@ class MemoryManager:
         start = time.perf_counter()
 
         # Reuse query_id from the last recall() so synthesis telemetry
-        # correlates to the same query.  If the caller passed actor directly
-        # without a preceding recall() call, start a fresh query.
-        query_id = self._telemetry_query_id or self._telemetry.start_query(query, actor=actor)
+        # correlates to the same query. If the caller supplied attribution
+        # directly without a preceding recall() call, start a fresh query.
+        query_id = self._telemetry_query_id or self._telemetry.start_query(
+            query, caller=telemetry_caller
+        )
         if query_id and self._telemetry_query_id is None:
             # Fresh query started here — keep the id for consistency
             self._telemetry_query_id = query_id
@@ -1511,7 +1589,7 @@ class MemoryManager:
             duration_ms=duration_ms,
             request_id=request_id,
             telemetry_query_id=query_id,
-            telemetry_actor=actor,
+            telemetry_caller=telemetry_caller,
         )
         return result
 

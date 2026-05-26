@@ -55,6 +55,23 @@ def _resolve_env_refs(value: str) -> str:
     return _ENV_VAR_PATTERN.sub(_replace, value)
 
 
+def _env_bool(value: str) -> bool:
+    return value.lower() in ("1", "true", "yes", "on")
+
+
+def _parse_env_int(name: str, value: str) -> int | None:
+    try:
+        return int(value)
+    except ValueError:
+        get_logger("zettelforge.config").warning(
+            "invalid_env_int",
+            name=name,
+            value=value,
+            hint="Must be an int",
+        )
+        return None
+
+
 @dataclass
 class StorageConfig:
     data_dir: str = "~/.amem"
@@ -107,6 +124,13 @@ class LLMConfig:
     max_retries: int = 2
     fallback: str = ""  # empty preserves implicit local→ollama fallback
     local_backend: str = "llama-cpp-python"  # RFC-011: "llama-cpp-python" or "onnxruntime-genai"
+    max_tokens: int = 400
+    max_tokens_causal: int = 8000
+    max_tokens_synthesis: int = 2500
+    max_tokens_extraction: int = 2500
+    max_tokens_ner: int = 2500
+    max_tokens_evolve: int = 2500
+    reasoning_model: bool = False
     extra: dict[str, Any] = field(default_factory=dict)
 
     # Keys under ``extra`` that are commonly used for secrets. Matched
@@ -136,6 +160,13 @@ class LLMConfig:
             f"temperature={self.temperature}, timeout={self.timeout}, "
             f"max_retries={self.max_retries}, fallback={self.fallback!r}, "
             f"local_backend={self.local_backend!r}, "
+            f"max_tokens={self.max_tokens}, "
+            f"max_tokens_causal={self.max_tokens_causal}, "
+            f"max_tokens_synthesis={self.max_tokens_synthesis}, "
+            f"max_tokens_extraction={self.max_tokens_extraction}, "
+            f"max_tokens_ner={self.max_tokens_ner}, "
+            f"max_tokens_evolve={self.max_tokens_evolve}, "
+            f"reasoning_model={self.reasoning_model}, "
             f"extra={self._redact_extra()!r})"
         )
 
@@ -202,11 +233,28 @@ class LimitsConfig:
 
 
 @dataclass
+class MemoryDefenseConfig:
+    """Write-time memory poisoning defense settings (SEC-011 / MemSAD)."""
+
+    enabled: bool = True
+    mode: str = "audit"  # audit | block | quarantine
+    min_calibration_notes: int = 50
+    max_reference_notes: int = 50
+    kappa: float = 2.0
+    lexical_weight: float = 0.25
+    ngram_size: int = 3
+    monitored_domains: list[str] = field(default_factory=list)  # empty = all domains
+    quarantine_path: str = ""
+    quarantine_raw_content: bool = True
+
+
+@dataclass
 class GovernanceConfig:
     enabled: bool = True
     min_content_length: int = 1
     pii: PIIConfig = field(default_factory=PIIConfig)
     limits: LimitsConfig = field(default_factory=LimitsConfig)
+    memory_defense: MemoryDefenseConfig = field(default_factory=MemoryDefenseConfig)
 
 
 @dataclass
@@ -251,6 +299,15 @@ class ExtensionsConfig:
 
 
 @dataclass
+class TelemetryConfig:
+    """RFC-007 Operational Telemetry settings."""
+
+    enabled: bool = True
+    data_dir: str = "~/.amem/telemetry"  # Shared fleet-wide telemetry
+    debug: bool = False
+
+
+@dataclass
 class OpenCTIConfig:
     """OpenCTI integration settings (Enterprise edition only)."""
 
@@ -288,6 +345,7 @@ class ZettelForgeConfig:
     lance: LanceConfig = field(default_factory=LanceConfig)
     logging: LoggingConfig = field(default_factory=LoggingConfig)
     enterprise: ExtensionsConfig = field(default_factory=ExtensionsConfig)
+    telemetry: TelemetryConfig = field(default_factory=TelemetryConfig)
     opencti: OpenCTIConfig = field(default_factory=OpenCTIConfig)
     web: WebConfig = field(default_factory=WebConfig)
 
@@ -427,6 +485,10 @@ def _apply_yaml(cfg: ZettelForgeConfig, data: dict):
                 for lk, lv in v.items():
                     if hasattr(cfg.governance.limits, lk):
                         setattr(cfg.governance.limits, lk, lv)
+            elif k == "memory_defense" and isinstance(v, dict):
+                for mk, mv in v.items():
+                    if hasattr(cfg.governance.memory_defense, mk):
+                        setattr(cfg.governance.memory_defense, mk, mv)
             else:
                 setattr(cfg.governance, k, v)
 
@@ -492,6 +554,12 @@ def _apply_env(cfg: ZettelForgeConfig):
     if v := os.environ.get("AMEM_EMBEDDING_MODEL"):
         cfg.embedding.model = v
 
+    # Telemetry (RFC-007)
+    if v := os.environ.get("ZETTELFORGE_TELEMETRY_DIR"):
+        cfg.telemetry.data_dir = v
+    if v := os.environ.get("ZETTELFORGE_TELEMETRY_DEBUG"):
+        cfg.telemetry.debug = v.lower() in ("1", "true", "yes")
+
     # LLM
     if v := os.environ.get("ZETTELFORGE_LLM_PROVIDER"):
         cfg.llm.provider = v
@@ -523,6 +591,22 @@ def _apply_env(cfg: ZettelForgeConfig):
     if v := os.environ.get("ZETTELFORGE_LLM_LOCAL_BACKEND"):
         cfg.llm.local_backend = v
 
+    llm_token_env = {
+        "ZETTELFORGE_LLM_MAX_TOKENS": "max_tokens",
+        "ZETTELFORGE_LLM_MAX_TOKENS_CAUSAL": "max_tokens_causal",
+        "ZETTELFORGE_LLM_MAX_TOKENS_SYNTHESIS": "max_tokens_synthesis",
+        "ZETTELFORGE_LLM_MAX_TOKENS_EXTRACTION": "max_tokens_extraction",
+        "ZETTELFORGE_LLM_MAX_TOKENS_NER": "max_tokens_ner",
+        "ZETTELFORGE_LLM_MAX_TOKENS_EVOLVE": "max_tokens_evolve",
+    }
+    for env_name, attr in llm_token_env.items():
+        if v := os.environ.get(env_name):
+            parsed = _parse_env_int(env_name, v)
+            if parsed is not None:
+                setattr(cfg.llm, attr, parsed)
+    if v := os.environ.get("ZETTELFORGE_LLM_REASONING_MODEL"):
+        cfg.llm.reasoning_model = _env_bool(v)
+
     # LLM NER
     if v := os.environ.get("ZETTELFORGE_LLM_NER_ENABLED"):
         cfg.llm_ner.enabled = v.lower() in ("true", "1", "yes")
@@ -538,6 +622,16 @@ def _apply_env(cfg: ZettelForgeConfig):
         cfg.governance.limits.max_content_length = int(v)
     if v := os.environ.get("ZETTELFORGE_LIMITS_RECALL_TIMEOUT"):
         cfg.governance.limits.recall_timeout_seconds = float(v)
+
+    # SEC-011 / MemSAD write-time memory defense
+    if v := os.environ.get("ZETTELFORGE_MEMORY_DEFENSE_ENABLED"):
+        cfg.governance.memory_defense.enabled = v.lower() in ("true", "1", "yes")
+    if v := os.environ.get("ZETTELFORGE_MEMORY_DEFENSE_MODE"):
+        cfg.governance.memory_defense.mode = v
+    if v := os.environ.get("ZETTELFORGE_MEMORY_DEFENSE_MIN_CALIBRATION"):
+        cfg.governance.memory_defense.min_calibration_notes = int(v)
+    if v := os.environ.get("ZETTELFORGE_MEMORY_DEFENSE_KAPPA"):
+        cfg.governance.memory_defense.kappa = float(v)
 
     # Extensions license key (used by zettelforge-enterprise fallback path)
     if v := os.environ.get("THREATENGRAM_LICENSE_KEY"):
@@ -563,6 +657,27 @@ def _apply_env(cfg: ZettelForgeConfig):
         cfg.web.ui_dir = v
 
 
+_REASONING_TOKEN_FLOORS = {
+    "max_tokens_causal": 8000,
+    "max_tokens_synthesis": 2500,
+    "max_tokens_extraction": 2500,
+    "max_tokens_ner": 2500,
+    "max_tokens_evolve": 2500,
+}
+
+
+def _apply_reasoning_model_scaling(cfg: ZettelForgeConfig) -> None:
+    """Raise LLM limits to known-good floors when reasoning models are enabled."""
+    if not cfg.llm.reasoning_model:
+        return
+
+    cfg.llm.timeout = max(float(cfg.llm.timeout), 180.0)
+    for attr, floor in _REASONING_TOKEN_FLOORS.items():
+        current = getattr(cfg.llm, attr)
+        if isinstance(current, int):
+            setattr(cfg.llm, attr, max(current, floor))
+
+
 # ── Singleton ──────────────────────────────────────────────
 
 _config: ZettelForgeConfig | None = None
@@ -582,6 +697,7 @@ def get_config() -> ZettelForgeConfig:
 
         # Layer 2: environment variables (override)
         _apply_env(_config)
+        _apply_reasoning_model_scaling(_config)
 
     return _config
 

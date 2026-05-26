@@ -61,7 +61,7 @@ from zettelforge.vector_retriever import VectorRetriever
 # importable for advanced use but are not part of the advertised public API
 # and are therefore excluded from __all__ below.
 
-__version__ = "2.6.2"
+__version__ = "2.7.0"
 __all__ = [
     # Ontology reference tables (TypedEntityStore / OntologyValidator are
     # importable from zettelforge.ontology but are not part of the public API

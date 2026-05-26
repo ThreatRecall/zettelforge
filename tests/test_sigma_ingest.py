@@ -22,6 +22,7 @@ import pytest
 
 import zettelforge.knowledge_graph as knowledge_graph_module
 from zettelforge import MemoryManager
+from zettelforge.note_schema import Content, Embedding, MemoryNote, Metadata, Semantic
 
 FIXTURES = Path(__file__).parent / "fixtures" / "sigma"
 
@@ -62,9 +63,7 @@ def mm() -> MemoryManager:
 def test_ingest_rule_single_file(mm: MemoryManager) -> None:
     from zettelforge.sigma.ingest import ingest_rule
 
-    note, relations = ingest_rule(
-        FIXTURES / "process_creation_example.yml", mm, domain="detection"
-    )
+    note, relations = ingest_rule(FIXTURES / "process_creation_example.yml", mm, domain="detection")
     # Note persisted → can be fetched back.
     assert note is not None
     fetched = mm.store.get_note_by_id(note.id)
@@ -83,9 +82,7 @@ def test_ingest_rule_emits_kg_edges_for_logsource(mm: MemoryManager) -> None:
     _note, _rels = ingest_rule(FIXTURES / "cloud_example.yml", mm)
 
     # cloud_example.yml → product=windows + service=security.
-    neighbors = mm.store.get_kg_neighbors(
-        "SigmaRule", "929a690e-bef0-4204-a928-ef5e620d6fcb"
-    )
+    neighbors = mm.store.get_kg_neighbors("SigmaRule", "929a690e-bef0-4204-a928-ef5e620d6fcb")
     targets = {(n["node"]["entity_type"], n["node"]["entity_value"]) for n in neighbors}
     assert ("LogSource", "product:windows") in targets
     assert ("LogSource", "service:security") in targets
@@ -141,6 +138,52 @@ def test_ingest_rules_dir_walks_tree(mm: MemoryManager) -> None:
     # Four fixtures: process_creation, cloud, correlation, tagged.
     assert ingested == 4
     assert skipped == 0
+
+
+def test_ingest_rules_dir_bulk_defers_enrichment_and_flushes() -> None:
+    from zettelforge.sigma.ingest import ingest_rules_dir
+
+    class _Store:
+        def get_note_by_source_ref(self, _source_ref):
+            return None
+
+        def add_kg_edge(self, **_kwargs):
+            return None
+
+    class _MM:
+        def __init__(self):
+            self.store = _Store()
+            self.calls = []
+            self.flushed = False
+
+        def remember(self, *, content, source_type, source_ref, domain, sync):
+            self.calls.append({"source_ref": source_ref, "sync": sync})
+            note = MemoryNote(
+                id=f"note-{len(self.calls)}",
+                created_at="2026-05-26T00:00:00",
+                updated_at="2026-05-26T00:00:00",
+                content=Content(raw=content, source_type=source_type, source_ref=source_ref),
+                semantic=Semantic(context="", keywords=[], tags=[], entities=[]),
+                embedding=Embedding(vector=[]),
+                metadata=Metadata(domain=domain),
+            )
+            return note, "created"
+
+        def flush(self, timeout=None):
+            self.flushed = True
+            self.flush_timeout = timeout
+            return True
+
+    mm = _MM()
+
+    ingested, skipped = ingest_rules_dir(FIXTURES, mm, bulk=True, flush_timeout=1.5)
+
+    assert ingested == 4
+    assert skipped == 0
+    assert mm.calls
+    assert all(call["sync"] is False for call in mm.calls)
+    assert mm.flushed is True
+    assert mm.flush_timeout == 1.5
 
 
 def test_ingest_rules_dir_skips_invalid_file(tmp_path: Path, mm: MemoryManager) -> None:

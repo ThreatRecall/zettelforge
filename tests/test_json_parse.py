@@ -1,7 +1,12 @@
 """Tests for shared JSON parsing utility."""
 
 import pytest
-from zettelforge.json_parse import extract_json, get_parse_stats, reset_parse_stats
+from zettelforge.json_parse import (
+    extract_json,
+    get_parse_stats,
+    reset_parse_stats,
+    strip_thinking_tags,
+)
 
 
 class TestExtractJson:
@@ -68,3 +73,15 @@ class TestExtractJson:
         raw = 'Here is the JSON:\n```json\n[{"a": 1}]\n```\nDone.'
         result = extract_json(raw, expect="array")
         assert result == [{"a": 1}]
+
+    def test_think_tags_are_removed_before_object_parse(self):
+        raw = '<think>private chain of thought {"not": "json"}</think>\n{"ok": true}'
+        assert extract_json(raw) == {"ok": True}
+
+    def test_thinking_tags_are_removed_before_array_parse(self):
+        raw = '<thinking>reasoning [0]</thinking>\n[{"ok": true}]'
+        assert extract_json(raw, expect="array") == [{"ok": True}]
+
+    def test_strip_thinking_tags_preserves_markdown_bold(self):
+        raw = '**thinking** is just markdown {"ok": true}'
+        assert strip_thinking_tags(raw) == raw

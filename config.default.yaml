@@ -218,6 +218,13 @@ llm:
   max_retries: 2
   fallback: ""
   local_backend: llama-cpp-python  # used when provider=local (RFC-011)
+  max_tokens: 400
+  max_tokens_causal: 8000
+  max_tokens_synthesis: 2500
+  max_tokens_extraction: 2500
+  max_tokens_ner: 2500
+  max_tokens_evolve: 2500
+  reasoning_model: false
   extra: {}
 
 
@@ -376,6 +383,10 @@ synthesis:
 #   ZETTELFORGE_PII_ACTION=redact
 #   ZETTELFORGE_LIMITS_MAX_CONTENT_LENGTH=104857600
 #   ZETTELFORGE_LIMITS_RECALL_TIMEOUT=60
+#   ZETTELFORGE_MEMORY_DEFENSE_ENABLED=true
+#   ZETTELFORGE_MEMORY_DEFENSE_MODE=audit       # audit | block | quarantine
+#   ZETTELFORGE_MEMORY_DEFENSE_MIN_CALIBRATION=50
+#   ZETTELFORGE_MEMORY_DEFENSE_KAPPA=2.0
 #
 governance:
   enabled: true
@@ -390,6 +401,17 @@ governance:
   limits:
     max_content_length: 52428800  # 50 MB, 0 = unlimited
     recall_timeout_seconds: 30.0  # seconds, 0 = unlimited
+  memory_defense:
+    enabled: true
+    mode: audit  # audit | block | quarantine
+    min_calibration_notes: 50
+    max_reference_notes: 50
+    kappa: 2.0
+    lexical_weight: 0.25
+    ngram_size: 3
+    monitored_domains: []  # empty = all domains
+    quarantine_path: ""  # default: <storage.data_dir>/quarantine/memory_anomalies.jsonl
+    quarantine_raw_content: true
 
 
 # ── LanceDB Maintenance (RFC-009 Phase 1.5) ─────────────────────────────────
@@ -487,4 +509,3 @@ web:
   enabled: true
   host: 0.0.0.0
   port: 8088
-
