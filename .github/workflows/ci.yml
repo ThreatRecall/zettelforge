@@ -57,7 +57,7 @@ jobs:
         # install, not at runtime; CI builds in ephemeral runners with
         # no persistent state. Re-evaluate when GitHub's images ship a
         # patched pip.
-        pip-audit --strict --vulnerability-service=osv \
+        pip-audit --strict \
           --ignore-vuln=CVE-2026-3219
 
   test:
