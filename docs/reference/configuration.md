@@ -129,6 +129,13 @@ class LLMConfig:
     max_retries: int = 2
     fallback: str = ""             # "" preserves implicit local->ollama fallback
     local_backend: str = "llama-cpp-python"  # RFC-011
+    max_tokens: int = 400
+    max_tokens_causal: int = 8000
+    max_tokens_synthesis: int = 2500
+    max_tokens_extraction: int = 2500
+    max_tokens_ner: int = 2500
+    max_tokens_evolve: int = 2500
+    reasoning_model: bool = False
     extra: dict = field(default_factory=dict)
 ```
 
@@ -143,6 +150,13 @@ class LLMConfig:
 | `llm.max_retries` | `int` | `2` | `ZETTELFORGE_LLM_MAX_RETRIES` | Number of retries on transient failure. Applied by `litellm` (via `num_retries` kwarg). |
 | `llm.fallback` | `str` | `""` | `ZETTELFORGE_LLM_FALLBACK` | Backup provider invoked when the primary fails with a non-configuration error. Empty string preserves the implicit `local -> ollama` fallback for backward compatibility; set explicitly to any other registered provider to route elsewhere. |
 | `llm.local_backend` | `str` | `llama-cpp-python` | `ZETTELFORGE_LLM_LOCAL_BACKEND` | In-process inference engine when `provider: local`. Options: `llama-cpp-python` (GGUF, default, requires `zettelforge[local]`), `onnxruntime-genai` (ONNX, requires `zettelforge[local-onnx]`). Ignored for all other providers. |
+| `llm.max_tokens` | `int` | `400` | `ZETTELFORGE_LLM_MAX_TOKENS` | Default generation budget when a caller does not pass an explicit `max_tokens`. |
+| `llm.max_tokens_causal` | `int` | `8000` | `ZETTELFORGE_LLM_MAX_TOKENS_CAUSAL` | Budget for causal triple extraction. |
+| `llm.max_tokens_synthesis` | `int` | `2500` | `ZETTELFORGE_LLM_MAX_TOKENS_SYNTHESIS` | Budget for RAG synthesis JSON output. |
+| `llm.max_tokens_extraction` | `int` | `2500` | `ZETTELFORGE_LLM_MAX_TOKENS_EXTRACTION` | Budget for two-phase fact extraction. |
+| `llm.max_tokens_ner` | `int` | `2500` | `ZETTELFORGE_LLM_MAX_TOKENS_NER` | Budget for conversational LLM NER and its retry path. |
+| `llm.max_tokens_evolve` | `int` | `2500` | `ZETTELFORGE_LLM_MAX_TOKENS_EVOLVE` | Budget for memory evolution decisions and retry path. |
+| `llm.reasoning_model` | `bool` | `false` | `ZETTELFORGE_LLM_REASONING_MODEL` | Raises timeout and per-call-site budgets to the known-good reasoning-model floors without lowering already larger operator overrides. |
 | `llm.extra` | `dict` | `{}` | -- | Provider-specific kwargs forwarded to the constructor. String values inside `extra` also honour `${ENV_VAR}` resolution. Common uses: `{filename: qwen2.5-3b-instruct-q4_k_m.gguf, n_ctx: 4096}` for `local` provider; `{provider: rocm}` for `onnxruntime-genai` execution provider selection; `{drop_params: true}` for `litellm`. |
 
 #### Provider quick-reference
@@ -495,6 +509,13 @@ See [Configure OpenCTI Integration](../how-to/configure-opencti.md) for setup st
 | `ZETTELFORGE_LLM_MAX_RETRIES` | `llm.max_retries` | `2` |
 | `ZETTELFORGE_LLM_FALLBACK` | `llm.fallback` | `ollama` |
 | `ZETTELFORGE_LLM_LOCAL_BACKEND` | `llm.local_backend` | `onnxruntime-genai` |
+| `ZETTELFORGE_LLM_MAX_TOKENS` | `llm.max_tokens` | `400` |
+| `ZETTELFORGE_LLM_MAX_TOKENS_CAUSAL` | `llm.max_tokens_causal` | `8000` |
+| `ZETTELFORGE_LLM_MAX_TOKENS_SYNTHESIS` | `llm.max_tokens_synthesis` | `2500` |
+| `ZETTELFORGE_LLM_MAX_TOKENS_EXTRACTION` | `llm.max_tokens_extraction` | `2500` |
+| `ZETTELFORGE_LLM_MAX_TOKENS_NER` | `llm.max_tokens_ner` | `2500` |
+| `ZETTELFORGE_LLM_MAX_TOKENS_EVOLVE` | `llm.max_tokens_evolve` | `2500` |
+| `ZETTELFORGE_LLM_REASONING_MODEL` | `llm.reasoning_model` | `true` |
 
 ### Web UI configuration (RFC-015)
 

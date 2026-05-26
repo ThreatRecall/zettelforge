@@ -176,12 +176,21 @@ def _fallback_provider(primary: str) -> str | None:
     return None
 
 
+def _default_max_tokens() -> int:
+    try:
+        from zettelforge.config import get_config
+
+        return int(get_config().llm.max_tokens)
+    except Exception:
+        return 400
+
+
 # ── Public API ───────────────────────────────────────────────────────────────
 
 
 def generate(
     prompt: str,
-    max_tokens: int = 400,
+    max_tokens: int | None = None,
     temperature: float = 0.1,
     system: str | None = None,
     json_mode: bool = False,
@@ -200,6 +209,7 @@ def generate(
         fail recoverably. Configuration errors are propagated.
     """
     primary = get_llm_provider()
+    effective_max_tokens = _default_max_tokens() if max_tokens is None else max_tokens
 
     try:
         provider = registry.get(primary, **_provider_kwargs(primary))
@@ -214,7 +224,7 @@ def generate(
     try:
         return provider.generate(
             prompt,
-            max_tokens=max_tokens,
+            max_tokens=effective_max_tokens,
             temperature=temperature,
             system=system,
             json_mode=json_mode,
@@ -235,7 +245,7 @@ def generate(
         fallback = registry.get(fallback_name, **_provider_kwargs(fallback_name))
         return fallback.generate(
             prompt,
-            max_tokens=max_tokens,
+            max_tokens=effective_max_tokens,
             temperature=temperature,
             system=system,
             json_mode=json_mode,

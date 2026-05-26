@@ -6,6 +6,21 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- Configurable LLM generation budgets for causal extraction, synthesis,
+  fact extraction, NER, and memory evolution, plus `reasoning_model` scaling
+  floors and `<think>` / `<thinking>` JSON parse stripping.
+- Bulk Sigma/YARA ingest can defer enrichment and drain once via
+  `MemoryManager.flush()`.
+
+### Fixed
+
+- Hardened CCCS YARA metadata validation against multiline regex injection
+  and overly permissive author values.
+- `MemoryManager.flush()` now waits for in-flight enrichment work, not only
+  queued work; cached `Plyara` parsing is serialized for concurrent callers.
+
 ## [2.7.0] - 2026-05-26
 
 Security and OSINT release. Adds the RFC-016 OSINT layer and the first

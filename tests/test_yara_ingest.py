@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from zettelforge.memory_manager import MemoryManager
+from zettelforge.note_schema import Content, Embedding, MemoryNote, Metadata, Semantic
 from zettelforge.yara.ingest import ingest_rule, ingest_rules_dir
 
 FIXTURES = Path(__file__).parent / "fixtures" / "yara"
@@ -48,6 +49,50 @@ def test_ingest_rules_dir_walks_tree(mm: MemoryManager) -> None:
     result = ingest_rules_dir(FIXTURES, mm, tier="warn")
     assert result["ingested"] >= 3
     assert result["errors"] == []
+
+
+def test_ingest_rules_dir_bulk_defers_enrichment_and_flushes() -> None:
+    class _Store:
+        def get_note_by_source_ref(self, _source_ref):
+            return None
+
+        def add_kg_edge(self, **_kwargs):
+            return None
+
+    class _MM:
+        def __init__(self):
+            self.store = _Store()
+            self.calls = []
+            self.flushed = False
+
+        def remember(self, *, content, source_type, source_ref, domain, sync):
+            self.calls.append({"source_ref": source_ref, "sync": sync})
+            note = MemoryNote(
+                id=f"note-{len(self.calls)}",
+                created_at="2026-05-26T00:00:00",
+                updated_at="2026-05-26T00:00:00",
+                content=Content(raw=content, source_type=source_type, source_ref=source_ref),
+                semantic=Semantic(context="", keywords=[], tags=[], entities=[]),
+                embedding=Embedding(vector=[]),
+                metadata=Metadata(domain=domain),
+            )
+            return note, "created"
+
+        def flush(self, timeout=None):
+            self.flushed = True
+            self.flush_timeout = timeout
+            return True
+
+    mm = _MM()
+
+    result = ingest_rules_dir(FIXTURES, mm, tier="warn", bulk=True, flush_timeout=1.5)
+
+    assert result["ingested"] >= 3
+    assert result["errors"] == []
+    assert mm.calls
+    assert all(call["sync"] is False for call in mm.calls)
+    assert mm.flushed is True
+    assert mm.flush_timeout == 1.5
 
 
 def test_ingest_rules_dir_second_run_skips_existing(mm: MemoryManager) -> None:

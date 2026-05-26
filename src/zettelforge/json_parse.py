@@ -12,6 +12,12 @@ import re
 _logger = logging.getLogger("zettelforge.json_parse")
 
 _parse_stats = {"success": 0, "failure": 0}
+_THINKING_TAG_RE = re.compile(r"<think(?:ing)?>.*?</think(?:ing)?>", re.DOTALL | re.IGNORECASE)
+
+
+def strip_thinking_tags(raw: str) -> str:
+    """Remove reasoning-model thinking blocks before JSON extraction."""
+    return _THINKING_TAG_RE.sub("", raw)
 
 
 def extract_json(raw: str | None, expect: str = "object") -> dict | list | None:
@@ -28,7 +34,7 @@ def extract_json(raw: str | None, expect: str = "object") -> dict | list | None:
         _parse_stats["failure"] += 1
         return None
 
-    text = _strip_code_fences(raw)
+    text = _strip_code_fences(strip_thinking_tags(raw))
 
     # Try to find JSON in the text
     if expect == "array":
