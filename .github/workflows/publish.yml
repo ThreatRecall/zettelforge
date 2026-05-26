@@ -6,6 +6,9 @@ on:
 
 jobs:
   publish:
+    # Package-only releases (for example packages-v0.1.0) are not
+    # Python package releases and must not attempt a PyPI upload.
+    if: startsWith(github.event.release.tag_name, 'v')
     runs-on: ubuntu-latest
     permissions:
       contents: read
