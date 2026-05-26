@@ -1,6 +1,7 @@
 """Tests for zettelforge.yara.parser."""
 
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
 
 from zettelforge.yara.parser import parse_file, parse_text, parse_yara
 
@@ -75,6 +76,19 @@ rule Second {
     # raw_rule carved from source lines — non-empty for both.
     assert "rule First" in rules[0]["raw_rule"]
     assert "rule Second" in rules[1]["raw_rule"]
+
+
+def test_parse_yara_cached_parser_is_safe_under_concurrency() -> None:
+    """Concurrent parses must not clear shared plyara state mid-parse."""
+    src = (FIXTURES / "webshell.yar").read_text()
+
+    def parse_names() -> list[str]:
+        return [rule["rule_name"] for rule in parse_yara(src)]
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        results = list(pool.map(lambda _i: parse_names(), range(12)))
+
+    assert results == [["SuspiciousWebShell"]] * 12
 
 
 def test_parse_text_raises_on_syntax_error() -> None:

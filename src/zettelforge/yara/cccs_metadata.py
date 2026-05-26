@@ -62,12 +62,12 @@ CCCS_YARA_VALUES: dict[str, Any] = _load_yaml(_CCCS_VALUES_PATH)
 
 
 def _allowed_regexes(value_name: str) -> list[re.Pattern[str]]:
-    """Return compiled alternation regexes for a named value set."""
+    """Return whole-value regexes for a named CCCS value set."""
     entries = CCCS_YARA_VALUES.get(value_name, []) or []
     patterns: list[re.Pattern[str]] = []
     for entry in entries:
         if isinstance(entry, dict) and "value" in entry:
-            patterns.append(re.compile(entry["value"]))
+            patterns.append(re.compile(rf"\A(?:{entry['value']})\Z"))
     return patterns
 
 
@@ -79,13 +79,14 @@ _MALWARE_TYPE_REGEXES = _allowed_regexes("malware_types")
 _ACTOR_TYPE_REGEXES = _allowed_regexes("actor_types")
 _HASH_REGEXES = _allowed_regexes("hash_types")
 
-# From CCCS_YARA.yml: author's own regexExpression.
-_AUTHOR_REGEX = re.compile(r"^[a-zA-Z]+\@[A-Z]+$|^[A-Z\s._\-]+$|^.*$")
-_VERSION_REGEX = re.compile(r"^\d+\.\d+$")
-_DATE_REGEX = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-_UUID_REGEX = re.compile(r"^[0-9A-Za-z]{16,}$")  # base62 UUID, generous lower bound.
-_FINGERPRINT_REGEX = re.compile(r"^[a-fA-F0-9]{40,64}$")  # SHA-1 / SHA-256-ish.
-_MITRE_ATT_REGEX = re.compile(r"^(TA|T|M|G|S)\d{4}(\.\d{3})?$")
+# The upstream author regex ends with ``^.*$`` and therefore accepts any
+# attacker-controlled string. Keep this field deliberately narrow.
+_AUTHOR_REGEX = re.compile(r"\A[A-Za-z0-9_.@+-]+\Z")
+_VERSION_REGEX = re.compile(r"\A\d+\.\d+\Z")
+_DATE_REGEX = re.compile(r"\A\d{4}-\d{2}-\d{2}\Z")
+_UUID_REGEX = re.compile(r"\A[0-9A-Za-z]{16,}\Z")  # base62 UUID, generous lower bound.
+_FINGERPRINT_REGEX = re.compile(r"\A[a-fA-F0-9]{40,64}\Z")  # SHA-1 / SHA-256-ish.
+_MITRE_ATT_REGEX = re.compile(r"\A(TA|T|M|G|S)\d{4}(\.\d{3})?\Z")
 
 
 # Fields whose ``optional: No`` makes them required under CCCS-strict.
@@ -133,7 +134,9 @@ REQUIRED_FIELDS: list[str] = _required_fields()
 def _regex_match(value: Any, patterns: list[re.Pattern[str]]) -> bool:
     if not isinstance(value, str):
         return False
-    return any(p.search(value) is not None for p in patterns)
+    if value != value.strip():
+        return False
+    return any(p.fullmatch(value) is not None for p in patterns)
 
 
 def _validate_field(name: str, value: Any) -> str | None:

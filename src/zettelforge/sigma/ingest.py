@@ -42,6 +42,7 @@ def ingest_rule(
     *,
     domain: str = "detection",
     source_ref: str | None = None,
+    sync: bool = True,
 ) -> tuple[Any, list[dict[str, Any]]]:
     """Ingest a single Sigma rule.
 
@@ -51,6 +52,8 @@ def ingest_rule(
         domain: Memory domain for the note (default ``"detection"``).
         source_ref: Override ``source_ref`` on the note (defaults to the
             rule id for dict/str input, or the file path for Path input).
+        sync: Whether MemoryManager enrichment should run inline. Directory
+            bulk ingest passes ``False`` and drains once at the end.
 
     Returns:
         ``(note, relations)`` — the :class:`MemoryNote` persisted and the
@@ -86,7 +89,7 @@ def ingest_rule(
         source_type="sigma_rule",
         source_ref=effective_source_ref,
         domain=domain,
-        sync=True,
+        sync=sync,
     )
 
     _persist_relations(mm, relations, note_id=note.id)
@@ -99,6 +102,8 @@ def ingest_rules_dir(
     *,
     glob: str = "**/*.yml",
     domain: str = "detection",
+    bulk: bool = False,
+    flush_timeout: float | None = None,
 ) -> tuple[int, int]:
     """Walk a directory, ingesting every matching Sigma rule.
 
@@ -142,7 +147,7 @@ def ingest_rules_dir(
             skipped += 1
             continue
         try:
-            ingest_rule(fpath, mm, domain=domain)
+            ingest_rule(fpath, mm, domain=domain, sync=not bulk)
             ingested += 1
         except (SigmaParseError, SigmaValidationError) as exc:
             _log.warning("sigma_ingest_skip path=%s reason=%s", fpath, exc)
@@ -150,6 +155,10 @@ def ingest_rules_dir(
         except Exception as exc:  # pragma: no cover — defensive
             _log.warning("sigma_ingest_error path=%s reason=%s", fpath, exc)
             skipped += 1
+    if bulk and hasattr(mm, "flush"):
+        flushed = mm.flush(timeout=flush_timeout)
+        if not flushed:
+            _log.warning("sigma_bulk_flush_timeout path=%s timeout=%s", root, flush_timeout)
     return ingested, skipped
 
 

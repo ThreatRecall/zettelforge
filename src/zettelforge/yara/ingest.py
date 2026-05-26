@@ -75,6 +75,7 @@ def ingest_rule(
     *,
     domain: str = "detection",
     tier: str = "warn",
+    sync: bool = True,
 ) -> tuple[MemoryNote | None, list[dict[str, Any]]]:
     """Ingest a single YARA rule (file, text, or pre-parsed dict).
 
@@ -89,6 +90,8 @@ def ingest_rule(
         domain: Memory domain for the note. Default ``"detection"``.
         tier: CCCS validation tier. ``"warn"`` (default), ``"strict"``,
             or ``"non_cccs"``.
+        sync: Whether MemoryManager enrichment should run inline. Directory
+            bulk ingest passes ``False`` and drains once at the end.
 
     Returns:
         ``(note, relations)``. ``note`` is ``None`` only when CCCS
@@ -102,7 +105,13 @@ def ingest_rule(
         return None, []
 
     rule_dict = rules[0]
-    note, relations, _is_new = _ingest_single(rule_dict, mm, domain=domain, tier=tier)
+    note, relations, _is_new = _ingest_single(
+        rule_dict,
+        mm,
+        domain=domain,
+        tier=tier,
+        sync=sync,
+    )
     return note, relations
 
 
@@ -113,6 +122,8 @@ def ingest_rules_dir(
     glob: str = "**/*.yar",
     tier: str = "warn",
     domain: str = "detection",
+    bulk: bool = False,
+    flush_timeout: float | None = None,
 ) -> dict[str, Any]:
     """Walk a directory tree and ingest every YARA rule file.
 
@@ -182,6 +193,7 @@ def ingest_rules_dir(
                         domain=domain,
                         tier=tier,
                         source_path=str(yar_path),
+                        sync=not bulk,
                     )
                 except Exception as exc:  # pragma: no cover — defensive
                     errors.append(f"{yar_path}:{rule_dict.get('rule_name')}: {exc}")
@@ -195,6 +207,11 @@ def ingest_rules_dir(
                 else:
                     # Already present (idempotent hit).
                     skipped += 1
+
+    if bulk and hasattr(mm, "flush"):
+        flushed = mm.flush(timeout=flush_timeout)
+        if not flushed:
+            _LOG.warning("yara_bulk_flush_timeout path=%s timeout=%s", root, flush_timeout)
 
     return {"ingested": ingested, "skipped": skipped, "errors": errors}
 
@@ -230,6 +247,7 @@ def _ingest_single(
     domain: str,
     tier: str,
     source_path: str | None = None,
+    sync: bool = True,
 ) -> tuple[MemoryNote | None, list[dict[str, Any]], bool]:
     """Ingest one rule. Returns ``(note_or_None, relations, is_new)``.
 
@@ -263,7 +281,7 @@ def _ingest_single(
         source_type="yara",
         source_ref=source_ref,
         domain=domain,
-        sync=True,
+        sync=sync,
     )
 
     # CR-B1: persist every relation as a KG edge keyed on the YaraRule's

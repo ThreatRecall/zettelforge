@@ -141,13 +141,15 @@ class SynthesisGenerator:
         full_prompt = f"{user_prompt}\n\nRespond with valid JSON only."
 
         try:
+            from zettelforge.config import get_config
             from zettelforge.llm_client import generate
 
-            # 2500-token budget for reasoning-model headroom. Pre-2.5.2 the
-            # 800-token cap was exhausted by qwen3.5+/qwen3.6/nemotron-3
-            # <think> tokens before any JSON answer was emitted, dropping
-            # synthesis to its empty-result fallback on every call.
-            raw = generate(full_prompt, max_tokens=2500, temperature=0.1, system=system_prompt)
+            raw = generate(
+                full_prompt,
+                max_tokens=get_config().llm.max_tokens_synthesis,
+                temperature=0.1,
+                system=system_prompt,
+            )
             result = extract_json(raw, expect="object")
             if result is None:
                 _logger.warning("parse_failed", schema="synthesis", raw=(raw or "")[:200])

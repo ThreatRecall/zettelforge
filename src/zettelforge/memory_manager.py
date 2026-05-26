@@ -1073,11 +1073,11 @@ class MemoryManager:
     def _enrichment_loop(self) -> None:
         """Background worker: process enrichment jobs until process exits."""
         while True:
+            job = None
             try:
                 job = self._enrichment_queue.get(timeout=1.0)
                 if job.defer:
                     # Batch-deferred job — skip for now, will be swept later
-                    self._enrichment_queue.task_done()
                     continue
                 if job.job_type == "neighbor_evolution":
                     self._run_evolution(job)
@@ -1085,7 +1085,6 @@ class MemoryManager:
                     self._run_llm_ner(job)
                 else:
                     self._run_enrichment(job)
-                self._enrichment_queue.task_done()
             except queue.Empty:
                 continue
             except BackendClosedError:
@@ -1093,6 +1092,27 @@ class MemoryManager:
                 return
             except Exception:
                 self._logger.error("enrichment_worker_error", exc_info=True)
+            finally:
+                if job is not None:
+                    self._enrichment_queue.task_done()
+
+    def flush(self, timeout: float | None = None) -> bool:
+        """Wait until queued and in-flight enrichment jobs complete.
+
+        Returns ``True`` when all jobs are done. If ``timeout`` is provided
+        and expires first, returns ``False``.
+        """
+        deadline = None if timeout is None else time.monotonic() + timeout
+        with self._enrichment_queue.all_tasks_done:
+            while self._enrichment_queue.unfinished_tasks:
+                if deadline is None:
+                    self._enrichment_queue.all_tasks_done.wait()
+                    continue
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    return False
+                self._enrichment_queue.all_tasks_done.wait(remaining)
+        return True
 
     def _run_enrichment(self, job: _EnrichmentJob) -> None:
         """Execute slow-path LLM causal triple extraction for one note."""
@@ -1212,10 +1232,10 @@ class MemoryManager:
         """atexit: process remaining enrichment jobs within a 10-second window."""
         deadline = time.monotonic() + 10.0
         while not self._enrichment_queue.empty() and time.monotonic() < deadline:
+            job = None
             try:
                 job = self._enrichment_queue.get_nowait()
                 if job.defer:
-                    self._enrichment_queue.task_done()
                     continue
                 if job.job_type == "neighbor_evolution":
                     self._run_evolution(job)
@@ -1223,7 +1243,6 @@ class MemoryManager:
                     self._run_llm_ner(job)
                 else:
                     self._run_enrichment(job)
-                self._enrichment_queue.task_done()
             except queue.Empty:
                 break
             except BackendClosedError:
@@ -1231,6 +1250,9 @@ class MemoryManager:
                 return
             except Exception:
                 self._logger.warning("enrichment_drain_failed", exc_info=True)
+            finally:
+                if job is not None:
+                    self._enrichment_queue.task_done()
 
     def evolve_note(self, note_id: str, sync: bool = False) -> dict | None:
         """Trigger neighbor evolution for an existing note.

@@ -10,6 +10,7 @@ Based on: A-Mem (arXiv:2502.12110, NeurIPS 2025)
 
 from typing import Any
 
+from zettelforge.config import get_config
 from zettelforge.json_parse import extract_json
 from zettelforge.llm_client import generate
 from zettelforge.log import get_logger
@@ -91,9 +92,10 @@ class MemoryEvolver:
             neighbor_content=neighbor.content.raw[:1000],
             new_content=new_note.content.raw[:1000],
         )
+        max_tokens = get_config().llm.max_tokens_evolve
 
         # First attempt
-        output = generate(prompt, max_tokens=2500, temperature=0.2, json_mode=True)
+        output = generate(prompt, max_tokens=max_tokens, temperature=0.2, json_mode=True)
         result = extract_json(output, expect="object")
 
         # Single retry on parse failure (AD-2). Capture what the model
@@ -108,7 +110,7 @@ class MemoryEvolver:
                 raw_chars=len(output or ""),
                 prompt_preview=prompt[:240],
             )
-            output = generate(prompt, max_tokens=2500, temperature=0.1, json_mode=True)
+            output = generate(prompt, max_tokens=max_tokens, temperature=0.1, json_mode=True)
             result = extract_json(output, expect="object")
 
         if result is None:

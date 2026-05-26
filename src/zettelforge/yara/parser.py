@@ -27,6 +27,7 @@ The parser preserves plyara's original keys and adds:
 
 from __future__ import annotations
 
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -36,6 +37,8 @@ import plyara
 #: a few KB; a 1 MB ceiling catches runaway payloads without blocking normal
 #: multi-rule files.
 MAX_RULE_FILE_BYTES = 1_048_576  # 1 MB
+_PARSER_LOCK = threading.Lock()
+_PARSER: plyara.Plyara | None = None
 
 
 class YaraParseError(ValueError):
@@ -66,18 +69,29 @@ def _carve_raw_rule(source_lines: list[str], rule: dict[str, Any]) -> str:
     return "\n".join(source_lines[start - 1 : stop])
 
 
+def _get_parser() -> plyara.Plyara:
+    global _PARSER
+    if _PARSER is None:
+        _PARSER = plyara.Plyara()
+    return _PARSER
+
+
 def parse_yara(text: str) -> list[dict[str, Any]]:
     """Parse YARA source text into a list of normalized rule dicts.
 
     A single .yar file may contain multiple rules; one dict per rule.
     """
-    parser = plyara.Plyara()
-    try:
-        rules: list[dict[str, Any]] = parser.parse_string(text)
-    except Exception as exc:  # plyara raises generic Exception on syntax errors
-        raise ValueError(f"plyara parse error: {exc}") from exc
+    with _PARSER_LOCK:
+        parser = _get_parser()
+        parser.clear()
+        try:
+            rules: list[dict[str, Any]] = list(parser.parse_string(text))
+            parser_imports = sorted(getattr(parser, "imports", set()) or [])
+        except Exception as exc:  # plyara raises generic Exception on syntax errors
+            raise ValueError(f"plyara parse error: {exc}") from exc
+        finally:
+            parser.clear()
 
-    parser_imports = sorted(getattr(parser, "imports", set()) or [])
     source_lines = text.splitlines()
 
     for rule in rules:
