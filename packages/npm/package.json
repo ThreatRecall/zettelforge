@@ -1,0 +1,33 @@
+{
+  "name": "zettelforge",
+  "version": "2.7.0",
+  "description": "Agentic memory for cyber threat intelligence. STIX graphs, actor aliasing, offline RAG, Sigma/YARA.",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "cybersecurity",
+    "threat-intelligence",
+    "cti",
+    "stix",
+    "agentic-memory",
+    "knowledge-graph"
+  ],
+  "homepage": "https://github.com/rolandpg/zettelforge",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rolandpg/zettelforge.git"
+  },
+  "license": "MIT",
+  "author": "Patrick Roland <patrick@groland.com>",
+  "bin": {
+    "zettelforge-mcp": "./bin/cli.mjs"
+  },
+  "files": [
+    "bin/cli.mjs",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
