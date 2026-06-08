@@ -49,16 +49,17 @@ jobs:
         # --ignore-vuln=CVE-... with a citation when the finding is
         # explicitly accepted per GOV-009 §"Vulnerability Response".
         #
-        # CVE-2026-3219: vulnerability in `pip` itself (the package
-        # manager), not a project dependency. The runner's pip is
-        # supplied by GitHub's setup-python image and is not something
-        # ZettelForge's pyproject can pin or upgrade. Risk-accepted
-        # because the pip vulnerability surface is exposed during
-        # install, not at runtime; CI builds in ephemeral runners with
-        # no persistent state. Re-evaluate when GitHub's images ship a
-        # patched pip.
+        # CVE-2026-3219 / PYSEC-2026-196: vulnerability in `pip` itself
+        # (the package manager), not a project dependency. The runner's
+        # pip is supplied by GitHub's setup-python image and is not
+        # something ZettelForge's pyproject can pin or upgrade.
+        # Risk-accepted because the pip vulnerability surface is exposed
+        # during install, not at runtime; CI builds in ephemeral runners
+        # with no persistent state. Re-evaluate when GitHub's images
+        # ship a patched pip.
         pip-audit --strict \
-          --ignore-vuln=CVE-2026-3219
+          --ignore-vuln=CVE-2026-3219 \
+          --ignore-vuln=PYSEC-2026-196
 
   test:
     runs-on: ubuntu-latest
