@@ -128,6 +128,13 @@ class EntityExtractor:
     # Regex for conversational person names from dialogue format "Name: text"
     _PERSON_PATTERN = re.compile(r"(?:^|\n)\s*([A-Z][a-z]{2,15}):", re.MULTILINE)
 
+    # Candidate person names anywhere in free text. Filtered hard below:
+    # sentence-initial tokens and multi-word proper noun phrases are skipped,
+    # so only single capitalized tokens in running text survive ("with
+    # Caroline", "What did Melanie paint?"). This is what lets query-side
+    # entity extraction fire graph traversal on conversational questions.
+    _FREETEXT_PERSON_PATTERN = re.compile(r"\b([A-Z][a-z]{2,15})\b")
+
     # Common words that match the person pattern but aren't names
     _NAME_STOPWORDS: ClassVar[set[str]] = {
         "the",
@@ -180,6 +187,80 @@ class EntityExtractor:
         "october",
         "november",
         "december",
+        # Capitalized mid-sentence terms that are not given names
+        "god",
+        "mom",
+        "dad",
+        "mum",
+        "grandma",
+        "grandpa",
+        "christmas",
+        "thanksgiving",
+        "halloween",
+        "easter",
+        "english",
+        "french",
+        "spanish",
+        "german",
+        "chinese",
+        "japanese",
+        "american",
+        "british",
+        "canadian",
+        "russian",
+        "iranian",
+        "korean",
+        "israeli",
+        "ukrainian",
+        "indian",
+        "pakistani",
+        "european",
+        "asian",
+        "african",
+        "italian",
+        "dutch",
+        "polish",
+        "turkish",
+        "mexican",
+        "brazilian",
+        "australian",
+        # Vendors and platforms that appear capitalized mid-sentence in CTI text
+        "microsoft",
+        "windows",
+        "linux",
+        "android",
+        "cisco",
+        "fortinet",
+        "ivanti",
+        "oracle",
+        "intel",
+        "nvidia",
+        "samsung",
+        "internet",
+        "facebook",
+        "instagram",
+        "youtube",
+        "netflix",
+        "spotify",
+        "amazon",
+        "google",
+        "apple",
+        "reddit",
+        "twitter",
+        "tiktok",
+        "covid",
+        "awesome",
+        "great",
+        "cool",
+        "nice",
+        "haha",
+        "congrats",
+        "sorry",
+        "happy",
+        "glad",
+        "today",
+        "tomorrow",
+        "yesterday",
     }
 
     # Regex for common locations
@@ -240,6 +321,24 @@ class EntityExtractor:
         for name in person_matches:
             if name.lower() not in self._NAME_STOPWORDS and len(name) >= 3:
                 persons.add(name.lower())
+
+        # Person names from running text: single capitalized tokens that are
+        # not sentence-initial and not part of a proper noun phrase.
+        for match in self._FREETEXT_PERSON_PATTERN.finditer(text):
+            word = match.group(1)
+            lower = word.lower()
+            if lower in persons or lower in self._NAME_STOPWORDS:
+                continue
+            prefix = text[: match.start()].rstrip(" \"'(")
+            if not prefix or prefix[-1] in ".!?:\n":
+                continue  # sentence-initial token, not a reliable name signal
+            following = re.match(r"\s+[A-Z][a-z]", text[match.end() :])
+            if following is not None:
+                continue  # "Cobalt Strike", "New York": proper noun phrase
+            preceding = re.search(r"([A-Za-z][\w-]*)\s*$", prefix)
+            if preceding is not None and preceding.group(1)[0].isupper():
+                continue  # second word of a proper noun phrase
+            persons.add(lower)
         results["person"] = list(persons)
 
         # Locations

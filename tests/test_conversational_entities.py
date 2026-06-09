@@ -224,3 +224,58 @@ class TestEntityIndexerConversational:
         results = idx.search_entities("paris")
         assert "location" in results
         assert "organization" in results
+
+
+class TestFreeTextPersonExtraction:
+    """Person names from free text, not just 'Name:' dialogue lines.
+
+    Query-side extraction is what lets graph traversal fire on
+    conversational questions ("What did Melanie paint?"); ingest-side
+    extraction is what indexes friends mentioned inside turns.
+    """
+
+    def test_query_side_person_extracted(self):
+        ext = EntityExtractor()
+        result = ext.extract_regex("What did Melanie paint last May?")
+        assert "melanie" in result["person"]
+
+    def test_mid_sentence_person_extracted(self):
+        ext = EntityExtractor()
+        result = ext.extract_regex("I went hiking with Caroline and her dog.")
+        assert "caroline" in result["person"]
+
+    def test_sentence_initial_words_not_persons(self):
+        ext = EntityExtractor()
+        result = ext.extract_regex("What tools does the group use? The group adapted.")
+        assert "what" not in result["person"]
+        assert "the" not in result["person"]
+
+    def test_proper_noun_phrases_skipped(self):
+        ext = EntityExtractor()
+        result = ext.extract_regex(
+            "APT28 used Cobalt Strike against New York targets."
+        )
+        assert "cobalt" not in result["person"]
+        assert "strike" not in result["person"]
+        assert "new" not in result["person"]
+        assert "york" not in result["person"]
+
+    def test_capitalized_common_terms_skipped(self):
+        ext = EntityExtractor()
+        result = ext.extract_regex("We celebrated Christmas in Toronto with Mom.")
+        assert "christmas" not in result["person"]
+        assert "mom" not in result["person"]
+        assert "toronto" in result["location"]
+
+    def test_dialogue_names_still_extracted(self):
+        ext = EntityExtractor()
+        result = ext.extract_regex("Melanie: I started a painting class!")
+        assert "melanie" in result["person"]
+
+    def test_demonyms_and_vendors_not_persons(self):
+        ext = EntityExtractor()
+        result = ext.extract_regex(
+            "APT28 is a Russian threat actor abusing Microsoft services."
+        )
+        assert "russian" not in result["person"]
+        assert "microsoft" not in result["person"]
