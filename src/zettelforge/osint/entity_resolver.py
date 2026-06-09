@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import ipaddress
 import re
-from datetime import datetime
 from typing import TYPE_CHECKING
 
 from zettelforge.osint.ontology import (
@@ -239,8 +238,7 @@ def add_resolved(
     if existing_id:
         node = kg.get_node_by_id(existing_id)
         if node and properties:
-            node["properties"].update(properties)
-            node["updated_at"] = datetime.now().isoformat()
+            kg.add_node(entity_type, canonical_value, properties)
         if canonical_value != entity_value:
             alias_reverse[entity_value] = canonical
         return existing_id, False

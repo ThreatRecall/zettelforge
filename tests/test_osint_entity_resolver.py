@@ -38,6 +38,11 @@ def test_add_resolved_registers_alias_for_existing_node(tmp_path, monkeypatch) -
     assert node['properties']['value'] == 'example.com'
     assert node['properties']['source'] == 'unit-test'
 
+    reloaded = KnowledgeGraph(data_dir=str(tmp_path))
+    reloaded_node = reloaded.get_node('DomainName', 'example.com')
+    assert reloaded_node is not None
+    assert reloaded_node['properties']['source'] == 'unit-test'
+
 
 def test_canonicalise_organization_normalizes_case_and_whitespace() -> None:
     assert entity_resolver.canonicalise_value('Organization', ' Example  Corp ') == 'example corp'
