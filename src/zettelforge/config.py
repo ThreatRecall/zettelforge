@@ -194,11 +194,12 @@ class RetrievalConfig:
     entity_boost: float = 2.5
     max_graph_depth: int = 2
     # Cross-encoder rerank policy: the reranker is the dominant read-path
-    # cost (ONNX on CPU), so its work is bounded. Defaults preserve prior
-    # behavior; benchmark-tuned values are set in config.default.yaml.
+    # cost (ONNX on CPU), so its work is bounded. Tuned on the CTI suite
+    # (2026-06-09 grid): accuracy holds at 75% from 512c-50n down to
+    # 128c-8n while p50 drops 91ms -> 42ms; 256c-8n picked for headroom.
     rerank_enabled: bool = True
-    rerank_max_candidates: int = 50
-    rerank_doc_chars: int = 512
+    rerank_max_candidates: int = 8
+    rerank_doc_chars: int = 256
 
 
 @dataclass
