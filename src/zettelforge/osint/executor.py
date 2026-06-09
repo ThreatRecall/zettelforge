@@ -186,6 +186,15 @@ def run_osint_collection(
                         canonical_input_value=canonical_input_value,
                     )
                     result.persisted.append(persisted)
+                else:
+                    from_value = _derive_endpoint_value(
+                        tup, "from", input_entity_type, canonical_input_value
+                    )
+                    to_value = _derive_endpoint_value(tup, "to", input_entity_type, canonical_input_value)
+                    from_props = _endpoint_properties(tup.from_entity_type, from_value, tup, input_entity_type)
+                    to_props = _endpoint_properties(tup.to_entity_type, to_value, tup, input_entity_type)
+                    _validate_entity_or_raise(validator, tup.from_entity_type, from_props)
+                    _validate_entity_or_raise(validator, tup.to_entity_type, to_props)
             except ValueError as exc:
                 result.errors.append(OSINTExecutionError(meta.name, str(exc), tuple_index=index))
 
