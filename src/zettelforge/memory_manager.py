@@ -49,21 +49,26 @@ from zettelforge.telemetry import get_telemetry
 from zettelforge.vector_memory import preload_embedding_model
 from zettelforge.vector_retriever import VectorRetriever
 
-# ── Reranker singleton ───────────────────────────────────────────────────────
-_reranker = None
+# ── Reranker singletons (one per configured model) ──────────────────────────
+_rerankers: dict[str, object] = {}
 _reranker_lock = threading.Lock()
 
 
 def _get_reranker():
-    """Get or create cross-encoder reranker (singleton, ~80MB, loads once)."""
-    global _reranker
-    if _reranker is None:
+    """Get or create the configured cross-encoder reranker (loads once per model)."""
+    retrieval_cfg = get_config().retrieval
+    model = retrieval_cfg.rerank_model
+    reranker = _rerankers.get(model)
+    if reranker is None:
         with _reranker_lock:
-            if _reranker is None:
+            reranker = _rerankers.get(model)
+            if reranker is None:
                 from fastembed.rerank.cross_encoder import TextCrossEncoder
 
-                _reranker = TextCrossEncoder("Xenova/ms-marco-MiniLM-L-6-v2")
-    return _reranker
+                threads = retrieval_cfg.rerank_threads or None
+                reranker = TextCrossEncoder(model, threads=threads)
+                _rerankers[model] = reranker
+    return reranker
 
 
 @dataclass

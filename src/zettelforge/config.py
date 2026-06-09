@@ -100,6 +100,10 @@ class EmbeddingConfig:
     url: str = "http://127.0.0.1:11434"  # only used when provider=ollama
     model: str = "nomic-ai/nomic-embed-text-v1.5-Q"
     dimensions: int = 768
+    # ONNX intra-op threads for single-query embedding. Oversubscription on
+    # many-core hosts hurts small-batch latency (measured 5.9ms -> 4.5ms at
+    # 8 threads on a 20-core GB10). 0 = onnxruntime default.
+    threads: int = 8
 
 
 @dataclass
@@ -200,6 +204,11 @@ class RetrievalConfig:
     rerank_enabled: bool = True
     rerank_max_candidates: int = 8
     rerank_doc_chars: int = 256
+    rerank_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
+    # ONNX intra-op threads for the cross-encoder. Small rerank batches
+    # thrash when onnxruntime grabs every core (measured 23.7ms -> 11.5ms
+    # at 8 threads on a 20-core GB10). 0 = onnxruntime default.
+    rerank_threads: int = 8
 
 
 @dataclass

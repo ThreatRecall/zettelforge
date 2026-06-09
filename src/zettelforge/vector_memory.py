@@ -72,7 +72,10 @@ def _get_embed_model():
             if _embed_model is None:
                 from fastembed import TextEmbedding
 
-                _embed_model = TextEmbedding(get_embedding_model())
+                from zettelforge.config import get_config
+
+                threads = get_config().embedding.threads or None
+                _embed_model = TextEmbedding(get_embedding_model(), threads=threads)
     return _embed_model
 
 
