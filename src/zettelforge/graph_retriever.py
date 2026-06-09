@@ -7,7 +7,10 @@ Score formula: 1 / (1 + hop_distance)
 """
 
 from dataclasses import dataclass, field
-from typing import Protocol
+from typing import TYPE_CHECKING, Protocol
+
+if TYPE_CHECKING:
+    from zettelforge.storage_backend import StorageBackend
 
 
 class GraphSource(Protocol):
@@ -29,7 +32,7 @@ class StoreGraphSource:
     isolated store yields phantom note IDs and unbounded BFS cost.
     """
 
-    def __init__(self, store) -> None:
+    def __init__(self, store: "StorageBackend") -> None:
         self._store = store
 
     def get_node(self, entity_type: str, entity_value: str) -> dict | None:
@@ -82,7 +85,7 @@ class GraphRetriever:
         start_value: str,
         max_depth: int,
         best: dict[str, ScoredResult],
-    ):
+    ) -> None:
         start_node = self.kg.get_node(start_type, start_value)
         if not start_node:
             return

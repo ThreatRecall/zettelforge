@@ -21,8 +21,12 @@ import threading
 import uuid
 from datetime import datetime
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from zettelforge.log import get_logger
+
+if TYPE_CHECKING:
+    from zettelforge.cache import SmartCache
 
 _logger = get_logger("zettelforge.vector_memory")
 
@@ -106,7 +110,7 @@ _embedding_cache = None
 _embedding_cache_lock = threading.Lock()
 
 
-def _get_embedding_cache():
+def _get_embedding_cache() -> "SmartCache":
     global _embedding_cache
     if _embedding_cache is None:
         with _embedding_cache_lock:
@@ -135,7 +139,7 @@ def get_embedding(text: str, model: str | None = None) -> list[float]:
     cache = _get_embedding_cache()
     key_model = model or get_embedding_model()
     key = f"{key_model}:{hashlib.sha256(text.encode()).hexdigest()}"
-    cached = cache.get(key)
+    cached: list[float] | None = cache.get(key)
     if cached is not None:
         return cached
     embedding = _compute_embedding(text, model)
