@@ -6,22 +6,39 @@ ontology and imports each collector subpackage so collectors register with
 ``TRANSFORM_REGISTRY`` at module load time.
 
 Phase 1 (Infrastructure) ships functional collectors (DNS, WHOIS, crt.sh)
-plus stubs for BGP and port scanning. Phases 2-5 ship as graceful stubs:
-each collector registers its metadata so callers can discover it, and
-returns ``[]`` until the underlying API integration lands.
+plus the passive BGP collector. Phase 1.5 adds the OSINT executor and
+resolver wiring; active port scanning remains gated behind explicit
+operator opt-in. Later collectors stay as graceful stubs until their
+respective phases land.
 
 Public surface:
 
-- ``OSINT_ENTITY_TYPES`` / ``OSINT_RELATION_TYPES`` / ``ONTOLOGY`` — additive
+- ``OSINT_ENTITY_TYPES`` / ``OSINT_RELATION_TYPES`` / ``ONTOLOGY`` -- additive
   ontology declarations.
-- ``TRANSFORM_REGISTRY`` — the singleton registry.
-- ``CollectorTuple`` — collector return-row shape.
-- ``TransformMetadata`` / ``TransformRegistry`` — types for adding new
+- ``TRANSFORM_REGISTRY`` -- the singleton registry.
+- ``CollectorTuple`` -- collector return-row shape.
+- ``TransformMetadata`` / ``TransformRegistry`` -- types for adding new
   collectors.
-- ``Investigation`` / ``EntityResolver`` — Phase 4 / Phase 1.5 utilities
-  (re-exported from their modules).
+- ``add_resolved`` / ``canonicalise_value`` / ``resolve`` -- entity
+  resolver helpers.
+- ``run_osint_collection`` / ``collect_osint`` -- the passive ingest API.
 """
 
+from zettelforge.osint.entity_resolver import (
+    add_resolved,
+    canonicalise_organization,
+    canonicalise_value,
+    register_alias,
+    resolve,
+)
+from zettelforge.osint.executor import (
+    SUPPORTED_SEED_TYPES,
+    OSINTCollectionResult,
+    OSINTExecutionError,
+    PersistedOSINTTuple,
+    collect_osint,
+    run_osint_collection,
+)
 from zettelforge.osint.ontology import (
     ONTOLOGY,
     OSINT_ENTITY_TYPES,
@@ -46,7 +63,7 @@ from zettelforge.osint.transform_registry import (
 )
 
 # Merge OSINT types into the global ontology before any collector runs.
-# Idempotent — safe under repeated imports (pytest, REPL re-imports, etc.).
+# Idempotent -- safe under repeated imports (pytest, REPL re-imports, etc.).
 merge_into_global_ontology()
 
 # Trigger collector self-registration. Each subpackage's __init__ imports
@@ -62,11 +79,18 @@ __all__ = [
     "ONTOLOGY",
     "OSINT_ENTITY_TYPES",
     "OSINT_RELATION_TYPES",
+    "SUPPORTED_SEED_TYPES",
     "TRANSFORM_REGISTRY",
     "CollectorFn",
     "CollectorTuple",
+    "OSINTCollectionResult",
+    "OSINTExecutionError",
+    "PersistedOSINTTuple",
     "TransformMetadata",
     "TransformRegistry",
+    "add_resolved",
+    "canonicalise_organization",
+    "canonicalise_value",
     "canonicalize_asn",
     "canonicalize_cidr",
     "canonicalize_domain",
@@ -75,6 +99,10 @@ __all__ = [
     "canonicalize_port",
     "canonicalize_url",
     "canonicalize_web_title",
+    "collect_osint",
     "get_transform_registry",
     "merge_into_global_ontology",
+    "register_alias",
+    "resolve",
+    "run_osint_collection",
 ]

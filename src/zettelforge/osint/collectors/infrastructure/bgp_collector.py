@@ -1,14 +1,13 @@
 """
-BGP collector — Phase 1.5 stub (RFC-016 §5).
+BGP collector — Phase 1.5 passive enrichment (RFC-016 §5).
 
 Fetches ASN / netblock data from BGPView's public JSON API. Sync; matches
 the rest of the codebase. Returns ``[]`` on any HTTP / parse failure or
 when ``httpx`` is unavailable; the agent sees an empty result, never an
 exception.
 
-The Phase 1 PR ships this with the registration metadata and the live
-BGPView call wired up but treated as best-effort. Hardening (retry / caching
-/ rate-limit budget) lands with Phase 1.5.
+This collector is intentionally passive and best-effort. Hardening (retry /
+caching / rate-limit budget) is intentionally deferred.
 """
 
 from __future__ import annotations
@@ -114,7 +113,7 @@ def collect(input_entity_type: str, input_value: str) -> list[CollectorTuple]:
 
 _METADATA = TransformMetadata(
     name="bgp_collector",
-    description="BGPView lookup: enumerate netblocks announced by an ASN.",
+    description="Passive BGPView lookup: enumerate netblocks announced by an ASN.",
     input_types=("ASNumber",),
     output_types=(("Netblock", "part_of_as"),),
     api_dependencies=("bgpview",),

@@ -1,8 +1,8 @@
 # RFC-016: ZettelForge OSINT Layer
 
-## Status (2026-04-28)
+## Status (2026-06-08)
 
-**Phase 1 (Infrastructure): functional. Phases 2-5: declared, collectors stubbed.**
+**Phase 1 (Infrastructure): functional. Phase 1.5: executor, resolver wiring, and passive BGP lookup shipped. Phases 2-5 remain declared/stubbed.**
 Branch: `rfc/osint-layer-scaffold` (PR #147 amended).
 
 What ships:
@@ -12,15 +12,17 @@ What ships:
   validates against. Auto-merged into the global ``ENTITY_TYPES`` /
   ``RELATION_TYPES`` at import time.
 - **Phase 1 collectors (functional)** — ``dns_collector`` (A/AAAA/NS/MX),
-  ``whois_collector`` (domain + IP RDAP), ``cert_collector`` (crt.sh).
-  All sync, all mocked in tests, no network at test time.
-- **Phase 1.5 + 2-5 collectors (stubs)** — ``bgp_collector``,
-  ``port_scanner`` (gated behind ``ZETTELFORGE_OSINT_ACTIVE_SCAN``),
-  Phase 2-4 collectors (Hunter, Holehe, Namechk, Wappalyzer, BuiltWith,
-  Twitter, Hashtag, HIBP, Breach Directory). Each registers metadata so
-  discovery works; each returns ``[]`` until its API integration lands.
-- **Tests** — 67 new mocked tests covering entity validation, edge
-  validation, canonicalization, and collector shape.
+  ``whois_collector`` (domain + IP RDAP), ``cert_collector`` (crt.sh), plus
+  the passive ``bgp_collector`` for ASN prefix lookups. All sync, all mocked
+  in tests, no network at test time.
+- **Phase 1.5 executor + resolver wiring** — ``run_osint_collection`` drives
+  registry discovery, ontology validation, canonicalization, and KG
+  persistence through ``entity_resolver`` and ``KnowledgeGraph``.
+  ``port_scanner`` remains gated behind ``ZETTELFORGE_OSINT_ACTIVE_SCAN``;
+  later Phase 2-4 collectors still register as stubs until their API
+  integrations land.
+- **Tests** — Focused mocked coverage for entity validation, edge
+  validation, canonicalization, executor ingest, and passive BGP lookup.
 - **Investigation / EntityResolver** — Phase 4 / 1.5 utility scaffolds.
 
 Three deviations from the literal text of this RFC are tracked in
