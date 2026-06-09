@@ -236,8 +236,7 @@ def add_resolved(
     alias_index, alias_reverse = _alias_maps(kg)
     existing_id = alias_index.get(canonical)
     if existing_id:
-        node = kg.get_node_by_id(existing_id)
-        if node and properties:
+        if properties:
             kg.add_node(entity_type, canonical_value, properties)
         if canonical_value != entity_value:
             alias_reverse[entity_value] = canonical

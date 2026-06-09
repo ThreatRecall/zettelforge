@@ -150,6 +150,20 @@ def _invalid_endpoint_collect(input_entity_type: str, input_value: str) -> list[
     ]
 
 
+def _typo_relation_collect(input_entity_type: str, input_value: str) -> list[CollectorTuple]:
+    return [
+        CollectorTuple(
+            output_entity_type='IPv4Address',
+            output_value='1.2.3.4',
+            edge_type='reslove_to',
+            from_entity_type='DomainName',
+            to_entity_type='IPv4Address',
+            output_props={'value': '1.2.3.4'},
+            edge_props={},
+        )
+    ]
+
+
 def test_run_osint_collection_does_not_persist_partial_tuple_on_invalid_endpoint(
     tmp_path,
     monkeypatch,
@@ -177,6 +191,69 @@ def test_run_osint_collection_does_not_persist_partial_tuple_on_invalid_endpoint
     assert result.seed_node_id is not None
     assert kg.get_node('Organization', 'example corp') is None
     assert kg.get_neighbors('ASNumber', '15169', 'owned_by') == []
+
+
+def test_run_osint_collection_validates_endpoints_in_dry_run(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(entity_resolver, '_ALIAS_INDEX', {})
+    monkeypatch.setattr(entity_resolver, '_ALIAS_REVERSE', {})
+
+    kg = KnowledgeGraph(data_dir=str(tmp_path))
+    registry = TransformRegistry()
+    registry.register(
+        TransformMetadata(
+            name='invalid_endpoint',
+            description='Collector that emits an invalid endpoint payload.',
+            input_types=('ASNumber',),
+            output_types=(('Organization', 'owned_by'),),
+        ),
+        _invalid_endpoint_collect,
+    )
+
+    result = run_osint_collection(
+        'ASNumber',
+        'AS15169',
+        kg=kg,
+        registry=registry,
+        persist=False,
+    )
+
+    assert result.collectors_run == ['invalid_endpoint']
+    assert result.error_count == 1
+    assert result.persisted_count == 0
+    assert result.seed_node_id is None
+    assert kg.get_node('Organization', 'example corp') is None
+    assert kg.get_neighbors('ASNumber', '15169', 'owned_by') == []
+
+
+def test_run_osint_collection_rejects_unregistered_relation_even_when_metadata_matches(
+    tmp_path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(entity_resolver, '_ALIAS_INDEX', {})
+    monkeypatch.setattr(entity_resolver, '_ALIAS_REVERSE', {})
+
+    kg = KnowledgeGraph(data_dir=str(tmp_path))
+    registry = TransformRegistry()
+    registry.register(
+        TransformMetadata(
+            name='typo_relation',
+            description='Collector that emits a typo relation.',
+            input_types=('DomainName',),
+            output_types=(('IPv4Address', 'reslove_to'),),
+        ),
+        _typo_relation_collect,
+    )
+
+    result = run_osint_collection('DomainName', 'example.com', kg=kg, registry=registry)
+
+    assert result.collectors_run == ['typo_relation']
+    assert result.error_count == 1
+    assert result.persisted_count == 0
+    assert result.seed_node_id is not None
+    assert kg.get_neighbors('DomainName', 'example.com', 'reslove_to') == []
 
 
 def test_bgp_collector_emits_netblocks_from_asn() -> None:

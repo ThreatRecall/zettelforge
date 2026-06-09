@@ -23,7 +23,7 @@ from typing import Any
 
 from zettelforge.knowledge_graph import KnowledgeGraph, get_knowledge_graph
 from zettelforge.log import get_logger
-from zettelforge.ontology import OntologyValidator
+from zettelforge.ontology import RELATION_TYPES, OntologyValidator
 from zettelforge.osint.entity_resolver import add_resolved, canonicalise_value
 from zettelforge.osint.ontology import merge_into_global_ontology
 from zettelforge.osint.transform_registry import (
@@ -175,7 +175,13 @@ def run_osint_collection(
         result.tuples_collected += len(tuples)
         for index, tup in enumerate(tuples):
             try:
-                _validate_tuple(meta, tup, validator)
+                _validate_tuple(
+                    meta,
+                    tup,
+                    validator,
+                    input_entity_type,
+                    canonical_input_value,
+                )
                 if persist:
                     persisted = _persist_tuple(
                         kg=kg,
@@ -190,9 +196,15 @@ def run_osint_collection(
                     from_value = _derive_endpoint_value(
                         tup, "from", input_entity_type, canonical_input_value
                     )
-                    to_value = _derive_endpoint_value(tup, "to", input_entity_type, canonical_input_value)
-                    from_props = _endpoint_properties(tup.from_entity_type, from_value, tup, input_entity_type)
-                    to_props = _endpoint_properties(tup.to_entity_type, to_value, tup, input_entity_type)
+                    to_value = _derive_endpoint_value(
+                        tup, "to", input_entity_type, canonical_input_value
+                    )
+                    from_props = _endpoint_properties(
+                        tup.from_entity_type, from_value, tup, input_entity_type
+                    )
+                    to_props = _endpoint_properties(
+                        tup.to_entity_type, to_value, tup, input_entity_type
+                    )
                     _validate_entity_or_raise(validator, tup.from_entity_type, from_props)
                     _validate_entity_or_raise(validator, tup.to_entity_type, to_props)
             except ValueError as exc:
@@ -211,9 +223,27 @@ def _validate_tuple(
     collector: TransformMetadata,
     tup: CollectorTuple,
     validator: OntologyValidator,
+    input_entity_type: str,
+    canonical_input_value: str,
 ) -> None:
     output_props = _entity_properties(tup.output_entity_type, tup.output_value, tup.output_props)
     _validate_entity_or_raise(validator, tup.output_entity_type, output_props)
+
+    if tup.edge_type not in RELATION_TYPES and tup.edge_type not in validator.custom_relations:
+        raise ValueError(
+            f"{collector.name} emitted unregistered relation "
+            f"{tup.from_entity_type} -[{tup.edge_type}]-> {tup.to_entity_type}"
+        )
+
+    if (tup.output_entity_type, tup.edge_type) not in collector.output_types:
+        allowed = (
+            ", ".join(f"{entity}:{edge}" for entity, edge in collector.output_types) or "<none>"
+        )
+        raise ValueError(
+            f"{collector.name} emitted undeclared tuple "
+            f"{tup.output_entity_type} -[{tup.edge_type}]-> {tup.to_entity_type}; "
+            f"allowed outputs: {allowed}"
+        )
 
     ok, errors = validator.validate_relation(
         tup.from_entity_type, tup.edge_type, tup.to_entity_type
@@ -224,6 +254,13 @@ def _validate_tuple(
             f"{tup.from_entity_type} -[{tup.edge_type}]-> {tup.to_entity_type}: "
             + "; ".join(errors)
         )
+
+    _validate_tuple_endpoints(
+        tup=tup,
+        validator=validator,
+        input_entity_type=input_entity_type,
+        canonical_input_value=canonical_input_value,
+    )
 
 
 def _persist_tuple(
@@ -237,14 +274,14 @@ def _persist_tuple(
 ) -> PersistedOSINTTuple:
     output_value = canonicalise_value(tup.output_entity_type, tup.output_value)
     output_props = _entity_properties(tup.output_entity_type, output_value, tup.output_props)
-
-    from_value = _derive_endpoint_value(tup, "from", input_entity_type, canonical_input_value)
-    to_value = _derive_endpoint_value(tup, "to", input_entity_type, canonical_input_value)
-
+    from_value, to_value = _validate_tuple_endpoints(
+        tup=tup,
+        validator=validator,
+        input_entity_type=input_entity_type,
+        canonical_input_value=canonical_input_value,
+    )
     from_props = _endpoint_properties(tup.from_entity_type, from_value, tup, input_entity_type)
     to_props = _endpoint_properties(tup.to_entity_type, to_value, tup, input_entity_type)
-    _validate_entity_or_raise(validator, tup.from_entity_type, from_props)
-    _validate_entity_or_raise(validator, tup.to_entity_type, to_props)
 
     output_node_id, _ = add_resolved(kg, tup.output_entity_type, output_value, output_props)
     add_resolved(kg, tup.from_entity_type, from_value, from_props)
@@ -277,6 +314,23 @@ def _persist_tuple(
         to_value=to_value,
         edge_type=tup.edge_type,
     )
+
+
+def _validate_tuple_endpoints(
+    *,
+    tup: CollectorTuple,
+    validator: OntologyValidator,
+    input_entity_type: str,
+    canonical_input_value: str,
+) -> tuple[str, str]:
+    from_value = _derive_endpoint_value(tup, "from", input_entity_type, canonical_input_value)
+    to_value = _derive_endpoint_value(tup, "to", input_entity_type, canonical_input_value)
+
+    from_props = _endpoint_properties(tup.from_entity_type, from_value, tup, input_entity_type)
+    to_props = _endpoint_properties(tup.to_entity_type, to_value, tup, input_entity_type)
+    _validate_entity_or_raise(validator, tup.from_entity_type, from_props)
+    _validate_entity_or_raise(validator, tup.to_entity_type, to_props)
+    return from_value, to_value
 
 
 def _derive_endpoint_value(
