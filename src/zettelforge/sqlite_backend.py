@@ -591,6 +591,29 @@ class SQLiteBackend(StorageBackend):
             self._conn.commit()
         return edge_id
 
+    def get_kg_edges_from(self, node_id: str) -> list[dict]:
+        """Outgoing KG edges from a node (scoped graph traversal read path)."""
+        with self._write_lock:
+            self._check_open()
+            cur = self._conn.execute(
+                "SELECT edge_id, from_node_id, to_node_id, relationship, edge_type, "
+                "note_id, properties FROM kg_edges WHERE from_node_id = ?",
+                (node_id,),
+            )
+            rows = cur.fetchall()
+        return [
+            {
+                "edge_id": row["edge_id"],
+                "from_node_id": row["from_node_id"],
+                "to_node_id": row["to_node_id"],
+                "relationship": row["relationship"],
+                "edge_type": row["edge_type"],
+                "note_id": row["note_id"],
+                "properties": json.loads(row["properties"] or "{}"),
+            }
+            for row in rows
+        ]
+
     def get_kg_neighbors(
         self,
         entity_type: str,

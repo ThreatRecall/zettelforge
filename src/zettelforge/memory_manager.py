@@ -799,13 +799,15 @@ class MemoryManager:
                             rest.append((note, score))
                     vector_scored = boosted + rest
 
-        # Blended retrieval: combine vector similarity with graph traversal
+        # Blended retrieval: combine vector similarity with graph traversal.
+        # The graph stage reads the per-store KG (same graph the write path
+        # populates), not the process-global JSONL KG: the global graph mixes
+        # every store on the machine, so traversing it from an isolated store
+        # returns phantom note IDs and unbounded BFS cost.
         from zettelforge.blended_retriever import BlendedRetriever
-        from zettelforge.graph_retriever import GraphRetriever
-        from zettelforge.knowledge_graph import get_knowledge_graph
+        from zettelforge.graph_retriever import GraphRetriever, StoreGraphSource
 
-        kg = get_knowledge_graph()
-        graph_retriever = GraphRetriever(kg)
+        graph_retriever = GraphRetriever(StoreGraphSource(self.store))
         _graph_start = time.perf_counter()
         graph_results = graph_retriever.retrieve_note_ids(query_entities=resolved, max_depth=2)
         _graph_latency_ms = (time.perf_counter() - _graph_start) * 1000

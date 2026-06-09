@@ -173,6 +173,17 @@ class StorageBackend(ABC):
         """
         ...
 
+    def get_kg_edges_from(self, node_id: str) -> list[dict]:
+        """Outgoing KG edges from a node, by internal node_id.
+
+        Read path for scoped graph traversal (GraphRetriever via
+        StoreGraphSource). Concrete backends must override; the default
+        fails loud rather than silently returning an empty graph.
+        """
+        raise NotImplementedError(
+            f"{self.__class__.__name__} does not implement get_kg_edges_from()"
+        )
+
     def add_temporal_edge(
         self,
         from_type: str,

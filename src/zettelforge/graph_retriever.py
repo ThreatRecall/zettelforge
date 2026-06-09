@@ -7,8 +7,39 @@ Score formula: 1 / (1 + hop_distance)
 """
 
 from dataclasses import dataclass, field
+from typing import Protocol
 
-from zettelforge.knowledge_graph import KnowledgeGraph
+
+class GraphSource(Protocol):
+    """Read interface the traversal needs from any graph store."""
+
+    def get_node(self, entity_type: str, entity_value: str) -> dict | None: ...
+
+    def get_node_by_id(self, node_id: str) -> dict | None: ...
+
+    def get_outgoing_edges(self, node_id: str) -> list[dict]: ...
+
+
+class StoreGraphSource:
+    """Adapts a StorageBackend's scoped KG tables to the traversal interface.
+
+    Recall's graph stage must read the same per-store graph that
+    _update_knowledge_graph writes. The process-global JSONL KG mixes every
+    store on the machine and grows without bound, so traversing it from an
+    isolated store yields phantom note IDs and unbounded BFS cost.
+    """
+
+    def __init__(self, store) -> None:
+        self._store = store
+
+    def get_node(self, entity_type: str, entity_value: str) -> dict | None:
+        return self._store.get_kg_node(entity_type, entity_value)
+
+    def get_node_by_id(self, node_id: str) -> dict | None:
+        return self._store.get_kg_node_by_id(node_id)
+
+    def get_outgoing_edges(self, node_id: str) -> list[dict]:
+        return self._store.get_kg_edges_from(node_id)
 
 
 @dataclass
@@ -24,7 +55,7 @@ class ScoredResult:
 class GraphRetriever:
     """Retrieve notes by traversing the knowledge graph from query entities."""
 
-    def __init__(self, knowledge_graph: KnowledgeGraph):
+    def __init__(self, knowledge_graph: GraphSource):
         self.kg = knowledge_graph
 
     def retrieve_note_ids(
