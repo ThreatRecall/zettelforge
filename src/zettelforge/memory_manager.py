@@ -294,7 +294,13 @@ class MemoryManager:
 
         _p = time.perf_counter()
         try:
-            reference_notes = self.store.get_notes_by_domain(domain)
+            # Bounded reference window: the gate keeps the most recent
+            # max_reference_notes valid-vector notes, so fetching the whole
+            # domain (O(n) rows + Pydantic parses per ingest) is waste. 4x
+            # overfetch leaves margin for notes the gate filters out.
+            _defense_cfg = get_config().governance.memory_defense
+            _fetch_limit = max(200, 4 * _defense_cfg.max_reference_notes)
+            reference_notes = self.store.get_recent_notes_by_domain(domain, _fetch_limit)
             self.memory_defense.enforce(
                 note,
                 reference_notes,

@@ -424,6 +424,16 @@ class SQLiteBackend(StorageBackend):
             rows = cur.fetchall()
         return [_row_to_note(r) for r in rows]
 
+    def get_recent_notes_by_domain(self, domain: str, limit: int) -> list[MemoryNote]:
+        with self._write_lock:
+            self._check_open()
+            cur = self._conn.execute(
+                "SELECT * FROM notes WHERE domain = ? ORDER BY created_at DESC LIMIT ?",
+                (domain, limit),
+            )
+            rows = cur.fetchall()
+        return [_row_to_note(r) for r in rows]
+
     def count_notes(self) -> int:
         with self._write_lock:
             self._check_open()
