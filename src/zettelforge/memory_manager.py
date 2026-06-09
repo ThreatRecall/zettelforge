@@ -11,6 +11,7 @@ With zettelforge-enterprise: TypeDB backend, deeper traversal, extended synthesi
 import atexit
 import concurrent.futures
 import queue
+import re
 import threading
 import time
 import uuid
@@ -470,6 +471,69 @@ class MemoryManager:
             phase_timings_ms={k: round(v, 2) for k, v in phase_timings_ms.items()},
         )
         return note, "created"
+
+    def remember_chunked(
+        self,
+        content: str,
+        source_type: str = "conversation",
+        source_ref: str = "",
+        domain: str = "general",
+        chunk_size: int = 800,
+        sync: bool = False,
+    ) -> list[MemoryNote]:
+        """
+        Split long content on sentence boundaries and store each chunk as its
+        own note via remember().
+
+        Smaller chunks give retrieval finer granularity on long conversational
+        sessions (MemPalace-style 800-char chunks). Content at or under
+        chunk_size is stored as a single note. Chunked notes carry an ordinal
+        source_ref suffix ("{source_ref}#c{i}") so provenance survives the
+        split.
+
+        Args:
+            content: Raw text to store.
+            source_type: Origin type (conversation, threat_report, etc.).
+            source_ref: Source identifier; chunks get "#c{i}" appended.
+            domain: Memory domain (cti, general, etc.).
+            chunk_size: Greedy sentence-packing target in characters. A single
+                sentence longer than chunk_size becomes its own chunk.
+            sync: Passed through to remember().
+
+        Returns: list of stored MemoryNote, in document order.
+        """
+        text = content.strip()
+        if len(text) <= chunk_size:
+            note, _ = self.remember(
+                text, source_type=source_type, source_ref=source_ref, domain=domain, sync=sync
+            )
+            return [note]
+
+        sentences = re.split(r"(?<=[.!?])\s+", text)
+        chunks: list[str] = []
+        current: list[str] = []
+        current_len = 0
+        for sentence in sentences:
+            if current and current_len + len(sentence) + 1 > chunk_size:
+                chunks.append(" ".join(current))
+                current = []
+                current_len = 0
+            current.append(sentence)
+            current_len += len(sentence) + 1
+        if current:
+            chunks.append(" ".join(current))
+
+        notes: list[MemoryNote] = []
+        for i, chunk in enumerate(chunks):
+            note, _ = self.remember(
+                chunk,
+                source_type=source_type,
+                source_ref=f"{source_ref}#c{i}",
+                domain=domain,
+                sync=sync,
+            )
+            notes.append(note)
+        return notes
 
     def remember_with_extraction(
         self,
