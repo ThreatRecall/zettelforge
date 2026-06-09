@@ -94,3 +94,35 @@ def test_recall_graph_isolated_between_stores(tmp_path):
     # phantom candidates from store A or the global KG.
     assert lookups['n'] <= 10
     assert all('APT28' not in n.content.raw for n in results)
+
+
+def test_high_fanout_entities_skip_graph_stage(tmp_path):
+    """Entities mapping to a large share of the corpus carry no signal
+    (conversational speaker names): they must not flood blended recall."""
+    from zettelforge.graph_retriever import GraphRetriever, StoreGraphSource
+
+    mm = _manager(tmp_path, 'fanout')
+    for i in range(12):
+        mm.remember(
+            f'Melanie: session {i} chat about topic {i} with details.',
+            source_type='dialogue',
+            source_ref=f's{i}',
+            domain='locomo',
+        )
+    mm.remember(
+        'Melanie: I tried the DROPBEAR exploit demo today.',
+        source_type='dialogue',
+        source_ref='s99',
+        domain='locomo',
+    )
+
+    filtered = mm._filter_low_signal_entities(
+        {'person': ['melanie'], 'tool': ['dropbear']}, max_fanout=5
+    )
+    assert filtered.get('person', []) == []
+    assert filtered.get('tool') == ['dropbear']
+
+    # End to end: recall must not return only melanie-flooded results when
+    # the query names a discriminative entity.
+    results = mm.recall('What is the DROPBEAR exploit?', k=5, exclude_superseded=False)
+    assert any('DROPBEAR' in n.content.raw for n in results)

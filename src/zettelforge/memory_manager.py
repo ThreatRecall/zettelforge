@@ -768,6 +768,9 @@ class MemoryManager:
         resolved = {}
         for etype, elist in query_entities.items():
             resolved[etype] = [self.resolver.resolve(etype, e) for e in elist]
+        # High-fanout entities (speaker names in every session) flood the
+        # graph and entity-augmentation stages with undiscriminative notes.
+        resolved = self._filter_low_signal_entities(resolved)
 
         # Vector retrieval (Community + Enterprise).
         # Request (note, score) tuples — BlendedRetriever's _normalize_scores
@@ -956,6 +959,35 @@ class MemoryManager:
             telemetry_caller=caller,
         )
         return results
+
+    def _filter_low_signal_entities(
+        self, resolved: dict[str, list[str]], max_fanout: int | None = None
+    ) -> dict[str, list[str]]:
+        """Drop query entities whose note fan-out exceeds max_fanout.
+
+        An entity mapped to a large share of the corpus (a conversational
+        speaker name, for example) ranks nothing: traversing it floods the
+        blended ranking with undiscriminative notes and displaces vector
+        hits. IDF-style gate; threshold from retrieval.entity_max_fanout.
+        """
+        limit = max_fanout if max_fanout is not None else get_config().retrieval.entity_max_fanout
+        if limit <= 0:
+            return resolved
+        filtered: dict[str, list[str]] = {}
+        for etype, values in resolved.items():
+            kept = []
+            for value in values:
+                if not value:
+                    continue
+                # Fan-out where flooding actually happens: KG out-degree.
+                # (Supersession prunes the entity index but MENTIONED_IN
+                # edges accumulate one per note.)
+                node = self.store.get_kg_node(etype, value)
+                fanout = len(self.store.get_kg_edges_from(node["node_id"])) if node else 0
+                if fanout <= limit:
+                    kept.append(value)
+            filtered[etype] = kept
+        return filtered
 
     def recall_entity(self, entity_type: str, entity_value: str, k: int = 5) -> list[MemoryNote]:
         """

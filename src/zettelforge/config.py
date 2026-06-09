@@ -205,6 +205,10 @@ class RetrievalConfig:
     rerank_max_candidates: int = 8
     rerank_doc_chars: int = 256
     rerank_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
+    # Query entities mapped to more than this many notes carry no retrieval
+    # signal (conversational speaker names appear in every session); they
+    # are skipped by the graph/entity-augmentation stages.
+    entity_max_fanout: int = 25
     # ONNX intra-op threads for the cross-encoder. Small rerank batches
     # thrash when onnxruntime grabs every core (measured 23.7ms -> 11.5ms
     # at 8 threads on a 20-core GB10). 0 = onnxruntime default.
