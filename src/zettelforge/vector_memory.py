@@ -97,9 +97,51 @@ def preload_embedding_model() -> None:
 
 # ── Embedding ────────────────────────────────────────────────────────────────
 
+# (model, text)-keyed LRU+TTL cache in front of embedding compute. Agents
+# re-ask the same queries; recomputing the vector each time is pure waste.
+_embedding_cache = None
+_embedding_cache_lock = threading.Lock()
+
+
+def _get_embedding_cache():
+    global _embedding_cache
+    if _embedding_cache is None:
+        with _embedding_cache_lock:
+            if _embedding_cache is None:
+                from zettelforge.cache import SmartCache
+                from zettelforge.config import get_config
+
+                cache_cfg = get_config().cache
+                _embedding_cache = SmartCache(
+                    maxsize=cache_cfg.max_entries,
+                    ttl_seconds=cache_cfg.ttl_seconds,
+                )
+    return _embedding_cache
+
+
+def reset_embedding_cache_for_tests() -> None:
+    """Drop the embedding cache so tests see a cold state."""
+    global _embedding_cache
+    with _embedding_cache_lock:
+        _embedding_cache = None
+
 
 def get_embedding(text: str, model: str | None = None) -> list[float]:
-    """Generate embedding. Uses fastembed (in-process) by default, ollama/HTTP as fallback."""
+    """Generate embedding, cached by (model, text). Compute is delegated to
+    _compute_embedding (fastembed in-process by default, ollama/HTTP fallback)."""
+    cache = _get_embedding_cache()
+    key_model = model or get_embedding_model()
+    key = f"{key_model}:{hashlib.sha256(text.encode()).hexdigest()}"
+    cached = cache.get(key)
+    if cached is not None:
+        return cached
+    embedding = _compute_embedding(text, model)
+    cache.set(key, embedding)
+    return embedding
+
+
+def _compute_embedding(text: str, model: str | None = None) -> list[float]:
+    """Compute an embedding. Uses fastembed (in-process) by default, ollama/HTTP as fallback."""
     provider = get_embedding_provider()
 
     if provider == "fastembed":
