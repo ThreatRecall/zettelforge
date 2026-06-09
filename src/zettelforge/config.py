@@ -177,6 +177,11 @@ class LLMNerConfig:
 
 
 @dataclass
+class EnrichmentConfig:
+    enabled: bool = True  # Master switch for background enrichment dispatch
+
+
+@dataclass
 class ExtractionConfig:
     max_facts: int = 5
     min_importance: int = 3
@@ -337,6 +342,7 @@ class ZettelForgeConfig:
     embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
     llm: LLMConfig = field(default_factory=LLMConfig)
     llm_ner: LLMNerConfig = field(default_factory=LLMNerConfig)
+    enrichment: EnrichmentConfig = field(default_factory=EnrichmentConfig)
     extraction: ExtractionConfig = field(default_factory=ExtractionConfig)
     retrieval: RetrievalConfig = field(default_factory=RetrievalConfig)
     synthesis: SynthesisConfig = field(default_factory=SynthesisConfig)
@@ -610,6 +616,10 @@ def _apply_env(cfg: ZettelForgeConfig):
     # LLM NER
     if v := os.environ.get("ZETTELFORGE_LLM_NER_ENABLED"):
         cfg.llm_ner.enabled = v.lower() in ("true", "1", "yes")
+
+    # Background enrichment master switch (benchmarks, offline ingestion)
+    if v := os.environ.get("ZETTELFORGE_ENRICHMENT_ENABLED"):
+        cfg.enrichment.enabled = v.lower() in ("true", "1", "yes")
 
     # RFC-013: PII detection via Presidio
     if v := os.environ.get("ZETTELFORGE_PII_ENABLED"):

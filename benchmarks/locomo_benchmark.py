@@ -32,6 +32,10 @@ from pathlib import Path
 from typing import List, Dict, Optional, Tuple
 from datetime import datetime
 
+# Must be set before any zettelforge import resolves the config singleton:
+# benchmark ingestion is deterministic, no background LLM enrichment.
+os.environ.setdefault("ZETTELFORGE_ENRICHMENT_ENABLED", "false")
+
 from zettelforge import MemoryManager
 
 
@@ -443,7 +447,6 @@ def run_benchmark(
     mm = MemoryManager(
         jsonl_path=f"{tmpdir}/notes.jsonl",
         lance_path=f"{tmpdir}/vectordb",
-        disable_enrichment=True,
     )
 
     # Ingest

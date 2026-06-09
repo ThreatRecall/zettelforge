@@ -401,56 +401,60 @@ class MemoryManager:
         # overhead only. In sync=True mode the LLM work runs inline and is intentionally
         # EXCLUDED from this bucket — mixing LLM latency into "dispatch" would corrupt
         # the Phase 0.5 attribution. sync=True is retained for tests/debug.
+        # The whole block is gated by config.enrichment.enabled
+        # (ZETTELFORGE_ENRICHMENT_ENABLED) so benchmarks and offline ingestion
+        # get deterministic writes with no LLM dispatch.
         dispatch_start = time.perf_counter() if not sync else None
-        job = _EnrichmentJob(
-            note_id=note.id,
-            domain=domain,
-            content_len=len(content),
-            resolved_entities=resolved_entities,
-        )
-        if sync:
-            self._run_enrichment(job)
-        else:
-            try:
-                self._enrichment_queue.put_nowait(job)
-                self._pending_enrichment.add(note.id)
-            except queue.Full:
-                self._logger.warning("enrichment_queue_full", note_id=note.id)
-
-        # Phase 6c: LLM NER enrichment (always-on, background — RFC-001 amendment)
-        if get_config().llm_ner.enabled:
-            ner_job = _EnrichmentJob(
+        if get_config().enrichment.enabled:
+            job = _EnrichmentJob(
                 note_id=note.id,
                 domain=domain,
                 content_len=len(content),
                 resolved_entities=resolved_entities,
-                job_type="llm_ner",
             )
             if sync:
-                self._run_llm_ner(ner_job)
+                self._run_enrichment(job)
             else:
                 try:
-                    self._enrichment_queue.put_nowait(ner_job)
-                except queue.Full:
-                    self._logger.warning("llm_ner_queue_full", note_id=note.id)
-
-        # Phase 6d: Neighbor evolution (A-Mem inspired — background worker)
-        # Skip if fewer than 3 notes exist — not enough neighbors to evolve against
-        if self.store.count_notes() >= 3:
-            evolution_job = _EnrichmentJob(
-                note_id=note.id,
-                domain=domain,
-                content_len=len(content),
-                job_type="neighbor_evolution",
-            )
-            if sync:
-                self._run_evolution(evolution_job)
-            else:
-                try:
-                    self._enrichment_queue.put_nowait(evolution_job)
+                    self._enrichment_queue.put_nowait(job)
                     self._pending_enrichment.add(note.id)
                 except queue.Full:
-                    self._logger.warning("evolution_queue_full", note_id=note.id)
+                    self._logger.warning("enrichment_queue_full", note_id=note.id)
+
+            # Phase 6c: LLM NER enrichment (always-on, background — RFC-001 amendment)
+            if get_config().llm_ner.enabled:
+                ner_job = _EnrichmentJob(
+                    note_id=note.id,
+                    domain=domain,
+                    content_len=len(content),
+                    resolved_entities=resolved_entities,
+                    job_type="llm_ner",
+                )
+                if sync:
+                    self._run_llm_ner(ner_job)
+                else:
+                    try:
+                        self._enrichment_queue.put_nowait(ner_job)
+                    except queue.Full:
+                        self._logger.warning("llm_ner_queue_full", note_id=note.id)
+
+            # Phase 6d: Neighbor evolution (A-Mem inspired — background worker)
+            # Skip if fewer than 3 notes exist — not enough neighbors to evolve against
+            if self.store.count_notes() >= 3:
+                evolution_job = _EnrichmentJob(
+                    note_id=note.id,
+                    domain=domain,
+                    content_len=len(content),
+                    job_type="neighbor_evolution",
+                )
+                if sync:
+                    self._run_evolution(evolution_job)
+                else:
+                    try:
+                        self._enrichment_queue.put_nowait(evolution_job)
+                        self._pending_enrichment.add(note.id)
+                    except queue.Full:
+                        self._logger.warning("evolution_queue_full", note_id=note.id)
         if dispatch_start is not None:
             phase_timings_ms["enrichment_dispatch"] = (time.perf_counter() - dispatch_start) * 1000
 
