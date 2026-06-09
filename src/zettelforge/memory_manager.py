@@ -870,23 +870,28 @@ class MemoryManager:
                             results.append(en)
                             result_ids.add(en.id)
 
-        # ── Enterprise: Cross-encoder reranking ─────────────────────────────
-        if len(results) > 1:
+        # ── Cross-encoder reranking (policy-bounded) ────────────────────────
+        # The reranker is the dominant read-path cost. Only the head of the
+        # blended ranking is reranked; the tail keeps its blended order.
+        retrieval_cfg = get_config().retrieval
+        if retrieval_cfg.rerank_enabled and len(results) > 1:
             try:
-                reranker = _get_reranker()  # Returns None in Community
+                reranker = _get_reranker()
                 if reranker is not None:
-                    docs = [n.content.raw[:512] for n in results]
+                    head = results[: retrieval_cfg.rerank_max_candidates]
+                    tail = results[len(head) :]
+                    docs = [n.content.raw[: retrieval_cfg.rerank_doc_chars] for n in head]
                     scores = list(reranker.rerank(query, docs))
-                    # B905: strict=True — scores and results have identical
+                    # B905: strict=True — scores and docs have identical
                     # length by construction (one score per doc), so a length
                     # mismatch would be a programming error, not a silent
                     # truncation bug.
                     paired = sorted(
-                        zip(scores, results, strict=True),
+                        zip(scores, head, strict=True),
                         key=lambda x: x[0],
                         reverse=True,
                     )
-                    results = [note for _, note in paired]
+                    results = [note for _, note in paired] + tail
             except Exception:
                 self._logger.warning("reranking_failed_using_original_order", exc_info=True)
 

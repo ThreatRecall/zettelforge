@@ -193,6 +193,12 @@ class RetrievalConfig:
     similarity_threshold: float = 0.25
     entity_boost: float = 2.5
     max_graph_depth: int = 2
+    # Cross-encoder rerank policy: the reranker is the dominant read-path
+    # cost (ONNX on CPU), so its work is bounded. Defaults preserve prior
+    # behavior; benchmark-tuned values are set in config.default.yaml.
+    rerank_enabled: bool = True
+    rerank_max_candidates: int = 50
+    rerank_doc_chars: int = 512
 
 
 @dataclass
@@ -620,6 +626,10 @@ def _apply_env(cfg: ZettelForgeConfig):
     # Background enrichment master switch (benchmarks, offline ingestion)
     if v := os.environ.get("ZETTELFORGE_ENRICHMENT_ENABLED"):
         cfg.enrichment.enabled = v.lower() in ("true", "1", "yes")
+
+    # Cross-encoder rerank kill switch
+    if v := os.environ.get("ZETTELFORGE_RERANK_ENABLED"):
+        cfg.retrieval.rerank_enabled = v.lower() in ("true", "1", "yes")
 
     # RFC-013: PII detection via Presidio
     if v := os.environ.get("ZETTELFORGE_PII_ENABLED"):
