@@ -67,6 +67,7 @@ nav:
     - Query APT Tools: how-to/query-apt-tools.md
     - Reproduce Benchmarks: how-to/reproduce-benchmarks.md
     - Resolve Aliases: how-to/resolve-aliases.md
+    - Passive OSINT Enrichment: how-to/passive-osint-enrichment.md
     - Run Temporal Query: how-to/run-temporal-query.md
     - Set Up MCP Server: how-to/set-up-mcp-server.md
     - Store Threat Actor: how-to/store-threat-actor.md
