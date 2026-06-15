@@ -1,0 +1,125 @@
+{
+  "dataset": {
+    "nodes": 10000,
+    "edges": 50000,
+    "depths": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "repeat": 5
+  },
+  "baseline": "sqlite (StorageBackend kg_edges; production per-node BFS reachable-set, the GraphRetriever path recall actually uses)",
+  "queries": {
+    "single_hop": {
+      "sqlite_median_ms": 5.702,
+      "sqlite_p95_ms": 16.771,
+      "sqlite_result_size": 1506,
+      "neo4j_median_ms": 97.02,
+      "neo4j_p95_ms": 292.797,
+      "neo4j_result_size": 1506,
+      "speedup_ratio": 0.06
+    },
+    "traverse_depth_2": {
+      "sqlite_median_ms": 0.107,
+      "sqlite_p95_ms": 0.11,
+      "sqlite_result_size": 30,
+      "neo4j_median_ms": 9.212,
+      "neo4j_p95_ms": 10.803,
+      "neo4j_result_size": 30,
+      "speedup_ratio": 0.01
+    },
+    "traverse_depth_3": {
+      "sqlite_median_ms": 0.484,
+      "sqlite_p95_ms": 0.513,
+      "sqlite_result_size": 127,
+      "neo4j_median_ms": 11.047,
+      "neo4j_p95_ms": 20.828,
+      "neo4j_result_size": 127,
+      "speedup_ratio": 0.04
+    },
+    "traverse_depth_4": {
+      "sqlite_median_ms": 2.391,
+      "sqlite_p95_ms": 2.56,
+      "sqlite_result_size": 507,
+      "neo4j_median_ms": 25.245,
+      "neo4j_p95_ms": 29.315,
+      "neo4j_result_size": 507,
+      "speedup_ratio": 0.09
+    },
+    "traverse_depth_5": {
+      "sqlite_median_ms": 9.494,
+      "sqlite_p95_ms": 9.701,
+      "sqlite_result_size": 1932,
+      "neo4j_median_ms": 82.646,
+      "neo4j_p95_ms": 106.151,
+      "neo4j_result_size": 1932,
+      "speedup_ratio": 0.11
+    },
+    "traverse_hub_depth_3": {
+      "sqlite_median_ms": 80.194,
+      "sqlite_p95_ms": 80.5,
+      "sqlite_result_size": 7962,
+      "neo4j_median_ms": 329.419,
+      "neo4j_p95_ms": 351.578,
+      "neo4j_result_size": 7962,
+      "speedup_ratio": 0.24
+    },
+    "traverse_hub_depth_4": {
+      "sqlite_median_ms": 169.407,
+      "sqlite_p95_ms": 169.836,
+      "sqlite_result_size": 9796,
+      "neo4j_median_ms": 418.266,
+      "neo4j_p95_ms": 620.538,
+      "neo4j_result_size": 9796,
+      "speedup_ratio": 0.41
+    },
+    "traverse_hub_depth_5": {
+      "sqlite_median_ms": 194.013,
+      "sqlite_p95_ms": 219.007,
+      "sqlite_result_size": 9913,
+      "neo4j_median_ms": 421.778,
+      "neo4j_p95_ms": 441.795,
+      "neo4j_result_size": 9913,
+      "speedup_ratio": 0.46
+    },
+    "traverse_hub_ids_depth_3": {
+      "sqlite_median_ms": 82.189,
+      "sqlite_p95_ms": 101.532,
+      "sqlite_result_size": 7962,
+      "neo4j_median_ms": 233.604,
+      "neo4j_p95_ms": 235.251,
+      "neo4j_result_size": 7962,
+      "speedup_ratio": 0.35
+    },
+    "traverse_hub_ids_depth_4": {
+      "sqlite_median_ms": 169.774,
+      "sqlite_p95_ms": 170.041,
+      "sqlite_result_size": 9796,
+      "neo4j_median_ms": 285.881,
+      "neo4j_p95_ms": 289.598,
+      "neo4j_result_size": 9796,
+      "speedup_ratio": 0.59
+    },
+    "traverse_hub_ids_depth_5": {
+      "sqlite_median_ms": 193.262,
+      "sqlite_p95_ms": 204.561,
+      "sqlite_result_size": 9913,
+      "neo4j_median_ms": 290.707,
+      "neo4j_p95_ms": 310.033,
+      "neo4j_result_size": 9913,
+      "speedup_ratio": 0.66
+    },
+    "shortest_path": {
+      "sqlite_median_ms": 122.869,
+      "sqlite_p95_ms": 133.127,
+      "sqlite_result_size": 10,
+      "neo4j_median_ms": 57.552,
+      "neo4j_p95_ms": 62.262,
+      "neo4j_result_size": 10,
+      "speedup_ratio": 2.13
+    }
+  },
+  "sc003_met": false
+}

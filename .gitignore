@@ -90,3 +90,6 @@ vectordb/
 # OS
 .DS_Store
 Thumbs.db
+
+# AGE-117: regenerable raw OpenCTI graph extract (benchmark input, not evidence)
+benchmarks/opencti_graph.json
