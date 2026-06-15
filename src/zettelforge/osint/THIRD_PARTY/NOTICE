@@ -1,0 +1,32 @@
+ZettelForge OSINT layer — third-party attribution
+==================================================
+
+This directory documents code and observable models adopted into ZettelForge
+from the Flowsint project under the Apache License, Version 2.0. ZettelForge
+itself is MIT-licensed; the obligations below cover only the adopted material.
+
+Upstream NOTICE (reproduced verbatim, reconurge/flowsint)
+---------------------------------------------------------
+
+    Flowsint, developed by Reconurge (https://github.com/reconurge/flowsint),
+    licensed under the Apache License, Version 2.0 as of 2026-01-25. All code
+    contributed prior to 2026-01-25 was originally released under the GNU
+    Affero General Public License v3.0 (AGPL-3.0-or-later) and was relicensed
+    to Apache-2.0 with the explicit written consent of all contributors.
+
+ZettelForge attribution
+-----------------------
+
+Portions of ZettelForge's OSINT observable models (the CryptoWallet,
+Transaction, and SocialAccount entity types in
+``zettelforge/osint/ontology.py``) are derived from the ``flowsint-types``
+package of reconurge/flowsint, pinned at commit
+2a4878c8fc06c13c16d91ce760873037fa0b6b6d (tag v1.2.8, 2026-04-11), which is
+on/after the 2026-01-25 Apache-2.0 relicense. The models were re-expressed in
+ZettelForge's ontology shape (required/optional/properties dicts) rather than
+copied as Pydantic source. Modifications by ZettelForge per Apache-2.0
+section 4(b).
+
+See PROVENANCE.md for the full pin, exclusions, and evidence. See
+THIRD_PARTY_NOTICES.md for the licenses of runtime dependencies used by the
+OSINT collectors.
