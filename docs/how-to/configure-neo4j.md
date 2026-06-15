@@ -110,6 +110,76 @@ path = find_shortest_path("ThreatActor", "APT28", "Vulnerability", "CVE-2017-014
 print(path)
 ```
 
+## Populate / sync the graph
+
+The path-query seam **queries** Neo4j but deliberately does **not** dual-write
+from the ingest hot path (that regressed the SQLite write/recall path). So with
+pathfinding enabled and an unpopulated Neo4j, path queries run against an empty
+graph. A standalone job mirrors the SQLite knowledge graph into Neo4j:
+
+```bash
+# Preview: read the source graph, connect read-only, report the delta (no writes)
+python -m zettelforge.scripts.neo4j_sync --data-dir ~/.zettelforge --dry-run
+
+# Incremental upsert (default) — safe to run repeatedly / on a schedule
+python -m zettelforge.scripts.neo4j_sync --data-dir ~/.zettelforge
+
+# Exact mirror: wipe the ZettelForge graph then reload (deletions included)
+python -m zettelforge.scripts.neo4j_sync --data-dir ~/.zettelforge --rebuild
+```
+
+The job reads `ZETTELFORGE_NEO4J_*` for the connection and emits a JSON report
+(node/edge counts before and after, plus a parity verdict); pass `--output` to
+also write it to a file. It populates Neo4j regardless of
+`ZETTELFORGE_NEO4J_PATHFINDING` (the gate controls query routing, not whether
+Neo4j may be loaded).
+
+### Consistency / staleness contract
+
+* **SQLite is the system of record.** Neo4j is a derived read-replica used only
+  by the path-query seam. The job is one-way (SQLite to Neo4j) and never writes
+  back.
+* **Default is incremental upsert.** Every current node/edge is MERGEd
+  (idempotent on `(entity_type, entity_value)` for nodes and
+  `(from, to, relationship)` for edges). The live graph is never emptied and is
+  always a superset-or-equal of SQLite. Upsert does **not** delete: entities or
+  edges removed from SQLite remain in Neo4j (the SQLite graph is append-mostly
+  and carries no deletion log).
+* **`--rebuild` is the exact mirror.** It deletes only `:Entity` nodes and their
+  `:REL` edges (in bounded sub-transactions), then reloads, so deletions
+  propagate. During a rebuild the graph is transiently partial: prefer it on a
+  quiesced window. Incremental upsert is the safe default for a live seam.
+* **Staleness.** Neo4j reflects SQLite as of the last successful sync; path
+  queries may miss edges added since. Bound staleness by scheduling the job, or
+  run it on demand for an immediate refresh. Because SQLite stays the system of
+  record, a stale or empty Neo4j only affects the opt-in path-query seam, never
+  storage or recall.
+* **Fail-loud.** A connection failure during a mutating run exits non-zero
+  (never reports a dropped sync as success). After the load, Neo4j counts are
+  verified against the source; a mismatch exits non-zero.
+
+### Schedule it
+
+The job is a plain idempotent command, so any scheduler works. Example systemd
+timer running an hourly incremental upsert:
+
+```ini
+# /etc/systemd/system/zettelforge-neo4j-sync.service
+[Service]
+Type=oneshot
+Environment=ZETTELFORGE_NEO4J_PASSWORD=...
+ExecStart=/usr/bin/python -m zettelforge.scripts.neo4j_sync --data-dir /var/lib/zettelforge
+
+# /etc/systemd/system/zettelforge-neo4j-sync.timer
+[Timer]
+OnCalendar=hourly
+Persistent=true
+[Install]
+WantedBy=timers.target
+```
+
+Equivalently as cron: `@hourly python -m zettelforge.scripts.neo4j_sync --data-dir /var/lib/zettelforge`.
+
 ## Failure behavior
 
 When Neo4j is unreachable or the credentials are wrong, `find_shortest_path`

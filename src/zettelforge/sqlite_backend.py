@@ -624,6 +624,74 @@ class SQLiteBackend(StorageBackend):
             for row in rows
         ]
 
+    def get_all_kg_nodes(self) -> list[dict]:
+        """Every KG node (full-graph export for the Neo4j sync job).
+
+        Materializes the whole ``kg_nodes`` table. Used by the standalone
+        ``scripts.neo4j_sync`` population job, not the recall hot path.
+        """
+        with self._write_lock:
+            self._check_open()
+            cur = self._conn.execute(
+                "SELECT node_id, entity_type, entity_value, properties, "
+                "created_at, updated_at FROM kg_nodes"
+            )
+            rows = cur.fetchall()
+        return [
+            {
+                "node_id": row["node_id"],
+                "entity_type": row["entity_type"],
+                "entity_value": row["entity_value"],
+                "properties": json.loads(row["properties"] or "{}"),
+                "created_at": row["created_at"],
+                "updated_at": row["updated_at"],
+            }
+            for row in rows
+        ]
+
+    def get_all_kg_edges(self) -> list[dict]:
+        """Every KG edge with resolved endpoint identities (Neo4j sync export).
+
+        Joins ``kg_edges`` to ``kg_nodes`` on both endpoints so each edge
+        carries ``(from_type, from_value, to_type, to_value)`` — the identity
+        the Neo4j backend MERGEs on. An INNER JOIN intentionally drops edges
+        whose endpoints are missing from ``kg_nodes`` (orphans cannot be
+        MERGEd by type/value); the sync job reports any such gap.
+        """
+        with self._write_lock:
+            self._check_open()
+            cur = self._conn.execute(
+                "SELECT e.edge_id, e.relationship, e.edge_type, e.note_id, e.properties, "
+                "nf.entity_type AS from_type, nf.entity_value AS from_value, "
+                "nt.entity_type AS to_type, nt.entity_value AS to_value "
+                "FROM kg_edges e "
+                "JOIN kg_nodes nf ON e.from_node_id = nf.node_id "
+                "JOIN kg_nodes nt ON e.to_node_id = nt.node_id"
+            )
+            rows = cur.fetchall()
+        return [
+            {
+                "edge_id": row["edge_id"],
+                "from_type": row["from_type"],
+                "from_value": row["from_value"],
+                "to_type": row["to_type"],
+                "to_value": row["to_value"],
+                "relationship": row["relationship"],
+                "edge_type": row["edge_type"],
+                "note_id": row["note_id"],
+                "properties": json.loads(row["properties"] or "{}"),
+            }
+            for row in rows
+        ]
+
+    def count_kg(self) -> tuple[int, int]:
+        """Return ``(node_count, edge_count)`` for the KG (sync parity check)."""
+        with self._write_lock:
+            self._check_open()
+            n = self._conn.execute("SELECT count(*) AS c FROM kg_nodes").fetchone()["c"]
+            e = self._conn.execute("SELECT count(*) AS c FROM kg_edges").fetchone()["c"]
+        return int(n), int(e)
+
     def get_kg_neighbors(
         self,
         entity_type: str,
