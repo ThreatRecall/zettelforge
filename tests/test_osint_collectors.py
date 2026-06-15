@@ -66,8 +66,10 @@ def _build_resolver_mock(answers_by_rdtype: dict[str, list[Any]]) -> MagicMock:
     return resolver
 
 
-def test_dns_collect_rejects_non_domain_input() -> None:
-    assert dns_collector.collect("IPv4Address", "1.2.3.4") == []
+def test_dns_collect_rejects_unhandled_input() -> None:
+    # DomainName (forward) and IPv4/IPv6 (reverse PTR) are handled; other
+    # seed types are not.
+    assert dns_collector.collect("ASNumber", "15169") == []
 
 
 def test_dns_collect_returns_empty_when_dnspython_missing() -> None:

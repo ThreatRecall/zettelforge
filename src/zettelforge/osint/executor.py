@@ -35,7 +35,17 @@ from zettelforge.osint.transform_registry import (
 
 _logger = get_logger("zettelforge.osint.executor")
 
-SUPPORTED_SEED_TYPES = ("DomainName", "IPv4Address", "IPv6Address", "ASNumber", "Netblock")
+SUPPORTED_SEED_TYPES = (
+    "DomainName",
+    "IPv4Address",
+    "IPv6Address",
+    "ASNumber",
+    "Netblock",
+    # AGE-120 enricher seeds.
+    "EmailAddress",
+    "Alias",
+    "CryptoWallet",
+)
 
 
 @dataclass(frozen=True)
@@ -98,6 +108,13 @@ _ENDPOINT_PROP_KEYS: dict[str, tuple[str, ...]] = {
     "Organization": ("organization", "org", "name"),
     "Port": ("port", "value"),
     "Website": ("url", "website", "value"),
+    # AGE-120 enricher endpoint types.
+    "EmailAddress": ("email", "value"),
+    "Alias": ("alias", "username", "value"),
+    "CryptoWallet": ("address", "wallet", "value"),
+    "Transaction": ("tx_hash", "hash", "value"),
+    "SocialAccount": ("id", "value"),
+    "Breach": ("name", "value"),
 }
 
 
@@ -408,6 +425,16 @@ def _entity_properties(
                 props.setdefault("protocol", protocol)
     elif entity_type == "Website":
         props.setdefault("url", canonical)
+    elif entity_type in ("EmailAddress", "Alias"):
+        props.setdefault("value", canonical)
+    elif entity_type == "CryptoWallet":
+        props.setdefault("address", canonical)
+    elif entity_type == "Transaction":
+        props.setdefault("tx_hash", canonical)
+    elif entity_type == "SocialAccount":
+        props.setdefault("id", canonical)
+    elif entity_type == "Breach":
+        props.setdefault("name", canonical)
 
     return props
 

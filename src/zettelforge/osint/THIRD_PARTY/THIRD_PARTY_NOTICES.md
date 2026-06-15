@@ -17,16 +17,15 @@ at install time from the respective distributions; summarized here:
 
 | Package | License | Use |
 |---|---|---|
-| python-whois (richardpenman) | MIT | domain WHOIS collector |
-| dnspython | ISC | DNS record collectors |
+| python-whois (richardpenman) | MIT | domain WHOIS collector (Organization + registrant EmailAddress) |
+| dnspython | ISC | DNS record collectors (forward A/AAAA/NS/MX + reverse PTR) |
 | ipwhois | BSD-2-Clause | IP -> ASN/netblock WHOIS |
+| maigret (soxoj) | MIT | username -> SocialAccount enumeration (AGE-120) |
+| sherlock-project | MIT | username presence checks (AGE-120) |
 
-Planned additions for the enricher follow-up (record their notices when added):
-
-| Package | License | Use |
-|---|---|---|
-| maigret (soxoj) | MIT | username -> SocialAccount enumeration |
-| sherlock-project | MIT | username presence checks |
+`email_to_breaches` (HIBP v3 REST) and `wallet_to_transactions` (Etherscan
+API) call their HTTP endpoints directly via `httpx` (Apache-2.0, already a
+core dependency): no breach- or chain-specific package is added.
 
 ## Excluded (NOT used — recorded so they are never reintroduced)
 

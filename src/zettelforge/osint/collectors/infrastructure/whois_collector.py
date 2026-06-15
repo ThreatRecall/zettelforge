@@ -28,6 +28,7 @@ from zettelforge.osint.ontology import (
     canonicalize_asn,
     canonicalize_cidr,
     canonicalize_domain,
+    canonicalize_email,
 )
 from zettelforge.osint.transform_registry import (
     TRANSFORM_REGISTRY,
@@ -121,6 +122,25 @@ def _domain_org(record: Any) -> str | None:
     return None
 
 
+def _domain_email(record: Any) -> str | None:
+    """Extract the registrant email from a python-whois record.
+
+    python-whois surfaces emails under ``emails`` (str or list) and
+    sometimes ``registrant_email``. Take the first plausible address.
+    """
+    for attr in ("registrant_email", "emails", "email"):
+        try:
+            value = getattr(record, attr, None)
+        except Exception:  # pragma: no cover — defensive
+            value = None
+        if value is None and isinstance(record, dict):
+            value = record.get(attr)
+        candidate = _first_string(value)
+        if candidate and "@" in candidate:
+            return candidate
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Branch implementations
 # ---------------------------------------------------------------------------
@@ -130,21 +150,41 @@ def _collect_domain(domain: str) -> list[CollectorTuple]:
     record = _lookup_domain(domain)
     if record is None:
         return []
+
+    out: list[CollectorTuple] = []
+
     org = _domain_org(record)
-    if not org:
-        _logger.debug("whois_no_registrant", domain=domain)
-        return []
-    return [
-        CollectorTuple(
-            output_entity_type="Organization",
-            output_value=org,
-            edge_type="owned_by",
-            from_entity_type="DomainName",
-            to_entity_type="Organization",
-            output_props={"name": org},
-            edge_props={},
+    if org:
+        out.append(
+            CollectorTuple(
+                output_entity_type="Organization",
+                output_value=org,
+                edge_type="owned_by",
+                from_entity_type="DomainName",
+                to_entity_type="Organization",
+                output_props={"name": org},
+                edge_props={},
+            )
         )
-    ]
+
+    raw_email = _domain_email(record)
+    if raw_email:
+        email = canonicalize_email(raw_email)
+        out.append(
+            CollectorTuple(
+                output_entity_type="EmailAddress",
+                output_value=email,
+                edge_type="registered_by",
+                from_entity_type="DomainName",
+                to_entity_type="EmailAddress",
+                output_props={"value": email},
+                edge_props={},
+            )
+        )
+
+    if not out:
+        _logger.debug("whois_no_registrant", domain=domain)
+    return out
 
 
 def _ip_address_family(ip: str) -> str:
@@ -271,10 +311,14 @@ def collect(input_entity_type: str, input_value: str) -> list[CollectorTuple]:
 
 _METADATA = TransformMetadata(
     name="whois_collector",
-    description="Domain or IP WHOIS lookup; emits Organization, Netblock, and ASNumber.",
+    description=(
+        "Domain or IP WHOIS lookup; emits Organization, registrant "
+        "EmailAddress, Netblock, and ASNumber."
+    ),
     input_types=("DomainName", "IPv4Address", "IPv6Address"),
     output_types=(
         ("Organization", "owned_by"),
+        ("EmailAddress", "registered_by"),
         ("Netblock", "associated_with"),
         ("ASNumber", "part_of_as"),
     ),

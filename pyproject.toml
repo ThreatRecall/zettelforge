@@ -120,6 +120,12 @@ osint = [
     "dnspython>=2.4.0",
     "python-whois>=0.9.0",
     "ipwhois>=1.2.0",
+    # AGE-120 enrichers. maigret/sherlock are both MIT (AGE-118 approved); they
+    # back username_to_social. Lazy-imported and fail-closed in the collector,
+    # so absence at runtime is non-fatal. HIBP and the block explorer use the
+    # already-present httpx (no new dep).
+    "maigret>=0.4.0",
+    "sherlock-project>=0.14.0",
 ]
 
 dev = [

@@ -181,6 +181,24 @@ OSINT_ENTITY_TYPES: dict[str, dict[str, Any]] = {
         ],
         "properties": {},
     },
+    # ── Phase 4 breach exposure (AGE-120) ───────────────────────────────────
+    # A named data breach an email address appeared in. Sourced from the
+    # native HIBP REST path (breach/hibp_collector.py). canonical value:
+    # ``canonicalize_breach`` -> lowercased breach name (HIBP "Name" field).
+    "Breach": {
+        "required": ["name"],
+        "optional": [
+            "title",
+            "domain",
+            "breach_date",
+            "added_date",
+            "pwn_count",
+            "data_classes",
+            "is_verified",
+            "description",
+        ],
+        "properties": {},
+    },
     # ── Phase 5: Physical (stubs — collectors deferred) ─────────────────────
     "GPS": {
         "required": ["latitude", "longitude"],
@@ -372,6 +390,19 @@ OSINT_RELATION_TYPES: dict[str, dict[str, Any]] = {
         "to_types": ["SocialAccount"],
         "cardinality": "many_to_many",
     },
+    # ── AGE-120 enricher edges ──────────────────────────────────────────────
+    # WHOIS registrant email for a domain (domain_to_whois EmailAddress branch).
+    "registered_by": {
+        "from_types": ["DomainName"],
+        "to_types": ["EmailAddress"],
+        "cardinality": "many_to_one",
+    },
+    # HIBP breach exposure for an email (email_to_breaches).
+    "appeared_in_breach": {
+        "from_types": ["EmailAddress"],
+        "to_types": ["Breach"],
+        "cardinality": "many_to_many",
+    },
     # ── Phase 5: Physical ───────────────────────────────────────────────────
     "located_near": {
         "from_types": ["Device", "Person"],
@@ -509,6 +540,36 @@ def canonicalize_social_account(username: str, platform: str) -> str:
     return f"{username.strip().lower()}@{platform.strip().lower()}"
 
 
+def canonicalize_email(raw: str) -> str:
+    """Lowercase and strip an email address for stable dedup.
+
+    Email addresses are treated case-insensitively for the providers the
+    OSINT layer targets, so ``Alice@Example.com`` and ``alice@example.com``
+    fold to one node. No syntactic validation here: the collector that
+    produces the address owns that.
+    """
+    return raw.strip().lower()
+
+
+def canonicalize_breach(raw: str) -> str:
+    """Canonical form for a breach name: stripped and lowercased.
+
+    HIBP breach names (the ``Name`` field, e.g. ``Adobe``) are stable
+    identifiers; lowercasing keeps ``(Breach, name)`` deduped regardless of
+    source casing.
+    """
+    return raw.strip().lower()
+
+
+def canonicalize_alias(raw: str) -> str:
+    """Canonical form for an Alias / username: stripped and lowercased.
+
+    Usernames are matched case-insensitively across the social platforms the
+    enrichers target, so folding case keeps one node per handle.
+    """
+    return raw.strip().lower()
+
+
 # ---------------------------------------------------------------------------
 # Merge helpers
 # ---------------------------------------------------------------------------
@@ -552,9 +613,12 @@ __all__ = [
     "ONTOLOGY",
     "OSINT_ENTITY_TYPES",
     "OSINT_RELATION_TYPES",
+    "canonicalize_alias",
     "canonicalize_asn",
+    "canonicalize_breach",
     "canonicalize_cidr",
     "canonicalize_domain",
+    "canonicalize_email",
     "canonicalize_ipv6",
     "canonicalize_mx",
     "canonicalize_port",
