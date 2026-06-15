@@ -81,6 +81,14 @@ pii = [
     "spacy>=3.5.0",
 ]
 
+# Neo4j path-query backend (opt-in). Enabled via ZETTELFORGE_NEO4J_PATHFINDING=true
+# (storage stays sqlite; only path-finding routes to Neo4j).
+# Adds zero mandatory dependencies for non-opt-in users.
+# pip install zettelforge[neo4j]
+neo4j = [
+    "neo4j>=5,<6",
+]
+
 # Extensions: install the separate zettelforge-enterprise package
 # pip install zettelforge-enterprise
 extensions = [
@@ -196,3 +204,6 @@ quote-style = "double"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "requires_neo4j: integration test that needs a reachable Neo4j (gated; skipped unless ZETTELFORGE_NEO4J_PASSWORD is set)",
+]

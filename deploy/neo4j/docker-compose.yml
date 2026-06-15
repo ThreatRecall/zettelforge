@@ -1,0 +1,48 @@
+# Local Neo4j for ZettelForge dev and benchmarking.
+#
+# Non-default host ports are used on purpose: this host already runs an
+# OpenCTI stack and other services on the standard 7474/7687. Host ports
+# 17474 (browser/HTTP) and 17687 (Bolt) avoid that collision. Inside the
+# container Neo4j still listens on its defaults; only the host mapping moves.
+#
+# Credentials come from the environment (NEO4J_PASSWORD). It is REQUIRED: there
+# is no baked default, so `up` fails fast if it is unset. This keeps credentials
+# out of version control and matches the feature's fail-loud design.
+#   NEO4J_PASSWORD=your-password docker compose -f deploy/neo4j/docker-compose.yml up -d
+#
+# Then point ZettelForge at it (path-query seam; storage stays sqlite):
+#   export ZETTELFORGE_NEO4J_PATHFINDING=true
+#   export ZETTELFORGE_NEO4J_URI="bolt://localhost:17687"
+#   export ZETTELFORGE_NEO4J_USER=neo4j
+#   export ZETTELFORGE_NEO4J_PASSWORD="$NEO4J_PASSWORD"
+
+services:
+  neo4j:
+    image: neo4j:5-community
+    container_name: zettelforge-neo4j
+    ports:
+      - "17474:7474"   # HTTP / Neo4j Browser
+      - "17687:7687"   # Bolt
+    environment:
+      NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD:?NEO4J_PASSWORD must be set before up}"
+      # Single-instance dev tuning; keep memory modest.
+      NEO4J_server_memory_heap_initial__size: "512m"
+      NEO4J_server_memory_heap_max__size: "1G"
+      NEO4J_server_memory_pagecache_size: "512m"
+      # APOC core: enables apoc.path.subgraphNodes, a true visited-set BFS that
+      # makes bounded reachable-set traversal far cheaper than enumerating every
+      # variable-length path. The backend falls back to plain Cypher if absent.
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_dbms_security_procedures_unrestricted: "apoc.*"
+      NEO4J_dbms_security_procedures_allowlist: "apoc.*"
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -u neo4j -p ${NEO4J_PASSWORD:?NEO4J_PASSWORD must be set before up} 'RETURN 1' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+    volumes:
+      - neo4j_data:/data
+
+volumes:
+  neo4j_data:

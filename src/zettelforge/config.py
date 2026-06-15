@@ -95,6 +95,43 @@ class TypeDBConfig:
 
 
 @dataclass
+class Neo4jConfig:
+    """Neo4j path-query backend settings (opt-in, scoped).
+
+    Neo4j is NOT a wholesale storage backend (that regresses the traversal
+    recall actually uses by ~6x on real CTI data). SQLite stays the storage
+    and recall/traversal path. Setting ``pathfinding = true`` routes only
+    undirected path-finding / relationship-discovery queries (where Neo4j is
+    ~20x faster) to Neo4j; everything else stays on the default backend.
+
+    Connection values are read from the environment by default so credentials
+    stay out of YAML. ``max_depth`` bounds path length; ``result_limit`` bounds
+    high-degree hub traversal (0 = unbounded). ``fallback`` is false by default
+    so an unreachable Neo4j fails loud rather than silently using a different
+    store; set it true to degrade explicitly (logged) to the default backend's
+    BFS path-finding.
+    """
+
+    uri: str = "bolt://localhost:7687"
+    user: str = "neo4j"
+    password: str = ""  # set via ZETTELFORGE_NEO4J_PASSWORD or ${...} in config.yaml
+    database: str = "neo4j"
+    max_depth: int = 5
+    result_limit: int = 10000
+    fallback: bool = False
+    pathfinding: bool = False  # route path-finding queries to Neo4j (storage stays sqlite)
+
+    def __repr__(self) -> str:
+        password_display = "'***'" if self.password else "''"
+        return (
+            f"Neo4jConfig(uri={self.uri!r}, user={self.user!r}, "
+            f"password={password_display}, database={self.database!r}, "
+            f"max_depth={self.max_depth}, result_limit={self.result_limit}, "
+            f"fallback={self.fallback}, pathfinding={self.pathfinding})"
+        )
+
+
+@dataclass
 class EmbeddingConfig:
     provider: str = "fastembed"  # "fastembed" (in-process ONNX) or "ollama" (HTTP server)
     url: str = "http://127.0.0.1:11434"  # only used when provider=ollama
@@ -358,6 +395,7 @@ class WebConfig:
 class ZettelForgeConfig:
     storage: StorageConfig = field(default_factory=StorageConfig)
     typedb: TypeDBConfig = field(default_factory=TypeDBConfig)
+    neo4j: Neo4jConfig = field(default_factory=Neo4jConfig)
     backend: str = "sqlite"
     embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
     llm: LLMConfig = field(default_factory=LLMConfig)
@@ -455,6 +493,13 @@ def _apply_yaml(cfg: ZettelForgeConfig, data: dict):
                 if k in {"username", "password"} and isinstance(v, str):
                     v = _resolve_env_refs(v)
                 setattr(cfg.typedb, k, v)
+
+    if "neo4j" in data and isinstance(data["neo4j"], dict):
+        for k, v in data["neo4j"].items():
+            if hasattr(cfg.neo4j, k):
+                if k == "password" and isinstance(v, str):
+                    v = _resolve_env_refs(v)
+                setattr(cfg.neo4j, k, v)
 
     if "backend" in data:
         cfg.backend = str(data["backend"])
@@ -571,6 +616,28 @@ def _apply_env(cfg: ZettelForgeConfig):
     # Backend
     if v := os.environ.get("ZETTELFORGE_BACKEND"):
         cfg.backend = v
+
+    # Neo4j graph backend (opt-in)
+    if v := os.environ.get("ZETTELFORGE_NEO4J_URI"):
+        cfg.neo4j.uri = v
+    if v := os.environ.get("ZETTELFORGE_NEO4J_USER"):
+        cfg.neo4j.user = v
+    if v := os.environ.get("ZETTELFORGE_NEO4J_PASSWORD"):
+        cfg.neo4j.password = v
+    if v := os.environ.get("ZETTELFORGE_NEO4J_DATABASE"):
+        cfg.neo4j.database = v
+    if v := os.environ.get("ZETTELFORGE_NEO4J_MAX_DEPTH"):
+        parsed = _parse_env_int("ZETTELFORGE_NEO4J_MAX_DEPTH", v)
+        if parsed is not None:
+            cfg.neo4j.max_depth = parsed
+    if v := os.environ.get("ZETTELFORGE_NEO4J_RESULT_LIMIT"):
+        parsed = _parse_env_int("ZETTELFORGE_NEO4J_RESULT_LIMIT", v)
+        if parsed is not None:
+            cfg.neo4j.result_limit = parsed
+    if v := os.environ.get("ZETTELFORGE_NEO4J_FALLBACK"):
+        cfg.neo4j.fallback = _env_bool(v)
+    if v := os.environ.get("ZETTELFORGE_NEO4J_PATHFINDING"):
+        cfg.neo4j.pathfinding = _env_bool(v)
 
     # Embedding
     if v := os.environ.get("ZETTELFORGE_EMBEDDING_PROVIDER"):

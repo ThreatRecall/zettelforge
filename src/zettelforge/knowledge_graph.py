@@ -21,8 +21,12 @@ import uuid
 from collections import deque
 from datetime import datetime
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from zettelforge.log import get_logger
+
+if TYPE_CHECKING:
+    from zettelforge.neo4j_knowledge_graph import Neo4jKnowledgeGraph
 
 _logger = get_logger("zettelforge.knowledge_graph")
 
@@ -437,6 +441,71 @@ class KnowledgeGraph:
         _dfs(start_node_id, 1, [])
         return results
 
+    def shortest_path(
+        self,
+        from_type: str,
+        from_value: str,
+        to_type: str,
+        to_value: str,
+        max_depth: int | None = None,
+    ) -> list[dict] | None:
+        """Undirected shortest path between two entities, or ``None`` if none.
+
+        Default-backend BFS counterpart to the Neo4j path-query backend, used
+        when Neo4j path-finding is disabled or as the explicit fallback. Edges
+        are walked in both directions (path discovery ignores orientation);
+        each step reports the edge's stored from/to orientation, so the return
+        shape matches :meth:`Neo4jKnowledgeGraph.shortest_path`.
+        """
+        start = self._node_index.get(from_type, {}).get(from_value)
+        goal = self._node_index.get(to_type, {}).get(to_value)
+        if not start or not goal:
+            return None
+        if start == goal:
+            return []
+        depth_cap = 5 if max_depth is None else max_depth
+        # BFS with parent pointers: node_id -> (prev_node_id, step_dict).
+        came_from: dict[str, tuple[str, dict]] = {start: ("", {})}
+        frontier: deque[tuple[str, int]] = deque([(start, 0)])
+        while frontier:
+            current_id, depth = frontier.popleft()
+            if depth >= depth_cap:
+                continue
+            for edge in (
+                *self._edges_from.get(current_id, []),
+                *self._edges_to.get(current_id, []),
+            ):
+                neighbor_id = (
+                    edge["to_node_id"]
+                    if edge["from_node_id"] == current_id
+                    else edge["from_node_id"]
+                )
+                if neighbor_id in came_from or neighbor_id not in self._nodes:
+                    continue
+                frm = self._nodes[edge["from_node_id"]]
+                to = self._nodes[edge["to_node_id"]]
+                came_from[neighbor_id] = (
+                    current_id,
+                    {
+                        "from_type": frm["entity_type"],
+                        "from_value": frm["entity_value"],
+                        "relationship": edge["relationship"],
+                        "to_type": to["entity_type"],
+                        "to_value": to["entity_value"],
+                    },
+                )
+                if neighbor_id == goal:
+                    steps: list[dict] = []
+                    node = goal
+                    while node != start:
+                        prev, step = came_from[node]
+                        steps.append(step)
+                        node = prev
+                    steps.reverse()
+                    return steps
+                frontier.append((neighbor_id, depth + 1))
+        return None
+
     def get_causal_edges(
         self, entity_type: str, entity_value: str, max_depth: int = 3, max_visited: int = 50
     ) -> list[dict]:
@@ -507,6 +576,11 @@ _kg_lock = threading.Lock()
 def get_knowledge_graph() -> KnowledgeGraph:
     """Get global knowledge graph instance.
 
+    Storage-backend selection. Neo4j is intentionally NOT a storage backend
+    here: it is a scoped, opt-in path-query seam (see :func:`find_shortest_path`),
+    not a wholesale store. Wiring ``ZETTELFORGE_BACKEND=neo4j`` as a full backend
+    regresses the traversal recall actually uses by ~6x on real CTI data, so the
+    default backend always owns storage, recall, and traversal.
     Enterprise: Tries TypeDB first, falls back to JSONL.
     Community: Always uses JSONL.
     """
@@ -532,3 +606,70 @@ def get_knowledge_graph() -> KnowledgeGraph:
                 else:
                     _kg_instance = KnowledgeGraph()
     return _kg_instance
+
+
+# Neo4j path-query seam (AGE-117). The driver is cached so a path query does not
+# reconnect/re-init schema each call. This is the ONLY production wiring to Neo4j;
+# storage, recall, and traversal stay on the default backend.
+_neo4j_path_backend: "Neo4jKnowledgeGraph | None" = None
+_neo4j_path_lock = threading.Lock()
+
+
+def _get_neo4j_path_backend() -> "Neo4jKnowledgeGraph":
+    """Return the cached Neo4j path-query backend, connecting on first use.
+
+    Raises ``Neo4jUnavailableError`` if the ``neo4j`` extra is missing or the
+    database is unreachable. Caching is deliberate: schema init runs once.
+    """
+    global _neo4j_path_backend
+    if _neo4j_path_backend is None:
+        with _neo4j_path_lock:
+            if _neo4j_path_backend is None:
+                from zettelforge.neo4j_knowledge_graph import Neo4jKnowledgeGraph
+
+                _neo4j_path_backend = Neo4jKnowledgeGraph()
+    return _neo4j_path_backend
+
+
+def find_shortest_path(
+    from_type: str,
+    from_value: str,
+    to_type: str,
+    to_value: str,
+    max_depth: int | None = None,
+) -> list[dict] | None:
+    """Find the undirected shortest path between two entities.
+
+    Scoped Neo4j seam (AGE-117): when ``neo4j.pathfinding`` is enabled this
+    routes the query to Neo4j (the one operation where it is ~20x faster than
+    the default backend, which has no native shortest-path operator). Storage,
+    recall, and traversal stay on the default backend regardless.
+
+    Fail-loud + explicit-fallback: if Neo4j is unreachable and ``neo4j.fallback``
+    is false (default), the error propagates. If fallback is true, it logs
+    loudly and degrades to the default backend's BFS path-finding. When
+    pathfinding is disabled, the default backend answers directly.
+    """
+    from zettelforge.config import get_config
+
+    cfg = get_config()
+    if not cfg.neo4j.pathfinding:
+        return get_knowledge_graph().shortest_path(
+            from_type, from_value, to_type, to_value, max_depth
+        )
+
+    from zettelforge.neo4j_knowledge_graph import Neo4jUnavailableError
+
+    try:
+        backend = _get_neo4j_path_backend()
+        return backend.shortest_path(from_type, from_value, to_type, to_value, max_depth)
+    except Neo4jUnavailableError:
+        if cfg.neo4j.fallback:
+            _logger.warning(
+                "neo4j_pathfinding_unavailable_explicit_fallback",
+                hint="ZETTELFORGE_NEO4J_FALLBACK=true",
+            )
+            return get_knowledge_graph().shortest_path(
+                from_type, from_value, to_type, to_value, max_depth
+            )
+        raise

@@ -1,0 +1,281 @@
+{
+  "source": "opencti",
+  "dataset": {
+    "nodes": 7481,
+    "edges": 35073,
+    "depths": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "repeat": 7
+  },
+  "baseline": "sqlite (StorageBackend kg_edges; production per-node BFS reachable-set, the GraphRetriever path recall actually uses)",
+  "queries": {
+    "single_hop": {
+      "sqlite_median_ms": 1.29,
+      "sqlite_p95_ms": 1.964,
+      "sqlite_result_size": 191,
+      "neo4j_median_ms": 18.388,
+      "neo4j_p95_ms": 26.207,
+      "neo4j_result_size": 191,
+      "speedup_ratio": 0.07
+    },
+    "traverse_depth_2": {
+      "sqlite_median_ms": 2.482,
+      "sqlite_p95_ms": 2.637,
+      "sqlite_result_size": 247,
+      "neo4j_median_ms": 17.541,
+      "neo4j_p95_ms": 18.387,
+      "neo4j_result_size": 247,
+      "speedup_ratio": 0.14
+    },
+    "traverse_depth_3": {
+      "sqlite_median_ms": 2.626,
+      "sqlite_p95_ms": 2.786,
+      "sqlite_result_size": 247,
+      "neo4j_median_ms": 16.091,
+      "neo4j_p95_ms": 16.734,
+      "neo4j_result_size": 247,
+      "speedup_ratio": 0.16
+    },
+    "traverse_depth_4": {
+      "sqlite_median_ms": 2.596,
+      "sqlite_p95_ms": 2.779,
+      "sqlite_result_size": 247,
+      "neo4j_median_ms": 17.295,
+      "neo4j_p95_ms": 18.251,
+      "neo4j_result_size": 247,
+      "speedup_ratio": 0.15
+    },
+    "traverse_depth_5": {
+      "sqlite_median_ms": 2.719,
+      "sqlite_p95_ms": 2.85,
+      "sqlite_result_size": 247,
+      "neo4j_median_ms": 16.924,
+      "neo4j_p95_ms": 28.864,
+      "neo4j_result_size": 247,
+      "speedup_ratio": 0.16
+    },
+    "traverse_hub_depth_3": {
+      "sqlite_median_ms": 2.734,
+      "sqlite_p95_ms": 2.887,
+      "sqlite_result_size": 247,
+      "neo4j_median_ms": 14.942,
+      "neo4j_p95_ms": 16.496,
+      "neo4j_result_size": 247,
+      "speedup_ratio": 0.18
+    },
+    "traverse_hub_depth_4": {
+      "sqlite_median_ms": 2.822,
+      "sqlite_p95_ms": 2.955,
+      "sqlite_result_size": 247,
+      "neo4j_median_ms": 16.437,
+      "neo4j_p95_ms": 18.822,
+      "neo4j_result_size": 247,
+      "speedup_ratio": 0.17
+    },
+    "traverse_hub_depth_5": {
+      "sqlite_median_ms": 2.78,
+      "sqlite_p95_ms": 2.941,
+      "sqlite_result_size": 247,
+      "neo4j_median_ms": 15.946,
+      "neo4j_p95_ms": 17.46,
+      "neo4j_result_size": 247,
+      "speedup_ratio": 0.17
+    },
+    "traverse_hub_ids_depth_3": {
+      "sqlite_median_ms": 2.758,
+      "sqlite_p95_ms": 2.904,
+      "sqlite_result_size": 247,
+      "neo4j_median_ms": 13.084,
+      "neo4j_p95_ms": 13.349,
+      "neo4j_result_size": 247,
+      "speedup_ratio": 0.21
+    },
+    "traverse_hub_ids_depth_4": {
+      "sqlite_median_ms": 2.794,
+      "sqlite_p95_ms": 2.924,
+      "sqlite_result_size": 247,
+      "neo4j_median_ms": 13.301,
+      "neo4j_p95_ms": 13.752,
+      "neo4j_result_size": 247,
+      "speedup_ratio": 0.21
+    },
+    "traverse_hub_ids_depth_5": {
+      "sqlite_median_ms": 2.773,
+      "sqlite_p95_ms": 2.921,
+      "sqlite_result_size": 247,
+      "neo4j_median_ms": 12.658,
+      "neo4j_p95_ms": 13.028,
+      "neo4j_result_size": 247,
+      "speedup_ratio": 0.22
+    },
+    "shortest_path_directed": {
+      "sqlite_median_ms": 5.768,
+      "sqlite_p95_ms": 5.804,
+      "sqlite_result_size": 3,
+      "neo4j_median_ms": 56.361,
+      "neo4j_p95_ms": 63.158,
+      "neo4j_result_size": 9,
+      "speedup_ratio": 0.1
+    },
+    "shortest_path_undirected": {
+      "sqlite_median_ms": 752.056,
+      "sqlite_p95_ms": 762.611,
+      "sqlite_result_size": 9,
+      "neo4j_median_ms": 37.665,
+      "neo4j_p95_ms": 54.117,
+      "neo4j_result_size": 9,
+      "speedup_ratio": 19.97
+    }
+  },
+  "opencti_meta": {
+    "hub_name": "Kimsuky",
+    "hub_degree": 191,
+    "hub_total_degree": 191,
+    "top_hubs": [
+      {
+        "name": "[T1059] Command and Scripting Interpreter",
+        "type": "Attack-Pattern",
+        "degree": 602,
+        "out_degree": 0
+      },
+      {
+        "name": "[T1027] Obfuscated Files or Information",
+        "type": "Attack-Pattern",
+        "degree": 509,
+        "out_degree": 0
+      },
+      {
+        "name": "[T1105] Ingress Tool Transfer",
+        "type": "Attack-Pattern",
+        "degree": 487,
+        "out_degree": 0
+      },
+      {
+        "name": "[T1071] Application Layer Protocol",
+        "type": "Attack-Pattern",
+        "degree": 451,
+        "out_degree": 0
+      },
+      {
+        "name": "[T1082] System Information Discovery",
+        "type": "Attack-Pattern",
+        "degree": 409,
+        "out_degree": 0
+      },
+      {
+        "name": "[T1071.001] Web Protocols",
+        "type": "Attack-Pattern",
+        "degree": 401,
+        "out_degree": 1
+      },
+      {
+        "name": "[T1059.003] Windows Command Shell",
+        "type": "Attack-Pattern",
+        "degree": 370,
+        "out_degree": 1
+      },
+      {
+        "name": "[T1083] File and Directory Discovery",
+        "type": "Attack-Pattern",
+        "degree": 356,
+        "out_degree": 0
+      },
+      {
+        "name": "[T1070] Indicator Removal",
+        "type": "Attack-Pattern",
+        "degree": 347,
+        "out_degree": 0
+      },
+      {
+        "name": "[T1140] Deobfuscate/Decode Files or Information",
+        "type": "Attack-Pattern",
+        "degree": 336,
+        "out_degree": 0
+      }
+    ],
+    "top_out_hubs": [
+      {
+        "name": "Kimsuky",
+        "type": "Intrusion-Set",
+        "out_degree": 191,
+        "total_degree": 191
+      },
+      {
+        "name": "Windows",
+        "type": "Infrastructure",
+        "out_degree": 172,
+        "total_degree": 173
+      },
+      {
+        "name": "Windows",
+        "type": "Software",
+        "out_degree": 172,
+        "total_degree": 172
+      },
+      {
+        "name": "APT28",
+        "type": "Intrusion-Set",
+        "out_degree": 159,
+        "total_degree": 159
+      },
+      {
+        "name": "Lazarus Group",
+        "type": "Intrusion-Set",
+        "out_degree": 155,
+        "total_degree": 155
+      },
+      {
+        "name": "APT41",
+        "type": "Intrusion-Set",
+        "out_degree": 147,
+        "total_degree": 147
+      },
+      {
+        "name": "APT29",
+        "type": "Intrusion-Set",
+        "out_degree": 145,
+        "total_degree": 145
+      },
+      {
+        "name": "Sandworm Team",
+        "type": "Intrusion-Set",
+        "out_degree": 143,
+        "total_degree": 143
+      },
+      {
+        "name": "OilRig",
+        "type": "Intrusion-Set",
+        "out_degree": 138,
+        "total_degree": 138
+      },
+      {
+        "name": "Mustang Panda",
+        "type": "Intrusion-Set",
+        "out_degree": 137,
+        "total_degree": 137
+      }
+    ],
+    "avg_degree": 9.38,
+    "max_degree": 602,
+    "max_out_degree": 191,
+    "pair_distances": [
+      3,
+      3,
+      3,
+      6,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5
+    ],
+    "node_count": 7481,
+    "edge_count": 35073
+  },
+  "sc003_met": false
+}
