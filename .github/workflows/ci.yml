@@ -57,9 +57,19 @@ jobs:
         # install, not at runtime; CI builds in ephemeral runners with
         # no persistent state. Re-evaluate when GitHub's images ship a
         # patched pip.
+        #
+        # CVE-2023-36464 / GHSA-4vvm-4w3v-6mr8: medium-severity
+        # infinite-loop DoS in PyPDF2 3.0.1, introduced transitively by
+        # Maigret. PyPDF2 has no patched release under that package name
+        # (upstream recommends migrating to pypdf>=3.9.0), and ZettelForge's
+        # AGE-120 username collector does not parse attacker-supplied PDFs or
+        # invoke Maigret report generation. Accepted for AGE-120 because the
+        # GOV-009 blocking threshold is HIGH/CRITICAL and the collector
+        # lazy-imports/fails closed.
         pip-audit --strict \
           --ignore-vuln=CVE-2026-3219 \
-          --ignore-vuln=PYSEC-2026-196
+          --ignore-vuln=PYSEC-2026-196 \
+          --ignore-vuln=CVE-2023-36464
 
   test:
     runs-on: ubuntu-latest
