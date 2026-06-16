@@ -33,21 +33,27 @@ _PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
         "instruction_override",
         re.compile(
             r"\b(ignore|disregard|forget|bypass|override)\b.{0,80}"
-            r"\b(previous|prior|above|earlier|system|developer|safety)\b.{0,80}"
-            r"\b(instructions?|directives?|rules?|prompt|message)\b",
+            r"(?:\b(previous|prior|above|earlier|system|developer|safety)\b.{0,80})?"
+            r"\b(all\s+)?(instructions?|directives?|rules?|prompts?|messages?)\b",
             re.IGNORECASE | re.DOTALL,
         ),
     ),
     (
         "role_rewrite",
         re.compile(
-            r"\b(you are now|act as|pretend to be|developer mode|jailbreak|dan mode)\b",
-            re.IGNORECASE,
+            r"\b(you are now|you should now be|you must now be)\b"
+            r"|\b(you\s+)?act as\s+(my|an?|the)\s+"
+            r"(assistant|system|developer|admin|root|jailbreak|dan)\b"
+            r"|\bpretend to be\s+(my|an?|the)?\s*"
+            r"(assistant|system|developer|admin|root|jailbreak|dan)\b"
+            r"|\b(developer mode|jailbreak|dan mode)\b",
+            re.IGNORECASE | re.DOTALL,
         ),
     ),
     (
         "secret_exfiltration",
         re.compile(
+            r"(?:^|[.!?,;:]\s*|\b(?:please|kindly)\s+)"
             r"\b(reveal|print|dump|show|exfiltrate|leak|return)\b.{0,80}"
             r"\b(system prompt|developer message|hidden instructions?|api keys?|tokens?|"
             r"secrets?|credentials?)\b",
@@ -57,8 +63,9 @@ _PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
     (
         "tool_or_network_command",
         re.compile(
+            r"(?:^|[.!?,;:]\s*|\b(?:please|kindly)\s+)"
             r"\b(call|invoke|use|run|execute)\b.{0,80}"
-            r"\b(tool|function|shell|bash|curl|wget|http request|webhook)\b",
+            r"\b(tool|function|shell tool|bash|curl|wget|http request|webhook)\b",
             re.IGNORECASE | re.DOTALL,
         ),
     ),
@@ -74,7 +81,7 @@ _PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
         "memory_poisoning_intent",
         re.compile(
             r"\b(store|remember|save)\b.{0,80}\b(this|the following)\b.{0,80}"
-            r"\b(as|as a)\b.{0,40}\b(system|developer|highest priority|permanent)\b"
+            r"\b(as|as a)\b.{0,40}\b(system|developer|highest priority)\b"
             r".{0,40}\b(instruction|rule|memory)\b",
             re.IGNORECASE | re.DOTALL,
         ),

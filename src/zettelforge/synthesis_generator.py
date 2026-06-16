@@ -12,7 +12,8 @@ import time
 
 from zettelforge.json_parse import extract_json
 from zettelforge.log import get_logger
-from zettelforge.prompt_injection_guard import assert_no_prompt_injection
+from zettelforge.ocsf import SEVERITY_HIGH, STATUS_FAILURE, log_api_activity
+from zettelforge.prompt_injection_guard import PromptInjectionError, assert_no_prompt_injection
 
 _logger = get_logger("zettelforge.synthesis_generator")
 
@@ -139,7 +140,17 @@ class SynthesisGenerator:
     def _generate_synthesis(self, query: str, context: str, format: str) -> dict:
         """Generate synthesis using LLM."""
         assert_no_prompt_injection(query, field="synthesis.query")
-        assert_no_prompt_injection(context, field="synthesis.context")
+        try:
+            assert_no_prompt_injection(context, field="synthesis.context")
+        except PromptInjectionError as exc:
+            log_api_activity(
+                operation="synthesize",
+                status_id=STATUS_FAILURE,
+                severity_id=SEVERITY_HIGH,
+                guard_field=exc.field,
+                guard_code=exc.code,
+            )
+            raise
         system_prompt = self._get_system_prompt(format)
         user_prompt = self._build_prompt(query, context, format)
         full_prompt = f"{user_prompt}\n\nRespond with valid JSON only."
