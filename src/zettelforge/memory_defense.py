@@ -417,9 +417,7 @@ def _memsad_score(candidate_vector: list[float], refs: list[Any]) -> tuple[float
     return 0.5 * max_similarity + 0.5 * mean_similarity, max_similarity, mean_similarity
 
 
-def _memsad_score_py(
-    candidate_vector: list[float], refs: list[Any]
-) -> tuple[float, float, float]:
+def _memsad_score_py(candidate_vector: list[float], refs: list[Any]) -> tuple[float, float, float]:
     """Original pure-Python scoring; retained as the degenerate-shape fallback."""
     similarities = [_cosine(candidate_vector, _note_vector(ref)) for ref in refs]
     if not similarities:
