@@ -15,6 +15,10 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from zettelforge.log import get_logger
+from zettelforge.prompt_injection_guard import (
+    PromptInjectionError,
+    assert_no_prompt_injection,
+)
 
 if TYPE_CHECKING:
     from zettelforge.config import LimitsConfig, PIIConfig
@@ -123,6 +127,11 @@ class GovernanceValidator:
                 f"Increase governance.limits.max_content_length or "
                 f"reduce input size."
             )
+
+        try:
+            assert_no_prompt_injection(content, field="remember.content")
+        except PromptInjectionError as exc:
+            raise GovernanceViolationError(str(exc)) from exc
 
         # RFC-013: Optional PII validation
         if self._pii is not None:
