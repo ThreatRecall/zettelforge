@@ -1,6 +1,6 @@
 ---
 title: "Governance Controls Reference"
-description: "GOV-003, GOV-007, GOV-011, and GOV-012 governance controls with enforcement points, validation rules, and error handling."
+description: "GOV-003, GOV-007, GOV-011, GOV-012, and AGE-127 governance controls with enforcement points, validation rules, and error handling."
 diataxis_type: "reference"
 audience: "Senior CTI Practitioner"
 tags:
@@ -15,7 +15,7 @@ version: "2.2.0"
 
 # Governance Controls Reference
 
-Module: `zettelforge.governance_validator`
+Modules: `zettelforge.governance_validator`, `zettelforge.prompt_injection_guard`
 
 ```python
 from zettelforge.governance_validator import GovernanceValidator, GovernanceViolationError
@@ -31,6 +31,7 @@ from zettelforge.governance_validator import GovernanceValidator, GovernanceViol
 | GOV-007 | Testing Standards | Quality Assurance | Build / CI | Test coverage >= 67% required | CI gate failure |
 | GOV-011 | Access Control & Input Validation | Security | Runtime (`remember`, `synthesize`) | All inputs validated before storage; no hardcoded secrets | `GovernanceViolationError` |
 | GOV-012 | Audit Logging | Observability | Runtime (`remember`, `recall`, `synthesize`) | All memory operations logged with structured format | Silent (log-only) |
+| AGE-127 | Prompt-Injection Guard | Security | Runtime (`remember`, `remember_with_extraction`, `recall`, `synthesize`, LLM prompt builders) | Explicit prompt override, role rewrite, tool execution, hidden-prompt disclosure, and memory-poisoning instructions fail closed | `PromptInjectionViolation` or `GovernanceViolationError` wrapper |
 
 ---
 
@@ -83,6 +84,7 @@ rules["GOV-007"] = {
 | Rule | Requirement | Enforcement |
 |:-----|:------------|:------------|
 | Input validation | Content must be a `str` or an object with a `content` attribute | Runtime check in `enforce()` |
+| Prompt-injection guard | Explicit instruction override, role rewrite, tool/network command, hidden prompt/secret exfiltration, prompt boundary marker, and permanent-memory poisoning patterns are rejected | Runtime check in `prompt_injection_guard.py` |
 | No hardcoded secrets | Content must not contain API keys, tokens, or credentials | Runtime check |
 | Minimum content length | Content length >= `governance.min_content_length` (default: 1) | Config-driven |
 
@@ -112,8 +114,49 @@ def enforce(self, operation: str, data: Any = None) -> None:
 
 | Operation | Checks Applied |
 |:----------|:---------------|
-| `remember` | Input type validation (must be `str` or have `.content` attribute) |
-| `synthesize` | Audit logging trigger (GOV-012) |
+| `remember` | Input type validation; content length; prompt-injection guard; optional PII validation |
+| `remember_with_extraction` | Prompt-injection guard before fact extraction |
+| `recall` / `get_context` | Prompt-injection guard before retrieval and embeddings |
+| `synthesize` | Prompt-injection guard on query and retrieved context before LLM generation; audit logging trigger (GOV-012) |
+
+---
+
+## AGE-127: Prompt-Injection Guard
+
+**Purpose:** Prevent untrusted CTI notes, recall queries, and synthesis context
+from becoming instructions to the model, tool layer, or future retrieval flow.
+
+The guard lives in `zettelforge.prompt_injection_guard`:
+
+```python
+from zettelforge.prompt_injection_guard import assert_no_prompt_injection
+```
+
+Blocked classes:
+
+| Class | Examples |
+|:------|:---------|
+| Instruction override | "ignore previous instructions", "override system rules" |
+| Role rewrite | "you are now", "developer mode", jailbreak framing |
+| Secret exfiltration | "reveal hidden instructions", "dump API keys" |
+| Tool/network command | "call the shell tool", "curl this webhook" |
+| Prompt boundary marker | fake "BEGIN SYSTEM PROMPT" / "END DEVELOPER MESSAGE" blocks |
+| Memory poisoning | requests to store future system/developer instructions as permanent memory |
+
+Allowed CTI examples:
+
+- Reports that describe attackers telling victims to ignore MFA warnings.
+- Notes that mention `curl`, secrets, or tokens as observed attacker tradecraft.
+- CVEs, indicators, malware names, ATT&CK techniques, and actor aliases.
+
+Audit expectation:
+
+- Blocked `remember()` input is wrapped as `GovernanceViolationError`, producing
+  the existing authorization failure path.
+- Rejected payload content must not be logged. Pattern code and field are enough
+  for triage.
+- Synthesis context is revalidated because historical notes may predate the
+  guard.
 
 **Exception class:**
 

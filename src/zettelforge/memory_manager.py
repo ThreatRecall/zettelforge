@@ -42,6 +42,7 @@ from zettelforge.ocsf import (
     log_api_activity,
     log_authorization,
 )
+from zettelforge.prompt_injection_guard import assert_no_prompt_injection
 from zettelforge.storage_backend import BackendClosedError
 from zettelforge.synthesis_generator import get_synthesis_generator
 from zettelforge.synthesis_validator import get_synthesis_validator
@@ -575,6 +576,10 @@ class MemoryManager:
             List of (MemoryNote or None, status) tuples.
             Status is one of: "added", "updated", "corrected", "noop".
         """
+        assert_no_prompt_injection(content, field="remember_with_extraction.content")
+        if context:
+            assert_no_prompt_injection(context, field="remember_with_extraction.context")
+
         # Phase 1: Extraction
         extractor = FactExtractor(max_facts=max_facts)
         facts = extractor.extract(content, context=context)
@@ -693,6 +698,7 @@ class MemoryManager:
         defense-in-depth control for D-03 (deep graph traversal DoS) per
         RFC-014.
         """
+        assert_no_prompt_injection(query, field="recall.query")
         telemetry_caller = caller if caller is not None else actor
         timeout = get_config().governance.limits.recall_timeout_seconds
         if timeout > 0:
@@ -747,6 +753,7 @@ class MemoryManager:
         caller: str | None = None,
         actor: str | None = None,
     ) -> list[MemoryNote]:
+        assert_no_prompt_injection(query, field="recall.query")
         caller = caller if caller is not None else actor
         request_id = uuid.uuid4().hex
         start = time.perf_counter()
@@ -1045,6 +1052,7 @@ class MemoryManager:
         """
         Get formatted memory context for agent prompt injection.
         """
+        assert_no_prompt_injection(query, field="context.query")
         return self.retriever.get_memory_context(
             query=query, domain=domain, k=k, token_budget=token_budget
         )
@@ -1659,6 +1667,7 @@ class MemoryManager:
         Returns:
             Dictionary with synthesis result, metadata, and sources
         """
+        assert_no_prompt_injection(query, field="synthesize.query")
         telemetry_caller = caller if caller is not None else actor
         _extended_formats = {"synthesized_brief", "timeline_analysis", "relationship_map"}
         if format in _extended_formats and not has_extension("enterprise"):
