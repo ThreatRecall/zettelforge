@@ -139,11 +139,16 @@ def get_embedding(text: str, model: str | None = None) -> list[float]:
     cache = _get_embedding_cache()
     key_model = model or get_embedding_model()
     key = f"{key_model}:{hashlib.sha256(text.encode()).hexdigest()}"
-    cached: list[float] | None = cache.get(key)
+    with _embedding_cache_lock:
+        cached: list[float] | None = cache.get(key)
     if cached is not None:
         return cached
     embedding = _compute_embedding(text, model)
-    cache.set(key, embedding)
+    with _embedding_cache_lock:
+        cached = cache.get(key)
+        if cached is not None:
+            return cached
+        cache.set(key, embedding)
     return embedding
 
 

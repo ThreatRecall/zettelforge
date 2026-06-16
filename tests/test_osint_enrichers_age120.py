@@ -9,12 +9,15 @@ executor and the new ontology entities/edges.
 
 from __future__ import annotations
 
-from types import SimpleNamespace
+import sys
+from types import ModuleType, SimpleNamespace
 from unittest.mock import MagicMock, patch
 
+import httpx
 import pytest
 
 from zettelforge import osint as _osint  # noqa: F401 — registers collectors
+from zettelforge.graph_retriever import StoreGraphSource
 from zettelforge.knowledge_graph import KnowledgeGraph
 from zettelforge.ontology import ENTITY_TYPES, OntologyValidator
 from zettelforge.osint.collectors.breach import hibp_collector
@@ -23,7 +26,6 @@ from zettelforge.osint.collectors.infrastructure import dns_collector, whois_col
 from zettelforge.osint.collectors.people import maigret_collector
 from zettelforge.osint.entity_resolver import canonicalise_value
 from zettelforge.osint.executor import SUPPORTED_SEED_TYPES, run_osint_collection
-
 
 # ---------------------------------------------------------------------------
 # Ontology additions
@@ -41,7 +43,7 @@ def test_breach_entity_registered() -> None:
         ("EmailAddress", "appeared_in_breach", "Breach"),
         ("Alias", "has_account", "SocialAccount"),
         ("CryptoWallet", "sent_transaction", "Transaction"),
-        ("Transaction", "received_transaction", "CryptoWallet"),
+        ("CryptoWallet", "received_transaction", "Transaction"),
     ],
 )
 def test_new_edges_validate(from_type: str, edge: str, to_type: str) -> None:
@@ -160,6 +162,53 @@ def test_maigret_rejects_non_alias() -> None:
     assert maigret_collector.collect("EmailAddress", "x@y.com") == []
 
 
+def test_maigret_live_path_loads_settings_and_passes_logger(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: dict[str, object] = {}
+
+    class FakeSettings:
+        sites_db_path = ""
+
+        def load(self) -> None:
+            calls["settings_loaded"] = True
+            self.sites_db_path = "maigret-sites.json"
+
+    class FakeDatabase:
+        def load_from_path(self, path: str):
+            calls["sites_db_path"] = path
+            return self
+
+        def ranked_sites_dict(self, top: int):
+            calls["top"] = top
+            return {"GitHub": object()}
+
+    async def fake_search(**kwargs):
+        calls["logger"] = kwargs.get("logger")
+        return {
+            "GitHub": {
+                "status": SimpleNamespace(status="CLAIMED"),
+                "url_user": "https://github.com/bobz",
+            }
+        }
+
+    fake_maigret = ModuleType("maigret")
+    fake_maigret.settings = SimpleNamespace(Settings=FakeSettings)
+    fake_maigret.search = fake_search
+    fake_sites = ModuleType("maigret.sites")
+    fake_sites.MaigretDatabase = FakeDatabase
+    monkeypatch.setitem(sys.modules, "maigret", fake_maigret)
+    monkeypatch.setitem(sys.modules, "maigret.sites", fake_sites)
+
+    rows = maigret_collector._search_username("bobz")
+
+    assert rows == [{"platform": "GitHub", "url": "https://github.com/bobz"}]
+    assert calls["settings_loaded"] is True
+    assert calls["sites_db_path"] == "maigret-sites.json"
+    assert calls["top"] == maigret_collector.MAX_ACCOUNTS
+    assert calls["logger"] is not None
+
+
 # ---------------------------------------------------------------------------
 # HIBP — email -> Breach
 # ---------------------------------------------------------------------------
@@ -195,6 +244,43 @@ def test_hibp_fail_closed_without_key(monkeypatch: pytest.MonkeyPatch) -> None:
     assert hibp_collector.collect("EmailAddress", "x@y.com") == []
 
 
+def test_hibp_logs_redacted_email_reference() -> None:
+    class FakeResponse:
+        status_code = 200
+
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self):
+            return {"unexpected": "shape"}
+
+    class FakeClient:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return None
+
+        def get(self, *args, **kwargs):
+            return FakeResponse()
+
+    with (
+        patch.object(hibp_collector.httpx, "Client", FakeClient),
+        patch.object(hibp_collector._logger, "warning") as warning,
+    ):
+        assert hibp_collector._fetch_breaches("victim@example.com", "test-key") == []
+
+    assert warning.call_args.args == ("hibp_collector_unexpected_shape",)
+    assert "email" not in warning.call_args.kwargs
+    assert warning.call_args.kwargs["email_ref"] == hibp_collector._email_log_ref(
+        "victim@example.com"
+    )
+    assert "victim@example.com" not in str(warning.call_args)
+
+
 # ---------------------------------------------------------------------------
 # Wallet — CryptoWallet -> Transaction
 # ---------------------------------------------------------------------------
@@ -222,6 +308,70 @@ def test_wallet_emits_sent_and_received(monkeypatch: pytest.MonkeyPatch) -> None
     assert sent.from_entity_type == "CryptoWallet"
     assert sent.to_entity_type == "Transaction"
     assert sent.output_value == "0xaaa"
+    received = next(t for t in out if t.edge_type == "received_transaction")
+    assert received.from_entity_type == "CryptoWallet"
+    assert received.to_entity_type == "Transaction"
+    assert received.output_value == "0xbbb"
+
+
+def test_wallet_fetch_uses_etherscan_v2_chainid() -> None:
+    calls: dict[str, object] = {}
+
+    class FakeResponse:
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self):
+            return {"result": []}
+
+    class FakeClient:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return None
+
+        def get(self, url: str, *, params: dict[str, str]):
+            calls["url"] = url
+            calls["params"] = params
+            return FakeResponse()
+
+    with patch.object(wallet_collector.httpx, "Client", FakeClient):
+        assert wallet_collector._fetch_transactions(_wallet(), "test-key") == []
+
+    assert calls["url"] == "https://api.etherscan.io/v2/api"
+    params = calls["params"]
+    assert isinstance(params, dict)
+    assert params["chainid"] == "1"
+    assert params["apikey"] == "test-key"
+
+
+def test_wallet_http_error_log_does_not_leak_api_key() -> None:
+    class RaisingClient:
+        def __init__(self, **kwargs):
+            self.kwargs = kwargs
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return None
+
+        def get(self, url: str, *, params: dict[str, str]):
+            request = httpx.Request("GET", f"{url}?apikey={params['apikey']}")
+            raise httpx.RequestError("request failed with test-key", request=request)
+
+    with (
+        patch.object(wallet_collector.httpx, "Client", RaisingClient),
+        patch.object(wallet_collector._logger, "warning") as warning,
+    ):
+        assert wallet_collector._fetch_transactions(_wallet(), "test-key") == []
+
+    assert warning.call_args.args == ("wallet_collector_http_error",)
+    assert "test-key" not in str(warning.call_args)
 
 
 def test_wallet_rejects_non_evm(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -259,6 +409,44 @@ def test_executor_persists_wallet_transactions(tmp_path, monkeypatch: pytest.Mon
     assert persisted.edge_type == "sent_transaction"
     assert kg.get_node("Transaction", "0xaaa") is not None
     assert kg.get_node("CryptoWallet", wallet) is not None
+
+
+def test_executor_persists_osint_to_scoped_store(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from zettelforge.sqlite_backend import SQLiteBackend
+
+    monkeypatch.setenv("ETHERSCAN_API_KEY", "test-key")
+    store = SQLiteBackend(data_dir=tmp_path)
+    store.initialize()
+    wallet = _wallet()
+    other = "0x" + "cd" * 20
+    txs = [
+        {"hash": "0xAAA", "from": wallet, "to": other, "value": "1"},
+        {"hash": "0xBBB", "from": other, "to": wallet, "value": "2"},
+    ]
+
+    try:
+        with patch.object(wallet_collector, "_fetch_transactions", return_value=txs):
+            result = run_osint_collection(
+                "CryptoWallet",
+                wallet,
+                store=store,
+                collector_names=["wallet_collector"],
+            )
+
+        assert result.error_count == 0
+        assert result.persisted_count == 2
+        source = StoreGraphSource(store)
+        wallet_node = source.get_node("CryptoWallet", wallet)
+        assert wallet_node is not None
+        outgoing = source.get_outgoing_edges(wallet_node["node_id"])
+        assert {edge["relationship"] for edge in outgoing} == {
+            "sent_transaction",
+            "received_transaction",
+        }
+        targets = {source.get_node_by_id(edge["to_node_id"])["entity_value"] for edge in outgoing}
+        assert targets == {"0xaaa", "0xbbb"}
+    finally:
+        store.close()
 
 
 def test_executor_accepts_email_seed_without_keys(tmp_path) -> None:

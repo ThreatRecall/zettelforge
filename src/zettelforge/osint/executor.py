@@ -32,6 +32,7 @@ from zettelforge.osint.transform_registry import (
     TransformRegistry,
     get_transform_registry,
 )
+from zettelforge.storage_backend import StorageBackend
 
 _logger = get_logger("zettelforge.osint.executor")
 
@@ -123,6 +124,7 @@ def run_osint_collection(
     input_value: str,
     *,
     kg: KnowledgeGraph | None = None,
+    store: StorageBackend | None = None,
     registry: TransformRegistry | None = None,
     validator: OntologyValidator | None = None,
     collector_names: Sequence[str] | None = None,
@@ -139,6 +141,10 @@ def run_osint_collection(
         Seed value. It is canonicalized before KG writes.
     kg:
         Optional ``KnowledgeGraph`` instance. Defaults to the global KG.
+    store:
+        Optional scoped ``StorageBackend``. When provided, OSINT nodes/edges
+        are persisted to the same KG tables used by recall graph traversal.
+        Pass either ``kg`` or ``store``, not both.
     registry:
         Optional collector registry. Defaults to ``TRANSFORM_REGISTRY``.
     validator:
@@ -150,6 +156,9 @@ def run_osint_collection(
     """
     merge_into_global_ontology()
 
+    if kg is not None and store is not None:
+        raise ValueError("pass either kg or store to run_osint_collection, not both")
+
     if input_entity_type not in SUPPORTED_SEED_TYPES:
         raise ValueError(
             f"unsupported OSINT seed type {input_entity_type!r}; "
@@ -158,7 +167,8 @@ def run_osint_collection(
 
     registry = registry or get_transform_registry()
     validator = validator or OntologyValidator()
-    kg = kg or get_knowledge_graph()
+    if store is None:
+        kg = kg or get_knowledge_graph()
     allowed_collectors = None if collector_names is None else set(collector_names)
 
     canonical_input_value = canonicalise_value(input_entity_type, input_value)
@@ -167,7 +177,16 @@ def run_osint_collection(
 
     seed_node_id: str | None = None
     if persist:
-        seed_node_id, _ = add_resolved(kg, input_entity_type, canonical_input_value, seed_props)
+        if store is not None:
+            seed_node_id = store.add_kg_node(
+                input_entity_type,
+                canonical_input_value,
+                seed_props,
+            )
+        else:
+            if kg is None:
+                raise RuntimeError("KnowledgeGraph target was not initialized")
+            seed_node_id, _ = add_resolved(kg, input_entity_type, canonical_input_value, seed_props)
 
     result = OSINTCollectionResult(
         input_entity_type=input_entity_type,
@@ -200,14 +219,26 @@ def run_osint_collection(
                     canonical_input_value,
                 )
                 if persist:
-                    persisted = _persist_tuple(
-                        kg=kg,
-                        validator=validator,
-                        collector=meta,
-                        tup=tup,
-                        input_entity_type=input_entity_type,
-                        canonical_input_value=canonical_input_value,
-                    )
+                    if store is not None:
+                        persisted = _persist_tuple_to_store(
+                            store=store,
+                            validator=validator,
+                            collector=meta,
+                            tup=tup,
+                            input_entity_type=input_entity_type,
+                            canonical_input_value=canonical_input_value,
+                        )
+                    else:
+                        if kg is None:
+                            raise RuntimeError("KnowledgeGraph target was not initialized")
+                        persisted = _persist_tuple(
+                            kg=kg,
+                            validator=validator,
+                            collector=meta,
+                            tup=tup,
+                            input_entity_type=input_entity_type,
+                            canonical_input_value=canonical_input_value,
+                        )
                     result.persisted.append(persisted)
                 else:
                     from_value = _derive_endpoint_value(
@@ -317,6 +348,59 @@ def _persist_tuple(
         to_value,
         tup.edge_type,
         edge_props,
+    )
+
+    return PersistedOSINTTuple(
+        collector_name=collector.name,
+        output_entity_type=tup.output_entity_type,
+        output_value=output_value,
+        output_node_id=output_node_id,
+        edge_id=edge_id,
+        from_entity_type=tup.from_entity_type,
+        from_value=from_value,
+        to_entity_type=tup.to_entity_type,
+        to_value=to_value,
+        edge_type=tup.edge_type,
+    )
+
+
+def _persist_tuple_to_store(
+    *,
+    store: StorageBackend,
+    validator: OntologyValidator,
+    collector: TransformMetadata,
+    tup: CollectorTuple,
+    input_entity_type: str,
+    canonical_input_value: str,
+) -> PersistedOSINTTuple:
+    output_value = canonicalise_value(tup.output_entity_type, tup.output_value)
+    output_props = _entity_properties(tup.output_entity_type, output_value, tup.output_props)
+    from_value, to_value = _validate_tuple_endpoints(
+        tup=tup,
+        validator=validator,
+        input_entity_type=input_entity_type,
+        canonical_input_value=canonical_input_value,
+    )
+    from_props = _endpoint_properties(tup.from_entity_type, from_value, tup, input_entity_type)
+    to_props = _endpoint_properties(tup.to_entity_type, to_value, tup, input_entity_type)
+
+    output_node_id = store.add_kg_node(tup.output_entity_type, output_value, output_props)
+    store.add_kg_node(tup.from_entity_type, from_value, from_props)
+    store.add_kg_node(tup.to_entity_type, to_value, to_props)
+
+    edge_props = dict(tup.edge_props)
+    edge_props.setdefault("collector", collector.name)
+    edge_props.setdefault("source", collector.name)
+    edge_props.setdefault("osint", True)
+    edge_props.setdefault("edge_type", "osint")
+
+    edge_id = store.add_kg_edge(
+        tup.from_entity_type,
+        from_value,
+        tup.to_entity_type,
+        to_value,
+        tup.edge_type,
+        properties=edge_props,
     )
 
     return PersistedOSINTTuple(

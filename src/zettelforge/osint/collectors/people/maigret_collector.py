@@ -20,6 +20,7 @@ result plus a structured warning.
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from zettelforge.log import get_logger
@@ -44,9 +45,8 @@ def _search_username(username: str) -> list[dict[str, Any]]:
     installed or the search fails — fail-closed, no silent retry. maigret's
     public search API is async, so it is driven on a private event loop.
 
-    ponytail: live maigret wiring is best-effort behind a single seam; tests
+    The live maigret wiring is best-effort behind a single boundary; tests
     mock this function and exercise the pure mapping in ``_rows_to_tuples``.
-    Pin maigret in ``[osint]`` before relying on the live path in prod.
     """
     try:
         import asyncio
@@ -58,10 +58,21 @@ def _search_username(username: str) -> list[dict[str, Any]]:
         return []
 
     try:
-        db = MaigretDatabase().load_from_path(maigret.settings.Settings().sites_db_path)
+        settings = maigret.settings.Settings()
+        load = getattr(settings, "load", None)
+        if callable(load):
+            load()
+        db = MaigretDatabase().load_from_path(settings.sites_db_path)
         sites = db.ranked_sites_dict(top=MAX_ACCOUNTS)
+        backend_logger = logging.getLogger("zettelforge.osint.collectors.maigret.backend")
         results = asyncio.run(
-            maigret.search(username=username, site_dict=sites, timeout=30, no_progressbar=True)
+            maigret.search(
+                username=username,
+                site_dict=sites,
+                timeout=30,
+                logger=backend_logger,
+                no_progressbar=True,
+            )
         )
     except Exception as exc:  # backend boundary: any maigret failure fails closed
         _logger.warning("maigret_collector_failed", error=str(exc))

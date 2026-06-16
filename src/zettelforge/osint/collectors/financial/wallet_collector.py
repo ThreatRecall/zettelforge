@@ -38,20 +38,22 @@ from zettelforge.osint.transform_registry import (
 _logger = get_logger("zettelforge.osint.collectors.wallet")
 
 API_KEY_ENV = "ETHERSCAN_API_KEY"
-API_URL = "https://api.etherscan.io/api"
+API_URL = "https://api.etherscan.io/v2/api"
 CHAIN = "eth"
+CHAIN_ID = "1"
 DEFAULT_TIMEOUT = 15.0
 # Cap so a high-volume wallet cannot flood the graph in one collection.
 MAX_TX = 100
 
 
 def _fetch_transactions(wallet: str, api_key: str) -> list[dict[str, Any]]:
-    """Call Etherscan ``account/txlist``. Returns the parsed tx list.
+    """Call Etherscan V2 ``account/txlist``. Returns the parsed tx list.
 
     The API key travels only in the query string and is never logged. A
     ``status`` of ``"0"`` (no transactions or upstream error) yields ``[]``.
     """
     params = {
+        "chainid": CHAIN_ID,
         "module": "account",
         "action": "txlist",
         "address": wallet,
@@ -68,10 +70,20 @@ def _fetch_transactions(wallet: str, api_key: str) -> list[dict[str, Any]]:
             response.raise_for_status()
             payload = response.json()
     except httpx.HTTPError as exc:
-        _logger.warning("wallet_collector_http_error", wallet=wallet, error=str(exc))
+        status_code = getattr(getattr(exc, "response", None), "status_code", None)
+        _logger.warning(
+            "wallet_collector_http_error",
+            wallet=wallet,
+            error_type=exc.__class__.__name__,
+            status_code=status_code,
+        )
         return []
     except ValueError as exc:  # JSON decode error
-        _logger.warning("wallet_collector_json_error", wallet=wallet, error=str(exc))
+        _logger.warning(
+            "wallet_collector_json_error",
+            wallet=wallet,
+            error_type=exc.__class__.__name__,
+        )
         return []
     if not isinstance(payload, dict):
         _logger.warning("wallet_collector_unexpected_shape", wallet=wallet)
@@ -138,8 +150,8 @@ def _to_tuples(wallet: str, records: list[dict[str, Any]]) -> list[CollectorTupl
                     output_entity_type="Transaction",
                     output_value=tx_hash,
                     edge_type="received_transaction",
-                    from_entity_type="Transaction",
-                    to_entity_type="CryptoWallet",
+                    from_entity_type="CryptoWallet",
+                    to_entity_type="Transaction",
                     output_props=props,
                     edge_props={},
                 )

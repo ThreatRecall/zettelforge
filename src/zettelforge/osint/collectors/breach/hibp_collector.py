@@ -20,6 +20,7 @@ breaches" (empty list); every other failure logs a warning and returns ``[]``.
 
 from __future__ import annotations
 
+import hashlib
 import os
 from typing import Any
 from urllib.parse import quote
@@ -43,6 +44,11 @@ USER_AGENT = "ZettelForge-OSINT"
 DEFAULT_TIMEOUT = 15.0
 
 
+def _email_log_ref(email: str) -> str:
+    """Stable non-reversible identifier for logs."""
+    return hashlib.sha256(email.encode("utf-8")).hexdigest()[:16]
+
+
 def _fetch_breaches(email: str, api_key: str) -> list[dict[str, Any]]:
     """Call HIBP v3 breachedaccount. Returns the parsed breach list.
 
@@ -52,6 +58,7 @@ def _fetch_breaches(email: str, api_key: str) -> list[dict[str, Any]]:
     url = f"{API_BASE}/{quote(email)}"
     headers = {"hibp-api-key": api_key, "User-Agent": USER_AGENT}
     params = {"truncateResponse": "false"}
+    email_ref = _email_log_ref(email)
     try:
         with httpx.Client(timeout=DEFAULT_TIMEOUT) as client:
             response = client.get(url, headers=headers, params=params)
@@ -60,13 +67,22 @@ def _fetch_breaches(email: str, api_key: str) -> list[dict[str, Any]]:
             response.raise_for_status()
             payload = response.json()
     except httpx.HTTPError as exc:
-        _logger.warning("hibp_collector_http_error", email=email, error=str(exc))
+        _logger.warning(
+            "hibp_collector_http_error",
+            email_ref=email_ref,
+            error_type=exc.__class__.__name__,
+            status_code=getattr(getattr(exc, "response", None), "status_code", None),
+        )
         return []
     except ValueError as exc:  # JSON decode error
-        _logger.warning("hibp_collector_json_error", email=email, error=str(exc))
+        _logger.warning(
+            "hibp_collector_json_error",
+            email_ref=email_ref,
+            error_type=exc.__class__.__name__,
+        )
         return []
     if not isinstance(payload, list):
-        _logger.warning("hibp_collector_unexpected_shape", email=email)
+        _logger.warning("hibp_collector_unexpected_shape", email_ref=email_ref)
         return []
     return [item for item in payload if isinstance(item, dict)]
 

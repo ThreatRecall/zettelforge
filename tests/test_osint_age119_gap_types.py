@@ -43,7 +43,7 @@ def test_gap_entities_registered() -> None:
     ("from_type", "edge", "to_type"),
     [
         ("CryptoWallet", "sent_transaction", "Transaction"),
-        ("Transaction", "received_transaction", "CryptoWallet"),
+        ("CryptoWallet", "received_transaction", "Transaction"),
         ("Person", "controls_wallet", "CryptoWallet"),
         ("EmailAddress", "has_account", "SocialAccount"),
     ],

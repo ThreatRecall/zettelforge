@@ -482,6 +482,11 @@ def _apply_yaml(cfg: ZettelForgeConfig, data: dict):
             if hasattr(cfg.llm_ner, k):
                 setattr(cfg.llm_ner, k, v)
 
+    if "enrichment" in data and isinstance(data["enrichment"], dict):
+        for k, v in data["enrichment"].items():
+            if hasattr(cfg.enrichment, k):
+                setattr(cfg.enrichment, k, v)
+
     if "extraction" in data and isinstance(data["extraction"], dict):
         for k, v in data["extraction"].items():
             if hasattr(cfg.extraction, k):

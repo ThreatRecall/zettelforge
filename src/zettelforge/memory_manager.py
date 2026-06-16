@@ -55,6 +55,17 @@ _rerankers: dict[str, object] = {}
 _reranker_lock = threading.Lock()
 
 
+def _has_valid_memory_defense_vector(note: Any) -> bool:
+    embedding = getattr(note, "embedding", None)
+    vector = getattr(embedding, "vector", None)
+    if not isinstance(vector, list) or not vector:
+        return False
+    try:
+        return any(float(value) != 0.0 for value in vector)
+    except (TypeError, ValueError):
+        return False
+
+
 def _get_reranker():
     """Get or create the configured cross-encoder reranker (loads once per model)."""
     retrieval_cfg = get_config().retrieval
@@ -300,13 +311,15 @@ class MemoryManager:
 
         _p = time.perf_counter()
         try:
-            # Bounded reference window: the gate keeps the most recent
-            # max_reference_notes valid-vector notes, so fetching the whole
-            # domain (O(n) rows + Pydantic parses per ingest) is waste. 4x
-            # overfetch leaves margin for notes the gate filters out.
+            # Bounded reference window with sparse-vector backfill: the gate
+            # keeps max_reference_notes valid-vector notes, so start bounded
+            # and grow only when invalid recent notes would underfill it.
             _defense_cfg = get_config().governance.memory_defense
-            _fetch_limit = max(200, 4 * _defense_cfg.max_reference_notes)
-            reference_notes = self.store.get_recent_notes_by_domain(domain, _fetch_limit)
+            reference_notes = self._memory_defense_reference_notes(
+                domain,
+                max_reference_notes=_defense_cfg.max_reference_notes,
+                min_calibration_notes=_defense_cfg.min_calibration_notes,
+            )
             self.memory_defense.enforce(
                 note,
                 reference_notes,
@@ -986,15 +999,51 @@ class MemoryManager:
             for value in values:
                 if not value:
                     continue
-                # Fan-out where flooding actually happens: KG out-degree.
-                # (Supersession prunes the entity index but MENTIONED_IN
-                # edges accumulate one per note.)
+                # Fan-out where flooding actually happens: note references.
+                # Other graph facts, including OSINT enrichment edges, should
+                # not make a discriminative entity look corpus-wide.
                 node = self.store.get_kg_node(etype, value)
-                fanout = len(self.store.get_kg_edges_from(node["node_id"])) if node else 0
+                fanout = self._note_fanout(node["node_id"]) if node else 0
                 if fanout <= limit:
                     kept.append(value)
             filtered[etype] = kept
         return filtered
+
+    def _memory_defense_reference_notes(
+        self,
+        domain: str,
+        *,
+        max_reference_notes: int,
+        min_calibration_notes: int,
+    ) -> list[MemoryNote]:
+        """Fetch a bounded recent window, widening only to fill valid refs."""
+        max_refs = max(0, int(max_reference_notes))
+        min_refs = max(0, int(min_calibration_notes))
+        fetch_limit = max(200, 4 * max_refs, 4 * min_refs)
+        max_fetch_limit = max(fetch_limit, 20 * max_refs, 20 * min_refs)
+        target_valid = max_refs
+
+        while True:
+            reference_notes = self.store.get_recent_notes_by_domain(domain, fetch_limit)
+            valid_count = sum(
+                1 for note in reference_notes if _has_valid_memory_defense_vector(note)
+            )
+            if valid_count >= target_valid:
+                return reference_notes
+            if len(reference_notes) < fetch_limit or fetch_limit >= max_fetch_limit:
+                return reference_notes
+            fetch_limit = min(fetch_limit * 2, max_fetch_limit)
+
+    def _note_fanout(self, node_id: str) -> int:
+        fanout = 0
+        for edge in self.store.get_kg_edges_from(node_id):
+            if edge.get("relationship") == "MENTIONED_IN":
+                fanout += 1
+                continue
+            target = self.store.get_kg_node_by_id(edge.get("to_node_id", ""))
+            if target and target.get("entity_type") == "note":
+                fanout += 1
+        return fanout
 
     def recall_entity(self, entity_type: str, entity_value: str, k: int = 5) -> list[MemoryNote]:
         """

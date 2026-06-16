@@ -376,8 +376,8 @@ OSINT_RELATION_TYPES: dict[str, dict[str, Any]] = {
         "cardinality": "many_to_many",
     },
     "received_transaction": {
-        "from_types": ["Transaction"],
-        "to_types": ["CryptoWallet"],
+        "from_types": ["CryptoWallet"],
+        "to_types": ["Transaction"],
         "cardinality": "many_to_many",
     },
     "controls_wallet": {
