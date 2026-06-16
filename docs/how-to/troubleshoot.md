@@ -281,6 +281,7 @@ Tooling:
 | `python -m zettelforge.scripts.telemetry_aggregator --date YYYY-MM-DD` | Daily summary report (latency averages, tier distribution, unused notes, top utility notes) |
 | `python -m zettelforge.scripts.human_eval_sampler` | Sample 20 random synthesis briefings for the monthly human evaluation rubric (see `docs/human-evaluation-rubric.md`) |
 | `streamlit run src/zettelforge/scripts/telemetry_dashboard.py` | Optional visualization (query volume, latency p50/p95, tier/utility trends, unused notes warning) |
+| `python -m zettelforge.scripts.neo4j_sync --data-dir DIR [--rebuild\|--dry-run]` | Populate/sync the Neo4j path-query graph from SQLite (incremental upsert by default; see `docs/how-to/configure-neo4j.md`) |
 
 Raw note content is never persisted in telemetry — only IDs, tiers,
 source types, and domains. Query text is truncated to 200 chars at INFO
