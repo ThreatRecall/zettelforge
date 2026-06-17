@@ -22,6 +22,8 @@ It extracts CVEs, threat actors, IOCs, and ATT&CK techniques from analyst notes 
 
 ## Architecture Overview
 
+For the research foundation and design rationale behind ZettelForge's dual-hemisphere (symbolic ontology plus GraphRAG) memory model, including the Cognitive Data Model basis and the evidence-and-provenance approach, see [Design philosophy: dual-hemisphere CTI memory](explanation/design-philosophy-dual-hemisphere.md).
+
 ZettelForge uses a hybrid storage architecture with in-process AI. TypeDB stores structured CTI entities and their relationships using the STIX 2.1 ontology. LanceDB stores unstructured notes as 768-dimensional vectors with IVF_PQ indexing. Embeddings are generated in-process by fastembed (nomic-embed-text-v1.5-Q, ONNX runtime, ~7ms/embed). LLM inference runs through one of four backends selected by `llm.provider`: in-process GGUF via `llama-cpp-python`, in-process ONNX via `onnxruntime-genai`, Ollama HTTP, or LiteLLM routing to 100+ cloud providers. No external AI services are required by default. The BlendedRetriever fuses results from both stores at query time, weighting vector similarity against graph traversal based on the classified intent of the query.
 
 Ingestion follows a two-phase pipeline. The **FactExtractor** distills raw text into scored candidate facts using an LLM. The **MemoryUpdater** compares each fact against existing notes and decides whether to ADD, UPDATE, DELETE, or NOOP -- preventing duplicates and keeping the knowledge base current.
