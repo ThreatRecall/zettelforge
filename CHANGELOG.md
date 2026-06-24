@@ -8,7 +8,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- RFC-018 specifying the next ThreatRecall ingestion, enrichment, parser-safety, metadata-policy, and operator-health improvements based on the latest recall hardening fixes.
+- RFC-018 specifying the next ThreatRecall ingestion, enrichment, parser-safety, metadata-policy, operator-health, and build/push release-train improvements based on the latest recall hardening fixes.
 - Configurable LLM generation budgets for causal extraction, synthesis,
   fact extraction, NER, and memory evolution, plus `reasoning_model` scaling
   floors and `<think>` / `<thinking>` JSON parse stripping.
