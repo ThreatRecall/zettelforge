@@ -403,3 +403,57 @@ class TestSQLiteLifecycle:
         assert result is not None
         assert result.content.raw == "APT28 uses Cobalt Strike"
         backend2.close()
+
+
+# ---------------------------------------------------------------------------
+# Enrichment job ledger
+# ---------------------------------------------------------------------------
+
+
+class TestSQLiteEnrichmentLedger:
+    def test_create_and_list_enrichment_job(self, db):
+        from zettelforge.enrichment_ledger import EnrichmentJobRecord
+
+        record = EnrichmentJobRecord.new(
+            job_id="job-1",
+            note_id="note-1",
+            job_type="llm_ner",
+            domain="cti",
+            content_len=123,
+        )
+
+        db.create_enrichment_job(record)
+
+        jobs = db.list_enrichment_jobs()
+        assert len(jobs) == 1
+        assert jobs[0]["job_id"] == "job-1"
+        assert jobs[0]["note_id"] == "note-1"
+        assert jobs[0]["job_type"] == "llm_ner"
+        assert jobs[0]["state"] == "queued"
+        assert jobs[0]["domain"] == "cti"
+        assert jobs[0]["content_len"] == 123
+        assert db.count_enrichment_jobs_by_state() == {"queued": 1}
+
+    def test_enrichment_job_state_transitions(self, db):
+        from zettelforge.enrichment_ledger import EnrichmentJobRecord
+
+        db.create_enrichment_job(
+            EnrichmentJobRecord.new(
+                job_id="job-1", note_id="note-1", job_type="causal_extraction"
+            )
+        )
+
+        db.mark_enrichment_job_running("job-1")
+        [running] = db.list_enrichment_jobs(state="running")
+        assert running["attempt_count"] == 1
+        assert running["started_at"]
+
+        db.mark_enrichment_job_terminal("job-1", "failed", error_code="queue_full")
+        [failed] = db.list_enrichment_jobs(state="failed")
+        assert failed["last_error_code"] == "queue_full"
+        assert failed["finished_at"]
+        assert db.count_enrichment_jobs_by_state() == {"failed": 1}
+
+    def test_invalid_terminal_state_rejected(self, db):
+        with pytest.raises(ValueError, match="Invalid terminal"):
+            db.mark_enrichment_job_terminal("job-1", "running")

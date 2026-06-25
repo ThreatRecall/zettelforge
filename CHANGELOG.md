@@ -8,6 +8,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- RFC-018 Phase 0 enrichment job ledger foundation with SQLite job metadata, MemoryManager queue-state recording, and regression tests.
 - RFC-018 specifying the next ThreatRecall ingestion, enrichment, parser-safety, metadata-policy, operator-health, and build/push release-train improvements based on the latest recall hardening fixes.
 - Configurable LLM generation budgets for causal extraction, synthesis,
   fact extraction, NER, and memory evolution, plus `reasoning_model` scaling

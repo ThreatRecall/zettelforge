@@ -24,6 +24,7 @@ from zettelforge.alias_resolver import AliasResolver
 from zettelforge.backend_factory import get_storage_backend
 from zettelforge.config import get_config
 from zettelforge.consolidation import ConsolidationMiddleware
+from zettelforge.enrichment_ledger import EnrichmentJobRecord
 from zettelforge.entity_indexer import EntityIndexer
 from zettelforge.extensions import has_extension
 from zettelforge.fact_extractor import FactExtractor
@@ -76,6 +77,8 @@ class _EnrichmentJob:
     resolved_entities: dict = field(default_factory=dict)
     job_type: str = "causal_extraction"  # or "neighbor_evolution" or "llm_ner"
     defer: bool = False  # If True, skip processing (used for batch-defer in remember_report)
+    job_id: str = field(default_factory=lambda: f"enrich_{uuid.uuid4().hex}")
+    ledger_error_code: str = ""
 
 
 class MemoryManager:
@@ -412,11 +415,7 @@ class MemoryManager:
         if sync:
             self._run_enrichment(job)
         else:
-            try:
-                self._enrichment_queue.put_nowait(job)
-                self._pending_enrichment.add(note.id)
-            except queue.Full:
-                self._logger.warning("enrichment_queue_full", note_id=note.id)
+            self._enqueue_enrichment_job(job, queue_full_event="enrichment_queue_full")
 
         # Phase 6c: LLM NER enrichment (always-on, background — RFC-001 amendment)
         if get_config().llm_ner.enabled:
@@ -430,10 +429,7 @@ class MemoryManager:
             if sync:
                 self._run_llm_ner(ner_job)
             else:
-                try:
-                    self._enrichment_queue.put_nowait(ner_job)
-                except queue.Full:
-                    self._logger.warning("llm_ner_queue_full", note_id=note.id)
+                self._enqueue_enrichment_job(ner_job, queue_full_event="llm_ner_queue_full")
 
         # Phase 6d: Neighbor evolution (A-Mem inspired — background worker)
         # Skip if fewer than 3 notes exist — not enough neighbors to evolve against
@@ -447,11 +443,7 @@ class MemoryManager:
             if sync:
                 self._run_evolution(evolution_job)
             else:
-                try:
-                    self._enrichment_queue.put_nowait(evolution_job)
-                    self._pending_enrichment.add(note.id)
-                except queue.Full:
-                    self._logger.warning("evolution_queue_full", note_id=note.id)
+                self._enqueue_enrichment_job(evolution_job, queue_full_event="evolution_queue_full")
         if dispatch_start is not None:
             phase_timings_ms["enrichment_dispatch"] = (time.perf_counter() - dispatch_start) * 1000
 
@@ -1078,6 +1070,51 @@ class MemoryManager:
 
     # ── Dual-stream: slow path enrichment worker ──────────────────────────
 
+    def _enqueue_enrichment_job(self, job: _EnrichmentJob, *, queue_full_event: str) -> bool:
+        """Queue an enrichment job and record its ledger row.
+
+        RFC-018's first implementation slice records durable job metadata while
+        keeping execution in the existing in-process queue.  Queue-full events
+        are marked terminal in the ledger so operators can distinguish jobs
+        that never ran from jobs still waiting.
+        """
+        record = EnrichmentJobRecord.new(
+            job_id=job.job_id,
+            note_id=job.note_id,
+            job_type=job.job_type,
+            domain=job.domain,
+            content_len=job.content_len,
+        )
+        create_job = getattr(self.store, "create_enrichment_job", None)
+        if create_job is not None:
+            create_job(record)
+        try:
+            self._enrichment_queue.put_nowait(job)
+            self._pending_enrichment.add(job.note_id)
+            return True
+        except queue.Full:
+            mark_terminal = getattr(self.store, "mark_enrichment_job_terminal", None)
+            if mark_terminal is not None:
+                mark_terminal(job.job_id, "failed", error_code="queue_full")
+            self._logger.warning(queue_full_event, note_id=job.note_id)
+            return False
+
+    def _mark_enrichment_job_running(self, job: _EnrichmentJob) -> None:
+        mark_running = getattr(self.store, "mark_enrichment_job_running", None)
+        if mark_running is not None:
+            mark_running(job.job_id)
+
+    def _mark_enrichment_job_terminal(
+        self,
+        job: _EnrichmentJob,
+        state: str,
+        *,
+        error_code: str = "",
+    ) -> None:
+        mark_terminal = getattr(self.store, "mark_enrichment_job_terminal", None)
+        if mark_terminal is not None:
+            mark_terminal(job.job_id, state, error_code=error_code)
+
     def _enrichment_loop(self) -> None:
         """Background worker: process enrichment jobs until process exits."""
         while True:
@@ -1086,19 +1123,29 @@ class MemoryManager:
                 job = self._enrichment_queue.get(timeout=1.0)
                 if job.defer:
                     # Batch-deferred job — skip for now, will be swept later
+                    self._mark_enrichment_job_terminal(job, "cancelled", error_code="deferred")
                     continue
+                self._mark_enrichment_job_running(job)
                 if job.job_type == "neighbor_evolution":
                     self._run_evolution(job)
                 elif job.job_type == "llm_ner":
                     self._run_llm_ner(job)
                 else:
                     self._run_enrichment(job)
+                if job.ledger_error_code:
+                    self._mark_enrichment_job_terminal(
+                        job, "failed", error_code=job.ledger_error_code
+                    )
+                else:
+                    self._mark_enrichment_job_terminal(job, "succeeded")
             except queue.Empty:
                 continue
             except BackendClosedError:
                 # Storage backend has shut down — exit the worker cleanly.
                 return
             except Exception:
+                if job is not None:
+                    self._mark_enrichment_job_terminal(job, "failed", error_code="worker_error")
                 self._logger.error("enrichment_worker_error", exc_info=True)
             finally:
                 if job is not None:
@@ -1131,6 +1178,7 @@ class MemoryManager:
 
         note = self.store.get_note_by_id(job.note_id)
         if note is None:
+            job.ledger_error_code = "note_missing"
             self._pending_enrichment.discard(job.note_id)
             return
 
@@ -1142,6 +1190,7 @@ class MemoryManager:
                     "causal_triples_stored", note_id=note.id, triples=len(triples), edges=edges
                 )
         except Exception:
+            job.ledger_error_code = "enrichment_failed"
             self._logger.warning("enrichment_failed", note_id=note.id, exc_info=True)
         finally:
             self._pending_enrichment.discard(job.note_id)
@@ -1154,6 +1203,7 @@ class MemoryManager:
         """
         note = self.store.get_note_by_id(job.note_id)
         if note is None:
+            job.ledger_error_code = "note_missing"
             self._pending_enrichment.discard(job.note_id)
             return
 
@@ -1206,6 +1256,7 @@ class MemoryManager:
                     duration_ms=round(duration_ms, 1),
                 )
         except Exception:
+            job.ledger_error_code = "llm_ner_failed"
             self.stats["llm_ner_failure"] += 1
             self._logger.warning("llm_ner_failed", note_id=job.note_id, exc_info=True)
         finally:
@@ -1215,6 +1266,7 @@ class MemoryManager:
         """Execute neighbor evolution for one note."""
         note = self.store.get_note_by_id(job.note_id)
         if note is None:
+            job.ledger_error_code = "note_missing"
             self._pending_enrichment.discard(job.note_id)
             return
 
@@ -1232,6 +1284,7 @@ class MemoryManager:
                 errors=report["errors"],
             )
         except Exception:
+            job.ledger_error_code = "neighbor_evolution_failed"
             self._logger.warning("neighbor_evolution_failed", note_id=job.note_id, exc_info=True)
         finally:
             self._pending_enrichment.discard(job.note_id)
@@ -1244,19 +1297,29 @@ class MemoryManager:
             try:
                 job = self._enrichment_queue.get_nowait()
                 if job.defer:
+                    self._mark_enrichment_job_terminal(job, "cancelled", error_code="deferred")
                     continue
+                self._mark_enrichment_job_running(job)
                 if job.job_type == "neighbor_evolution":
                     self._run_evolution(job)
                 elif job.job_type == "llm_ner":
                     self._run_llm_ner(job)
                 else:
                     self._run_enrichment(job)
+                if job.ledger_error_code:
+                    self._mark_enrichment_job_terminal(
+                        job, "failed", error_code=job.ledger_error_code
+                    )
+                else:
+                    self._mark_enrichment_job_terminal(job, "succeeded")
             except queue.Empty:
                 break
             except BackendClosedError:
                 # Backend already closed — nothing left to drain against.
                 return
             except Exception:
+                if job is not None:
+                    self._mark_enrichment_job_terminal(job, "failed", error_code="drain_error")
                 self._logger.warning("enrichment_drain_failed", exc_info=True)
             finally:
                 if job is not None:
@@ -1292,11 +1355,7 @@ class MemoryManager:
             evolver = MemoryEvolver(self)
             return evolver.evolve_neighbors(note)
 
-        try:
-            self._enrichment_queue.put_nowait(job)
-            self._pending_enrichment.add(note_id)
-        except queue.Full:
-            self._logger.warning("evolution_queue_full", note_id=note_id)
+        self._enqueue_enrichment_job(job, queue_full_event="evolution_queue_full")
         return None
 
     def mark_note_superseded(self, note_id: str, superseded_by_id: str) -> bool:
