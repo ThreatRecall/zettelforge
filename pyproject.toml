@@ -90,7 +90,7 @@ extensions = [
 # Web UI (ZettelForge)
 web = [
     # Exclude 0.136.3 while PyPI advisory MAL-2026-4750 is active.
-    "fastapi>=0.100.0,<0.136.4",
+    "fastapi>=0.100.0,<0.138.2",
     "uvicorn>=0.20.0",
     "psutil>=5.9.0",
     "jinja2>=3.0.0",
@@ -130,7 +130,7 @@ dev = [
     "ruff>=0.4.0",
     "langchain-core>=0.2.0",
     # Exclude 0.136.3 while PyPI advisory MAL-2026-4750 is active.
-    "fastapi>=0.100.0,<0.136.4",  # for test_web_api.py
+    "fastapi>=0.100.0,<0.138.2",  # for test_web_api.py
     "uvicorn>=0.20.0",      # for test_web_api.py
     "psutil>=5.9.0",        # for test_web_api.py
     "jinja2>=3.0.0",        # for test_web_api.py
