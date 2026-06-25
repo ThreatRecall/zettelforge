@@ -57,7 +57,14 @@ jobs:
         # install, not at runtime; CI builds in ephemeral runners with
         # no persistent state. Re-evaluate when GitHub's images ship a
         # patched pip.
+        # --skip-editable: do not audit the editable local zettelforge
+        # install. It is the project itself, not a third-party dependency,
+        # and on a release-prep PR its version is bumped ahead of PyPI
+        # (e.g. 2.8.0 before publish), so pip-audit cannot resolve it and
+        # --strict would otherwise fail with "could not be audited".
+        # Third-party dependencies are still fully audited.
         pip-audit --strict \
+          --skip-editable \
           --ignore-vuln=CVE-2026-3219 \
           --ignore-vuln=PYSEC-2026-196
 
