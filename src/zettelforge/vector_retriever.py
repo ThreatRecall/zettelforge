@@ -12,6 +12,7 @@ from zettelforge.entity_indexer import EntityExtractor
 from zettelforge.log import get_logger
 from zettelforge.memory_store import MemoryStore
 from zettelforge.note_schema import MemoryNote
+from zettelforge.prompt_injection_guard import inspect_prompt_injection
 from zettelforge.vector_memory import get_embedding
 
 _logger = get_logger("zettelforge.retriever")
@@ -363,9 +364,30 @@ class VectorRetriever:
         if not notes:
             return "No relevant memories found."
 
-        context_parts = [f"## Relevant Memories ({len(notes)} notes)\n"]
+        safe_notes = []
+        unsafe_count = 0
+        for note in notes:
+            finding = inspect_prompt_injection(
+                f"{note.semantic.context or ''}\n{note.content.raw or ''}"
+            )
+            if finding is not None:
+                unsafe_count += 1
+                _logger.warning(
+                    "unsafe_memory_context_filtered",
+                    note_id=note.id,
+                    guard_code=finding.code,
+                )
+                continue
+            safe_notes.append(note)
 
-        for i, note in enumerate(notes, 1):
+        if not safe_notes:
+            if unsafe_count:
+                return "No relevant memories passed safety filtering."
+            return "No relevant memories found."
+
+        context_parts = [f"## Relevant Memories ({len(safe_notes)} notes)\n"]
+
+        for i, note in enumerate(safe_notes, 1):
             confidence = note.metadata.confidence
             recency = note.created_at[:10]
 

@@ -3,6 +3,19 @@
 Visual diagram: [`docs/architecture-diagram.mmd`](docs/architecture-diagram.mmd)
 Deep explanation: [`docs/explanation/architecture.md`](docs/explanation/architecture.md)
 
+## Foundational Model: Two Hemispheres
+
+ZettelForge is modeled on the brain. A symbolic left hemisphere (the typed,
+STIX-aligned knowledge graph with schema enforcement and rule-based inference) is
+the precise, explainable authority of record. An associative right hemisphere
+(blended vector and graph retrieval with GraphRAG and agentic synthesis) explores
+and proposes. Underneath both, knowledge is atomic facts connected by directed,
+time-stamped, pairwise associations, with time and provenance as first-class
+primitives (Cognitive Data Model, Pieris 2025). The components below implement
+this model. See [design philosophy](docs/explanation/design-philosophy-dual-hemisphere.md)
+for the rationale and research basis, and [GOVERNANCE.md](GOVERNANCE.md) for the
+binding design commitment.
+
 ## Storage
 
 ZettelForge uses a `StorageBackend` ABC (33 methods) with pluggable
