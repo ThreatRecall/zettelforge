@@ -1,0 +1,962 @@
+{
+  "meta": {
+    "date": "2026-06-09T13:32:20.204960",
+    "version": "zettelforge-2.7.0",
+    "dataset": "/home/rolandpg/.openclaw/workspace-nexus/Locomo-Plus/data/locomo10.json",
+    "per_category": 20,
+    "judge": "keyword",
+    "k": 10
+  },
+  "ingest": {
+    "ingested": 272,
+    "errors": 0,
+    "duration_s": 33.82,
+    "rate_per_s": 8.0
+  },
+  "by_category": {
+    "single-hop": {
+      "accuracy": 5.0,
+      "avg_score": 0.125,
+      "p50_latency_ms": 164.89955666474998,
+      "p95_latency_ms": 251.72034185379744,
+      "n": 20
+    },
+    "multi-hop": {
+      "accuracy": 0.0,
+      "avg_score": 0.075,
+      "p50_latency_ms": 167.22881654277444,
+      "p95_latency_ms": 220.0862099416554,
+      "n": 20
+    },
+    "temporal": {
+      "accuracy": 5.0,
+      "avg_score": 0.075,
+      "p50_latency_ms": 175.95603200607002,
+      "p95_latency_ms": 211.49435499683022,
+      "n": 20
+    },
+    "open-domain": {
+      "accuracy": 20.0,
+      "avg_score": 0.35,
+      "p50_latency_ms": 170.30203063040972,
+      "p95_latency_ms": 220.54198710247874,
+      "n": 20
+    },
+    "adversarial": {
+      "accuracy": 25.0,
+      "avg_score": 0.375,
+      "p50_latency_ms": 165.67518352530897,
+      "p95_latency_ms": 190.5370568856597,
+      "n": 20
+    }
+  },
+  "overall": {
+    "accuracy": 11.0,
+    "avg_score": 0.2,
+    "p50_latency_ms": 169.87449256703258,
+    "p95_latency_ms": 211.44699584692717,
+    "total_samples": 100
+  },
+  "details": [
+    {
+      "category": "single-hop",
+      "question": "What did Caroline research?",
+      "gold_answer": "Adoption agencies",
+      "predicted": "Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Melanie: Wow, what an experience! How did it make you feel?. Melanie: That sounds awesome! What did you take away from it to use in your life?. Here's a photo of my horse painting I did recently. What else helps you out?",
+      "score": 1.0,
+      "latency_s": 0.252,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What is Caroline's identity?",
+      "gold_answer": "Transgender woman",
+      "predicted": "Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. Melanie: Wow, that's cool, Caroline! What happened that was so awesome? Did you hear any inspiring stories?. Caroline: Gonna continue my edu and check out career options, which is pretty exciting!. Melanie: Wow, Caroline! What kinda jobs are you thinkin' of? Anything that stands out?. Is this your own painting?",
+      "score": 0.0,
+      "latency_s": 0.163,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What is Caroline's relationship status?",
+      "gold_answer": "Single",
+      "predicted": "Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. Caroline: Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. Melanie: That's gorgeous, Caroline! It's awesome what items can mean so much to us, right? Got any other objects that you treasure, like that necklace?. Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?. What motivated you to pursue counselin",
+      "score": 0.0,
+      "latency_s": 0.167,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "Where did Caroline move from 4 years ago?",
+      "gold_answer": "Sweden",
+      "predicted": "They've been there through everything, I've known these friends for 4 years, since I moved from my home country. Caroline: Hey Melanie, great to hear from you. Melanie: That sounds great, Caroline. How did you feel about your time there? Anything that sticks out to you?. Caroline: Wow! Did you see that band?",
+      "score": 0.0,
+      "latency_s": 0.17,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What career path has Caroline decided to persue?",
+      "gold_answer": "counseling or mental health for Transgender people",
+      "predicted": "Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Caroline: The support group has made me feel accepted and given me courage to embrace myself. Caroline: Hey Mel, great to chat with you again! So much has happened since we last spoke - I went to an LGBTQ conference two days ago and it was really special. Melanie: That sounds awesome! What did you take away from it t",
+      "score": 0.5,
+      "latency_s": 0.199,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What activities does Melanie partake in?",
+      "gold_answer": "pottery, camping, painting, swimming",
+      "predicted": "Melanie: Caroline, awesome news that you two are getting along! What was it like for you both? Care to fill me in?. What do you hope to do next time?. Any specific projects or activities you're looking forward to there?. Caroline: Wow, what a fun moment! What's the band?. Melanie: Cool! What type of music do you play?",
+      "score": 0.0,
+      "latency_s": 0.153,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "Where has Melanie camped?",
+      "gold_answer": "beach, mountains, forest",
+      "predicted": "Caroline: Finding a community where I'm accepted, loved and supported has really meant a lot to me. I'm looking forward to seeing how much fun everyone has and how proud they'll feel of their talents!. Caroline: Yeah totally! \"Brave\" by Sara Bareilles has a lot of significance for me. Melanie: Wow, that's gorgeous! Where did you find it?. It was so vibrant and welcoming, I had to take a picture! It reminds us that love and acceptance are everywhere\u2014even where we least expect it",
+      "score": 0.0,
+      "latency_s": 0.157,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What do Melanie's kids like?",
+      "gold_answer": "dinosaurs, nature",
+      "predicted": "What do you hope to do next time?. Melanie: Cool! What type of music do you play?. What other creative projects do you do with them, besides pottery?. What do you think of these?. What do flowers mean to you?",
+      "score": 0.0,
+      "latency_s": 0.163,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What books has Melanie read?",
+      "gold_answer": "\"Nothing is Impossible\", \"Charlotte's Web\"",
+      "predicted": "Melanie: Sounds great! What kind of books you got in your library?. What effect has the journey had on your relationships?. Melanie: That's gorgeous, Caroline! It's awesome what items can mean so much to us, right? Got any other objects that you treasure, like that necklace?. Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?. What motivated you to pursue counseling?",
+      "score": 0.0,
+      "latency_s": 0.186,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What does Melanie do to destress?",
+      "gold_answer": "Running, pottery",
+      "predicted": "Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?. I'll do my best to make sure these kids have a safe and loving home. Melanie: Caroline, awesome news that you two are getting along! What was it like for you both? Care to fill me in?. It was wonderful to see how the audience related to what I said and how it inspired them to be better allies. Melanie: That's gorgeous, Caroline! It's awesome what items can mean so much to us, right? Got any other ob",
+      "score": 0.0,
+      "latency_s": 0.153,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What LGBTQ+ events has Caroline participated in?",
+      "gold_answer": "Pride parade, school speech, support group",
+      "predicted": "Melanie: Caroline, awesome news that you two are getting along! What was it like for you both? Care to fill me in?. Last week I went to an LGBTQ+ pride parade. It showed me how much our community has grown, it was amazing!. Melanie: Wow, Caroline, sounds like the parade was an awesome experience! It's great to see the love and support for the LGBTQ+ community. Congrats! Has this experience influenced your goals at all?",
+      "score": 0.5,
+      "latency_s": 0.18,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What events has Caroline participated in to help children?",
+      "gold_answer": "Mentoring program, school speech",
+      "predicted": "Melanie: That sounds awesome! What did you take away from it to use in your life?. It was great! I truly felt the power of our collective effort to help people in need, so heartwarming. It's important to help people find what they need. I wanted to help out in these tough times by doing a community food drive. This journey has been amazing and I'm grateful I get to share it and help others with theirs",
+      "score": 0.0,
+      "latency_s": 0.188,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What did Melanie paint recently?",
+      "gold_answer": "sunset",
+      "predicted": "Melanie: Wow, what an experience! How did it make you feel?. What gave you the idea to paint it?. How's it going for you? That painting is awesome! Did you paint it?. Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Caroline: I totally agree, Melanie",
+      "score": 0.0,
+      "latency_s": 0.198,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What activities has Melanie done with her family?",
+      "gold_answer": "Pottery, painting, camping, museum, swimming, hiking",
+      "predicted": "Maria: Sounds like parenting has been a wonderful experience for you - what has it been like?. It's always fun coming up with activities for my family to enjoy. What inspires you with your volunteering?. What effect has the journey had on your relationships?. Caroline: Wow, that's awesome! What do you love most about camping with your fam?",
+      "score": 0.0,
+      "latency_s": 0.154,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "In what ways is Caroline participating in the LGBTQ community?",
+      "gold_answer": "Joining activist group, going to pride parades, participating in an art show, mentoring program",
+      "predicted": "It was awesome! I talked about my transgender journey and encouraged students to get involved in the LGBTQ community. Sounds like your event was amazing! I'm so proud of you for spreading awareness and getting others involved in the LGBTQ community. Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. Our group, 'Connected LGBTQ Activists', is made of all kinds of people investing in positive changes. Talking to the community made me want to use my story ",
+      "score": 0.0,
+      "latency_s": 0.205,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "How many times has Melanie gone to the beach in 2023?",
+      "gold_answer": "2",
+      "predicted": "Audrey: Hey Andrew! It's been a wild ride! I did something fun with my pups over the weekend, took them to the beach and it was so fun to see them playing in the ocean. Andrew: Haven't been to the beach in a while. Have fun at the beach trip! Bet you can't wait to get out to the nature. Andrew: Sounds great! Did they love being at the beach? Did they enjoy the water? Here's a pic of my last trip to the beach. It's hard to find open spaces in the city",
+      "score": 0.0,
+      "latency_s": 0.154,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What kind of art does Caroline make?",
+      "gold_answer": "abstract art",
+      "predicted": "Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?. Melanie: Sounds great! What kind of books you got in your library?. Art gives me a sense of freedom, but so does having supportive people around, promoting LGBTQ rights and being true to myself. What do you think of these?. The pattern and colors are awesome-- it reminds me of art and self-expression",
+      "score": 0.5,
+      "latency_s": 0.156,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "Who supports Caroline when she has a negative experience?",
+      "gold_answer": "Her mentors, family, and friends",
+      "predicted": "I ran into a group of religious conservatives who said something that really upset me. Caroline: Yeah, it's true! Having people who back you makes such a huge difference. I'm creating a library for when I have kids. It's a journey for me, but when I look after myself, I'm able to better look after my family. Caroline: Researching adoption agencies \u2014 it's been a dream to have a family and give a loving home to kids who need it",
+      "score": 0.0,
+      "latency_s": 0.167,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What types of pottery have Melanie and her kids made?",
+      "gold_answer": "bowls, cup",
+      "predicted": "Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?. Takes a lot of courage and maturity! What do you think of this?. My kids have so much and others don't. So much since we talked! Last Fri I finally took my kids to a pottery workshop. Caroline: Wow, Mel! Sounds like you and the kids had a blast",
+      "score": 0.0,
+      "latency_s": 0.152,
+      "retrieved": 10
+    },
+    {
+      "category": "single-hop",
+      "question": "What has Melanie painted?",
+      "gold_answer": "Horse, sunset, sunrise",
+      "predicted": "Melanie: That's gorgeous, Caroline! It's awesome what items can mean so much to us, right? Got any other objects that you treasure, like that necklace?. Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?. What motivated you to pursue counseling?. Caroline: Thanks, Melanie. Melanie: Congrats Caroline! Good on you for going after what you really care about",
+      "score": 0.0,
+      "latency_s": 0.161,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Caroline go to the LGBTQ support group?",
+      "gold_answer": "7 May 2023",
+      "predicted": "Caroline: I went to a LGBTQ support group yesterday and it was so powerful. Caroline: The support group has made me feel accepted and given me courage to embrace myself. I'm off to go swimming with the kids. Melanie: Wow, Caroline, sounds like the parade was an awesome experience! It's great to see the love and support for the LGBTQ+ community. Talking to the community made me want to use my story to help others too - I'm still thinking that counseling and mental health is the way to go",
+      "score": 0.0,
+      "latency_s": 0.163,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Melanie paint a sunrise?",
+      "gold_answer": "2022",
+      "predicted": "I'm creating a library for when I have kids. Let me know when you're free for a catch-up. Jolene: Wow, that's a great photo! How did she show you to appreciate it?. It's a journey for me, but when I look after myself, I'm able to better look after my family. Caroline: Hey Melanie! Long time no talk! A lot's been going on in my life! Take a look at this",
+      "score": 0.0,
+      "latency_s": 0.166,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Melanie run a charity race?",
+      "gold_answer": "The sunday before 25 May 2023",
+      "predicted": "I just wanted to let you know I challenged myself last Friday and did a charity event. John: I set up a 5K charity run in our neighborhood. I ran a charity race for mental health last Saturday \u2013 it was really rewarding. Caroline: That charity race sounds great, Mel! Making a difference & raising awareness for mental health is super rewarding - I'm really proud of you for taking part!. It's a journey for me, but when I look after myself, I'm able to better look after my family",
+      "score": 0.0,
+      "latency_s": 0.17,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When is Melanie planning on going camping?",
+      "gold_answer": "June 2023",
+      "predicted": "Reaching the top of a challenging trail is amazing too - it feels like all worries just vanish when you get to the top. Did you reach the summit? When I was younger, my family and I went on a road trip to Oregon. Caroline: The mentoring is going great! I've met some amazing young folks and supported them along the way. [1:33 pm on 25 August, 2023] Conversation session 14:. It's tough when those things happen, but it's great you apologized",
+      "score": 0.0,
+      "latency_s": 0.202,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Caroline give a speech at a school?",
+      "gold_answer": "The week before 9 June 2023",
+      "predicted": "Conversations about gender identity and inclusion are so necessary and I'm thankful for being able to give a voice to the trans community. Here's a pic from when we met up last week!. Melanie: That's a gorgeous song, Caroline. I'm creating a library for when I have kids. Here's a pic of my family camping at the beach",
+      "score": 0.0,
+      "latency_s": 0.165,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Caroline meet up with her friends, family, and mentors?",
+      "gold_answer": "The week before 9 June 2023",
+      "predicted": "It was so amazing lying there and watching the sky light up with streaks of light. Transitioning wasn't easy and acceptance wasn't either, but the help I got from friends, family and people I looked up to was invaluable. They'll help with the process and provide all the info. Caroline: The room was electric with energy and support! The posters were amazing, so much pride and strength! It inspired me to make some art. It's an important part of my life and I've made strong connections with people ",
+      "score": 0.0,
+      "latency_s": 0.208,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "How long has Caroline had her current group of friends for?",
+      "gold_answer": "4 years",
+      "predicted": "I'm looking forward to seeing how much fun everyone has and how proud they'll feel of their talents!. Melanie: Wow, that photo is great! How long have you had such a great support system?. Caroline: The support group has made me feel accepted and given me courage to embrace myself. It's made me appreciate how lucky I am to have my friends and family helping with my transition. How have your friends and fam been helping you out with your transition?",
+      "score": 0.0,
+      "latency_s": 0.164,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "How long ago was Caroline's 18th birthday?",
+      "gold_answer": "10 years ago",
+      "predicted": "It was so cool seeing how friendship and compassion can make a difference. A friend made it for my 18th birthday ten years ago. How was it? Anything fun?. Seeing how passionate these pros were about making a safe space for people like me was amazing. It was awesome to see how strong the young people were, with all the challenges they face",
+      "score": 0.5,
+      "latency_s": 0.162,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Melanie sign up for a pottery class?",
+      "gold_answer": "2 July 2023",
+      "predicted": "I'm creating a library for when I have kids. Jolene: Woohoo! I signed up for a meditation course at a retreat near a lake. Caroline: Right, it was so much fun! We could do a family outting, or wanna plan something special for this summer, just us two? It'd be a great chance to catch up and explore nature! What do you think?. Caroline: Seeing my mentee's face light up when they saw the support was the best! Such a special moment. So much since we talked! Last Fri I finally took my kids to a potte",
+      "score": 0.0,
+      "latency_s": 0.182,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When is Caroline going to the transgender conference?",
+      "gold_answer": "July 2023",
+      "predicted": "It was awesome! I talked about my transgender journey and encouraged students to get involved in the LGBTQ community. Talking about inclusivity and acceptance is crucial, and you're so brave to speak up for the trans community. Talking to the community made me want to use my story to help others too - I'm still thinking that counseling and mental health is the way to go. Caroline: Thanks Mel! I'm going to a transgender conference this month. Caroline: The mentoring is going great! I've met some ",
+      "score": 0.0,
+      "latency_s": 0.173,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Melanie go to the museum?",
+      "gold_answer": "5 July 2023",
+      "predicted": "Caroline: That's so funny! I used to go horseback riding with my dad when I was a kid, we'd go through the fields, feeling the wind. Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. When I go to an art show, it's like we're still experiencing it together even though she's gone. Melanie: Hey, Caroline! Nice to hear from you! Love the necklace, any special meaning to",
+      "score": 0.0,
+      "latency_s": 0.171,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Caroline have a picnic?",
+      "gold_answer": "The week before 6 July 2023",
+      "predicted": "I'm creating a library for when I have kids. It was nice seeing them have a good time outdoors. Melanie: That's a gorgeous song, Caroline. Life's tough but it's worth it when we have things that make us happy. It's made a huge difference to have people who get what I'm going through",
+      "score": 0.0,
+      "latency_s": 0.156,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Caroline go to the LGBTQ conference?",
+      "gold_answer": "10 July 2023",
+      "predicted": "Talking to the community made me want to use my story to help others too - I'm still thinking that counseling and mental health is the way to go. I'm off to go swimming with the kids. It was awesome! I talked about my transgender journey and encouraged students to get involved in the LGBTQ community. Caroline: Hey Melanie! That sounds great! Last weekend I joined a mentorship program for LGBTQ youth - it's really rewarding to help the community. Caroline: Hey Mel, great to chat with you again! S",
+      "score": 0.0,
+      "latency_s": 0.185,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Melanie read the book \"nothing is impossible\"?",
+      "gold_answer": "2022",
+      "predicted": "Evan: The painting is mine, I made it when I was a mix of emotions - sad, mad, and hopeful. Caroline: The mentoring is going great! I've met some amazing young folks and supported them along the way. Caroline: Seeing my mentee's face light up when they saw the support was the best! Such a special moment. Melanie: Wow, Caroline, that painting is awesome! Those colors are so vivid and the whole thing looks really unified. Melanie: That's a gorgeous photo, Caroline! Wow, the love around you is awes",
+      "score": 0.0,
+      "latency_s": 0.166,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Caroline go to the adoption meeting?",
+      "gold_answer": "The friday before 15 July 2023",
+      "predicted": "Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Caroline: That's so funny! I used to go horseback riding with my dad when I was a kid, we'd go through the fields, feeling the wind. Caroline: Woohoo Melanie! I passed the adoption agency interviews last Friday! I'm so excited and thankful. Transitioning wasn't easy and acceptance wasn't either, but the help I got fr",
+      "score": 0.0,
+      "latency_s": 0.168,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Melanie go to the pottery workshop?",
+      "gold_answer": "The Friday before 15 July 2023",
+      "predicted": "So much since we talked! Last Fri I finally took my kids to a pottery workshop. Melanie: The kids loved it! They were so excited to get their hands dirty and make something with clay. Caroline: Thanks Melanie - love the blue vase in the pic! Blue's my fave, it makes me feel relaxed. They represent growth, beauty and reminding us to appreciate the small moments. Melanie: Marrying my partner and promising to be together forever was the best part",
+      "score": 0.0,
+      "latency_s": 0.16,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Melanie go camping in June?",
+      "gold_answer": "The week before 27 June 2023",
+      "predicted": "Caroline: I was out walking in my neighborhood when I came across this cool rainbow sidewalk for Pride Month. Did you reach the summit? When I was younger, my family and I went on a road trip to Oregon. Audrey: Hey Andrew! It's been a wild ride! I did something fun with my pups over the weekend, took them to the beach and it was so fun to see them playing in the ocean. Melanie: Hey Caroline, hope all's good! I had a quiet weekend after we went camping with my fam two weekends ago. Caroline: Seei",
+      "score": 0.0,
+      "latency_s": 0.22,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Caroline go to a pride parade during the summer?",
+      "gold_answer": "The week before 3 July 2023",
+      "predicted": "I went to a pride parade last Friday and it was awesome - so much energy and love everywhere. Last week I went to an LGBTQ+ pride parade. Melanie: Wow, Caroline, sounds like the parade was an awesome experience! It's great to see the love and support for the LGBTQ+ community. Talking to the community made me want to use my story to help others too - I'm still thinking that counseling and mental health is the way to go. Conversations about gender identity and inclusion are so necessary and I'm th",
+      "score": 0.5,
+      "latency_s": 0.176,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Melanie go camping in July?",
+      "gold_answer": "two weekends before 17 July 2023",
+      "predicted": "Caroline: I was out walking in my neighborhood when I came across this cool rainbow sidewalk for Pride Month. Did you reach the summit? When I was younger, my family and I went on a road trip to Oregon. Melanie: Hey Caroline, hope all's good! I had a quiet weekend after we went camping with my fam two weekends ago. Caroline: Seeing my mentee's face light up when they saw the support was the best! Such a special moment. It's awesome to see the difference we can make in each other's lives",
+      "score": 0.5,
+      "latency_s": 0.159,
+      "retrieved": 10
+    },
+    {
+      "category": "multi-hop",
+      "question": "When did Caroline join a mentorship program?",
+      "gold_answer": "The weekend before 17 July 2023",
+      "predicted": "Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Melanie: Oliver's hilarious! He hid his bone in my slipper once! Cute, right? Almost as silly as when I got to feed a horse a carrot. Caroline: That's so funny! I used to go horseback riding with my dad when I was a kid, we'd go through the fields, feeling the wind. Here's a photo of my horse painting I did recently.",
+      "score": 0.0,
+      "latency_s": 0.155,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "What fields would Caroline be likely to pursue in her educaton?",
+      "gold_answer": "Psychology, counseling certification",
+      "predicted": "It was wonderful to see how the audience related to what I said and how it inspired them to be better allies. Caroline: Right, it was so much fun! We could do a family outting, or wanna plan something special for this summer, just us two? It'd be a great chance to catch up and explore nature! What do you think?. Melanie: That sounds awesome! What did you take away from it to use in your life?. It was awesome! I talked about my transgender journey and encouraged students to get involved in the LG",
+      "score": 0.0,
+      "latency_s": 0.185,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would Caroline still want to pursue counseling as a career if she hadn't received support growing up?",
+      "gold_answer": "Likely no",
+      "predicted": "Caroline: I'm so lucky to have such a great support system around me. Caroline: I went to a LGBTQ support group yesterday and it was so powerful. Caroline: I'm keen on counseling or working in mental health - I'd love to support those with similar issues. Blue calms me, so I wanted the painting to have a serene vibe while still having lots of vibrant colors. Melanie: Oliver's hilarious! He hid his bone in my slipper once! Cute, right? Almost as silly as when I got to feed a horse a carrot",
+      "score": 0.0,
+      "latency_s": 0.176,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would Caroline likely have Dr. Seuss books on her bookshelf?",
+      "gold_answer": "Yes, since she collects classic children's books",
+      "predicted": "Melanie: That must have been tough for you, Caroline. [8:18 pm on 6 July, 2023] Conversation session 6:. Lots has been going on since then!. Melanie: That's awesome, Caroline! Congrats on following your dreams. Caroline: Melanie, that's a great pic! That must have been awesome",
+      "score": 0.0,
+      "latency_s": 0.178,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would Caroline pursue writing as a career option?",
+      "gold_answer": "LIkely no; though she likes reading, she wants to be a counselor",
+      "predicted": "Melanie: I loved reading \"Charlotte's Web\" as a kid. It'll be tough as a single parent, but I'm up for the challenge!. Nate: Go for it! Follow your passion for writing, but if acting really makes you happy, give it a shot as well. Writing has become like an escape and a way to express my feelings. It's knowing that my writing can make a difference that keeps me going, even on tough days",
+      "score": 0.0,
+      "latency_s": 0.162,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would Melanie be considered a member of the LGBTQ community?",
+      "gold_answer": "Likely no, she does not refer to herself as part of it",
+      "predicted": "Melanie: You'd be a great counselor! Your empathy and understanding will really help the people you work with. Sounds like your event was amazing! I'm so proud of you for spreading awareness and getting others involved in the LGBTQ community. I'm so proud to be part of the difference you're making. Melanie: I'm a big fan of pottery - the creativity and skill is awesome. It's great to see how far LGBTQ rights have come, but there's still plenty of progress to be made",
+      "score": 0.0,
+      "latency_s": 0.18,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would Melanie be more interested in going to a national park or a theme park?",
+      "gold_answer": "National park; she likes the outdoors",
+      "predicted": "Having them happy and healthy would be a good first step before going all in for more dogs. But there are still some ways to appreciate it in the city, like getting some plants for your place or taking a trip to the park on the weekends. We went to a national park last week and made it to this beautiful peak. Melanie: Hey Caroline! Since we last spoke, I took my kids to a park yesterday. Melanie: That's so cool, Caroline! That's a great way to show off and be proud of everyone's skills",
+      "score": 0.5,
+      "latency_s": 0.173,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would Melanie be considered an ally to the transgender community?",
+      "gold_answer": "Yes, she is supportive",
+      "predicted": "It was awesome! I talked about my transgender journey and encouraged students to get involved in the LGBTQ community. It was wonderful to see how the audience related to what I said and how it inspired them to be better allies. Our stories can be so inspiring and encouraging to others who are facing the same challenges. I'm so proud to be part of the difference you're making. I've been chasing my ambitions and had the chance to volunteer at an LGBTQ+ youth center",
+      "score": 0.0,
+      "latency_s": 0.173,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "What would Caroline's political leaning likely be?",
+      "gold_answer": "Liberal",
+      "predicted": "Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. It's what keeps us going, even when life's hard. Caroline: Right, it was so much fun! We could do a family outting, or wanna plan something special for this summer, just us two? It'd be a great chance to catch up and explore nature! What do you think?. Melanie: Yeah, Caroline! I'll start thinking about what we can do. Melanie: That sounds awesome! What did you take away from it to use in your life?",
+      "score": 0.0,
+      "latency_s": 0.204,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would Caroline be considered religious?",
+      "gold_answer": "Somewhat, but not extremely religious",
+      "predicted": "It's been so helpful to have people around me who accept and support me, so I know I'll be ok!. Plus, painting helps me express my feelings and be creative. Seeing how art can be a source of self-expression and growth is truly inspiring. Melanie: Agreed, Caroline. Melanie: Yeah, same here Caroline",
+      "score": 0.0,
+      "latency_s": 0.16,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would Melanie likely enjoy the song \"The Four Seasons\" by Vivaldi?",
+      "gold_answer": "Yes; it's classical music",
+      "predicted": "Deborah: Enjoy your day and make time for the things that bring you joy. Sam: Wish I could feel the same about love, but I've started to enjoy running in the mornings, and it's been a great way to clear my head. Caroline: Thanks Melanie - love the blue vase in the pic! Blue's my fave, it makes me feel relaxed. Melanie: Hey, Caroline! Nice to hear from you! Love the necklace, any special meaning to it?. It's like a reminder of my roots and all the love and support I get from my family",
+      "score": 0.0,
+      "latency_s": 0.17,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "What personality traits might Melanie say Caroline has?",
+      "gold_answer": "Thoughtful, authentic, driven",
+      "predicted": "Melanie: Wow, that's cool, Caroline! What happened that was so awesome? Did you hear any inspiring stories?. Melanie: Wow, Caroline! What kinda jobs are you thinkin' of? Anything that stands out?. Melanie: Yep, Caroline. Melanie: That's gorgeous, Caroline! It's awesome what items can mean so much to us, right? Got any other objects that you treasure, like that necklace?. Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?",
+      "score": 0.0,
+      "latency_s": 0.193,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would Melanie go on another roadtrip soon?",
+      "gold_answer": "Likely no; since this one went badly",
+      "predicted": "Maria: Wow, great pic! Where did you go on that road trip?. [6:55 pm on 20 October, 2023] Conversation session 18:. Melanie: Hey Caroline, that roadtrip this past weekend was insane! We were all freaked when my son got into an accident. Caroline: Glad your son is okay, Melanie. Melanie: Thanks! They were scared but we reassured them and explained their brother would be OK",
+      "score": 0.0,
+      "latency_s": 0.179,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would Caroline want to move back to her home country soon?",
+      "gold_answer": "No; she's in the process of adopting children.",
+      "predicted": "It's been a dream to adopt and provide a safe, loving home for kids who need it. Giving a home to needy kids is such a loving way to build a family. My dream is to create a safe and loving home for these kids. Love and acceptance should be everyone's right, and I want them to experience it. That's why I want to pass that same support to anyone who needs it",
+      "score": 0.0,
+      "latency_s": 0.176,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "What might John's financial status be?",
+      "gold_answer": "Middle-class or wealthy",
+      "predicted": "What do you have in this spread? Looks delicious! I made this apple pie for the kids yesterday too!. James: Hey John! What new has happened in your life?. James: Wow, that book looks great! What other resources do you use to improve your game? Tell me about your gaming tips!. What about you? How's everything going?. It's kind of overwhelming but I'm excited! What have you been up to?",
+      "score": 0.0,
+      "latency_s": 0.169,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would John be considered a patriotic person?",
+      "gold_answer": "Yes",
+      "predicted": "John: You're a real bookworm! It would be awesome to go to a book conference with you. Your assistance would be really appreciated. John: I'll be happy to find a place where my skills and passions are a perfect match. Your skills and passions will be a great addition. John: Thanks James! I kept it a secret because I would have been very upset if I had told you about her in advance and then it wouldn't have worked out",
+      "score": 0.0,
+      "latency_s": 0.168,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "What might John's degree be in?",
+      "gold_answer": "Political science, Public administration, Public affairs",
+      "predicted": "James: Hey John, that sounds awesome! Combining your two loves - gaming and helping people - must be really exciting! So what kind of gig did they offer you?. James: Freelancing can definitely be a great way to sharpen skills and gain experience. What projects are you currently working on?. James: Congrats on your first professional project, John! Bet it's been great applying what you learned in class. James: What challenges have you encountered?",
+      "score": 0.0,
+      "latency_s": 0.166,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Around which US holiday did Maria get into a car accident?",
+      "gold_answer": "Independence Day",
+      "predicted": "Maria: Looks like a blast! Did everyone get a chance to try it? Glad you're all having a great time!. Maria: Wow, John! Hearing that can really make an impact and get us fired up to make a difference. Had a wild week, my car broke down last Fri on my way to work. Trying to get it fixed but it's tough & putting a strain on my wallet. Yeah, it's been tough with car trouble and money problems, but I stay positive and find a way",
+      "score": 0.0,
+      "latency_s": 0.186,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Does John live close to a beach or the mountains?",
+      "gold_answer": "beach",
+      "predicted": "Audrey: Hey Andrew! It's been a wild ride! I did something fun with my pups over the weekend, took them to the beach and it was so fun to see them playing in the ocean. Andrew: Sounds great! Did they love being at the beach? Did they enjoy the water? Here's a pic of my last trip to the beach. Andrew: Haven't been to the beach in a while. But there are still some ways to appreciate it in the city, like getting some plants for your place or taking a trip to the park on the weekends. John: Agreed! ",
+      "score": 1.0,
+      "latency_s": 0.209,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "Would John be open to moving to another country?",
+      "gold_answer": "No, he has goals specifically in the U.S. like joining the military and running for office.",
+      "predicted": "John: You're a real bookworm! It would be awesome to go to a book conference with you. John: The game turned out to be a total success! Lots of people showed up and had a great time, plus we were able to raise some money for charity. Tim: Edinburgh, Scotland would be great for a magical vibe. I want to be known as a consistent performer and help my team. Don't be afraid to seek help if you need it",
+      "score": 0.0,
+      "latency_s": 0.148,
+      "retrieved": 10
+    },
+    {
+      "category": "temporal",
+      "question": "What attributes describe John?",
+      "gold_answer": "Selfless, family-oriented, passionate, rational",
+      "predicted": "James: Wow, that's awesome! What game was it for? Sounds like a dream!. What have you been doing to stay motivated?. James: Hey John! What new has happened in your life?. James: Wow, that book looks great! What other resources do you use to improve your game? Tell me about your gaming tips!. What sort of games are you interested in exploring?",
+      "score": 0.0,
+      "latency_s": 0.211,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What did the charity race raise awareness for?",
+      "gold_answer": "mental health",
+      "predicted": "Caroline: That charity race sounds great, Mel! Making a difference & raising awareness for mental health is super rewarding - I'm really proud of you for taking part!. I ran a charity race for mental health last Saturday \u2013 it was really rewarding. I just wanted to let you know I challenged myself last Friday and did a charity event. Maria: You did awesome! How's the response been to that?. What did you make?",
+      "score": 1.0,
+      "latency_s": 0.159,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What did Melanie realize after the charity race?",
+      "gold_answer": "self-care is important",
+      "predicted": "Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Melanie: Thanks, Caroline! Yup, we just did it yesterday! The kids loved it and it was a nice way to relax after the road trip. I just wanted to let you know I challenged myself last Friday and did a charity event. Maria: You did awesome! How's the response been to that?. Especially after the accident, I've thought a",
+      "score": 0.0,
+      "latency_s": 0.206,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "How does Melanie prioritize self-care?",
+      "gold_answer": "by carving out some me-time each day for activities like running, reading, or playing the violin",
+      "predicted": "How does it feel? Also, do you have any pets?. Caroline: I totally agree, Melanie. How was it? Anything fun?. They talked about different therapeutic methods and how to best work with trans people. Seeing how passionate these pros were about making a safe space for people like me was amazing",
+      "score": 0.0,
+      "latency_s": 0.19,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What are Caroline's plans for the summer?",
+      "gold_answer": "researching adoption agencies",
+      "predicted": "Any fun plans for the summer?. Melanie: Caroline, awesome news that you two are getting along! What was it like for you both? Care to fill me in?. Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. The red and blue are for the binary gender system, and the mix of colors means smashing that rigid thinking. Caroline: Hey Melanie! That sounds great! Last weekend I joined a mentorship program for LGBTQ youth - it's really rewarding to help the community",
+      "score": 0.0,
+      "latency_s": 0.162,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What type of individuals does the adoption agency Caroline is considering support?",
+      "gold_answer": "LGBTQ+ individuals",
+      "predicted": "Caroline: Woohoo Melanie! I passed the adoption agency interviews last Friday! I'm so excited and thankful. For me, adoption is a way of giving back and showing love and acceptance. Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Melanie: Cool! What type of music do you play?. Melanie: That's awesome! What type of guitar? Been playing long?",
+      "score": 0.0,
+      "latency_s": 0.2,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "Why did Caroline choose the adoption agency?",
+      "gold_answer": "because of their inclusivity and support for LGBTQ+ individuals",
+      "predicted": "Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Caroline: Woohoo Melanie! I passed the adoption agency interviews last Friday! I'm so excited and thankful. Caroline: Thanks so much, Melanie! It's beautiful! It really brings home how much love's in families - both blood and the ones we choose. Wishing you the best on your adoption journey!. Melanie: Thanks for the ",
+      "score": 0.0,
+      "latency_s": 0.172,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What is Caroline excited about in the adoption process?",
+      "gold_answer": "creating a family for kids who need one",
+      "predicted": "Caroline: Woohoo Melanie! I passed the adoption agency interviews last Friday! I'm so excited and thankful. Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. It was awesome! I talked about my transgender journey and encouraged students to get involved in the LGBTQ community. Talking about inclusivity and acceptance is crucial, and you're so brave to speak up for the",
+      "score": 0.0,
+      "latency_s": 0.178,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What does Melanie think about Caroline's decision to adopt?",
+      "gold_answer": "she thinks Caroline is doing something amazing and will be an awesome mom",
+      "predicted": "Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Melanie: That's awesome, Caroline! You drew it? What does it mean to you?. Melanie: Yeah, it's normal to be both excited and nervous with a big decision. Art gives me a sense of freedom, but so does having supportive people around, promoting LGBTQ rights and being true to myself. It's awesome to see how passionate yo",
+      "score": 0.5,
+      "latency_s": 0.169,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "How long have Mel and her husband been married?",
+      "gold_answer": "Mel and her husband have been married for 5 years.",
+      "predicted": "Deborah: Aw, that's wonderful! How long have you been married?. Evan: Hey Sam! Long time no see! Been up and down lately, got married last week - how about you?. This painting has such an inspiring vibe; you really have a knack for understanding art! How about you? How long have you been painting?. How have you been coping?. We're all still sad about it, but have been comforted by the good times we had and the memories we have",
+      "score": 0.5,
+      "latency_s": 0.221,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What does Caroline's necklace symbolize?",
+      "gold_answer": "love, faith, and strength",
+      "predicted": "Caroline: Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. Melanie: That's gorgeous, Caroline! It's awesome what items can mean so much to us, right? Got any other objects that you treasure, like that necklace?. Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?. What motivated you to pursue counseling?. Melanie: Congrats Caroline! Good on you for going after what you really care about",
+      "score": 0.0,
+      "latency_s": 0.175,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What country is Caroline's grandma from?",
+      "gold_answer": "Sweden",
+      "predicted": "Caroline: Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. This is a big move towards my goal of having a family. For me, adoption is a way of giving back and showing love and acceptance. Giving a home to needy kids is such a loving way to build a family",
+      "score": 1.0,
+      "latency_s": 0.162,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What was grandma's gift to Caroline?",
+      "gold_answer": "necklace",
+      "predicted": "It was wonderful to see how the audience related to what I said and how it inspired them to be better allies. Caroline: Right, it was so much fun! We could do a family outting, or wanna plan something special for this summer, just us two? It'd be a great chance to catch up and explore nature! What do you think?. Caroline: Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. She gave it to me when I was young, and it stands for love, faith and",
+      "score": 1.0,
+      "latency_s": 0.155,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What is Melanie's hand-painted bowl a reminder of?",
+      "gold_answer": "art and self-expression",
+      "predicted": "Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. Caroline: Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. It's like a reminder of my roots and all the love and support I get from my family. Caroline: Yep, Melanie! I've got some other stuff with sentimental value, like my hand-painted bowl. Caroline: Wow, what a great day! Glad everyone could make it",
+      "score": 0.5,
+      "latency_s": 0.17,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What did Melanie and her family do while camping?",
+      "gold_answer": "explored nature, roasted marshmallows, and went on a hike",
+      "predicted": "Caroline: Right, it was so much fun! We could do a family outting, or wanna plan something special for this summer, just us two? It'd be a great chance to catch up and explore nature! What do you think?. Takes a lot of courage and maturity! What do you think of this?. Did you reach the summit? When I was younger, my family and I went on a road trip to Oregon. John: Cool, Maria! You've built some awesome connections and you're making a big impact at the homeless shelter - nice work! How did you m",
+      "score": 0.5,
+      "latency_s": 0.168,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What kind of counseling and mental health services is Caroline interested in pursuing?",
+      "gold_answer": "working with trans people, helping them accept themselves and supporting their mental health",
+      "predicted": "Talking to the community made me want to use my story to help others too - I'm still thinking that counseling and mental health is the way to go. Melanie: Sounds great! What kind of books you got in your library?. Caroline: That charity race sounds great, Mel! Making a difference & raising awareness for mental health is super rewarding - I'm really proud of you for taking part!. Caroline: I'm keen on counseling or working in mental health - I'd love to support those with similar issues. Caroline",
+      "score": 0.5,
+      "latency_s": 0.175,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What workshop did Caroline attend recently?",
+      "gold_answer": "LGBTQ+ counseling workshop",
+      "predicted": "Melanie: Wow, what an experience! How did it make you feel?. Melanie: Wow, that's cool, Caroline! What happened that was so awesome? Did you hear any inspiring stories?. Melanie: That sounds awesome! What did you take away from it to use in your life?. So much since we talked! Last Fri I finally took my kids to a pottery workshop. What other creative projects do you do with them, besides pottery?",
+      "score": 0.0,
+      "latency_s": 0.15,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What was discussed in the LGBTQ+ counseling workshop?",
+      "gold_answer": "therapeutic methods and how to best work with trans people",
+      "predicted": "Melanie: Wow, Caroline, sounds like the parade was an awesome experience! It's great to see the love and support for the LGBTQ+ community. It was awesome! I talked about my transgender journey and encouraged students to get involved in the LGBTQ community. Sounds like your event was amazing! I'm so proud of you for spreading awareness and getting others involved in the LGBTQ community. It was wonderful to see how the audience related to what I said and how it inspired them to be better allies. C",
+      "score": 0.5,
+      "latency_s": 0.165,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What motivated Caroline to pursue counseling?",
+      "gold_answer": "her own journey and the support she received, and how counseling improved her life",
+      "predicted": "Caroline: Right, it was so much fun! We could do a family outting, or wanna plan something special for this summer, just us two? It'd be a great chance to catch up and explore nature! What do you think?. Melanie: Hey Caroline! Great to hear from you! Wow, what an amazing journey. What have you been up to lately, artistically?. What feelings were you hoping to portray?. Melanie: That's awesome, Caroline! You drew it? What does it mean to you?",
+      "score": 0.0,
+      "latency_s": 0.171,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "What kind of place does Caroline want to create for people?",
+      "gold_answer": "a safe and inviting place for people to grow",
+      "predicted": "Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?. My dream is to create a safe and loving home for these kids. Caroline: Right, it was so much fun! We could do a family outting, or wanna plan something special for this summer, just us two? It'd be a great chance to catch up and explore nature! What do you think?. Melanie: Sounds great! What kind of books you got in your library?. Now I'm passionate about creating a safe, inviting place for people t",
+      "score": 1.0,
+      "latency_s": 0.211,
+      "retrieved": 10
+    },
+    {
+      "category": "open-domain",
+      "question": "Did Melanie make the black and white bowl in the photo?",
+      "gold_answer": "Yes",
+      "predicted": "Melanie: The kids loved it! They were so excited to get their hands dirty and make something with clay. Caroline: Thanks Melanie - love the blue vase in the pic! Blue's my fave, it makes me feel relaxed. Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. Melanie: Thanks, Caroline! I'm obsessed with those, so I made something to catch the eye and make people smile. Nate: You can use stuff like dairy-free margarine or coconut oil instead of butter, and ma",
+      "score": 0.0,
+      "latency_s": 0.156,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What did Caroline realize after her charity race?",
+      "gold_answer": "self-care is important",
+      "predicted": "I just wanted to let you know I challenged myself last Friday and did a charity event. Melanie: Congrats Caroline! Good on you for going after what you really care about. Melanie: That sounds awesome! What did you take away from it to use in your life?. Caroline: Cool! What did it look like?. I ran a charity race for mental health last Saturday \u2013 it was really rewarding",
+      "score": 0.0,
+      "latency_s": 0.161,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What are Melanie's plans for the summer with respect to adoption?",
+      "gold_answer": "researching adoption agencies",
+      "predicted": "Respect for finding acceptance and helping others with what you've been through. Melanie: Caroline, awesome news that you two are getting along! What was it like for you both? Care to fill me in?. Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Caroline: That's so funny! I used to go horseback riding with my dad when I was a kid, we'd go through the fields, feelin",
+      "score": 0.5,
+      "latency_s": 0.169,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What type of individuals does the adoption agency Melanie is considering support?",
+      "gold_answer": "LGBTQ+ individuals",
+      "predicted": "Caroline: Woohoo Melanie! I passed the adoption agency interviews last Friday! I'm so excited and thankful. For me, adoption is a way of giving back and showing love and acceptance. Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Andrew: Meeting all these adorable pups has been awesome! For those considering getting a pup, the size of living space and the exercise",
+      "score": 0.0,
+      "latency_s": 0.183,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "Why did Melanie choose the adoption agency?",
+      "gold_answer": "because of their inclusivity and support for LGBTQ+ individuals",
+      "predicted": "Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Caroline: Woohoo Melanie! I passed the adoption agency interviews last Friday! I'm so excited and thankful. Caroline: Thanks so much, Melanie! It's beautiful! It really brings home how much love's in families - both blood and the ones we choose. Wishing you the best on your adoption journey!. Melanie: Congrats, Carol",
+      "score": 0.0,
+      "latency_s": 0.155,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What is Melanie excited about in her adoption process?",
+      "gold_answer": "creating a family for kids who need one",
+      "predicted": "Caroline: Woohoo Melanie! I passed the adoption agency interviews last Friday! I'm so excited and thankful. For me, adoption is a way of giving back and showing love and acceptance. Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. Caroline: Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. Melanie: Congrats C",
+      "score": 0.0,
+      "latency_s": 0.178,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What does Melanie's necklace symbolize?",
+      "gold_answer": "love, faith, and strength",
+      "predicted": "Caroline: Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. Melanie: That's gorgeous, Caroline! It's awesome what items can mean so much to us, right? Got any other objects that you treasure, like that necklace?. Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?. What motivated you to pursue counseling?. Melanie: Congrats Caroline! Good on you for going after what you really care about",
+      "score": 0.0,
+      "latency_s": 0.175,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What country is Melanie's grandma from?",
+      "gold_answer": "Sweden",
+      "predicted": "Caroline: Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. John: Wow, having symbols of travel memories in our homes is so cool! Last week I retook the aptitude test with some great results, and I feel drawn to serving my country in this way. Melanie: That's gorgeous, Caroline! It's awesome what items can mean so much to us, right? Got any other objects that you treasure, like that necklace?. Melanie: Sounds great! What kind of counseling",
+      "score": 1.0,
+      "latency_s": 0.184,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What was grandma's gift to Melanie?",
+      "gold_answer": "necklace",
+      "predicted": "Caroline: Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. She gave it to me when I was young, and it stands for love, faith and strength. Melanie: That's gorgeous, Caroline! It's awesome what items can mean so much to us, right? Got any other objects that you treasure, like that necklace?. Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?. Last Friday, I went to an LGBTQ+ counseling workshop",
+      "score": 1.0,
+      "latency_s": 0.157,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What was grandpa's gift to Caroline?",
+      "gold_answer": "necklace",
+      "predicted": "Melanie: Caroline, awesome news that you two are getting along! What was it like for you both? Care to fill me in?. It was wonderful to see how the audience related to what I said and how it inspired them to be better allies. Caroline: Right, it was so much fun! We could do a family outting, or wanna plan something special for this summer, just us two? It'd be a great chance to catch up and explore nature! What do you think?. Caroline: Thanks, Melanie! This necklace is super special to me - a gi",
+      "score": 1.0,
+      "latency_s": 0.158,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What is Caroline's hand-painted bowl a reminder of?",
+      "gold_answer": "art and self-expression",
+      "predicted": "Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. Caroline: Thanks, Melanie! This necklace is super special to me - a gift from my grandma in my home country, Sweden. It's like a reminder of my roots and all the love and support I get from my family. Caroline: Yep, Melanie! I've got some other stuff with sentimental value, like my hand-painted bowl. Caroline: Wow, what a great day! Glad everyone could make it",
+      "score": 0.5,
+      "latency_s": 0.179,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What did Caroline and her family do while camping?",
+      "gold_answer": "explored nature, roasted marshmallows, and went on a hike",
+      "predicted": "Caroline: Right, it was so much fun! We could do a family outting, or wanna plan something special for this summer, just us two? It'd be a great chance to catch up and explore nature! What do you think?. Takes a lot of courage and maturity! What do you think of this?. Did you reach the summit? When I was younger, my family and I went on a road trip to Oregon. Andrew: He's a German Shepherd - they're so smart and loyal! What do you think?. What made you decide to transition and join the transgend",
+      "score": 0.5,
+      "latency_s": 0.177,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What kind of counseling and mental health services is Melanie interested in pursuing?",
+      "gold_answer": "working with trans people, helping them accept themselves and supporting their mental health",
+      "predicted": "Caroline: That charity race sounds great, Mel! Making a difference & raising awareness for mental health is super rewarding - I'm really proud of you for taking part!. Melanie: Sounds great! What kind of books you got in your library?. Caroline: I'm keen on counseling or working in mental health - I'd love to support those with similar issues. Caroline: Since our last chat, I've been looking into counseling or mental health work more. For me, adoption is a way of giving back and showing love and",
+      "score": 0.5,
+      "latency_s": 0.183,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What kind of counseling workshop did Melanie attend recently?",
+      "gold_answer": "LGBTQ+ counseling workshop",
+      "predicted": "Melanie: Sounds great! What kind of books you got in your library?. Melanie: Wow, that's cool, Caroline! What happened that was so awesome? Did you hear any inspiring stories?. Melanie: Cool! What type of music do you play?. Melanie: That's awesome! What type of guitar? Been playing long?. Deborah: Did my photo remind you of something?",
+      "score": 0.0,
+      "latency_s": 0.146,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What motivated Melanie to pursue counseling?",
+      "gold_answer": "her own journey and the support she received, and how counseling improved her life",
+      "predicted": "Melanie: Caroline, awesome news that you two are getting along! What was it like for you both? Care to fill me in?. Last Friday, my partner and I talked about how our loved ones have influenced us and what their values meant to us. Their values have influenced us to pursue our goals, such as me with engineering and my partner with their creative endeavors. Melanie: Hey Caroline! Great to hear from you! Wow, what an amazing journey. Caroline: Oh man, sorry to hear that, Melanie",
+      "score": 0.0,
+      "latency_s": 0.16,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What kind of place does Melanie want to create for people?",
+      "gold_answer": "a safe and inviting place for people to grow",
+      "predicted": "Melanie: Sounds great! What kind of counseling and mental health services do you want to persue?. My dream is to create a safe and loving home for these kids. It was inspiring and emotional - so many people wanted to create loving homes for children in need. Now I'm passionate about creating a safe, inviting place for people to grow. Melanie: Sounds great! What kind of books you got in your library?",
+      "score": 1.0,
+      "latency_s": 0.191,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "Did Caroline make the black and white bowl in the photo?",
+      "gold_answer": "No",
+      "predicted": "Melanie: The kids loved it! They were so excited to get their hands dirty and make something with clay. Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. Melanie: Thanks, Caroline! I'm obsessed with those, so I made something to catch the eye and make people smile. Nate: You can use stuff like dairy-free margarine or coconut oil instead of butter, and make sure to check the labels to ensure they're dairy-free. I took them to a snowy one last winter and",
+      "score": 1.0,
+      "latency_s": 0.181,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What are the new shoes that Caroline got used for?",
+      "gold_answer": "Running",
+      "predicted": "Melanie: That's gorgeous, Caroline! It's awesome what items can mean so much to us, right? Got any other objects that you treasure, like that necklace?. Melanie: \"Summer Sounds\"- The playing an awesome pop song that got everyone dancing and singing. Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. Audrey: Woohoo! I got a new place with a bigger backyard for the pooches! Take a look!. Audrey: That looks fun! Where are you at? I would love to take the d",
+      "score": 0.0,
+      "latency_s": 0.146,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What is Caroline's reason for getting into running?",
+      "gold_answer": "To de-stress and clear her mind",
+      "predicted": "Melanie: Caroline, awesome news that you two are getting along! What was it like for you both? Care to fill me in?. Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. Caroline: That charity race sounds great, Mel! Making a difference & raising awareness for mental health is super rewarding - I'm really proud of you for taking part!. Caroline: That's great, Mel! Taking time for yourself is so important. Melanie: You're doing something amazing! Creating a",
+      "score": 0.5,
+      "latency_s": 0.157,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What does Caroline say running has been great for?",
+      "gold_answer": "Her mental health",
+      "predicted": "What has it been like for you finding supportive folks?. Taking care of it has been really calming, and it's a great way to connect with nature. The dog-training course has been a big time sink but it's paid off because they're doing great. Melanie: That's awesome! What type of guitar? Been playing long?. Caroline: I started playing acoustic guitar about five years ago; it's been a great way to express myself and escape into my emotions",
+      "score": 0.0,
+      "latency_s": 0.162,
+      "retrieved": 10
+    },
+    {
+      "category": "adversarial",
+      "question": "What did Melanie see at the council meeting for adoption?",
+      "gold_answer": "many people wanting to create loving homes for children in need",
+      "predicted": "Guess what I did this week? I took the first step towards becoming a mom - I applied to adoption agencies! It's a big decision, but I think I'm ready to give all my love to a child. It was wonderful to see how the audience related to what I said and how it inspired them to be better allies. Caroline: That bowl is awesome, Mel! What gave you the idea for all the colors and patterns?. Caroline: I'm always here for you, Mel! We had a blast last year at the Pride fest. Tell me, what's your vision fo",
+      "score": 0.0,
+      "latency_s": 0.162,
+      "retrieved": 10
+    }
+  ]
+}

@@ -57,6 +57,16 @@ jobs:
         # install, not at runtime; CI builds in ephemeral runners with
         # no persistent state. Re-evaluate when GitHub's images ship a
         # patched pip.
+        #
+        # CVE-2023-36464 / GHSA-4vvm-4w3v-6mr8: medium-severity
+        # infinite-loop DoS in PyPDF2 3.0.1, introduced transitively by
+        # Maigret. PyPDF2 has no patched release under that package name
+        # (upstream recommends migrating to pypdf>=3.9.0), and ZettelForge's
+        # AGE-120 username collector does not parse attacker-supplied PDFs or
+        # invoke Maigret report generation. Accepted for AGE-120 because the
+        # GOV-009 blocking threshold is HIGH/CRITICAL and the collector
+        # lazy-imports/fails closed.
+        #
         # --skip-editable: do not audit the editable local zettelforge
         # install. It is the project itself, not a third-party dependency,
         # and on a release-prep PR its version is bumped ahead of PyPI
@@ -70,13 +80,17 @@ jobs:
         # third-party dependency (and the runner's pip) is still audited.
         pip-audit --skip-editable \
           --ignore-vuln=CVE-2026-3219 \
-          --ignore-vuln=PYSEC-2026-196
+          --ignore-vuln=PYSEC-2026-196 \
+          --ignore-vuln=CVE-2023-36464
 
   test:
     runs-on: ubuntu-latest
     needs: lint
     strategy:
       fail-fast: false
+      # The fastembed model download is shared across Python versions. Running
+      # these jobs in parallel can double-hit HuggingFace and trigger 429s.
+      max-parallel: 1
       matrix:
         python-version: ['3.12', '3.13']
 
@@ -87,6 +101,14 @@ jobs:
       uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
       with:
         python-version: ${{ matrix.python-version }}
+
+    - name: Cache fastembed model
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+      with:
+        path: |
+          ~/.cache/fastembed
+          ~/.cache/huggingface
+        key: fastembed-nomic-embed-text-v1.5-Q-${{ runner.os }}
 
     - name: Install dependencies
       run: |

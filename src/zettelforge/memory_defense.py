@@ -19,12 +19,36 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 from zettelforge.config import MemoryDefenseConfig, get_config
 from zettelforge.log import get_logger
 from zettelforge.memory_store import get_default_data_dir
 
 _logger = get_logger("zettelforge.memory_defense")
 _VALID_MODES = {"audit", "block", "quarantine"}
+
+# Content-hash keyed n-gram counter cache. The gate recounts the same
+# reference texts on every ingest; counts are pure functions of
+# (text, ngram_size), so caching is exact.
+_NGRAM_CACHE_MAX = 8192
+_ngram_cache: dict[tuple[str, int], Counter[str]] = {}
+
+
+def reset_defense_caches_for_tests() -> None:
+    """Drop module caches so tests see a cold state."""
+    _ngram_cache.clear()
+
+
+def _cached_ngram_counts(text: str, ngram_size: int) -> Counter[str]:
+    key = (hashlib.sha1(text.encode(), usedforsecurity=False).hexdigest(), int(ngram_size))
+    cached = _ngram_cache.get(key)
+    if cached is None:
+        if len(_ngram_cache) >= _NGRAM_CACHE_MAX:
+            _ngram_cache.clear()
+        cached = _ngram_counts(text, ngram_size)
+        _ngram_cache[key] = cached
+    return cached
 
 
 class MemoryAnomalyError(RuntimeError):
@@ -281,6 +305,42 @@ def _select_reference_notes(candidate: Any, notes: list[Any], limit: int) -> lis
 
 
 def _calibration_scores(notes: list[Any], cfg: MemoryDefenseConfig) -> list[float]:
+    """Leave-one-out anomaly scores over the reference set.
+
+    Vectorized with numpy: the previous pure-Python loop (O(n^2) cosines
+    plus n full n-gram recounts of every other note) dominated remember()
+    latency (~1.1s at 50 references). Falls back to the original loop when
+    vectors are missing or dimensions are mixed.
+    """
+    if len(notes) < 2:
+        return _calibration_scores_py(notes, cfg)
+
+    vectors = [_note_vector(note) for note in notes]
+    dims = {len(v) for v in vectors}
+    if len(dims) != 1 or 0 in dims:
+        return _calibration_scores_py(notes, cfg)
+
+    matrix = np.asarray(vectors, dtype=np.float64)
+    norms = np.linalg.norm(matrix, axis=1)
+    safe_norms = np.where(norms == 0.0, 1.0, norms)
+    normalized = matrix / safe_norms[:, None]
+    normalized[norms == 0.0] = 0.0
+    sims = normalized @ normalized.T
+    np.fill_diagonal(sims, -np.inf)
+    max_sim = sims.max(axis=1)
+    np.fill_diagonal(sims, 0.0)
+    mean_sim = sims.sum(axis=1) / (len(notes) - 1)
+    memsad = 0.5 * max_sim + 0.5 * mean_sim
+
+    jsd = _leave_one_out_jsd([_note_text(note) for note in notes], cfg.ngram_size)
+    blended = memsad + cfg.lexical_weight * np.asarray(jsd, dtype=np.float64)
+    # Plain Python floats at the boundary: numpy scalars would leak into
+    # decision fields (np.bool_ flags, unserializable np.float64).
+    return [float(score) for score in blended]
+
+
+def _calibration_scores_py(notes: list[Any], cfg: MemoryDefenseConfig) -> list[float]:
+    """Original pure-Python scoring; retained as the degenerate-shape fallback."""
     scores: list[float] = []
     for i, note in enumerate(notes):
         refs = notes[:i] + notes[i + 1 :]
@@ -294,7 +354,71 @@ def _calibration_scores(notes: list[Any], cfg: MemoryDefenseConfig) -> list[floa
     return scores
 
 
+def _leave_one_out_jsd(texts: list[str], ngram_size: int) -> list[float]:
+    """JSD(note_i, all-others) for every i, over one shared vocabulary.
+
+    Counter subtraction from the pooled total is exact (integer counts), so
+    each row reproduces _jensen_shannon(c_i, sum-of-others) bit-for-bit up
+    to float summation order.
+    """
+    counters = [_cached_ngram_counts(text, ngram_size) for text in texts]
+    total: Counter[str] = Counter()
+    for counter in counters:
+        total.update(counter)
+    vocab = {key: idx for idx, key in enumerate(total)}
+    n, v = len(counters), len(vocab)
+
+    counts = np.zeros((n, max(v, 1)), dtype=np.float64)
+    for i, counter in enumerate(counters):
+        for key, value in counter.items():
+            counts[i, vocab[key]] = float(value)
+    row_tot = counts.sum(axis=1)
+    total_vec = counts.sum(axis=0)
+    rest = total_vec[None, :] - counts
+    rest_tot = row_tot.sum() - row_tot
+
+    results = np.zeros(n, dtype=np.float64)
+    both_empty = (row_tot == 0.0) & (rest_tot == 0.0)
+    one_empty = ((row_tot == 0.0) | (rest_tot == 0.0)) & ~both_empty
+    results[one_empty] = 1.0
+
+    regular = ~(both_empty | one_empty)
+    if regular.any():
+        p = counts[regular] / row_tot[regular, None]
+        q = rest[regular] / rest_tot[regular, None]
+        m = 0.5 * (p + q)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            p_term = np.where(p > 0.0, p * np.log2(np.where(p > 0.0, p / m, 1.0)), 0.0)
+            q_term = np.where(q > 0.0, q * np.log2(np.where(q > 0.0, q / m, 1.0)), 0.0)
+        results[regular] = np.clip(0.5 * (p_term.sum(axis=1) + q_term.sum(axis=1)), 0.0, 1.0)
+    return list(results)
+
+
 def _memsad_score(candidate_vector: list[float], refs: list[Any]) -> tuple[float, float, float]:
+    if not refs:
+        return 0.0, 0.0, 0.0
+    ref_vectors = [_note_vector(ref) for ref in refs]
+    dim = len(candidate_vector)
+    if dim == 0 or any(len(v) != dim for v in ref_vectors):
+        return _memsad_score_py(candidate_vector, refs)
+
+    matrix = np.asarray(ref_vectors, dtype=np.float64)
+    candidate = np.asarray(candidate_vector, dtype=np.float64)
+    cand_norm = float(np.linalg.norm(candidate))
+    if cand_norm == 0.0:
+        similarities = np.zeros(len(refs), dtype=np.float64)
+    else:
+        norms = np.linalg.norm(matrix, axis=1)
+        safe_norms = np.where(norms == 0.0, 1.0, norms)
+        similarities = (matrix @ candidate) / (safe_norms * cand_norm)
+        similarities[norms == 0.0] = 0.0
+    max_similarity = float(similarities.max())
+    mean_similarity = float(similarities.mean())
+    return 0.5 * max_similarity + 0.5 * mean_similarity, max_similarity, mean_similarity
+
+
+def _memsad_score_py(candidate_vector: list[float], refs: list[Any]) -> tuple[float, float, float]:
+    """Original pure-Python scoring; retained as the degenerate-shape fallback."""
     similarities = [_cosine(candidate_vector, _note_vector(ref)) for ref in refs]
     if not similarities:
         return 0.0, 0.0, 0.0
@@ -322,10 +446,10 @@ def _stddev(values: list[float], mean: float) -> float:
 
 
 def _lexical_jsd(text: str, reference_texts: list[str], ngram_size: int) -> float:
-    candidate = _ngram_counts(text, ngram_size)
-    reference = Counter()
+    candidate = _cached_ngram_counts(text, ngram_size)
+    reference: Counter[str] = Counter()
     for ref_text in reference_texts:
-        reference.update(_ngram_counts(ref_text, ngram_size))
+        reference.update(_cached_ngram_counts(ref_text, ngram_size))
     return _jensen_shannon(candidate, reference)
 
 

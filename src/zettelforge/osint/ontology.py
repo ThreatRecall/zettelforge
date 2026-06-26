@@ -150,6 +150,55 @@ OSINT_ENTITY_TYPES: dict[str, dict[str, Any]] = {
         "optional": ["confidence", "language"],
         "properties": {},
     },
+    # ── Phase 4 gap types ported from flowsint-types (AGE-119) ──────────────
+    # Adopted (not duplicated) from reconurge/flowsint `flowsint-types`
+    # v1.2.8 @ 2a4878c8 (Apache-2.0). ASN/CIDR were NOT ported: they already
+    # exist here as ASNumber / Netblock. See THIRD_PARTY/PROVENANCE.md.
+    "CryptoWallet": {
+        # canonical value: see ``canonicalize_wallet`` (hex -> lowercased).
+        "required": ["address"],
+        "optional": ["chain", "node_id", "label"],
+        "properties": {},
+    },
+    "Transaction": {
+        # Blockchain transaction. canonical value: ``canonicalize_tx_hash``.
+        "required": ["tx_hash"],
+        "optional": ["chain", "from_address", "to_address", "value", "timestamp", "block"],
+        "properties": {},
+    },
+    "SocialAccount": {
+        # The "home" of a username on a platform. canonical value:
+        # ``canonicalize_social_account`` -> ``username@platform``.
+        "required": ["id"],
+        "optional": [
+            "username",
+            "platform",
+            "display_name",
+            "profile_url",
+            "bio",
+            "location",
+            "verified",
+        ],
+        "properties": {},
+    },
+    # ── Phase 4 breach exposure (AGE-120) ───────────────────────────────────
+    # A named data breach an email address appeared in. Sourced from the
+    # native HIBP REST path (breach/hibp_collector.py). canonical value:
+    # ``canonicalize_breach`` -> lowercased breach name (HIBP "Name" field).
+    "Breach": {
+        "required": ["name"],
+        "optional": [
+            "title",
+            "domain",
+            "breach_date",
+            "added_date",
+            "pwn_count",
+            "data_classes",
+            "is_verified",
+            "description",
+        ],
+        "properties": {},
+    },
     # ── Phase 5: Physical (stubs — collectors deferred) ─────────────────────
     "GPS": {
         "required": ["latitude", "longitude"],
@@ -320,6 +369,40 @@ OSINT_RELATION_TYPES: dict[str, dict[str, Any]] = {
         "to_types": ["Sentiment"],
         "cardinality": "many_to_many",
     },
+    # ── Phase 4 gap edges for ported types (AGE-119) ────────────────────────
+    "sent_transaction": {
+        "from_types": ["CryptoWallet"],
+        "to_types": ["Transaction"],
+        "cardinality": "many_to_many",
+    },
+    "received_transaction": {
+        "from_types": ["CryptoWallet"],
+        "to_types": ["Transaction"],
+        "cardinality": "many_to_many",
+    },
+    "controls_wallet": {
+        "from_types": ["Person", "Organization", "SocialAccount"],
+        "to_types": ["CryptoWallet"],
+        "cardinality": "many_to_many",
+    },
+    "has_account": {
+        "from_types": ["Person", "Alias", "EmailAddress"],
+        "to_types": ["SocialAccount"],
+        "cardinality": "many_to_many",
+    },
+    # ── AGE-120 enricher edges ──────────────────────────────────────────────
+    # WHOIS registrant email for a domain (domain_to_whois EmailAddress branch).
+    "registered_by": {
+        "from_types": ["DomainName"],
+        "to_types": ["EmailAddress"],
+        "cardinality": "many_to_one",
+    },
+    # HIBP breach exposure for an email (email_to_breaches).
+    "appeared_in_breach": {
+        "from_types": ["EmailAddress"],
+        "to_types": ["Breach"],
+        "cardinality": "many_to_many",
+    },
     # ── Phase 5: Physical ───────────────────────────────────────────────────
     "located_near": {
         "from_types": ["Device", "Person"],
@@ -418,6 +501,76 @@ def canonicalize_web_title(url: str, title: str, max_len: int = 256) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Canonicalization helpers (Phase 4 gap types — AGE-119)
+# ---------------------------------------------------------------------------
+
+
+def canonicalize_wallet(raw: str) -> str:
+    """Canonical form for a crypto wallet address.
+
+    Hex addresses (``0x...``, EVM chains, case-insensitive checksums) are
+    lowercased so a checksummed and a lowercase form dedupe to one node.
+    Non-hex addresses (Bitcoin base58 is case-sensitive) are returned with
+    surrounding whitespace stripped only.
+
+    ponytail: case-fold only hex; folding base58 would corrupt BTC
+    addresses. Per-chain validation lands with the wallet collector.
+    """
+    s = raw.strip()
+    if s.lower().startswith("0x"):
+        return s.lower()
+    return s
+
+
+def canonicalize_tx_hash(raw: str) -> str:
+    """Canonical form for a blockchain transaction hash: stripped, lowercased.
+
+    Transaction hashes are hex on every supported chain, so lowercasing is
+    always safe and makes ``(Transaction, tx_hash)`` dedupe correctly.
+    """
+    return raw.strip().lower()
+
+
+def canonicalize_social_account(username: str, platform: str) -> str:
+    """Composite canonical value ``username@platform`` (both lowercased).
+
+    Mirrors flowsint-types ``SocialAccount.id``. Keeps
+    ``(SocialAccount, id)`` unique across platforms for the same handle.
+    """
+    return f"{username.strip().lower()}@{platform.strip().lower()}"
+
+
+def canonicalize_email(raw: str) -> str:
+    """Lowercase and strip an email address for stable dedup.
+
+    Email addresses are treated case-insensitively for the providers the
+    OSINT layer targets, so ``Alice@Example.com`` and ``alice@example.com``
+    fold to one node. No syntactic validation here: the collector that
+    produces the address owns that.
+    """
+    return raw.strip().lower()
+
+
+def canonicalize_breach(raw: str) -> str:
+    """Canonical form for a breach name: stripped and lowercased.
+
+    HIBP breach names (the ``Name`` field, e.g. ``Adobe``) are stable
+    identifiers; lowercasing keeps ``(Breach, name)`` deduped regardless of
+    source casing.
+    """
+    return raw.strip().lower()
+
+
+def canonicalize_alias(raw: str) -> str:
+    """Canonical form for an Alias / username: stripped and lowercased.
+
+    Usernames are matched case-insensitively across the social platforms the
+    enrichers target, so folding case keeps one node per handle.
+    """
+    return raw.strip().lower()
+
+
+# ---------------------------------------------------------------------------
 # Merge helpers
 # ---------------------------------------------------------------------------
 
@@ -460,13 +613,19 @@ __all__ = [
     "ONTOLOGY",
     "OSINT_ENTITY_TYPES",
     "OSINT_RELATION_TYPES",
+    "canonicalize_alias",
     "canonicalize_asn",
+    "canonicalize_breach",
     "canonicalize_cidr",
     "canonicalize_domain",
+    "canonicalize_email",
     "canonicalize_ipv6",
     "canonicalize_mx",
     "canonicalize_port",
+    "canonicalize_social_account",
+    "canonicalize_tx_hash",
     "canonicalize_url",
+    "canonicalize_wallet",
     "canonicalize_web_title",
     "merge_into_global_ontology",
 ]

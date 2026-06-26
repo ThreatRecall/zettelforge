@@ -1,78 +1,78 @@
 {
   "meta": {
-    "date": "2026-04-10T08:05:55.405026",
+    "date": "2026-06-09T13:56:15.802128",
     "reports": 8,
     "queries": 20
   },
   "full_session": {
     "strategy": "full_session",
     "notes": 8,
-    "ingest_time_s": 69.1,
+    "ingest_time_s": 3.4,
     "accuracy": 75.0,
-    "avg_score": 0.875,
-    "p50_latency_ms": 620.0,
-    "p95_latency_ms": 2732.0,
+    "avg_score": 0.85,
+    "p50_latency_ms": 39.0,
+    "p95_latency_ms": 159.0,
     "by_category": {
       "tool-attribution": {
         "accuracy": 40.0,
         "avg_score": 0.7,
-        "p50_latency_ms": 1343.0
+        "p50_latency_ms": 42.0
       },
       "cve-linkage": {
         "accuracy": 75.0,
-        "avg_score": 0.875,
-        "p50_latency_ms": 794.0
+        "avg_score": 0.75,
+        "p50_latency_ms": 38.0
       },
       "attribution": {
         "accuracy": 100.0,
         "avg_score": 1.0,
-        "p50_latency_ms": 611.0
+        "p50_latency_ms": 59.0
       },
       "temporal": {
         "accuracy": 66.7,
         "avg_score": 0.833,
-        "p50_latency_ms": 569.0
+        "p50_latency_ms": 41.0
       },
       "multi-hop": {
         "accuracy": 100.0,
         "avg_score": 1.0,
-        "p50_latency_ms": 644.0
+        "p50_latency_ms": 38.0
       }
     }
   },
   "chunked_800": {
     "strategy": "chunked_800",
     "notes": 8,
-    "ingest_time_s": 56.5,
+    "ingest_time_s": 0.1,
     "accuracy": 75.0,
-    "avg_score": 0.875,
-    "p50_latency_ms": 706.0,
-    "p95_latency_ms": 2729.0,
+    "avg_score": 0.85,
+    "p50_latency_ms": 52.0,
+    "p95_latency_ms": 59.0,
     "by_category": {
       "tool-attribution": {
         "accuracy": 40.0,
         "avg_score": 0.7,
-        "p50_latency_ms": 1299.0
+        "p50_latency_ms": 50.0
       },
       "cve-linkage": {
         "accuracy": 75.0,
-        "avg_score": 0.875,
-        "p50_latency_ms": 795.0
+        "avg_score": 0.75,
+        "p50_latency_ms": 52.0
       },
       "attribution": {
         "accuracy": 100.0,
         "avg_score": 1.0,
-        "p50_latency_ms": 535.0
+        "p50_latency_ms": 52.0
       },
       "temporal": {
         "accuracy": 66.7,
         "avg_score": 0.833,
-        "p50_latency_ms": 772.0
+        "p50_latency_ms": 54.0
       },
       "multi-hop": {
         "accuracy": 100.0,
         "avg_score": 1.0,
-        "p50_latency_ms": 741.0
+        "p50_latency_ms": 33.0
       }
     }
   }

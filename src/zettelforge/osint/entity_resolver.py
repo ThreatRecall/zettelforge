@@ -25,12 +25,17 @@ import re
 from typing import TYPE_CHECKING
 
 from zettelforge.osint.ontology import (
+    canonicalize_alias,
     canonicalize_asn,
+    canonicalize_breach,
     canonicalize_cidr,
     canonicalize_domain,
+    canonicalize_email,
     canonicalize_mx,
     canonicalize_port,
+    canonicalize_tx_hash,
     canonicalize_url,
+    canonicalize_wallet,
     canonicalize_web_title,
 )
 
@@ -204,6 +209,22 @@ def _canonical_key(entity_type: str, value: str) -> str:
             raise ValueError(f"WebTitle must be 'url::title', got {value!r}")
         url, title = raw.split("::", 1)
         return f"{entity_type}:{canonicalize_web_title(url, title)}"
+    # ── AGE-120 enricher seed / output types ────────────────────────────────
+    if entity_type == "EmailAddress":
+        return f"{entity_type}:{canonicalize_email(value)}"
+    if entity_type == "Alias":
+        return f"{entity_type}:{canonicalize_alias(value)}"
+    if entity_type == "CryptoWallet":
+        return f"{entity_type}:{canonicalize_wallet(value)}"
+    if entity_type == "Transaction":
+        return f"{entity_type}:{canonicalize_tx_hash(value)}"
+    if entity_type == "SocialAccount":
+        # Value is the composite ``username@platform`` id; fold case so a
+        # checksum/case variant dedupes. Already produced canonical by the
+        # collector via ``canonicalize_social_account`` — this stays idempotent.
+        return f"{entity_type}:{value.strip().lower()}"
+    if entity_type == "Breach":
+        return f"{entity_type}:{canonicalize_breach(value)}"
     return f"{entity_type}:{value.strip()}"
 
 

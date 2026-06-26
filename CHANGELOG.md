@@ -6,12 +6,13 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-## [2.8.0] - 2026-06-25
+## [2.8.0] - 2026-06-26
 
 Feature release. Extends the RFC-016 OSINT layer with passive ingest and
-adds AGE-127 prompt-injection / retrieval-poisoning guardrails across the
-memory pipeline, alongside configurable LLM generation budgets and bulk
-detection-ingest hardening. No data migration is required.
+live AGE-120 enrichers, and adds AGE-127 prompt-injection /
+retrieval-poisoning guardrails across the memory pipeline, alongside
+configurable LLM generation budgets and bulk detection-ingest hardening.
+No data migration is required.
 
 ### Added
 
@@ -27,6 +28,13 @@ detection-ingest hardening. No data migration is required.
   avoid WHOIS/RDAP duplicates; treats an explicit empty collector
   allow-list as empty; adds user-facing passive OSINT docs and mkdocs
   navigation. (#163)
+- **Live OSINT enrichers** (AGE-120). Native RFC-016 collectors that feed
+  the graph backend: WHOIS/DNS, maigret/sherlock username discovery, HIBP
+  breach lookup, and blockchain wallet transactions, with OSINT
+  ontology / executor / entity-resolution / graph-persistence extensions.
+  The network collectors are an opt-in `[osint]` extra, key-gated and
+  fail-closed, and are never auto-triggered by `remember()`. Known
+  fast-follow robustness items are tracked in #176. (#167)
 - Configurable LLM generation budgets for causal extraction, synthesis,
   fact extraction, NER, and memory evolution, plus `reasoning_model` scaling
   floors and `<think>` / `<thinking>` JSON parse stripping. (#153)

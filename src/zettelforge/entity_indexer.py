@@ -126,7 +126,12 @@ class EntityExtractor:
         '"activity": ["swimming"], "temporal": ["last Tuesday"]}'
     )
 
-    # Regex for conversational person names from dialogue format "Name: text"
+    # Regex for conversational person names from dialogue format "Name: text".
+    # Free-text person extraction (single capitalized tokens in running text)
+    # was tried 2026-06-09 and REVERTED: speaker names extracted from turn
+    # bodies reshuffled supersession chains and dropped LoCoMo from 11% to 5%
+    # while single-hop/multi-hop stayed at 0. Revisit only with the LLM NER
+    # path (RFC-001) where extraction quality is high enough to gate on.
     _PERSON_PATTERN = re.compile(r"(?:^|\n)\s*([A-Z][a-z]{2,15}):", re.MULTILINE)
 
     # Common words that match the person pattern but aren't names
@@ -181,6 +186,80 @@ class EntityExtractor:
         "october",
         "november",
         "december",
+        # Capitalized mid-sentence terms that are not given names
+        "god",
+        "mom",
+        "dad",
+        "mum",
+        "grandma",
+        "grandpa",
+        "christmas",
+        "thanksgiving",
+        "halloween",
+        "easter",
+        "english",
+        "french",
+        "spanish",
+        "german",
+        "chinese",
+        "japanese",
+        "american",
+        "british",
+        "canadian",
+        "russian",
+        "iranian",
+        "korean",
+        "israeli",
+        "ukrainian",
+        "indian",
+        "pakistani",
+        "european",
+        "asian",
+        "african",
+        "italian",
+        "dutch",
+        "polish",
+        "turkish",
+        "mexican",
+        "brazilian",
+        "australian",
+        # Vendors and platforms that appear capitalized mid-sentence in CTI text
+        "microsoft",
+        "windows",
+        "linux",
+        "android",
+        "cisco",
+        "fortinet",
+        "ivanti",
+        "oracle",
+        "intel",
+        "nvidia",
+        "samsung",
+        "internet",
+        "facebook",
+        "instagram",
+        "youtube",
+        "netflix",
+        "spotify",
+        "amazon",
+        "google",
+        "apple",
+        "reddit",
+        "twitter",
+        "tiktok",
+        "covid",
+        "awesome",
+        "great",
+        "cool",
+        "nice",
+        "haha",
+        "congrats",
+        "sorry",
+        "happy",
+        "glad",
+        "today",
+        "tomorrow",
+        "yesterday",
     }
 
     # Regex for common locations
