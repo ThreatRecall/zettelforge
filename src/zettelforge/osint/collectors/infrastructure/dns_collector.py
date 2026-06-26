@@ -15,6 +15,7 @@ Design notes:
 
 from __future__ import annotations
 
+import ipaddress
 from typing import Any
 
 from zettelforge.log import get_logger
@@ -73,6 +74,60 @@ def _resolve(resolver: Any, domain: str, rdtype: str) -> list[Any]:
     return list(answer)
 
 
+def _reverse_pointer(ip: str) -> Any:
+    """Return the dnspython reverse-pointer name for an IP. Seam for tests."""
+    import dns.reversename
+
+    return dns.reversename.from_address(ip)
+
+
+def _collect_ptr(ip: str, timeout: float, lifetime: float) -> list[CollectorTuple]:
+    """Reverse-resolve an IP to its PTR DomainName(s) via the ``hosts`` edge.
+
+    Forward DNS (domain -> A/AAAA/NS/MX) was already live in Phase 1; this
+    fills the inverse direction for IP seeds. Returns ``[]`` on invalid IP,
+    missing dnspython, or no PTR record.
+    """
+    try:
+        canonical_ip = ipaddress.ip_address(ip)
+    except ValueError:
+        _logger.debug("dns_invalid_ip", ip=ip)
+        return []
+    # Reverse DNS on private / reserved / documentation IPs is pointless and
+    # would leak a needless query; skip them (also keeps unit tests offline).
+    if not canonical_ip.is_global:
+        _logger.debug("dns_skip_non_global_ip", ip=str(canonical_ip))
+        return []
+    family = "IPv6Address" if isinstance(canonical_ip, ipaddress.IPv6Address) else "IPv4Address"
+
+    try:
+        resolver = _make_resolver(timeout, lifetime)
+        pointer = _reverse_pointer(str(canonical_ip))
+    except ImportError:
+        _logger.warning("dns_collector_missing_dnspython", ip=str(canonical_ip))
+        return []
+
+    out: list[CollectorTuple] = []
+    seen: set[str] = set()
+    for rdata in _resolve(resolver, pointer, "PTR"):
+        name = canonicalize_domain(str(rdata))
+        if not name or name in seen:
+            continue
+        seen.add(name)
+        out.append(
+            CollectorTuple(
+                output_entity_type="DomainName",
+                output_value=name,
+                edge_type="hosts",
+                from_entity_type=family,
+                to_entity_type="DomainName",
+                output_props={"value": name},
+                edge_props={},
+            )
+        )
+    return out
+
+
 def collect(
     input_entity_type: str,
     input_value: str,
@@ -80,15 +135,16 @@ def collect(
     timeout: float = DEFAULT_TIMEOUT,
     lifetime: float = DEFAULT_LIFETIME,
 ) -> list[CollectorTuple]:
-    """Collect DNS records for a DomainName input.
+    """Collect DNS records for a DomainName seed, or PTR for an IP seed.
 
     Parameters
     ----------
     input_entity_type : str
-        Must be ``"DomainName"``. Other types return an empty list.
+        ``"DomainName"`` (forward A/AAAA/NS/MX) or ``"IPv4Address"`` /
+        ``"IPv6Address"`` (reverse PTR -> DomainName). Other types return [].
     input_value : str
-        Domain to resolve. Will be canonicalized (lowercased, trailing dot
-        stripped) before lookup.
+        Domain or IP to resolve. Domains are canonicalized (lowercased,
+        trailing dot stripped) before lookup.
 
     Returns
     -------
@@ -96,6 +152,9 @@ def collect(
         One tuple per record. Empty list on lookup miss or when dnspython is
         not installed.
     """
+    if input_entity_type in ("IPv4Address", "IPv6Address"):
+        return _collect_ptr(input_value, timeout, lifetime)
+
     if input_entity_type != "DomainName":
         return []
 
@@ -195,13 +254,17 @@ def collect(
 
 _METADATA = TransformMetadata(
     name="dns_collector",
-    description="Resolve a domain to A, AAAA, NS, and MX records via DNS.",
-    input_types=("DomainName",),
+    description=(
+        "Forward-resolve a domain to A, AAAA, NS, MX records, or "
+        "reverse-resolve an IP to its PTR DomainName."
+    ),
+    input_types=("DomainName", "IPv4Address", "IPv6Address"),
     output_types=(
         ("IPv4Address", "resolves_to"),
         ("IPv6Address", "resolves_to"),
         ("NSRecord", "ns_for"),
         ("MXRecord", "mx_for"),
+        ("DomainName", "hosts"),
     ),
     api_dependencies=("dnspython",),
     rate_limit=None,

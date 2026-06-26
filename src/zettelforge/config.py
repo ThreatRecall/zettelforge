@@ -100,6 +100,10 @@ class EmbeddingConfig:
     url: str = "http://127.0.0.1:11434"  # only used when provider=ollama
     model: str = "nomic-ai/nomic-embed-text-v1.5-Q"
     dimensions: int = 768
+    # ONNX intra-op threads for single-query embedding. Oversubscription on
+    # many-core hosts hurts small-batch latency (measured 5.9ms -> 4.5ms at
+    # 8 threads on a 20-core GB10). 0 = onnxruntime default.
+    threads: int = 8
 
 
 @dataclass
@@ -177,6 +181,11 @@ class LLMNerConfig:
 
 
 @dataclass
+class EnrichmentConfig:
+    enabled: bool = True  # Master switch for background enrichment dispatch
+
+
+@dataclass
 class ExtractionConfig:
     max_facts: int = 5
     min_importance: int = 3
@@ -188,6 +197,22 @@ class RetrievalConfig:
     similarity_threshold: float = 0.25
     entity_boost: float = 2.5
     max_graph_depth: int = 2
+    # Cross-encoder rerank policy: the reranker is the dominant read-path
+    # cost (ONNX on CPU), so its work is bounded. Tuned on the CTI suite
+    # (2026-06-09 grid): accuracy holds at 75% from 512c-50n down to
+    # 128c-8n while p50 drops 91ms -> 42ms; 256c-8n picked for headroom.
+    rerank_enabled: bool = True
+    rerank_max_candidates: int = 8
+    rerank_doc_chars: int = 256
+    rerank_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
+    # Query entities mapped to more than this many notes carry no retrieval
+    # signal (conversational speaker names appear in every session); they
+    # are skipped by the graph/entity-augmentation stages.
+    entity_max_fanout: int = 25
+    # ONNX intra-op threads for the cross-encoder. Small rerank batches
+    # thrash when onnxruntime grabs every core (measured 23.7ms -> 11.5ms
+    # at 8 threads on a 20-core GB10). 0 = onnxruntime default.
+    rerank_threads: int = 8
 
 
 @dataclass
@@ -337,6 +362,7 @@ class ZettelForgeConfig:
     embedding: EmbeddingConfig = field(default_factory=EmbeddingConfig)
     llm: LLMConfig = field(default_factory=LLMConfig)
     llm_ner: LLMNerConfig = field(default_factory=LLMNerConfig)
+    enrichment: EnrichmentConfig = field(default_factory=EnrichmentConfig)
     extraction: ExtractionConfig = field(default_factory=ExtractionConfig)
     retrieval: RetrievalConfig = field(default_factory=RetrievalConfig)
     synthesis: SynthesisConfig = field(default_factory=SynthesisConfig)
@@ -455,6 +481,11 @@ def _apply_yaml(cfg: ZettelForgeConfig, data: dict):
         for k, v in data["llm_ner"].items():
             if hasattr(cfg.llm_ner, k):
                 setattr(cfg.llm_ner, k, v)
+
+    if "enrichment" in data and isinstance(data["enrichment"], dict):
+        for k, v in data["enrichment"].items():
+            if hasattr(cfg.enrichment, k):
+                setattr(cfg.enrichment, k, v)
 
     if "extraction" in data and isinstance(data["extraction"], dict):
         for k, v in data["extraction"].items():
@@ -610,6 +641,14 @@ def _apply_env(cfg: ZettelForgeConfig):
     # LLM NER
     if v := os.environ.get("ZETTELFORGE_LLM_NER_ENABLED"):
         cfg.llm_ner.enabled = v.lower() in ("true", "1", "yes")
+
+    # Background enrichment master switch (benchmarks, offline ingestion)
+    if v := os.environ.get("ZETTELFORGE_ENRICHMENT_ENABLED"):
+        cfg.enrichment.enabled = v.lower() in ("true", "1", "yes")
+
+    # Cross-encoder rerank kill switch
+    if v := os.environ.get("ZETTELFORGE_RERANK_ENABLED"):
+        cfg.retrieval.rerank_enabled = v.lower() in ("true", "1", "yes")
 
     # RFC-013: PII detection via Presidio
     if v := os.environ.get("ZETTELFORGE_PII_ENABLED"):

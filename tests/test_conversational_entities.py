@@ -224,3 +224,39 @@ class TestEntityIndexerConversational:
         results = idx.search_entities("paris")
         assert "location" in results
         assert "organization" in results
+
+
+class TestFreeTextPersonNotExtracted:
+    """Regression lock: persons come from 'Name:' dialogue lines only.
+
+    Free-text person extraction (capitalized tokens in running text) was
+    measured on 2026-06-09: it reshuffled supersession chains at ingest
+    and dropped LoCoMo overall accuracy from 11% to 5% with no
+    single-hop/multi-hop gain. Reverted; revisit via the RFC-001 LLM NER
+    path where extraction precision is high enough to gate on.
+    """
+
+    def test_free_text_words_not_persons(self):
+        ext = EntityExtractor()
+        result = ext.extract_regex("I went hiking with Caroline and her dog.")
+        assert "caroline" not in result["person"]
+
+    def test_proper_noun_phrases_not_persons(self):
+        ext = EntityExtractor()
+        result = ext.extract_regex(
+            "APT28 used Cobalt Strike against New York targets."
+        )
+        assert result["person"] == []
+
+    def test_dialogue_names_still_extracted(self):
+        ext = EntityExtractor()
+        result = ext.extract_regex("Melanie: I started a painting class!")
+        assert "melanie" in result["person"]
+
+    def test_demonyms_and_vendors_not_persons(self):
+        ext = EntityExtractor()
+        result = ext.extract_regex(
+            "Russian: a language note.\nMicrosoft: a vendor note."
+        )
+        assert "russian" not in result["person"]
+        assert "microsoft" not in result["person"]

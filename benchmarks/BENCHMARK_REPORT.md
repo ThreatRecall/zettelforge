@@ -28,6 +28,79 @@ ZettelForge was evaluated across five benchmark suites. The system runs with zer
 
 ---
 
+## 0. Performance session 2026-06-09 (v2.8.0-dev, branch perf/cti-memory-40)
+
+All numbers below are same-machine (DGX Spark GB10), same-day, deterministic
+config: enrichment disabled (`ZETTELFORGE_ENRICHMENT_ENABLED=false`), keyword
+judge, heuristic answer extraction (no synthesis LLM installed). The clean
+baseline was measured first on unmodified v2.7.0 source after repairing the
+rotted harnesses (dead `disable_enrichment` kwarg, removed `remember_chunked`
+API). Raw logs: `benchmarks/results/session_2026-06-09/`.
+
+| Metric | v2.7.0 baseline | optimized | delta |
+|--------|-----------------|-----------|-------|
+| LoCoMo accuracy (keyword judge) | 7.0% | 11.0% | +57% relative |
+| LoCoMo p50 / p95 latency | 336ms / 387ms | 170ms / 193ms | -49% / -50% |
+| LoCoMo ingest (272 sessions) | 262.5s (1.0/s) | 33.8s (8.0/s) | 7.8x |
+| CTI retrieval accuracy | 75.0% | 75.0% | held |
+| CTI p50 latency (idle machine) | 79ms | 39ms | -51% |
+| recall p95 (profiled, 60 calls) | 258ms | 93ms | -64% |
+| recall mean (profiled) | 117.6ms | 54.8ms | -53% |
+
+Note on LoCoMo baselines: the published 22% (v2.1.1) used a local synthesis
+LLM (qwen2.5:3b) that is not installed on this host; both columns above use
+the same deterministic heuristic-extraction path, so the comparison is
+apples to apples. Latency includes harness overhead (keyword boost scan and
+synthesis fallback), not just `recall()`.
+
+### What changed
+
+1. **Scoped knowledge graph reads.** `_recall_inner` traversed the
+   process-global JSONL KG (109MB on this host, mixing every store) while
+   writes went to the per-store SQLite KG. Isolated stores saw up to ~2000
+   phantom note IDs per entity query and never saw their own graph. Recall
+   now reads the store's KG via `StoreGraphSource`.
+2. **MemSAD gate vectorized.** The write-time anomaly gate was 93% of
+   remember() latency at 50 references (~1.1s/ingest): O(n^2) pure-Python
+   cosines plus n^2 n-gram recounts per ingest. numpy pairwise scoring,
+   content-hash counter cache, and a bounded reference fetch
+   (`get_recent_notes_by_domain`) brought warm evaluate() to ~3.4ms with
+   scores pinned to the original math at 1e-9 by characterization tests.
+3. **Rerank policy.** Cross-encoder rerank is the dominant read cost and is
+   worth +15pp CTI accuracy (75% vs 60% without it). Grid-tuned bounds:
+   8 candidates, 256 chars/doc (accuracy holds from 50x512 down to 8x128;
+   collapses below 8 candidates). `rerank_model` is configurable; the
+   model grid kept ms-marco-MiniLM-L-6-v2.
+4. **ONNX thread pinning.** 20-core default oversubscribed small batches:
+   8 threads cut rerank 23.7ms to 11.5ms and query embedding 5.9ms to 4.5ms.
+5. **Embedding LRU cache** keyed by (model, sha256(text)) — first
+   integration of the dormant cache.py.
+6. **Entity fan-out gate.** Query entities whose KG out-degree exceeds
+   `retrieval.entity_max_fanout` (default 25) are skipped by graph and
+   entity-augmentation stages (conversational speaker names map to every
+   session and flood blended recall).
+7. **Enrichment off-switch** (`ZETTELFORGE_ENRICHMENT_ENABLED`) restoring
+   deterministic benchmark ingestion; `remember_chunked()` restored.
+
+### Chunked-ingestion configuration (recorded, not default)
+
+`LOCOMO_CHUNK_SIZE=800` stores each session as ~800-char chunks
+(MemPalace granularity, no 4000-char truncation): 13.0% accuracy at
+p50 347ms / p95 418ms on a ~1400-note store. Compared to the v2.7.0
+baseline at effectively the same latency (336ms), that is +86%
+relative accuracy; compared to the default optimized config it trades
+2x latency for +2pp. Default stays full-session (11.0% at 170ms).
+
+### Negative result (recorded)
+
+Free-text person extraction (capitalized tokens in running text) dropped
+LoCoMo from 11% to 5% by reshuffling supersession chains at ingest, with no
+single-hop or multi-hop gain. Reverted same day; regression-locked in
+`tests/test_conversational_entities.py`. Conversational NER should come via
+the RFC-001 LLM path, not regex.
+
+---
+
 ## 1. CTI Retrieval Benchmark (Domain Benchmark)
 
 **Date:** 2026-04-10 | **Corpus:** 8 real-world-style CTI reports | **Queries:** 20

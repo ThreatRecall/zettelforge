@@ -70,6 +70,7 @@ merge_into_global_ontology()
 # the collector modules under it, and each module calls
 # ``TRANSFORM_REGISTRY.register(...)`` at import time.
 from zettelforge.osint.collectors import breach as _breach  # noqa: F401
+from zettelforge.osint.collectors import financial as _financial  # noqa: F401
 from zettelforge.osint.collectors import infrastructure as _infrastructure  # noqa: F401
 from zettelforge.osint.collectors import people as _people  # noqa: F401
 from zettelforge.osint.collectors import social as _social  # noqa: F401

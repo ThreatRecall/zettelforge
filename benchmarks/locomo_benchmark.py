@@ -32,6 +32,10 @@ from pathlib import Path
 from typing import List, Dict, Optional, Tuple
 from datetime import datetime
 
+# Must be set before any zettelforge import resolves the config singleton:
+# benchmark ingestion is deterministic, no background LLM enrichment.
+os.environ.setdefault("ZETTELFORGE_ENRICHMENT_ENABLED", "false")
+
 from zettelforge import MemoryManager
 
 
@@ -127,18 +131,44 @@ def ingest_conversations(mm: MemoryManager, turns: List[Dict], batch_sessions: b
                 sessions[key] = {"date": turn["date"], "lines": [], "sample_id": turn["sample_id"], "session": turn["session"]}
             sessions[key]["lines"].append(f"{turn['speaker']}: {turn['text']}")
 
+        # LOCOMO_CHUNK_SIZE > 0 stores each session as ~chunk-size pieces
+        # (MemPalace-style granularity) with the [date] header repeated per
+        # chunk, and avoids the 4000-char truncation that drops session tails.
+        chunk_size = int(os.environ.get("LOCOMO_CHUNK_SIZE", "0"))
+
         for key, session in sessions.items():
-            content = f"[{session['date']}] Conversation session {session['session']}:\n" + "\n".join(session["lines"])
-            # Truncate very long sessions to avoid overwhelming the embedding
-            if len(content) > 4000:
-                content = content[:4000]
+            header = f"[{session['date']}] Conversation session {session['session']}:"
+            source_ref = f"locomo:{session['sample_id']}:session_{session['session']}"
+            if chunk_size > 0:
+                pieces: List[str] = []
+                current: List[str] = []
+                current_len = 0
+                for line in session["lines"]:
+                    if current and current_len + len(line) + 1 > chunk_size:
+                        pieces.append("\n".join(current))
+                        current = []
+                        current_len = 0
+                    current.append(line)
+                    current_len += len(line) + 1
+                if current:
+                    pieces.append("\n".join(current))
+                contents = [f"{header}\n{piece}" for piece in pieces]
+            else:
+                content = f"{header}\n" + "\n".join(session["lines"])
+                # Truncate very long sessions to avoid overwhelming the embedding
+                if len(content) > 4000:
+                    content = content[:4000]
+                contents = [content]
+
             try:
-                mm.remember(
-                    content=content,
-                    source_type="dialogue",
-                    source_ref=f"locomo:{session['sample_id']}:session_{session['session']}",
-                    domain="locomo",
-                )
+                for i, content in enumerate(contents):
+                    ref = source_ref if len(contents) == 1 else f"{source_ref}#c{i}"
+                    mm.remember(
+                        content=content,
+                        source_type="dialogue",
+                        source_ref=ref,
+                        domain="locomo",
+                    )
                 ingested += 1
             except RuntimeError as e:
                 errors += 1
@@ -443,7 +473,6 @@ def run_benchmark(
     mm = MemoryManager(
         jsonl_path=f"{tmpdir}/notes.jsonl",
         lance_path=f"{tmpdir}/vectordb",
-        disable_enrichment=True,
     )
 
     # Ingest
