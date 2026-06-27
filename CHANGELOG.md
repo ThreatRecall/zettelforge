@@ -6,6 +6,11 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- RFC-018 Phase 0 enrichment job ledger foundation with SQLite job metadata, MemoryManager queue-state recording, and regression tests. (#171)
+- RFC-018 specifying the next ThreatRecall ingestion, enrichment, parser-safety, metadata-policy, operator-health, and build/push release-train improvements based on the latest recall hardening fixes. (#171)
+
 ## [2.8.0] - 2026-06-26
 
 Feature release. Extends the RFC-016 OSINT layer with passive ingest and

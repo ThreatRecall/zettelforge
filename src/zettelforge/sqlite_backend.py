@@ -16,10 +16,11 @@ import threading
 import uuid
 from collections import defaultdict, deque
 from collections.abc import Iterator
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from zettelforge.enrichment_ledger import EnrichmentJobRecord
 from zettelforge.note_schema import (
     Content,
     Embedding,
@@ -118,6 +119,26 @@ CREATE TABLE IF NOT EXISTS entity_index (
 CREATE INDEX IF NOT EXISTS idx_entity_lookup
     ON entity_index(entity_type, entity_value);
 CREATE INDEX IF NOT EXISTS idx_entity_note ON entity_index(note_id);
+
+CREATE TABLE IF NOT EXISTS enrichment_jobs (
+    job_id TEXT PRIMARY KEY,
+    note_id TEXT NOT NULL,
+    job_type TEXT NOT NULL,
+    state TEXT NOT NULL,
+    attempt_count INTEGER DEFAULT 0,
+    last_error_code TEXT DEFAULT '',
+    created_at TEXT NOT NULL,
+    started_at TEXT,
+    finished_at TEXT,
+    domain TEXT DEFAULT '',
+    content_len INTEGER DEFAULT 0
+);
+CREATE INDEX IF NOT EXISTS idx_enrichment_jobs_state
+    ON enrichment_jobs(state);
+CREATE INDEX IF NOT EXISTS idx_enrichment_jobs_note
+    ON enrichment_jobs(note_id);
+CREATE INDEX IF NOT EXISTS idx_enrichment_jobs_created
+    ON enrichment_jobs(created_at);
 """
 
 
@@ -462,6 +483,125 @@ class SQLiteBackend(StorageBackend):
                 (now, note_id),
             )
             self._conn.commit()
+
+    # ── Enrichment Job Ledger ────────────────────────────────────────────
+
+    def create_enrichment_job(self, record: EnrichmentJobRecord) -> None:
+        """Persist a queued deferred-enrichment job record.
+
+        The ledger stores bounded metadata only.  Job payloads remain in the
+        in-process queue for this RFC-018 foundation slice.
+        """
+        with self._write_lock:
+            self._check_open()
+            self._conn.execute(
+                """
+                INSERT INTO enrichment_jobs
+                (job_id, note_id, job_type, state, attempt_count, last_error_code,
+                 created_at, started_at, finished_at, domain, content_len)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(job_id) DO NOTHING
+                """,
+                (
+                    record.job_id,
+                    record.note_id,
+                    record.job_type,
+                    record.state,
+                    record.attempt_count,
+                    record.last_error_code,
+                    record.created_at,
+                    record.started_at,
+                    record.finished_at,
+                    record.domain,
+                    record.content_len,
+                ),
+            )
+            self._conn.commit()
+
+    def mark_enrichment_job_running(self, job_id: str) -> None:
+        """Mark a job as running and increment its attempt count if present."""
+        now = datetime.now(timezone.utc).isoformat()
+        with self._write_lock:
+            self._check_open()
+            self._conn.execute(
+                """
+                UPDATE enrichment_jobs
+                SET state = 'running', started_at = COALESCE(started_at, ?),
+                    attempt_count = attempt_count + 1
+                WHERE job_id = ?
+                """,
+                (now, job_id),
+            )
+            self._conn.commit()
+
+    def mark_enrichment_job_terminal(
+        self,
+        job_id: str,
+        state: str,
+        *,
+        error_code: str = "",
+    ) -> None:
+        """Mark a job terminal if present.
+
+        ``state`` is intentionally accepted as a string to keep callers simple;
+        the SQL layer constrains no enum so old databases remain migration-free.
+        """
+        if state not in {"succeeded", "failed", "dead_lettered", "cancelled"}:
+            raise ValueError(f"Invalid terminal enrichment job state: {state}")
+        now = datetime.now(timezone.utc).isoformat()
+        with self._write_lock:
+            self._check_open()
+            self._conn.execute(
+                """
+                UPDATE enrichment_jobs
+                SET state = ?, finished_at = ?, last_error_code = ?
+                WHERE job_id = ?
+                """,
+                (state, now, error_code, job_id),
+            )
+            self._conn.commit()
+
+    def list_enrichment_jobs(
+        self,
+        *,
+        state: str | None = None,
+        limit: int = 100,
+    ) -> list[dict[str, Any]]:
+        """Return recent enrichment job metadata, newest first."""
+        safe_limit = max(1, min(int(limit), 1000))
+        with self._write_lock:
+            self._check_open()
+            if state is None:
+                cur = self._conn.execute(
+                    """
+                    SELECT * FROM enrichment_jobs
+                    ORDER BY created_at DESC
+                    LIMIT ?
+                    """,
+                    (safe_limit,),
+                )
+            else:
+                cur = self._conn.execute(
+                    """
+                    SELECT * FROM enrichment_jobs
+                    WHERE state = ?
+                    ORDER BY created_at DESC
+                    LIMIT ?
+                    """,
+                    (state, safe_limit),
+                )
+            rows = cur.fetchall()
+        return [dict(row) for row in rows]
+
+    def count_enrichment_jobs_by_state(self) -> dict[str, int]:
+        """Return ledger counts grouped by state."""
+        with self._write_lock:
+            self._check_open()
+            cur = self._conn.execute(
+                "SELECT state, COUNT(*) AS count FROM enrichment_jobs GROUP BY state"
+            )
+            rows = cur.fetchall()
+        return {row["state"]: int(row["count"]) for row in rows}
 
     # ── Vector Index Sync ───────────────────────────────────────────────
 
