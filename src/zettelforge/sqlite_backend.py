@@ -496,10 +496,11 @@ class SQLiteBackend(StorageBackend):
             self._check_open()
             self._conn.execute(
                 """
-                INSERT OR REPLACE INTO enrichment_jobs
+                INSERT INTO enrichment_jobs
                 (job_id, note_id, job_type, state, attempt_count, last_error_code,
                  created_at, started_at, finished_at, domain, content_len)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(job_id) DO NOTHING
                 """,
                 (
                     record.job_id,
