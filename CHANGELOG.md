@@ -36,11 +36,11 @@ migration is required.
   The network collectors are an opt-in `[osint]` extra, key-gated and
   fail-closed, and are never auto-triggered by `remember()`. Known
   fast-follow robustness items are tracked in #176. (#167)
-- **RFC-018 Phase 0 enrichment job ledger** (#178). Durable SQLite
-  job-metadata foundation with `MemoryManager` queue-state recording and
-  regression tests, plus the RFC-018 spec for the next ingestion,
-  enrichment, parser-safety, metadata-policy, operator-health, and
-  release-train improvements.
+- **RFC-018 Phase 0 enrichment job ledger.** Durable SQLite job-metadata
+  foundation with `MemoryManager` queue-state recording and regression
+  tests, plus the RFC-018 spec for the next ingestion, enrichment,
+  parser-safety, metadata-policy, operator-health, and release-train
+  improvements. (#178)
 - Configurable LLM generation budgets for causal extraction, synthesis,
   fact extraction, NER, and memory evolution, plus `reasoning_model` scaling
   floors and `<think>` / `<thinking>` JSON parse stripping. (#153)
