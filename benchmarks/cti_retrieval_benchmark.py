@@ -22,6 +22,8 @@ from datetime import datetime
 from typing import List, Dict, Tuple
 
 os.environ["ZETTELFORGE_BACKEND"] = "jsonl"
+# Deterministic ingestion: no background LLM enrichment during benchmarks.
+os.environ.setdefault("ZETTELFORGE_ENRICHMENT_ENABLED", "false")
 
 from zettelforge import MemoryManager
 

@@ -1,9 +1,15 @@
 """
-Holehe collector — Phase 2 stub (RFC-016 §5).
+Holehe collector — DISABLED for license compliance (AGE-118 / AGE-119).
 
-Enumerates the social-media accounts associated with an email address
-using the ``holehe`` library. Stub: returns ``[]`` when ``holehe`` is not
-importable. Phase 2 ships the live enumeration.
+``holehe`` (megadose) is GPL-3.0. Copying or importing it into MIT-licensed
+ZettelForge would force a copyleft relicense, so the AGE-118 supply-chain
+review marked it a hard exclusion (it is also abandoned, last release 2021).
+
+This collector is kept as a permanent no-op so the registry shape stays
+stable and so no future change re-adds a GPL import here. It NEVER imports
+``holehe`` and always returns ``[]``. Email -> account enumeration must be
+reimplemented from scratch on a permissive basis (e.g. maigret/sherlock on a
+derived username, or the native HIBP REST breach path), not via holehe.
 """
 
 from __future__ import annotations
@@ -19,28 +25,19 @@ _logger = get_logger("zettelforge.osint.collectors.holehe")
 
 
 def collect(input_entity_type: str, input_value: str) -> list[CollectorTuple]:
-    """Enumerate accounts tied to an EmailAddress via holehe. Stub: ``[]``."""
-    if input_entity_type != "EmailAddress":
-        return []
-    try:
-        import holehe  # noqa: F401  — Phase 2 will use this
-    except ImportError:
-        _logger.debug("holehe_collector_missing_holehe")
-        return []
-    # Phase 2: real holehe enumeration goes here. For now: fail closed.
+    """Disabled per AGE-118 (holehe is GPL-3.0). Always returns ``[]``."""
+    if input_entity_type == "EmailAddress":
+        _logger.debug("holehe_collector_disabled_gpl", reason="AGE-118 GPL exclusion")
     return []
 
 
 _METADATA = TransformMetadata(
     name="holehe_collector",
-    description="Holehe: enumerate social-media accounts tied to an email address.",
+    description="DISABLED (GPL-3.0 exclusion, AGE-118): holehe is not used.",
     input_types=("EmailAddress",),
-    output_types=(
-        ("Alias", "has_handle"),
-        ("NamechkResult", "verified_on"),
-    ),
-    api_dependencies=("holehe",),
-    rate_limit=2.0,
+    output_types=(),
+    api_dependencies=(),
+    rate_limit=None,
 )
 
 

@@ -298,6 +298,12 @@ retrieval:
   similarity_threshold: 0.25
   entity_boost: 2.5
   max_graph_depth: 2
+  # Cross-encoder rerank policy (tuned 2026-06-09, CTI suite): accuracy
+  # holds while bounding the dominant read-path cost. Env kill switch:
+  # ZETTELFORGE_RERANK_ENABLED=false
+  rerank_enabled: true
+  rerank_max_candidates: 8
+  rerank_doc_chars: 256
 
 
 # ── Synthesis ───────────────────────────────────────────────────────────────

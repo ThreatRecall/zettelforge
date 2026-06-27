@@ -16,7 +16,7 @@ import threading
 import uuid
 from collections import defaultdict, deque
 from collections.abc import Iterator
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -445,6 +445,16 @@ class SQLiteBackend(StorageBackend):
             rows = cur.fetchall()
         return [_row_to_note(r) for r in rows]
 
+    def get_recent_notes_by_domain(self, domain: str, limit: int) -> list[MemoryNote]:
+        with self._write_lock:
+            self._check_open()
+            cur = self._conn.execute(
+                "SELECT * FROM notes WHERE domain = ? ORDER BY created_at DESC LIMIT ?",
+                (domain, limit),
+            )
+            rows = cur.fetchall()
+        return [_row_to_note(r) for r in rows]
+
     def count_notes(self) -> int:
         with self._write_lock:
             self._check_open()
@@ -509,7 +519,7 @@ class SQLiteBackend(StorageBackend):
 
     def mark_enrichment_job_running(self, job_id: str) -> None:
         """Mark a job as running and increment its attempt count if present."""
-        now = datetime.now(UTC).isoformat()
+        now = datetime.now(timezone.utc).isoformat()
         with self._write_lock:
             self._check_open()
             self._conn.execute(
@@ -537,7 +547,7 @@ class SQLiteBackend(StorageBackend):
         """
         if state not in {"succeeded", "failed", "dead_lettered", "cancelled"}:
             raise ValueError(f"Invalid terminal enrichment job state: {state}")
-        now = datetime.now(UTC).isoformat()
+        now = datetime.now(timezone.utc).isoformat()
         with self._write_lock:
             self._check_open()
             self._conn.execute(
@@ -729,6 +739,29 @@ class SQLiteBackend(StorageBackend):
             )
             self._conn.commit()
         return edge_id
+
+    def get_kg_edges_from(self, node_id: str) -> list[dict]:
+        """Outgoing KG edges from a node (scoped graph traversal read path)."""
+        with self._write_lock:
+            self._check_open()
+            cur = self._conn.execute(
+                "SELECT edge_id, from_node_id, to_node_id, relationship, edge_type, "
+                "note_id, properties FROM kg_edges WHERE from_node_id = ?",
+                (node_id,),
+            )
+            rows = cur.fetchall()
+        return [
+            {
+                "edge_id": row["edge_id"],
+                "from_node_id": row["from_node_id"],
+                "to_node_id": row["to_node_id"],
+                "relationship": row["relationship"],
+                "edge_type": row["edge_type"],
+                "note_id": row["note_id"],
+                "properties": json.loads(row["properties"] or "{}"),
+            }
+            for row in rows
+        ]
 
     def get_kg_neighbors(
         self,

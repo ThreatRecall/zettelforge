@@ -10,11 +10,13 @@ APIs are wired up.
 from zettelforge.osint.collectors.people import (
     holehe_collector,
     hunter_collector,
+    maigret_collector,
     namechk_collector,
 )
 
 __all__ = [
     "holehe_collector",
     "hunter_collector",
+    "maigret_collector",
     "namechk_collector",
 ]

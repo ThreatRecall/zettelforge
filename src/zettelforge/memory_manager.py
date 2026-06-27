@@ -11,6 +11,7 @@ With zettelforge-enterprise: TypeDB backend, deeper traversal, extended synthesi
 import atexit
 import concurrent.futures
 import queue
+import re
 import threading
 import time
 import uuid
@@ -50,21 +51,37 @@ from zettelforge.telemetry import get_telemetry
 from zettelforge.vector_memory import preload_embedding_model
 from zettelforge.vector_retriever import VectorRetriever
 
-# ── Reranker singleton ───────────────────────────────────────────────────────
-_reranker = None
+# ── Reranker singletons (one per configured model) ──────────────────────────
+_rerankers: dict[str, object] = {}
 _reranker_lock = threading.Lock()
 
 
+def _has_valid_memory_defense_vector(note: Any) -> bool:
+    embedding = getattr(note, "embedding", None)
+    vector = getattr(embedding, "vector", None)
+    if not isinstance(vector, list) or not vector:
+        return False
+    try:
+        return any(float(value) != 0.0 for value in vector)
+    except (TypeError, ValueError):
+        return False
+
+
 def _get_reranker():
-    """Get or create cross-encoder reranker (singleton, ~80MB, loads once)."""
-    global _reranker
-    if _reranker is None:
+    """Get or create the configured cross-encoder reranker (loads once per model)."""
+    retrieval_cfg = get_config().retrieval
+    model = retrieval_cfg.rerank_model
+    reranker = _rerankers.get(model)
+    if reranker is None:
         with _reranker_lock:
-            if _reranker is None:
+            reranker = _rerankers.get(model)
+            if reranker is None:
                 from fastembed.rerank.cross_encoder import TextCrossEncoder
 
-                _reranker = TextCrossEncoder("Xenova/ms-marco-MiniLM-L-6-v2")
-    return _reranker
+                threads = retrieval_cfg.rerank_threads or None
+                reranker = TextCrossEncoder(model, threads=threads)
+                _rerankers[model] = reranker
+    return reranker
 
 
 @dataclass
@@ -297,7 +314,15 @@ class MemoryManager:
 
         _p = time.perf_counter()
         try:
-            reference_notes = self.store.get_notes_by_domain(domain)
+            # Bounded reference window with sparse-vector backfill: the gate
+            # keeps max_reference_notes valid-vector notes, so start bounded
+            # and grow only when invalid recent notes would underfill it.
+            _defense_cfg = get_config().governance.memory_defense
+            reference_notes = self._memory_defense_reference_notes(
+                domain,
+                max_reference_notes=_defense_cfg.max_reference_notes,
+                min_calibration_notes=_defense_cfg.min_calibration_notes,
+            )
             self.memory_defense.enforce(
                 note,
                 reference_notes,
@@ -405,45 +430,52 @@ class MemoryManager:
         # overhead only. In sync=True mode the LLM work runs inline and is intentionally
         # EXCLUDED from this bucket — mixing LLM latency into "dispatch" would corrupt
         # the Phase 0.5 attribution. sync=True is retained for tests/debug.
+        # The whole block is gated by config.enrichment.enabled
+        # (ZETTELFORGE_ENRICHMENT_ENABLED) so benchmarks and offline ingestion
+        # get deterministic writes with no LLM dispatch.
         dispatch_start = time.perf_counter() if not sync else None
-        job = _EnrichmentJob(
-            note_id=note.id,
-            domain=domain,
-            content_len=len(content),
-            resolved_entities=resolved_entities,
-        )
-        if sync:
-            self._run_enrichment(job)
-        else:
-            self._enqueue_enrichment_job(job, queue_full_event="enrichment_queue_full")
-
-        # Phase 6c: LLM NER enrichment (always-on, background — RFC-001 amendment)
-        if get_config().llm_ner.enabled:
-            ner_job = _EnrichmentJob(
+        if get_config().enrichment.enabled:
+            job = _EnrichmentJob(
                 note_id=note.id,
                 domain=domain,
                 content_len=len(content),
                 resolved_entities=resolved_entities,
-                job_type="llm_ner",
             )
             if sync:
-                self._run_llm_ner(ner_job)
+                self._run_enrichment(job)
             else:
-                self._enqueue_enrichment_job(ner_job, queue_full_event="llm_ner_queue_full")
+                self._enqueue_enrichment_job(job, queue_full_event="enrichment_queue_full")
 
-        # Phase 6d: Neighbor evolution (A-Mem inspired — background worker)
-        # Skip if fewer than 3 notes exist — not enough neighbors to evolve against
-        if self.store.count_notes() >= 3:
-            evolution_job = _EnrichmentJob(
-                note_id=note.id,
-                domain=domain,
-                content_len=len(content),
-                job_type="neighbor_evolution",
-            )
-            if sync:
-                self._run_evolution(evolution_job)
-            else:
-                self._enqueue_enrichment_job(evolution_job, queue_full_event="evolution_queue_full")
+            # Phase 6c: LLM NER enrichment (always-on, background — RFC-001 amendment)
+            if get_config().llm_ner.enabled:
+                ner_job = _EnrichmentJob(
+                    note_id=note.id,
+                    domain=domain,
+                    content_len=len(content),
+                    resolved_entities=resolved_entities,
+                    job_type="llm_ner",
+                )
+                if sync:
+                    self._run_llm_ner(ner_job)
+                else:
+                    self._enqueue_enrichment_job(ner_job, queue_full_event="llm_ner_queue_full")
+
+            # Phase 6d: Neighbor evolution (A-Mem inspired — background worker)
+            # Skip if fewer than 3 notes exist — not enough neighbors to evolve against
+            if self.store.count_notes() >= 3:
+                evolution_job = _EnrichmentJob(
+                    note_id=note.id,
+                    domain=domain,
+                    content_len=len(content),
+                    job_type="neighbor_evolution",
+                )
+                if sync:
+                    self._run_evolution(evolution_job)
+                else:
+                    self._enqueue_enrichment_job(
+                        evolution_job,
+                        queue_full_event="evolution_queue_full",
+                    )
         if dispatch_start is not None:
             phase_timings_ms["enrichment_dispatch"] = (time.perf_counter() - dispatch_start) * 1000
 
@@ -459,6 +491,69 @@ class MemoryManager:
             phase_timings_ms={k: round(v, 2) for k, v in phase_timings_ms.items()},
         )
         return note, "created"
+
+    def remember_chunked(
+        self,
+        content: str,
+        source_type: str = "conversation",
+        source_ref: str = "",
+        domain: str = "general",
+        chunk_size: int = 800,
+        sync: bool = False,
+    ) -> list[MemoryNote]:
+        """
+        Split long content on sentence boundaries and store each chunk as its
+        own note via remember().
+
+        Smaller chunks give retrieval finer granularity on long conversational
+        sessions (MemPalace-style 800-char chunks). Content at or under
+        chunk_size is stored as a single note. Chunked notes carry an ordinal
+        source_ref suffix ("{source_ref}#c{i}") so provenance survives the
+        split.
+
+        Args:
+            content: Raw text to store.
+            source_type: Origin type (conversation, threat_report, etc.).
+            source_ref: Source identifier; chunks get "#c{i}" appended.
+            domain: Memory domain (cti, general, etc.).
+            chunk_size: Greedy sentence-packing target in characters. A single
+                sentence longer than chunk_size becomes its own chunk.
+            sync: Passed through to remember().
+
+        Returns: list of stored MemoryNote, in document order.
+        """
+        text = content.strip()
+        if len(text) <= chunk_size:
+            note, _ = self.remember(
+                text, source_type=source_type, source_ref=source_ref, domain=domain, sync=sync
+            )
+            return [note]
+
+        sentences = re.split(r"(?<=[.!?])\s+", text)
+        chunks: list[str] = []
+        current: list[str] = []
+        current_len = 0
+        for sentence in sentences:
+            if current and current_len + len(sentence) + 1 > chunk_size:
+                chunks.append(" ".join(current))
+                current = []
+                current_len = 0
+            current.append(sentence)
+            current_len += len(sentence) + 1
+        if current:
+            chunks.append(" ".join(current))
+
+        notes: list[MemoryNote] = []
+        for i, chunk in enumerate(chunks):
+            note, _ = self.remember(
+                chunk,
+                source_type=source_type,
+                source_ref=f"{source_ref}#c{i}",
+                domain=domain,
+                sync=sync,
+            )
+            notes.append(note)
+        return notes
 
     def remember_with_extraction(
         self,
@@ -688,6 +783,9 @@ class MemoryManager:
         resolved = {}
         for etype, elist in query_entities.items():
             resolved[etype] = [self.resolver.resolve(etype, e) for e in elist]
+        # High-fanout entities (speaker names in every session) flood the
+        # graph and entity-augmentation stages with undiscriminative notes.
+        resolved = self._filter_low_signal_entities(resolved)
 
         # Vector retrieval (Community + Enterprise).
         # Request (note, score) tuples — BlendedRetriever's _normalize_scores
@@ -730,13 +828,15 @@ class MemoryManager:
                             rest.append((note, score))
                     vector_scored = boosted + rest
 
-        # Blended retrieval: combine vector similarity with graph traversal
+        # Blended retrieval: combine vector similarity with graph traversal.
+        # The graph stage reads the per-store KG (same graph the write path
+        # populates), not the process-global JSONL KG: the global graph mixes
+        # every store on the machine, so traversing it from an isolated store
+        # returns phantom note IDs and unbounded BFS cost.
         from zettelforge.blended_retriever import BlendedRetriever
-        from zettelforge.graph_retriever import GraphRetriever
-        from zettelforge.knowledge_graph import get_knowledge_graph
+        from zettelforge.graph_retriever import GraphRetriever, StoreGraphSource
 
-        kg = get_knowledge_graph()
-        graph_retriever = GraphRetriever(kg)
+        graph_retriever = GraphRetriever(StoreGraphSource(self.store))
         _graph_start = time.perf_counter()
         graph_results = graph_retriever.retrieve_note_ids(query_entities=resolved, max_depth=2)
         _graph_latency_ms = (time.perf_counter() - _graph_start) * 1000
@@ -799,23 +899,28 @@ class MemoryManager:
                             results.append(en)
                             result_ids.add(en.id)
 
-        # ── Enterprise: Cross-encoder reranking ─────────────────────────────
-        if len(results) > 1:
+        # ── Cross-encoder reranking (policy-bounded) ────────────────────────
+        # The reranker is the dominant read-path cost. Only the head of the
+        # blended ranking is reranked; the tail keeps its blended order.
+        retrieval_cfg = get_config().retrieval
+        if retrieval_cfg.rerank_enabled and len(results) > 1:
             try:
-                reranker = _get_reranker()  # Returns None in Community
+                reranker = _get_reranker()
                 if reranker is not None:
-                    docs = [n.content.raw[:512] for n in results]
+                    head = results[: retrieval_cfg.rerank_max_candidates]
+                    tail = results[len(head) :]
+                    docs = [n.content.raw[: retrieval_cfg.rerank_doc_chars] for n in head]
                     scores = list(reranker.rerank(query, docs))
-                    # B905: strict=True — scores and results have identical
+                    # B905: strict=True — scores and docs have identical
                     # length by construction (one score per doc), so a length
                     # mismatch would be a programming error, not a silent
                     # truncation bug.
                     paired = sorted(
-                        zip(scores, results, strict=True),
+                        zip(scores, head, strict=True),
                         key=lambda x: x[0],
                         reverse=True,
                     )
-                    results = [note for _, note in paired]
+                    results = [note for _, note in paired] + tail
             except Exception:
                 self._logger.warning("reranking_failed_using_original_order", exc_info=True)
 
@@ -869,6 +974,71 @@ class MemoryManager:
             telemetry_caller=caller,
         )
         return results
+
+    def _filter_low_signal_entities(
+        self, resolved: dict[str, list[str]], max_fanout: int | None = None
+    ) -> dict[str, list[str]]:
+        """Drop query entities whose note fan-out exceeds max_fanout.
+
+        An entity mapped to a large share of the corpus (a conversational
+        speaker name, for example) ranks nothing: traversing it floods the
+        blended ranking with undiscriminative notes and displaces vector
+        hits. IDF-style gate; threshold from retrieval.entity_max_fanout.
+        """
+        limit = max_fanout if max_fanout is not None else get_config().retrieval.entity_max_fanout
+        if limit <= 0:
+            return resolved
+        filtered: dict[str, list[str]] = {}
+        for etype, values in resolved.items():
+            kept = []
+            for value in values:
+                if not value:
+                    continue
+                # Fan-out where flooding actually happens: note references.
+                # Other graph facts, including OSINT enrichment edges, should
+                # not make a discriminative entity look corpus-wide.
+                node = self.store.get_kg_node(etype, value)
+                fanout = self._note_fanout(node["node_id"]) if node else 0
+                if fanout <= limit:
+                    kept.append(value)
+            filtered[etype] = kept
+        return filtered
+
+    def _memory_defense_reference_notes(
+        self,
+        domain: str,
+        *,
+        max_reference_notes: int,
+        min_calibration_notes: int,
+    ) -> list[MemoryNote]:
+        """Fetch a bounded recent window, widening only to fill valid refs."""
+        max_refs = max(0, int(max_reference_notes))
+        min_refs = max(0, int(min_calibration_notes))
+        fetch_limit = max(200, 4 * max_refs, 4 * min_refs)
+        max_fetch_limit = max(fetch_limit, 20 * max_refs, 20 * min_refs)
+        target_valid = max_refs
+
+        while True:
+            reference_notes = self.store.get_recent_notes_by_domain(domain, fetch_limit)
+            valid_count = sum(
+                1 for note in reference_notes if _has_valid_memory_defense_vector(note)
+            )
+            if valid_count >= target_valid:
+                return reference_notes
+            if len(reference_notes) < fetch_limit or fetch_limit >= max_fetch_limit:
+                return reference_notes
+            fetch_limit = min(fetch_limit * 2, max_fetch_limit)
+
+    def _note_fanout(self, node_id: str) -> int:
+        fanout = 0
+        for edge in self.store.get_kg_edges_from(node_id):
+            if edge.get("relationship") == "MENTIONED_IN":
+                fanout += 1
+                continue
+            target = self.store.get_kg_node_by_id(edge.get("to_node_id", ""))
+            if target and target.get("entity_type") == "note":
+                fanout += 1
+        return fanout
 
     def recall_entity(self, entity_type: str, entity_value: str, k: int = 5) -> list[MemoryNote]:
         """
