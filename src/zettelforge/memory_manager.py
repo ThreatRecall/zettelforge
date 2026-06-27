@@ -174,8 +174,12 @@ class MemoryManager:
             daemon=True,
         )
         self._enrichment_worker.start()
-        atexit.register(self._drain_enrichment_queue)
+        # atexit runs handlers in LIFO order, so register store.close
+        # first and the queue drain last: the drain must run while the
+        # store is still open, otherwise it hits BackendClosedError and
+        # leaves enrichment ledger rows non-terminal after a clean exit.
         atexit.register(self.store.close)
+        atexit.register(self._drain_enrichment_queue)
 
     def remember(
         self,

@@ -66,7 +66,19 @@ jobs:
         # invoke Maigret report generation. Accepted for AGE-120 because the
         # GOV-009 blocking threshold is HIGH/CRITICAL and the collector
         # lazy-imports/fails closed.
-        pip-audit --strict \
+        #
+        # --skip-editable: do not audit the editable local zettelforge
+        # install. It is the project itself, not a third-party dependency,
+        # and on a release-prep PR its version is bumped ahead of PyPI
+        # (e.g. 2.8.0 before publish), so pip-audit cannot resolve it.
+        #
+        # --strict is intentionally NOT used: it fails the run whenever a
+        # distribution can't be audited, which includes the editable
+        # package we deliberately skip ("distribution marked as editable").
+        # pip-audit still exits non-zero on any real reported vulnerability,
+        # so the "any reported vuln blocks" gate is preserved; every
+        # third-party dependency (and the runner's pip) is still audited.
+        pip-audit --skip-editable \
           --ignore-vuln=CVE-2026-3219 \
           --ignore-vuln=PYSEC-2026-196 \
           --ignore-vuln=CVE-2023-36464
