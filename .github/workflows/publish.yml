@@ -3,12 +3,21 @@ name: Publish to PyPI
 on:
   release:
     types: [published]
+  # Manual re-run path (e.g. after fixing a trusted-publisher config or a
+  # transient upload failure). Provide the existing git tag to publish.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing git tag to build and publish (e.g. v2.8.0)'
+        required: true
+        type: string
 
 jobs:
   publish:
     # Package-only releases (for example packages-v0.1.0) are not
-    # Python package releases and must not attempt a PyPI upload.
-    if: startsWith(github.event.release.tag_name, 'v')
+    # Python package releases and must not attempt a PyPI upload. Manual
+    # workflow_dispatch runs always proceed (the caller picks the tag).
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.release.tag_name, 'v')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -16,6 +25,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      with:
+        # release event: the published tag; manual run: the input tag.
+        ref: ${{ github.event.release.tag_name || inputs.tag }}
 
     - name: Set up Python
       uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
