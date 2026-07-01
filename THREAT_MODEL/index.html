@@ -1,0 +1,3256 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+      
+      
+        <meta name="author" content="Patrick Roland">
+      
+      
+        <link rel="canonical" href="https://docs.threatrecall.ai/THREAT_MODEL/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>ZettelForge Threat Model - ZettelForge Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/brand-tokens.css">
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+
+  
+  
+  <link rel="canonical" href="https://docs.threatrecall.ai/THREAT_MODEL/">
+  
+
+  
+  
+  
+  
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ZettelForge Documentation">
+  <meta property="og:title" content="ZettelForge Threat Model — ZettelForge Documentation">
+  <meta property="og:description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+  <meta property="og:url" content="https://docs.threatrecall.ai/THREAT_MODEL/">
+  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ZettelForge Threat Model — ZettelForge Documentation">
+  <meta name="twitter:description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta name="twitter:site" content="@Deuslogica">
+  <meta name="twitter:creator" content="@Deuslogica">
+
+  
+  
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#zettelforge-threat-model" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZettelForge Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ZettelForge Threat Model
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../tutorials/01-quickstart/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../how-to/build-extensions/" class="md-tabs__link">
+          
+  
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../explanation/architecture/" class="md-tabs__link">
+          
+  
+  
+  Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/architecture-deep-dive/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../brand/brandIdentity/" class="md-tabs__link">
+          
+  
+  
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../narrative/2026-04-16-the-memory-problem/" class="md-tabs__link">
+          
+  
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    ZettelForge Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/01-quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/02-first-cti-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First CTI Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/configure-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/configure-opencti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure OpenCTI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/configure-typedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure TypeDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest News Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/integrate-llm-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate LLM Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/integrate-with-crewai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with CrewAI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/integrate-with-langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with LangChain
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve Aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/passive-osint-enrichment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Passive OSINT Enrichment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run Temporal Query
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set Up MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/store-threat-actor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Store Threat Actor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/troubleshoot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Detection Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-Phase Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX in ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Budgets & Timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection Rules Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Indexer Concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG Edge Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/memory-manager-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Manager API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module Inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/stix-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/web-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/yara-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YARA Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../brand/brandIdentity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brand Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rfcs/RFC-001-conversational-entity-extractor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-001 Conversational Entity Extractor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rfcs/RFC-002-universal-llm-provider/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-002 Universal LLM Provider Interface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rfcs/RFC-003-read-path-depth-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-003 Read-Path Depth Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    About
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../narrative/2026-04-16-the-memory-problem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-system-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. System Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. System Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-high-level-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 High-Level Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-trust-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Trust Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-data-flow-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Data Flow Diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-stride-threat-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. STRIDE Threat Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. STRIDE Threat Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-spoofing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Spoofing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-tampering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Tampering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-repudiation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Repudiation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-information-disclosure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Information Disclosure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-denial-of-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Denial of Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-elevation-of-privilege" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Elevation of Privilege
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-risk-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Risk Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Risk Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#top-5-mitigations-priority-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top 5 Mitigations (Priority Order)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-mitigation-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Mitigation Details
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Mitigation Details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-existing-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Existing Controls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-recommended-additions-not-yet-implemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Recommended Additions (Not Yet Implemented)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-threat-model-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Threat Model Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-data-classification-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Data Classification Mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-recent-changes-affecting-threat-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Recent Changes Affecting Threat Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-threat-model-review-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Threat Model Review Log
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="zettelforge-threat-model">ZettelForge Threat Model<a class="headerlink" href="#zettelforge-threat-model" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Document ID:</strong> THREAT-001
+<strong>Classification:</strong> Internal (Tier 2)
+<strong>Last Updated:</strong> 2026-04-25
+<strong>Framework:</strong> STRIDE (GOV-011 SSDL Requirement)
+<strong>Scope:</strong> Community Edition v2.5.x (MIT-licensed codebase)
+<strong>Compliance Mapping:</strong> FedRAMP SA-3, SA-8, SA-11, SA-15; NIST 800-171 3.11, 3.13, 3.14</p>
+</blockquote>
+<h2 id="1-system-overview">1. System Overview<a class="headerlink" href="#1-system-overview" title="Permanent link">&para;</a></h2>
+<h3 id="11-high-level-architecture">1.1 High-Level Architecture<a class="headerlink" href="#11-high-level-architecture" title="Permanent link">&para;</a></h3>
+<p>ZettelForge is an agentic memory system for cyber threat intelligence (CTI). It ingests unstructured text (threat reports, analyst notes, agent observations) through <code>remember()</code>, stores it in a hybrid SQLite + LanceDB backend, and retrieves it via <code>recall()</code> and <code>synthesize()</code> with intent-classified, policy-weighted blended retrieval.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>                      ┌─────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                      │     External Actors          │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                      │  (Analyst / AI Agent / MCP)  │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                      └─────────────┬───────────────┘
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                                    │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                      ┌─────────────▼───────────────┐
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                      │   MemoryManager              │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                      │   remember() / recall()      │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                      │   synthesize()               │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                      └─────┬───────────────┬───────┘
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                            │               │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>               ┌────────────▼───┐    ┌──────▼────────────┐
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>               │  Governance    │    │  LLM Providers    │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>               │  Validator     │    │  (local/ollama/   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>               │  (PII, rules)  │    │   litellm/mock)  │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>               └────────┬───────┘    └──────┬────────────┘
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                        │                   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>               ┌────────▼───────┐    ┌──────▼────────────┐
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>               │  SQLite +      │    │  Enrichment Queue │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>               │  LanceDB       │    │  (causal / LLM   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>               │  (notes, vec)  │    │   NER extraction)│
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>               └────────────────┘    └───────────────────┘
+</code></pre></div>
+<h3 id="12-trust-boundaries">1.2 Trust Boundaries<a class="headerlink" href="#12-trust-boundaries" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Boundary #</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TB-1</td>
+<td>External → API surface (MCP, REST, direct Python API)</td>
+<td>External network / process</td>
+</tr>
+<tr>
+<td>TB-2</td>
+<td>Python API → MemoryManager</td>
+<td>Internal process</td>
+</tr>
+<tr>
+<td>TB-3</td>
+<td>MemoryManager → SQLite / LanceDB filesystem</td>
+<td>Local filesystem</td>
+</tr>
+<tr>
+<td>TB-4</td>
+<td>LLM Provider → External API (litellm, ollama)</td>
+<td>Outbound network</td>
+</tr>
+<tr>
+<td>TB-5</td>
+<td>Enrichment worker → LLM (fact extraction, NER)</td>
+<td>Internal process</td>
+</tr>
+<tr>
+<td>TB-6</td>
+<td>Configuration loader → env vars / YAML files</td>
+<td>Local filesystem</td>
+</tr>
+</tbody>
+</table>
+<h3 id="13-data-flow-diagram">1.3 Data Flow Diagram<a class="headerlink" href="#13-data-flow-diagram" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>[C2] Analyst/AI Agent
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  │  remember(content) / recall(query)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  ▼
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>TB-1 ──────────────────────────────────────────────────┐
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  │                                                      │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  ▼                                                      │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>[P1] MemoryManager._remember_inner()                     │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  │                                                      │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  │  content                                             │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  ▼                                                      │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>[P2] GovernanceValidator.validate_remember()             │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>  │  ┌──────────────────┐                               │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  │  │ (Optional) PII    │  TB-5 (lazy)                 │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  │  │ Validator         │──→ presidio-analyzer         │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  │  │ (log/redact/block)│    (in-process spaCy)        │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  │  └──────────────────┘                               │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  │                                                      │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  │  redacted content (or original)                     │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  ▼                                                      │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>[P3] NoteConstructor → construct MetadataNote           │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>  │                                                      │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  ├──→ [DS1] EntityIndexer → extract entities           │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  ├──→ [DS2] AliasResolver → resolve APT28/Fancy Bear   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  ├──→ [DS3] SQLite DB (notes, KG, entity index)       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>  ├──→ [DS4] LanceDB (vector index, IVF_PQ 768-dim)     │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>  │                                                      │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  └──→ Enrichment Queue (async)                         │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>       ├──→ [P4] LLM Causal Triple Extraction            │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>       └──→ [P5] LLM NER (background)                    │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>                                                         │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>[S1] LLM Provider Dispatch                               │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  ├──→ local (in-process llama-cpp-python / onnx)      │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  ├──→ ollama (HTTP to localhost:11434) TB-4           │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  └──→ litellm (HTTP to cloud APIs)    TB-4            │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>                                                         │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>[C1] Configuration Loader                                │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  ├── config.yaml / config.default.yaml  TB-6          │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>  ├── Environment variables (ZETTELFORGE_*)             │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>  └── ${ENV_VAR} resolution for secrets                 │
+</code></pre></div>
+<hr />
+<h2 id="2-stride-threat-analysis">2. STRIDE Threat Analysis<a class="headerlink" href="#2-stride-threat-analysis" title="Permanent link">&para;</a></h2>
+<h3 id="21-spoofing">2.1 Spoofing<a class="headerlink" href="#21-spoofing" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Component</th>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>S-01</td>
+<td>Attacker spoofs a valid MCP client to call <code>remember()</code> / <code>recall()</code> with malicious content</td>
+<td>MCP Server / REST API (TB-1)</td>
+<td><strong>High</strong> — unauthorized memory access</td>
+<td>MCP server relies on transport-level auth (stdio transport for local agents; TLS client certs or API tokens for remote). No built-in authentication in Community edition. Enterprise edition adds JWT/OAuth.</td>
+</tr>
+<tr>
+<td>S-02</td>
+<td>Attacker spoofs an LLM provider endpoint (e.g., fake Ollama server) to return malicious model output</td>
+<td>LLM Provider (TB-4, ollama/litellm)</td>
+<td><strong>Medium</strong> — model output is treated as data, not executable; but could inject false threat intelligence</td>
+<td>No TLS verification for localhost endpoints (default ollama). litellm uses HTTPS for cloud APIs. Local deployments are responsible for network isolation.</td>
+</tr>
+<tr>
+<td>S-03</td>
+<td>Attacker spoofs configuration file to inject malicious settings</td>
+<td>Config Loader (TB-6)</td>
+<td><strong>High</strong> — could set <code>provider: litellm</code> with attacker-controlled API key or disable governance</td>
+<td>Config files are local filesystem; <code>config.yaml</code> is in <code>.gitignore</code> to prevent accidental commits. No integrity verification on config files.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-tampering">2.2 Tampering<a class="headerlink" href="#22-tampering" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Component</th>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>T-01</td>
+<td>Attacker modifies SQLite database or LanceDB index files on disk</td>
+<td>Storage (TB-3)</td>
+<td><strong>Critical</strong> — persistent memory corruption</td>
+<td>SQLite WAL mode with no built-in integrity check on reads. No HMAC or signature on stored notes. Mitigation relies on OS-level filesystem permissions. Encrypt filesystem at OS level for sensitive deployments (noted in SECURITY.md).</td>
+</tr>
+<tr>
+<td>T-02</td>
+<td>Attacker modifies config.yaml in-place to change LLM provider, disable PII validation, or alter governance settings</td>
+<td>Config Loader (TB-6)</td>
+<td><strong>High</strong> — silent security downgrade</td>
+<td>Config files are local. <code>config.default.yaml</code> is tracked in git. <code>config.yaml</code> is user-owned. No integrity verification.</td>
+</tr>
+<tr>
+<td>T-03</td>
+<td>Attacker tampers with enrichment queue data in memory</td>
+<td>Enrichment Queue (P4/P5)</td>
+<td><strong>Low</strong> — in-process queue, not network-accessible</td>
+<td>The queue is an in-memory Python <code>queue.Queue</code> with <code>maxsize=500</code>. No external access path.</td>
+</tr>
+<tr>
+<td>T-04</td>
+<td>Attacker modifies a note's embedding to bias recall results</td>
+<td>LanceDB (DS4)</td>
+<td><strong>Medium</strong> — retrieval poisoning</td>
+<td>LanceDB stores vectors as parquet files. OS-level file permissions are the only protection.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="23-repudiation">2.3 Repudiation<a class="headerlink" href="#23-repudiation" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Component</th>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R-01</td>
+<td>Attacker performs operations (remember, recall, synthesize) without audit trail</td>
+<td>MemoryManager</td>
+<td><strong>High</strong> — compliance failure for FedRAMP AU-2/AU-3</td>
+<td>All operations emit OCSF structured events via <code>log_api_activity()</code> / <code>log_authorization()</code>. OCSF class 1001 (API Activity) and 3001/3003 (Authorization) are emitted for every operation. Events include <code>request_id</code>, <code>actor</code>, <code>resource</code>, <code>status_id</code>.</td>
+</tr>
+<tr>
+<td>R-02</td>
+<td>Governance violation occurs without attribution</td>
+<td>GovernanceValidator</td>
+<td><strong>Medium</strong> — violation logged but no actor identity</td>
+<td><code>log_authorization()</code> records <code>actor="system"</code> for automatic calls. MCP and REST API paths should include authenticated actor. Currently Community edition uses hardcoded <code>"system"</code> actor.</td>
+</tr>
+<tr>
+<td>R-03</td>
+<td>PII detection events without traceability</td>
+<td>PIIValidator (RFC-013)</td>
+<td><strong>Medium</strong> — compliance requirement for data protection</td>
+<td><code>pii_detected</code> structured log event includes count, action, entity types, and scores. No raw PII text is logged (fixed in commit 5ac162c).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-information-disclosure">2.4 Information Disclosure<a class="headerlink" href="#24-information-disclosure" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Component</th>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>I-01</td>
+<td>Stored threat intelligence (notes, entities, IOCs) leaked via filesystem access</td>
+<td>SQLite / LanceDB (DS3/DS4)</td>
+<td><strong>Critical</strong> — all CTI data exposed</td>
+<td>No encryption at rest in Community edition. SQLite WAL files and LanceDB parquet files contain plaintext. <strong>Mitigation:</strong> encrypt filesystem at OS level. Enterprise edition adds optional SQLite encryption.</td>
+</tr>
+<tr>
+<td>I-02</td>
+<td>PII stored in notes leaks through recall/synthesize responses</td>
+<td>Storage → Retrieval</td>
+<td><strong>High</strong> — PII compliance</td>
+<td>RFC-013 PIIValidator with <code>action=redact</code> strips PII before storage. <code>action=block</code> prevents storage entirely. Disabled by default — user must opt in.</td>
+</tr>
+<tr>
+<td>I-03</td>
+<td>API keys logged in structured logs</td>
+<td>LLM Provider / Config Loader</td>
+<td><strong>Critical</strong> — credential exposure</td>
+<td><code>LLMConfig.__repr__</code> redacts <code>api_key</code> as <code>'***'</code>. <code>extra</code> dict fields matching sensitive key patterns (<code>key</code>, <code>token</code>, <code>secret</code>, <code>password</code>, <code>credential</code>, <code>auth</code>) are also redacted. Config resolution uses <code>${ENV_VAR}</code> references so raw keys never appear in YAML.</td>
+</tr>
+<tr>
+<td>I-04</td>
+<td>Error messages leak internal paths, configuration, or stack traces</td>
+<td>All components</td>
+<td><strong>Medium</strong> — information gathering</td>
+<td>No global exception handler catches and sanitizes errors. structlog can redact PII from log messages if configured.</td>
+</tr>
+<tr>
+<td>I-05</td>
+<td>Raw PII text previously logged in structured events</td>
+<td>PIIValidator (fixed)</td>
+<td><strong>Medium</strong> — historical exposure</td>
+<td>Fixed in 5ac162c: PII text removed from log entities. Only entity type and score are logged. Users on prior commits should rotate logs containing PII.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="25-denial-of-service">2.5 Denial of Service<a class="headerlink" href="#25-denial-of-service" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Component</th>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D-01</td>
+<td>Large content in <code>remember()</code> exhausts memory or blocks the enrichment queue</td>
+<td>MemoryManager (P1)</td>
+<td><strong>Low</strong> — gracefully rejected</td>
+<td><code>governance.limits.max_content_length</code> (RFC-014, default 50 MB) blocks oversized content with a clear error. <code>remember_report()</code> chunks long documents. Enrichment queue has <code>maxsize=500</code> backpressure.</td>
+</tr>
+<tr>
+<td>D-02</td>
+<td>LLM provider (ollama, litellm) hangs and blocks <code>remember()</code></td>
+<td>LLM Provider (TB-4)</td>
+<td><strong>High</strong> — operation blocks</td>
+<td>OllamaProvider has timeout (RFC-010, default 60s). LitellmProvider has timeout + num_retries. <code>generate()</code> returns empty string on recoverable failure. Fallback provider (e.g., local -&gt; ollama) gives alternative path.</td>
+</tr>
+<tr>
+<td>D-03</td>
+<td>Malicious query triggers deep graph traversal exhausting time/resources</td>
+<td>BlendedRetriever</td>
+<td><strong>Medium</strong> — bounded, but timeout may still block</td>
+<td><code>governance.limits.recall_timeout_seconds</code> (RFC-014, default 30s) applies a wall-clock timeout to the recall pipeline, but the current <code>ThreadPoolExecutor</code>-based approach must not be treated as guaranteeing prompt return on timeout. <code>max_graph_depth</code> (default 2) limits BFS hops. <code>default_k</code> (default 10) limits results. Reclassify to <strong>Low</strong> only after the timeout path is verified to return promptly and log <code>recall_timed_out</code> without waiting for the running task to finish.</td>
+</tr>
+<tr>
+<td>D-04</td>
+<td>spaCy model download blocks first <code>remember()</code> when PII is enabled</td>
+<td>PIIValidator (lazy load)</td>
+<td><strong>Low</strong> — delayed first call (~2-3 seconds)</td>
+<td>One-time download cost. Matching fastembed pattern. Can be pre-downloaded for air-gapped deployments.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="26-elevation-of-privilege">2.6 Elevation of Privilege<a class="headerlink" href="#26-elevation-of-privilege" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Threat</th>
+<th>Component</th>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E-01</td>
+<td>MCP client accesses notes from a different domain/tenant than authorized</td>
+<td>MemoryManager / MCP Server</td>
+<td><strong>High</strong> — cross-tenant data access</td>
+<td>No domain-level access control in Community edition. Enterprise edition adds multi_tenant config. Domain is a metadata field on notes, not an access control boundary.</td>
+</tr>
+<tr>
+<td>E-02</td>
+<td>Attacker bypasses governance validation (PII, rules) by calling storage backend directly</td>
+<td>Direct filesystem / SQLite access</td>
+<td><strong>Critical</strong> — all governance controls bypassed</td>
+<td>Governance runs in-memory in <code>_remember_inner()</code>. Direct SQLite or LanceDB access bypasses it entirely. Mitigation: OS-level filesystem permissions.</td>
+</tr>
+<tr>
+<td>E-03</td>
+<td>Config change elevates provider from mocked/local to cloud API without user knowledge</td>
+<td>Config Loader</td>
+<td><strong>Medium</strong> — unexpected outbound calls</td>
+<td>No change of config is signed or validated. User is responsible for config integrity.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-risk-summary">3. Risk Summary<a class="headerlink" href="#3-risk-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Risk Level</th>
+<th>Count</th>
+<th>Key Concerns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Critical</strong></td>
+<td>2</td>
+<td>T-01 (storage tampering), I-01 (unencrypted data at rest), E-02 (governance bypass via filesystem)</td>
+</tr>
+<tr>
+<td><strong>High</strong></td>
+<td>7</td>
+<td>S-01 (spoofed MCP client), S-03 (config tampering), T-02 (config security downgrade), R-01 (repudiation without audit), I-02 (PII in stored notes), D-02 (LLM provider hang), E-01 (cross-tenant data access)</td>
+</tr>
+<tr>
+<td><strong>Medium</strong></td>
+<td>7</td>
+<td>S-02 (fake LLM provider), T-04 (retrieval poisoning), R-02, R-03, I-04 (error message leakage), E-03</td>
+</tr>
+<tr>
+<td><strong>Low</strong></td>
+<td>3</td>
+<td>D-01, D-03, D-04 (PII model download delay)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="top-5-mitigations-priority-order">Top 5 Mitigations (Priority Order)<a class="headerlink" href="#top-5-mitigations-priority-order" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Encryption at rest</strong> — Encrypt the data directory filesystem (OS-level LUKS, BitLocker, or eCryptfs). ZettelForge does not apply at-rest encryption itself.</li>
+<li><strong>Filesystem permissions</strong> — Restrict access to <code>~/.amem/</code> to the ZettelForge process user only. Prevents governance bypass (E-02) and storage tampering (T-01).</li>
+<li><strong>Network isolation</strong> — Run Ollama and ZettelForge on a dedicated VLAN or firewall zone. Prevent unauthorized MCP clients (S-01) and fake provider attacks (S-02).</li>
+<li><strong>Enable PII redaction</strong> — Set <code>governance.pii.enabled: true</code> and <code>action: redact</code> in production. Prevents PII persistence (I-02).</li>
+<li><strong>Audit log retention</strong> — Ensure OCSF logs are shipped to a SIEM (via structlog JSON output). Satisfies FedRAMP AU-2/AU-3 (R-01).</li>
+</ol>
+<hr />
+<h2 id="4-mitigation-details">4. Mitigation Details<a class="headerlink" href="#4-mitigation-details" title="Permanent link">&para;</a></h2>
+<h3 id="41-existing-controls">4.1 Existing Controls<a class="headerlink" href="#41-existing-controls" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Threat(s)</th>
+<th>Mechanism</th>
+<th>Verification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OCSF audit logging</td>
+<td>R-01, R-02</td>
+<td><code>log_api_activity()</code>, <code>log_authorization()</code> emitted on every operation</td>
+<td>CI test coverage, structlog configuration</td>
+</tr>
+<tr>
+<td>API key redaction</td>
+<td>I-03</td>
+<td><code>LLMConfig.__repr__</code> redacts api_key and sensitive extra keys</td>
+<td>Unit tests in <code>test_llm_providers.py</code></td>
+</tr>
+<tr>
+<td>PII detection + redaction</td>
+<td>I-02</td>
+<td>PIIValidator (RFC-013): log/redact/block</td>
+<td>Unit tests in <code>test_pii_validator.py</code></td>
+</tr>
+<tr>
+<td>LLM provider timeout</td>
+<td>D-02</td>
+<td><code>OllamaProvider</code> timeout=60s, <code>LiteLLMProvider</code> timeout + num_retries</td>
+<td>Unit tests (RFC-010, RFC-012)</td>
+</tr>
+<tr>
+<td>Content size limit</td>
+<td>D-01</td>
+<td><code>governance.limits.max_content_length</code> (RFC-014, default 50 MB) blocks oversized content</td>
+<td>Unit tests in <code>test_governance.py</code></td>
+</tr>
+<tr>
+<td>Recall timeout</td>
+<td>D-03</td>
+<td><code>governance.limits.recall_timeout_seconds</code> (RFC-014, default 30s) wraps recall in ThreadPoolExecutor with wall-clock timeout</td>
+<td>Unit tests in <code>test_governance.py</code></td>
+</tr>
+<tr>
+<td>Config env-var resolution</td>
+<td>I-03</td>
+<td><code>${ENV_VAR}</code> syntax prevents raw secrets in YAML</td>
+<td>Unit tests</td>
+</tr>
+<tr>
+<td>Configurable model provider</td>
+<td>S-02, E-03</td>
+<td><code>provider</code> key selects backend; no implicit unauthenticated outbound calls</td>
+<td>Config validation</td>
+</tr>
+<tr>
+<td>Enrichment queue backpressure</td>
+<td>D-01</td>
+<td><code>maxsize=500</code> bounded queue</td>
+<td>Code review</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-recommended-additions-not-yet-implemented">4.2 Recommended Additions (Not Yet Implemented)<a class="headerlink" href="#42-recommended-additions-not-yet-implemented" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Recommendation</th>
+<th>Threat(s)</th>
+<th>Effort</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Add global exception handler that sanitizes error output</td>
+<td>I-04</td>
+<td>Medium</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>Add TLS verification option for self-hosted LLM endpoints</td>
+<td>S-02</td>
+<td>Small</td>
+<td>P2</td>
+</tr>
+<tr>
+<td>Add config file integrity check (SHA-256 of default vs. loaded)</td>
+<td>T-02, S-03</td>
+<td>Medium</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Add recall timeout (configurable, default 30s)</td>
+<td>D-03</td>
+<td>Medium</td>
+<td>P3</td>
+</tr>
+<tr>
+<td>Domain-level access control for multi-tenant</td>
+<td>E-01</td>
+<td>Large</td>
+<td>Enterprise</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-threat-model-maintenance">5. Threat Model Maintenance<a class="headerlink" href="#5-threat-model-maintenance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Activity</th>
+<th>Frequency</th>
+<th>Owner</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Threat model review</td>
+<td>Per quarter or per significant feature</td>
+<td>CTO/CIO</td>
+<td>Updated THREAT_MODEL.md</td>
+</tr>
+<tr>
+<td>STRIDE assessment for new components</td>
+<td>Per RFC (GOV-016 requirement)</td>
+<td>RFC Author</td>
+<td>Threats section in RFC</td>
+</tr>
+<tr>
+<td>SAST scan</td>
+<td>Every PR (CI)</td>
+<td>Automated</td>
+<td>CI pipeline logs</td>
+</tr>
+<tr>
+<td>SCA scan</td>
+<td>Every PR + daily scheduled</td>
+<td>Automated</td>
+<td>pip-audit, Snyk reports</td>
+</tr>
+<tr>
+<td>Secret scan</td>
+<td>Every PR (CI)</td>
+<td>Automated</td>
+<td>GitGuardian</td>
+</tr>
+<tr>
+<td>Dependency vulnerability review</td>
+<td>Per advisory (GOV-009 timelines)</td>
+<td>Maintainer</td>
+<td>GitHub Dependabot, Snyk</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-data-classification-mapping">6. Data Classification Mapping<a class="headerlink" href="#6-data-classification-mapping" title="Permanent link">&para;</a></h2>
+<p>Per GOV-021, the following data types exist in the system:</p>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Classification</th>
+<th>Storage</th>
+<th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Threat intelligence notes (actor TTPs, IOCs, campaigns)</td>
+<td>Internal (Tier 2)</td>
+<td>SQLite + LanceDB, no encryption at rest</td>
+<td>OS-level filesystem encryption recommended</td>
+</tr>
+<tr>
+<td>PII (names, emails, phones — if not redacted)</td>
+<td>Confidential (Tier 3)</td>
+<td>SQLite (if PII passes through without redaction)</td>
+<td><strong>Must</strong> enable PII redaction (RFC-013)</td>
+</tr>
+<tr>
+<td>API keys / credentials</td>
+<td>Confidential (Tier 3)</td>
+<td>Never committed; env vars only</td>
+<td>Redacted from logs, resolved at runtime</td>
+</tr>
+<tr>
+<td>Audit logs (OCSF events)</td>
+<td>Internal (Tier 2)</td>
+<td>Structured logs (GOV-012)</td>
+<td>Logs must not contain Tier 3/4 data values</td>
+</tr>
+<tr>
+<td>Configuration files</td>
+<td>Internal (Tier 2)</td>
+<td>config.yaml, config.default.yaml</td>
+<td><code>.gitignore</code> excludes user config; no secrets in YAML</td>
+</tr>
+<tr>
+<td>Embedding vectors</td>
+<td>Internal (Tier 2)</td>
+<td>LanceDB parquet files</td>
+<td>Derived from notes; same classification as source</td>
+</tr>
+<tr>
+<td>CUI (federal contract data)</td>
+<td>CUI (Tier 4)</td>
+<td><strong>Not handled</strong> in Community edition</td>
+<td>Enterprise edition only, after FedRAMP authorization</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-recent-changes-affecting-threat-model">7. Recent Changes Affecting Threat Model<a class="headerlink" href="#7-recent-changes-affecting-threat-model" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Change</th>
+<th>RFC/PR</th>
+<th>Date</th>
+<th>Threat Model Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content size limits + recall timeout</td>
+<td>RFC-014</td>
+<td>2026-04-25</td>
+<td>Mitigation for D-01 (content size limit, default 50 MB); partial mitigation for D-03 (timeout)</td>
+</tr>
+<tr>
+<td>PII detection and redaction</td>
+<td>RFC-013 (PR #118)</td>
+<td>2026-04-25</td>
+<td>New control for I-02; new attack surface (D-04); PII text logging fixed</td>
+</tr>
+<tr>
+<td>LiteLLM unified provider</td>
+<td>RFC-012 (PR #108)</td>
+<td>2026-04-25</td>
+<td>New provider for I-03 (API keys); new outbound traffic pattern (TB-4)</td>
+</tr>
+<tr>
+<td>Local LLM backend selection</td>
+<td>RFC-011 (PR #104)</td>
+<td>2026-04-25</td>
+<td>No new threat surface — extends existing local provider</td>
+</tr>
+<tr>
+<td>Ollama provider timeout</td>
+<td>RFC-010</td>
+<td>2026-04-24</td>
+<td>Mitigation for D-02</td>
+</tr>
+<tr>
+<td>LLM provider registry</td>
+<td>RFC-002</td>
+<td>2026-04-16</td>
+<td>Foundation for S-02, E-03 via provider selection</td>
+</tr>
+<tr>
+<td>SQLite backend default</td>
+<td>v2.2.0</td>
+<td>2026-04-14</td>
+<td>Migration path changes attack surface of legacy JSONL</td>
+</tr>
+<tr>
+<td>Injection defenses</td>
+<td>v2.1.1</td>
+<td>2026-04-10</td>
+<td>Fixed parameterized queries (was: P0 SQL injection — see CHANGELOG)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="8-threat-model-review-log">8. Threat Model Review Log<a class="headerlink" href="#8-threat-model-review-log" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Reviewer</th>
+<th>Changes</th>
+<th>Next Review</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-04-25</td>
+<td>Hermes Agent (automated)</td>
+<td>Initial threat model creation per GOV-011</td>
+<td>2026-07-25</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../assets/cf-analytics.js"></script>
+      
+    
+  </body>
+</html>

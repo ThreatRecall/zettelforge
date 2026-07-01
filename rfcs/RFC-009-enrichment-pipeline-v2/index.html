@@ -1,0 +1,3803 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+      
+      
+        <meta name="author" content="Software Architect + Backend Architect + AI Engineer (integrated by Claude Code)">
+      
+      
+        <link rel="canonical" href="https://docs.threatrecall.ai/rfcs/RFC-009-enrichment-pipeline-v2/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>RFC-009: Enrichment Pipeline Dataflow v2 - ZettelForge Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+
+  
+  
+  <link rel="canonical" href="https://docs.threatrecall.ai/rfcs/RFC-009-enrichment-pipeline-v2/">
+  
+
+  
+  
+  
+  
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ZettelForge Documentation">
+  <meta property="og:title" content="RFC-009: Enrichment Pipeline Dataflow v2">
+  <meta property="og:description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+  <meta property="og:url" content="https://docs.threatrecall.ai/rfcs/RFC-009-enrichment-pipeline-v2/">
+  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RFC-009: Enrichment Pipeline Dataflow v2">
+  <meta name="twitter:description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta name="twitter:site" content="@Deuslogica">
+  <meta name="twitter:creator" content="@Deuslogica">
+
+  
+  
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rfc-009-enrichment-pipeline-dataflow-v2" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZettelForge Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RFC-009: Enrichment Pipeline Dataflow v2
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/01-quickstart/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+          
+  
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../explanation/architecture/" class="md-tabs__link">
+          
+  
+  
+  Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../brand/brandIdentity/" class="md-tabs__link">
+          
+  
+  
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../narrative/2026-04-16-the-memory-problem/" class="md-tabs__link">
+          
+  
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    ZettelForge Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-first-cti-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First CTI Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-opencti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure OpenCTI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-typedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure TypeDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest News Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-llm-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate LLM Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-with-crewai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with CrewAI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-with-langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with LangChain
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve Aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Passive OSINT Enrichment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run Temporal Query
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set Up MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Store Threat Actor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Detection Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-Phase Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX in ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Budgets & Timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection Rules Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Indexer Concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG Edge Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/memory-manager-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Manager API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module Inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/stix-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/web-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/yara-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YARA Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brand/brandIdentity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brand Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RFC-001-conversational-entity-extractor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-001 Conversational Entity Extractor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RFC-002-universal-llm-provider/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-002 Universal LLM Provider Interface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RFC-003-read-path-depth-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-003 Read-Path Depth Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    About
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../narrative/2026-04-16-the-memory-problem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem statement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-1-target-dataflow-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 1: Target dataflow topology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 1: Target dataflow topology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-synchronous-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Synchronous boundary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-queue-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Queue architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-outbox-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Outbox integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-dataflow-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Dataflow diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-15-lancedb-version-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 1.5: LanceDB version cleanup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 1.5: LanceDB version cleanup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#151-mechanism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5.1 Mechanism
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#152-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5.2 Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#153-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5.3 Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#154-default-cadence-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5.4 Default cadence rationale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#155-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5.5 Safety
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#156-out-of-scope-for-v250" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5.6 Out of scope for v2.5.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-2-durable-enrichment-outbox" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 2: Durable enrichment outbox
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 2: Durable enrichment outbox">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-transactional-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Transactional contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-backoff-poison-policy-and-attempts-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Backoff, poison policy, and attempts semantics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-sweeper-thread" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Sweeper thread
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Observability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-out-of-scope-for-v1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Out of scope for v1
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-3-llm-provider-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 3: LLM provider hardening
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 3: LLM provider hardening">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-bug-fix-honor-timeout-and-max_retries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Bug fix: honor timeout and max_retries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-retry-policy-provider-layer-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Retry policy (provider layer only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-empty-response-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Empty-response handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-circuit-breaker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Circuit breaker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-explicit-non-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Explicit non-goals
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-4-lifecycle-state-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 4: Lifecycle state machine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 4: Lifecycle state machine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-backendstate-enum-and-op-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 BackendState enum and op classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-memorymanagershutdown-as-single-entry-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 MemoryManager.shutdown() as single entry point
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-cursor-tracking-for-safe-draining-reads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Cursor tracking for safe DRAINING reads
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-deadline-handling-and-in-flight-jobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Deadline handling and in-flight jobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-backendclosederror-consolidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 BackendClosedError consolidation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46-state-diagram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6 State diagram
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47-diff-level-change-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7 Diff-level change summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-5-three-tier-evaluation-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 5: Three-tier evaluation loop
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 5: Three-tier evaluation loop">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-tier-1-synthetic-benchmarks-existing-keep-as-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Tier 1 — Synthetic benchmarks (existing; keep as-is)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-tier-2-slo-gated-shadow-workload-v251-release-blocking-after-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Tier 2 — SLO-gated shadow workload (v2.5.1; release-blocking AFTER bootstrap)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-tier-3-adversarial-chaos-missing-recommended-not-release-blocking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Tier 3 — Adversarial chaos (MISSING; recommended, not release-blocking)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-6-empty-response-content-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 6: Empty-response content policy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 6: Empty-response content policy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-fallback-behavior-per-job-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Fallback behavior per job type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-enrichment_degraded-metadata-transient-vs-permanent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 enrichment_degraded metadata — transient vs. permanent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-api-level-signal-open-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 API-level signal — OPEN QUESTION
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-7-implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 7: Implementation plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 7: Implementation plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ownership
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#section-8-rollout-and-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Section 8: Rollout and rollback
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Section 8: Rollout and rollback">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-feature-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Feature flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Rollback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-database-migration-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Database migration safety
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related files
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<blockquote>
+<p><strong>Revision note:</strong> v1.1 integrates findings from two parallel critique passes. Critique audit trail and per-finding response in <a href="../../tasks/rfc-009-critique-2026-04-24.md"><code>tasks/rfc-009-critique-2026-04-24.md</code></a>. Changes from v1.0 are flagged with <code>[v1.1]</code> markers in-section.</p>
+</blockquote>
+<h1 id="rfc-009-enrichment-pipeline-dataflow-v2">RFC-009: Enrichment Pipeline Dataflow v2<a class="headerlink" href="#rfc-009-enrichment-pipeline-dataflow-v2" title="Permanent link">&para;</a></h1>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>ZettelForge v2.4.1 shipped with RFC-007 telemetry that immediately revealed a production-critical failure mode:</p>
+<ul>
+<li><strong>0/350 neighbor-evolution candidates succeeded</strong> on Vigil's traffic today (2026-04-24).</li>
+<li><strong>100% of LLM NER + causal-extraction calls returned <code>raw == ""</code></strong> (Ollama hanging or producing empty responses).</li>
+<li><strong>2,329 enrichment jobs were silently dropped</strong> to <code>queue.Full</code> — unrecoverable data loss.</li>
+<li><strong><code>remember()</code> ran at 5.70s avg / 66.5s max</strong> because the LLM <code>timeout</code> kwarg is literally ignored by <code>OllamaProvider</code> (dead-code bug at <code>llm_providers/ollama_provider.py:27</code>).</li>
+<li><strong>Synthetic benchmarks (LOCOMO / CTIBench / RAGAS) all passed green</strong> before the release — they measure answer quality on degraded-but-functional retrieval and are blind to enrichment yield.</li>
+</ul>
+<p>RFC-009 redesigns the enrichment pipeline end-to-end so this class of failure cannot silently persist: durable outbox, prioritized single queue, lifecycle state machine, LLM provider hardening with circuit breaker, and a three-tier evaluation loop with a release-blocking SLO gate.</p>
+<p>Full operational context: <a href="../../tasks/vigil-telemetry-audit-2026-04-24.md"><code>tasks/vigil-telemetry-audit-2026-04-24.md</code></a>.</p>
+<h2 id="problem-statement">Problem statement<a class="headerlink" href="#problem-statement" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Observed (2026-04-24 Vigil logs)</th>
+<th>Root cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>remember</code> avg 5.70s / max 66.5s; <code>recall</code> fine at 0.75s</td>
+<td><code>OllamaProvider.__init__</code> at <code>ollama_provider.py:27</code> accepts <code>**_</code> and drops <code>timeout</code>. <code>ollama.Client(host=self._url)</code> at line 55 inherits no timeout → hangs instead of failing fast. Configured <code>LLMConfig.timeout=60.0</code> is dead code.</td>
+</tr>
+<tr>
+<td>157 <code>parse_failed</code> events, all with <code>raw==""</code>; 348 <code>evolution_parse_failed</code></td>
+<td>Ollama returning literal empty strings. No provider-layer detection — calling code treats <code>""</code> as valid LLM output. No circuit breaker → cascade continues for hours.</td>
+</tr>
+<tr>
+<td><code>enrichment_queue_full=746</code>, <code>llm_ner_queue_full=776</code>, <code>evolution_queue_full=807</code> (all today)</td>
+<td><code>queue.Queue(maxsize=500)</code> drops on overflow. Producer logs <code>*_queue_full</code> and moves on → silent data loss. No durable retry.</td>
+</tr>
+<tr>
+<td><code>consolidation_failed</code> @ 17:25:48 UTC with <code>BackendClosedError</code> from v2.4.1</td>
+<td>Three independent sites (<code>_enrichment_loop</code>, <code>_drain_enrichment_queue</code>, <code>consolidation.py:224</code>) iterate the store without a shared lifecycle contract. PR #84 patched 2 of 3; shape admits a 4th regression.</td>
+</tr>
+<tr>
+<td>0 evolved / 350 candidates / 350 errors in <code>neighbor_evolution_complete</code> events</td>
+<td>Consequence of LLM returning empty → JSON parse fails → evolution decides nothing. Silent.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="section-1-target-dataflow-topology">Section 1: Target dataflow topology<a class="headerlink" href="#section-1-target-dataflow-topology" title="Permanent link">&para;</a></h2>
+<h3 id="11-synchronous-boundary">1.1 Synchronous boundary<a class="headerlink" href="#11-synchronous-boundary" title="Permanent link">&para;</a></h3>
+<p><strong>[v1.1 — the v1.0 claim "5.7s → 150ms" was retracted under review; see F02.]</strong> Code inspection of <code>memory_manager.py:284-332</code> confirms <code>remember()</code> already runs enrichment via <code>put_nowait()</code>, NOT inline — the LLM is not on the hot path today. The observed 5.70s avg / 66.5s max for <code>remember</code> is therefore coming from somewhere other than LLM work. Candidates include <code>MemoryStore._index_in_lance()</code> (<code>memory_store.py:160</code>, not in any SQLite txn), fastembed first-load cost, <code>ConsolidationMiddleware.before_write()</code>, or entity-index writes. <strong>RFC-009 makes no latency-improvement promise until Phase 0 profiles this.</strong> See Phase 0 in Section 7.</p>
+<p>The target synchronous segment of <code>remember()</code> is:</p>
+<ol>
+<li><code>GovernanceValidator.enforce()</code> (GOV-011, inline, fast-fail).</li>
+<li><code>NoteConstructor.construct()</code> → POJO build, no I/O.</li>
+<li><code>SQLiteBackend.write_note()</code> → <strong>SQLite durability boundary</strong>. After this line the note row is crash-safe in SQLite. <em>Not</em> crash-safe end-to-end — see (4).</li>
+<li><code>MemoryStore._index_in_lance()</code> (<code>memory_store.py:160</code>) — vector-index write. <strong>[v1.1 — F03:</strong> this is a SEPARATE data store and is NOT in the SQLite txn. A crash between (3) and (4) leaves the note in SQLite without its vector → <code>recall()</code> misses it until LanceDB is rebuilt. This is an eventual-consistency window, not a durability boundary. Future work: add a <code>lance_pending</code> outbox job type. Not in RFC-009's scope; documented here so the asymmetry is visible.<strong>]</strong></li>
+<li>Regex-only entity extraction + <code>add_entity_mapping()</code> (microsecond cost).</li>
+<li><code>ConsolidationMiddleware.before_write()</code> → in-process, no LLM.</li>
+<li>Transactional enrichment-outbox insert, co-committed with (3) in one <code>execute()</code> sequence — see Section 2.2.</li>
+<li>Best-effort <code>put_nowait()</code> onto the in-memory priority queue (Section 1.2); on <code>queue.Full</code>, the job already lives in the outbox and will be picked up by the sweeper.</li>
+<li>Telemetry emit + return.</li>
+</ol>
+<p>Everything LLM-dependent — NER, causal triples, neighbor evolution — remains OUT of the synchronous path. The <code>sync=True</code> kwarg is retained for tests only and MUST NOT be used by production callers.</p>
+<h3 id="12-queue-architecture">1.2 Queue architecture<a class="headerlink" href="#12-queue-architecture" title="Permanent link">&para;</a></h3>
+<p>The current three-labels-on-one-queue muddle (<code>_enrichment_queue</code> at <code>memory_manager.py:134</code> dispatching <code>llm_ner</code> / <code>neighbor_evolution</code> / <code>enrichment</code> by <code>job.job_type</code>, with three independent <code>*_queue_full</code> log events confusing operators) SHALL be replaced by a single <code>PriorityQueue</code> with explicit priority ordering:</p>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Job kind</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 (hi)</td>
+<td><code>llm_ner</code></td>
+<td>Blocks recall quality; cheapest prompt; drain first.</td>
+</tr>
+<tr>
+<td>1</td>
+<td><code>causal_triples</code></td>
+<td>Per-note, bounded work.</td>
+</tr>
+<tr>
+<td>2 (lo)</td>
+<td><code>neighbor_evolution</code></td>
+<td>N-neighbor fan-out, expensive, tolerant of delay.</td>
+</tr>
+</tbody>
+</table>
+<p>Queue bound: <code>maxsize=2000</code> (4× current 500 to absorb bursts without immediately spilling to outbox).</p>
+<p><strong>[v1.1 — C2 fix:</strong> <code>_EnrichmentJob</code> is a <code>@dataclass</code> without <code>order=True</code>, so <code>PriorityQueue</code> raw comparison raises <code>TypeError</code> on tie-break. Items MUST be inserted as three-tuples <code>(priority: int, counter: int, job: _EnrichmentJob)</code> where <code>counter</code> comes from a module-level <code>itertools.count()</code> (guaranteeing monotonic uniqueness for tie-break). Using <code>@dataclass(order=True)</code> is explicitly rejected because it would fold all fields into ordering and produce surprising priority inversions on content.<strong>]</strong></p>
+<p><strong>[v1.1 — F06 fix:</strong> Worker pool size is <strong>configurable via <code>LLMConfig.enrichment_workers</code> (default 1)</strong>, not the previously-claimed "n=2". The v1.0 citation of <code>OLLAMA_NUM_PARALLEL=2</code> was unverified — neither the Vigil deployment config nor the repo sets the variable, and Ollama's actual default varies by version. Default stays at 1 until we have measured evidence from Vigil's Ollama; reviewers with that data should update this line with a specific citation before Phase 3 lands. When RFC-002 Phase 2 (<code>openai_compat</code>) introduces a provider with known parallelism headroom, <code>LLMProvider.max_concurrency</code> becomes the authoritative source for this number.<strong>]</strong></p>
+<h3 id="13-outbox-integration">1.3 Outbox integration<a class="headerlink" href="#13-outbox-integration" title="Permanent link">&para;</a></h3>
+<p>On <code>queue.Full</code>, the producer SHALL fall through to an outbox write rather than drop (today's 2,329 silent-loss events/day). The contract at the dataflow layer:</p>
+<ul>
+<li><strong>Write</strong>: transactionally bound with <code>write_note()</code> (see Section 2). The producer never sees <code>queue.Full</code> as a loss condition; worst case the job waits in the outbox for the sweeper.</li>
+<li><strong>Read</strong>: a background <code>_outbox_sweeper</code> thread wakes every 30s (or on in-memory queue drain signal), selects up to N rows ordered by <code>(priority, next_attempt_at)</code>, and re-enqueues them onto the in-memory priority queue.</li>
+</ul>
+<h3 id="14-dataflow-diagram">1.4 Dataflow diagram<a class="headerlink" href="#14-dataflow-diagram" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>flowchart LR
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  C[Caller] --&gt; R[remember/]
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  R --&gt; W[(SQLite write_note)]
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  R --&gt; L[(LanceDB index)]
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  R --&gt; E{enqueue job in same txn}
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  E --&gt;|queue has room| Q[PriorityQueue size=2000]
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  E --&gt;|queue.Full| O[(outbox table)]
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  Q --&gt; P[Worker pool n=2]
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  O --&gt; S[outbox sweeper 30s] --&gt; Q
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>  P --&gt; LLM[Ollama / LLM provider]
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  LLM --&gt; WB[write-back: entities / KG edges / evolution]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>  WB --&gt; B[(SQLite backend)]
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>  R -.returns ~100ms.-&gt; C
+</code></pre></div>
+<p>Normative: no code path other than the worker pool and the sweeper SHALL call the LLM. <code>remember()</code> touches the LLM zero times.</p>
+<hr />
+<h2 id="section-15-lancedb-version-cleanup">Section 1.5: LanceDB version cleanup<a class="headerlink" href="#section-15-lancedb-version-cleanup" title="Permanent link">&para;</a></h2>
+<p><strong>Added 2026-04-25 after Phase 0.5 confirmed end-to-end.</strong> This section did not exist in v1.0/v1.1 of the RFC; the original draft assumed the LanceDB write was a black-box hot spot to be moved off the synchronous path via the F03 outbox extension. Phase 0.5 instrumentation (v2.4.2) and the post-cleanup workload retest (2026-04-25T02:34Z) established that the dominant cost is <code>MemoryStore._index_in_lance()</code> (<code>src/zettelforge/memory_store.py:160</code>) walking an unbounded version chain, not anything intrinsic to vector indexing. Periodic <code>cleanup_old_versions()</code> is the targeted fix.</p>
+<h3 id="151-mechanism">1.5.1 Mechanism<a class="headerlink" href="#151-mechanism" title="Permanent link">&para;</a></h3>
+<p>LanceDB persists every <code>INSERT</code> as a new dataset version, leaving previous-version data files in <code>notes_&lt;domain&gt;.lance/data/</code> until explicitly pruned. ZettelForge has never invoked <code>cleanup_old_versions()</code> since inception, so on a write-heavy shard the version chain grows unboundedly at ~2 versions per <code>remember()</code> (one for the row insert, one for the metadata <code>_rewrite_note</code> path). On Vigil's <code>notes_cti</code> shard the chain reached <strong>thousands of versions before manifesting as 53–67 second tail events</strong> on <code>remember()</code>. After a one-shot cleanup the chain dropped to 1 version and tail events disappeared (32× avg / 44× max latency improvement on a 44-call retest; full data in <code>docs/superpowers/research/2026-04-25-phase-0.5-attribution.md</code>).</p>
+<p>The active dataset was always 1 logical fragment via <code>Lance.to_lance().get_fragments()</code>. <code>compact_files()</code> was never the right operation; it correctly returns <code>fragments_added=0, fragments_removed=0</code> because there is no fragment merging to do. The 7,917 <code>.lance</code> files in the data directory were orphan version snapshots, not active fragments.</p>
+<h3 id="152-scope">1.5.2 Scope<a class="headerlink" href="#152-scope" title="Permanent link">&para;</a></h3>
+<p>A new <code>LanceVersionMaintenance</code> thread pool on <code>MemoryStore</code> (the existing wrapper around <code>lancedb.connect()</code> whose <code>_index_in_lance()</code> is the hot path under audit):</p>
+<ol>
+<li>On <code>MemoryStore.__init__</code>, discover all existing <code>notes_&lt;domain&gt;.lance</code> tables under <code>vectordb/</code> and start one daemon thread per table.</li>
+<li><strong>Late-bound table registration.</strong> <code>notes_&lt;domain&gt;</code> tables are created lazily on first write to a new domain (see <code>_index_in_lance</code> at <code>memory_store.py:163</code> — <code>table_name = f"notes_{note.metadata.domain}"</code>). The maintenance system MUST therefore expose a <code>_register_table_for_cleanup(table_name)</code> method that <code>_index_in_lance</code> calls every time it touches a table, idempotently spawning a maintenance thread the first time a new domain is observed. Without this, a domain that doesn't exist at startup never gets cleaned.</li>
+<li>Each thread loops as follows:</li>
+<li><code>time.sleep(cleanup_interval_seconds)</code> (resolved from config; see 1.5.3)</li>
+<li>Read the current <code>cleanup_older_than_seconds</code> config value. If <code>0</code>, skip this iteration (operator-disabled).</li>
+<li>Otherwise: <code>table.cleanup_old_versions(older_than=timedelta(seconds=cleanup_older_than_seconds))</code>.</li>
+<li>Each cleanup emits a structured event:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;lance_cleanup_old_versions&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;notes_cti&quot;</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;bytes_freed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1234567</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&quot;versions_pruned&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">&quot;elapsed_seconds&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.42</span><span class="p">,</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;info&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
+</code></pre></div></li>
+<li>Threads are <code>daemon=True</code> and registered with the new <code>MemoryManager.shutdown()</code> orchestrator (Section 4) so <code>BackendState.DRAINING</code> stops further cleanups before the backend closes.</li>
+</ol>
+<h3 id="153-configuration">1.5.3 Configuration<a class="headerlink" href="#153-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># config.default.yaml</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">lance</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">cleanup_interval_minutes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">      </span><span class="c1"># 0 disables; &gt;0 enables</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">cleanup_older_than_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w">  </span><span class="c1"># 0 disables a single iteration; &gt;0 = passed to older_than</span>
+</code></pre></div>
+<p>Override via <code>ZETTELFORGE_LANCE_CLEANUP_INTERVAL_MINUTES</code> / <code>ZETTELFORGE_LANCE_CLEANUP_OLDER_THAN_SECONDS</code>. Both knobs follow the existing config-then-env pattern.</p>
+<p><strong>Note on disable sentinel.</strong> <code>0</code> is the canonical disable value; YAML <code>null</code> is <strong>not</strong> supported. ZettelForge's <code>_parse_simple_yaml()</code> fallback (used when PyYAML is not installed — see <code>src/zettelforge/config.py:253</code>) does not treat <code>null</code> specially and will load it as the string <code>"null"</code>, which would break numeric-typed settings. <code>0</code> survives both PyYAML and the simple-parser path identically.</p>
+<h3 id="154-default-cadence-rationale">1.5.4 Default cadence rationale<a class="headerlink" href="#154-default-cadence-rationale" title="Permanent link">&para;</a></h3>
+<p>60 minutes is conservative. Vigil's measured insert rate (~2 versions/insert) means a 60-min interval keeps the version count bounded at roughly <code>inserts_per_hour × 2 + buffer</code>, which on the observed Vigil rate of &lt;100 inserts/hr stays at ~200 versions per shard — well below any plausible inflection point. Operators on hotter workloads can lower the interval; a future investigation will characterise the latency-vs-version-count curve to support a count-based trigger as an alternative or complement.</p>
+<h3 id="155-safety">1.5.5 Safety<a class="headerlink" href="#155-safety" title="Permanent link">&para;</a></h3>
+<p><code>cleanup_old_versions(older_than=...)</code> only prunes versions older than the supplied threshold (resolved from <code>lance.cleanup_older_than_seconds</code> per 1.5.3). The latest version is never deleted. Concurrent readers are unaffected. The operation does not require quiescing writers, but in the unlikely event of an exception (e.g. transient FS error) it MUST be caught and logged at <code>warning</code> — never propagated, since maintenance failure should not crash the agent. The thread continues with the next interval.</p>
+<h3 id="156-out-of-scope-for-v250">1.5.6 Out of scope for v2.5.0<a class="headerlink" href="#156-out-of-scope-for-v250" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Count-based triggers (<code>lance.cleanup_threshold_versions</code>). Time-based is sufficient for v2.5.0 given Vigil's measured insert rate. Add later if a hotter-workload deployment needs it.</li>
+<li><code>compact_files()</code> / <code>optimize()</code> periodic invocation. Pass 4 of Phase 0.5 confirmed these are no-ops on the actual Vigil workload because the dataset is naturally 1 logical fragment. They remain useful as one-shot operator commands via the <code>compact_lance</code> script (#94) but do not need a periodic loop.</li>
+<li>Cross-shard cleanup coordination. Each table runs its own thread independently; no global lock or schedule.</li>
+</ul>
+<hr />
+<h2 id="section-2-durable-enrichment-outbox">Section 2: Durable enrichment outbox<a class="headerlink" href="#section-2-durable-enrichment-outbox" title="Permanent link">&para;</a></h2>
+<p>The enrichment outbox is the durability boundary for the pipeline. Any enrichment job that cannot be handed to the in-memory queue MUST be persisted here instead of dropped.</p>
+<h3 id="21-schema">2.1 Schema<a class="headerlink" href="#21-schema" title="Permanent link">&para;</a></h3>
+<p>The outbox lives in the same SQLite database as the rest of the backend (<code>~/.zettelforge/zettelforge.db</code>). DDL is idempotent and MUST be applied from <code>SQLiteBackend.initialize()</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">enrichment_outbox</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="n">job_id</span><span class="w">            </span><span class="nb">TEXT</span><span class="w">    </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span><span class="w">          </span><span class="c1">-- uuid4 hex</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="n">note_id</span><span class="w">           </span><span class="nb">TEXT</span><span class="w">    </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">job_type</span><span class="w">          </span><span class="nb">TEXT</span><span class="w">    </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">job_type</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;causal&#39;</span><span class="p">,</span><span class="s1">&#39;ner&#39;</span><span class="p">,</span><span class="s1">&#39;evolution&#39;</span><span class="p">)),</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">payload</span><span class="w">           </span><span class="nb">TEXT</span><span class="w">    </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">             </span><span class="c1">-- JSON serialization of _EnrichmentJob</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="n">attempts</span><span class="w">          </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="n">max_attempts</span><span class="w">      </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">  </span><span class="c1">-- [v1.1 F01 — see 2.3]</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="n">next_attempt_at</span><span class="w">   </span><span class="nb">TEXT</span><span class="w">    </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">             </span><span class="c1">-- ISO-8601 UTC</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="n">last_error</span><span class="w">        </span><span class="nb">TEXT</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="n">created_at</span><span class="w">        </span><span class="nb">TEXT</span><span class="w">    </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">             </span><span class="c1">-- ISO-8601 UTC</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="n">completed_at</span><span class="w">      </span><span class="nb">TEXT</span><span class="p">,</span><span class="w">                         </span><span class="c1">-- set on terminal success</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="n">poison</span><span class="w">            </span><span class="nb">INTEGER</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="w">    </span><span class="c1">-- 1 = exceeded max_attempts</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">);</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">idx_outbox_due</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">    </span><span class="k">ON</span><span class="w"> </span><span class="n">enrichment_outbox</span><span class="w"> </span><span class="p">(</span><span class="n">next_attempt_at</span><span class="p">)</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">completed_at</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">poison</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">idx_outbox_note</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">    </span><span class="k">ON</span><span class="w"> </span><span class="n">enrichment_outbox</span><span class="w"> </span><span class="p">(</span><span class="n">note_id</span><span class="p">);</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1">-- [v1.1 C6 fix] Idempotency: a given (note_id, job_type) pair may only have</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="c1">-- ONE pending row at a time. Crash-retry of write_note() does not produce</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="c1">-- duplicate pending jobs.</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">ux_outbox_pending</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">    </span><span class="k">ON</span><span class="w"> </span><span class="n">enrichment_outbox</span><span class="w"> </span><span class="p">(</span><span class="n">note_id</span><span class="p">,</span><span class="w"> </span><span class="n">job_type</span><span class="p">)</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">completed_at</span><span class="w"> </span><span class="k">IS</span><span class="w"> </span><span class="k">NULL</span><span class="p">;</span>
+</code></pre></div>
+<p>The partial index <code>idx_outbox_due</code> is the hot path for the sweeper. The partial UNIQUE <code>ux_outbox_pending</code> is the idempotency contract.</p>
+<h3 id="22-transactional-contract">2.2 Transactional contract<a class="headerlink" href="#22-transactional-contract" title="Permanent link">&para;</a></h3>
+<p><code>memory_manager.remember()</code> at <code>src/zettelforge/memory_manager.py:237</code> currently calls <code>self.store.write_note(note)</code> and then attempts <code>_enrichment_queue.put_nowait(job)</code> <strong>outside</strong> any transaction. This MUST change:</p>
+<ul>
+<li><code>SQLiteBackend.write_note()</code> SHALL grow a new signature <code>write_note(note, outbox_jobs: List[EnrichmentJob] = [])</code>.</li>
+</ul>
+<p><strong>[v1.1 C1 fix — how the transaction is actually implemented:</strong>
+<code>SQLiteBackend.initialize()</code> at <code>sqlite_backend.py:299</code> opens the connection with <code>sqlite3</code>'s default <code>isolation_level=""</code> (deferred-transaction mode). In that mode, any DML auto-opens a transaction and <code>commit()</code> closes it; an explicit <code>BEGIN IMMEDIATE</code> immediately after a DML raises <code>OperationalError: cannot start a transaction within a transaction</code>. RFC-009 therefore does NOT use <code>BEGIN IMMEDIATE</code>. Instead:</p>
+<ol>
+<li><code>SQLiteBackend.write_note()</code> acquires the existing <code>_write_lock</code> (PR #69 pattern).</li>
+<li>Executes <code>INSERT OR REPLACE INTO notes ...</code> — this auto-opens the deferred txn.</li>
+<li>For each <code>outbox_jobs[i]</code>, executes <code>INSERT INTO enrichment_outbox ...</code> with <code>next_attempt_at = now()</code> (<strong>[C7 fix]</strong> — jobs are immediately eligible; backoff only applies after first failure). <code>INSERT OR REPLACE</code> is used on the <code>(note_id, job_type)</code> unique index to handle crash-retry idempotency; <code>INSERT OR IGNORE</code> was the v1.0 spec but is meaningless on the UUID PK.</li>
+<li><code>self._conn.commit()</code> closes the txn atomically.</li>
+</ol>
+<p>If the process crashes between steps 2 and 4, the whole txn rolls back. If it crashes after step 4, the note AND its outbox rows are both durable. There is no window where a note exists without its pending backlog.<strong>]</strong></p>
+<p>After the transaction commits, <code>remember()</code> performs best-effort <code>put_nowait()</code> onto the in-memory priority queue. On <code>queue.Full</code>, the job already lives in the outbox and will be picked up by the sweeper — no <code>*_queue_full</code> warning, no data loss. On successful in-memory dispatch and LLM success, the worker calls <code>SQLiteBackend.outbox_mark_completed(job_id)</code> which sets <code>completed_at = now()</code> in its own small transaction.</p>
+<h3 id="23-backoff-poison-policy-and-attempts-semantics">2.3 Backoff, poison policy, and attempts semantics<a class="headerlink" href="#23-backoff-poison-policy-and-attempts-semantics" title="Permanent link">&para;</a></h3>
+<p><strong>[v1.1 F01 fix — horizon raised from ~5min to ~10h]</strong> With <code>max_attempts=20</code> and <code>delay = min(2**attempts * 10, 3600)</code> seconds + ±20% jitter, the retry schedule is:</p>
+<table>
+<thead>
+<tr>
+<th>Attempt</th>
+<th>Delay</th>
+<th>Cumulative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>20s</td>
+<td>20s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>40s</td>
+<td>1m</td>
+</tr>
+<tr>
+<td>3</td>
+<td>80s</td>
+<td>2.3m</td>
+</tr>
+<tr>
+<td>4</td>
+<td>160s</td>
+<td>5m</td>
+</tr>
+<tr>
+<td>5</td>
+<td>320s</td>
+<td>10.3m</td>
+</tr>
+<tr>
+<td>6</td>
+<td>640s</td>
+<td>21m</td>
+</tr>
+<tr>
+<td>7</td>
+<td>1280s</td>
+<td>42m</td>
+</tr>
+<tr>
+<td>8-20</td>
+<td>1h cap (3600s each)</td>
+<td><strong>~13h total before poison</strong></td>
+</tr>
+</tbody>
+</table>
+<p>A 10-hour Ollama outage is retried through; a permanent config failure poisons out cleanly. This addresses the v1.0 pathology where a 3-day outage produced a flood of poisoned notes after 5 minutes with no path back.</p>
+<p><strong>[v1.1 F11 fix — attempts counter write-back ordering]</strong> The counter increments <strong>optimistically, BEFORE</strong> the LLM call:
+1. Sweeper picks row; <code>UPDATE ... SET attempts = attempts + 1 WHERE job_id = ? AND attempts = ?</code> (CAS on the row's current value; if rowcount==0 someone else is processing, bail).
+2. Run LLM call.
+3. On success: <code>UPDATE ... SET completed_at = now() WHERE job_id = ?</code>.
+4. On failure (<code>LLMEmptyResponseError</code>, <code>LLMCircuitOpenError</code>, <code>TimeoutException</code>, or any other exception): <code>UPDATE ... SET next_attempt_at = ?, last_error = ? WHERE job_id = ?</code> (attempts already incremented in step 1).</p>
+<p>If the process SIGKILLs between steps 1 and 3, the attempt counts (optimistic) — consistent with "crash-while-in-flight is treated as a failed attempt, not a lost one." If this produces premature poisoning in practice, the alternative is a heartbeat-based lease on the row; spec explicitly defers that to a follow-up.</p>
+<p>On <code>attempts &gt;= max_attempts</code>, set <code>poison = 1</code>; poison rows are excluded from the sweep index. A separate <code>currently_degraded</code> telemetry counter (Section 6.2) distinguishes transient retry-in-progress notes from permanently-flagged ones.</p>
+<h3 id="24-sweeper-thread">2.4 Sweeper thread<a class="headerlink" href="#24-sweeper-thread" title="Permanent link">&para;</a></h3>
+<p>A single daemon thread <code>zettelforge-outbox-sweeper</code> replaces none of the existing workers — it only feeds them. Each tick (default 30s, <code>LLMConfig.outbox_sweep_interval_s</code>):</p>
+<ol>
+<li><code>SELECT job_id, payload FROM enrichment_outbox WHERE completed_at IS NULL AND poison = 0 AND next_attempt_at &lt;= ? ORDER BY next_attempt_at LIMIT 50</code></li>
+<li>Deserialize payload → <code>_EnrichmentJob</code></li>
+<li><code>_enrichment_queue.put_nowait(job)</code> for each; on <code>queue.Full</code>, break the loop — remaining jobs stay in the table and are revisited next tick.</li>
+<li>Emit <code>outbox_sweep_batch{picked, enqueued, remaining_due}</code>.</li>
+</ol>
+<p>Prioritized dequeue within the sweeper is OUT OF SCOPE; the in-memory queue's priority (Section 1.2) handles ordering once jobs are enqueued.</p>
+<h3 id="25-observability">2.5 Observability<a class="headerlink" href="#25-observability" title="Permanent link">&para;</a></h3>
+<p>Telemetry events (via <code>telemetry.log_*</code>): <code>outbox_enqueued{job_id, job_type, reason: "new"|"queue_full"}</code>, <code>outbox_sweep_batch{picked, enqueued}</code>, <code>outbox_poison{job_id, note_id, attempts, last_error}</code>, <code>outbox_drained{job_id, job_type, attempts}</code>.</p>
+<h3 id="26-out-of-scope-for-v1">2.6 Out of scope for v1<a class="headerlink" href="#26-out-of-scope-for-v1" title="Permanent link">&para;</a></h3>
+<p>Horizontal sharing across agent processes (each agent has its own SQLite file today); per-job-type priority within the sweeper (handled downstream by the in-memory priority queue); operator-facing replay CLI for poison rows (ships separately in v2.5.x).</p>
+<hr />
+<h2 id="section-3-llm-provider-hardening">Section 3: LLM provider hardening<a class="headerlink" href="#section-3-llm-provider-hardening" title="Permanent link">&para;</a></h2>
+<p>The audit established that 100% of the 157 <code>parse_failed</code> events carry <code>raw == ""</code> and that <code>OllamaProvider.__init__</code> drops <code>timeout</code> and <code>max_retries</code> on the floor (<code>**_: Any</code> at <code>src/zettelforge/llm_providers/ollama_provider.py:27</code>). <code>remember</code> p50 of 5.7s and p-max of 66.5s is the direct consequence: <code>client.generate(**kwargs)</code> at line 55 inherits no timeout, so Ollama hangs until its default HTTP deadline.</p>
+<h3 id="31-bug-fix-honor-timeout-and-max_retries">3.1 Bug fix: honor timeout and max_retries<a class="headerlink" href="#31-bug-fix-honor-timeout-and-max_retries" title="Permanent link">&para;</a></h3>
+<p><code>OllamaProvider.__init__</code> MUST accept <code>timeout: float = 60.0</code> and <code>max_retries: int = 2</code> as named kwargs and pass them through:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="bp">self</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">60.0</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">max_retries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="o">**</span><span class="n">_</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span> <span class="ow">or</span> <span class="n">_DEFAULT_MODEL</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="n">url</span> <span class="ow">or</span> <span class="n">_DEFAULT_URL</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_timeout</span> <span class="o">=</span> <span class="n">timeout</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_max_retries</span> <span class="o">=</span> <span class="n">max_retries</span>
+</code></pre></div>
+<p><code>generate()</code> MUST construct the client with <code>ollama.Client(host=self._url, timeout=self._timeout)</code>. The registry already threads <code>LLMConfig.timeout</code> through; this wires it to the wire.</p>
+<h3 id="32-retry-policy-provider-layer-only">3.2 Retry policy (provider layer only)<a class="headerlink" href="#32-retry-policy-provider-layer-only" title="Permanent link">&para;</a></h3>
+<p>The provider MUST retry up to <code>max_retries</code> times ONLY on <code>httpx.TimeoutException</code> and <code>httpx.ConnectError</code>. These are transport failures where in-process retry is cheap and recovers from transient backend flaps. The provider MUST NOT retry on HTTP 200 + empty response — that signals a degraded model/Ollama state where retrying in-process amplifies load. Job-level retry is owned entirely by the outbox sweeper (Section 2).</p>
+<h3 id="33-empty-response-handling">3.3 Empty-response handling<a class="headerlink" href="#33-empty-response-handling" title="Permanent link">&para;</a></h3>
+<p><strong>[v1.1 C4 fix — the exception hierarchy does not exist today and MUST be created]</strong> Today <code>src/zettelforge/llm_providers/base.py:22</code> defines only <code>LLMProviderConfigurationError(Exception)</code>. RFC-009 SHALL create <code>src/zettelforge/llm_providers/errors.py</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">LLMError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all LLM provider runtime errors.&quot;&quot;&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">LLMEmptyResponseError</span><span class="p">(</span><span class="n">LLMError</span><span class="p">):</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prompt_len</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">LLMCircuitOpenError</span><span class="p">(</span><span class="n">LLMError</span><span class="p">):</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">until</span><span class="p">:</span> <span class="n">datetime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">class</span><span class="w"> </span><span class="nc">LLMTimeoutError</span><span class="p">(</span><span class="n">LLMError</span><span class="p">):</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">timeout_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+</code></pre></div>
+<p><code>LLMProviderConfigurationError</code> remains in <code>base.py</code> (it's a configuration-time error, not a runtime one, and existing imports should not break).</p>
+<p><code>OllamaProvider.generate()</code> MUST raise <code>LLMEmptyResponseError</code> when <code>response.get("response", "").strip() == ""</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">text</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;response&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="k">raise</span> <span class="n">LLMEmptyResponseError</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="p">,</span> <span class="n">prompt_len</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">prompt</span><span class="p">))</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">return</span> <span class="n">text</span>
+</code></pre></div>
+<p>Callers <code>_run_enrichment</code>, <code>_run_llm_ner</code>, and <code>_run_evolution</code> in <code>memory_manager.py</code> MUST catch <code>LLMError</code> (base), record the specific subclass via <code>last_error</code> on the outbox row, and let the sweeper schedule the next attempt. They MUST NOT treat empty responses as success.</p>
+<h3 id="34-circuit-breaker">3.4 Circuit breaker<a class="headerlink" href="#34-circuit-breaker" title="Permanent link">&para;</a></h3>
+<p><strong>[v1.1 F05 fix — threshold retuned for Vigil's actual traffic rate]</strong> Vigil runs ~1.6 enrichment calls/min steady-state (audit data). The v1.0 "10 consecutive in 60s" threshold cannot trip organically at that rate. The breaker SHALL open when EITHER:</p>
+<ul>
+<li><strong>5 consecutive failures</strong> (<code>LLMEmptyResponseError</code> OR <code>LLMTimeoutError</code> OR <code>httpx.ConnectError</code>), OR</li>
+<li><strong><code>&gt;50%</code> failure rate in the last 20 calls</strong> (requires a minimum sample size to prevent flapping on 1-of-1 blips).</li>
+</ul>
+<p>Whichever trips first. This keeps the breaker responsive under sustained failure (tripped after 5 in a row = ~3 minutes of audit-day pacing) while also catching sparse-but-high-rate degradation like the 100% empty responses observed today.</p>
+<p>While open, <code>generate()</code> MUST raise <code>LLMCircuitOpenError</code> immediately without contacting Ollama. The breaker closes on a single successful probe after a 300s cooldown (half-open → closed).</p>
+<p>Counters are thread-safe (<code>threading.Lock</code> around a fixed-size deque of the last N outcomes). <strong>[v1.1 C12 fix]</strong> On every <code>generate()</code> call, the deque is pruned of entries older than 60s before the threshold check — this prevents unbounded growth when the breaker never opens. <strong>[v1.1 C14 ack]</strong> At design throughput (&lt;20 calls/s), the lock is not on the critical path of <code>generate()</code> — the HTTP call dominates by orders of magnitude.</p>
+<h3 id="35-metrics">3.5 Metrics<a class="headerlink" href="#35-metrics" title="Permanent link">&para;</a></h3>
+<p>Emit via <code>telemetry.log_llm_provider_event</code> (new helper): <code>llm_timeout{provider, model}</code>, <code>llm_empty_response{provider, model, prompt_len}</code>, <code>llm_circuit_open{provider, model, consecutive_failures}</code>, <code>llm_circuit_closed{provider, model, cooldown_s}</code>, <code>llm_retry{provider, model, attempt, reason}</code>. Aggregate counters SHOULD surface in <code>get_stats()</code> under a new <code>llm_provider</code> key.</p>
+<h3 id="36-explicit-non-goals">3.6 Explicit non-goals<a class="headerlink" href="#36-explicit-non-goals" title="Permanent link">&para;</a></h3>
+<p>Alternate provider failover (RFC-002 Phase 2, <code>openai_compat</code>); prompt re-engineering to reduce empty responses; changing outbox-level retry policy; cross-process circuit breaker state sharing.</p>
+<hr />
+<h2 id="section-4-lifecycle-state-machine">Section 4: Lifecycle state machine<a class="headerlink" href="#section-4-lifecycle-state-machine" title="Permanent link">&para;</a></h2>
+<h3 id="41-backendstate-enum-and-op-classification">4.1 <code>BackendState</code> enum and op classification<a class="headerlink" href="#41-backendstate-enum-and-op-classification" title="Permanent link">&para;</a></h3>
+<p><code>SQLiteBackend</code> SHALL expose a tri-state lifecycle, replacing the v2.4.1 boolean-ish <code>_conn is None</code> check:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">BackendState</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">OPEN</span>     <span class="o">=</span> <span class="s2">&quot;open&quot;</span>      <span class="c1"># all operations accepted</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">DRAINING</span> <span class="o">=</span> <span class="s2">&quot;draining&quot;</span>  <span class="c1"># reads OK, writes rejected, active cursors drain, close pending</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">CLOSED</span>   <span class="o">=</span> <span class="s2">&quot;closed&quot;</span>    <span class="c1"># all operations raise BackendClosedError</span>
+</code></pre></div>
+<p>Transitions (monotonic, one-way): <code>OPEN ──stop_accepting()──▶ DRAINING ──close()──▶ CLOSED</code></p>
+<p><strong>[v1.1 C8 fix — explicit read vs. write classification]</strong> Write ops are annotated with a <code>@_write_op</code> decorator; everything else is classified as read by default. The enumerated write set in <code>sqlite_backend.py</code> is:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>write_note</code></td>
+<td>INSERT/UPDATE</td>
+</tr>
+<tr>
+<td><code>rewrite_note</code></td>
+<td>UPDATE</td>
+</tr>
+<tr>
+<td><code>delete_note</code></td>
+<td>DELETE</td>
+</tr>
+<tr>
+<td><code>reindex_vector</code></td>
+<td>UPDATE</td>
+</tr>
+<tr>
+<td><code>mark_access_dirty</code></td>
+<td>UPDATE</td>
+</tr>
+<tr>
+<td><code>add_kg_node</code></td>
+<td>INSERT</td>
+</tr>
+<tr>
+<td><code>add_kg_edge</code></td>
+<td>INSERT</td>
+</tr>
+<tr>
+<td><code>add_entity_mapping</code></td>
+<td>INSERT</td>
+</tr>
+<tr>
+<td><code>remove_entity_mappings_for_note</code></td>
+<td>DELETE</td>
+</tr>
+<tr>
+<td><code>outbox_insert</code>, <code>outbox_mark_completed</code>, <code>outbox_mark_failed</code>, <code>outbox_mark_poison</code></td>
+<td>INSERT/UPDATE</td>
+</tr>
+<tr>
+<td><code>export_snapshot</code></td>
+<td>effectively write (creates file)</td>
+</tr>
+</tbody>
+</table>
+<p>The decorator implementation:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">_write_op</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">wrapped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_lock</span><span class="p">:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">BackendState</span><span class="o">.</span><span class="n">OPEN</span><span class="p">:</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>                <span class="k">raise</span> <span class="n">BackendClosedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> not OPEN (state=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="k">return</span> <span class="n">wrapped</span>
+</code></pre></div></p>
+<p>Read ops acquire the <code>_state_lock</code> similarly but permit <code>OPEN | DRAINING</code>.</p>
+<h3 id="42-memorymanagershutdown-as-single-entry-point">4.2 <code>MemoryManager.shutdown()</code> as single entry point<a class="headerlink" href="#42-memorymanagershutdown-as-single-entry-point" title="Permanent link">&para;</a></h3>
+<p>The two bottom-up <code>atexit.register</code> hooks at <code>memory_manager.py:141-142</code> SHALL be replaced by a single top-down method:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deadline_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shutdown_lock</span><span class="p">:</span>  <span class="c1"># [v1.1 C13 fix — double-invocation guard]</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">_MMState</span><span class="o">.</span><span class="n">RUNNING</span><span class="p">:</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>            <span class="k">return</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">_MMState</span><span class="o">.</span><span class="n">SHUTTING_DOWN</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_accepting</span> <span class="o">=</span> <span class="kc">False</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">stop_accepting</span><span class="p">()</span>                 <span class="c1"># OPEN → DRAINING</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_enrichment_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">_POISON</span><span class="p">)</span>         <span class="c1"># wake worker</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_enrichment_worker</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">deadline_s</span><span class="p">)</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="c1"># [v1.1 C5 fix — worker may still be blocked inside an Ollama call that</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="c1"># outlives deadline_s. Rather than abandon in-flight jobs, we attempt a</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="c1"># best-effort drain of the priority queue itself to the outbox, mark</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    <span class="c1"># anything the worker&#39;s `current_job` slot reports as &quot;unknown attempt</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    <span class="c1"># outcome&quot; (retry after restart), and tolerate that late LLM returns</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    <span class="c1"># from the zombie worker will raise BackendClosedError on writeback —</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>    <span class="c1"># the worker&#39;s writeback path catches that and re-enqueues the result</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>    <span class="c1"># via outbox instead of losing it.]</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_drain_queue_to_outbox</span><span class="p">()</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>                          <span class="c1"># DRAINING → CLOSED</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">_MMState</span><span class="o">.</span><span class="n">STOPPED</span>
+</code></pre></div>
+<p><strong>[v1.1 C11 acknowledgment]</strong> <code>atexit</code> LIFO ordering is still a concern for external hooks registered after <code>MemoryManager.__init__</code>. Current codebase has 2 <code>atexit.register</code> call sites — both in <code>memory_manager.py:141-142</code> and both replaced by this single hook. Future callers registering their own hooks MUST NOT rely on the store being available; document in the developer guide.</p>
+<h3 id="43-cursor-tracking-for-safe-draining-reads">4.3 Cursor tracking for safe <code>DRAINING</code> reads<a class="headerlink" href="#43-cursor-tracking-for-safe-draining-reads" title="Permanent link">&para;</a></h3>
+<p><strong>[v1.1 C3 fix — the critical race]</strong> <code>iterate_notes()</code> is a generator that yields rows across multiple <code>fetchmany</code> calls. A naive <code>_accepting</code> check at loop start does NOT protect against <code>close()</code> firing between yields. RFC-009 introduces cursor tracking:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SQLiteBackend</span><span class="p">:</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_active_cursors</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_cursor_cv</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_state_lock</span><span class="p">)</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="nd">@contextmanager</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_cursor_lease</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_lock</span><span class="p">:</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">is</span> <span class="n">BackendState</span><span class="o">.</span><span class="n">CLOSED</span><span class="p">:</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>                <span class="k">raise</span> <span class="n">BackendClosedError</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_active_cursors</span> <span class="o">+=</span> <span class="mi">1</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>            <span class="k">yield</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>        <span class="k">finally</span><span class="p">:</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_lock</span><span class="p">:</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_active_cursors</span> <span class="o">-=</span> <span class="mi">1</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active_cursors</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>                    <span class="bp">self</span><span class="o">.</span><span class="n">_cursor_cv</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">iterate_notes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">]:</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cursor_lease</span><span class="p">():</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT ...&quot;</span><span class="p">):</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>                <span class="k">yield</span> <span class="n">_row_to_note</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_lock</span><span class="p">:</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">BackendState</span><span class="o">.</span><span class="n">DRAINING</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>            <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active_cursors</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_cursor_cv</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">BackendState</span><span class="o">.</span><span class="n">CLOSED</span>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+<p><code>close()</code> therefore blocks on any in-flight iteration until it finishes. Consumers like <code>consolidation.py:224</code> see a consistent view through their iteration; no half-closed state.</p>
+<p>The v1.0 <code>_accepting</code> flag on <code>MemoryManager</code> is retained as a <strong>pre-iteration check</strong> (fast-path) but is no longer the primary safety mechanism.</p>
+<h3 id="44-deadline-handling-and-in-flight-jobs">4.4 Deadline handling and in-flight jobs<a class="headerlink" href="#44-deadline-handling-and-in-flight-jobs" title="Permanent link">&para;</a></h3>
+<p>The 10s drain window is preserved. If <code>_enrichment_worker.join(timeout=10.0)</code> returns with the thread still alive, <code>_drain_queue_to_outbox()</code> empties the priority queue into the outbox (they'll be picked up on next start).</p>
+<p><strong>[v1.1 C5 fix]</strong> The worker's writeback path (per-job-type: <code>add_kg_edge</code> for causal, <code>add_entity_mapping</code> for ner, <code>rewrite_note</code> for evolution) is wrapped in <code>try/except BackendClosedError</code>: on catch, the result is serialized and written to a new <code>pending_writeback</code> outbox row (job_type <code>writeback</code>) for the next process to apply. This is the ONLY place the worker touches the outbox from outside the success-path.</p>
+<p>Net contract: <strong>no job result is silently lost</strong>. Either the job completes and writes back in-process, or it's re-enqueued for retry, or its successful result is preserved as a <code>writeback</code> outbox row that applies on next start.</p>
+<h3 id="45-backendclosederror-consolidation">4.5 <code>BackendClosedError</code> consolidation<a class="headerlink" href="#45-backendclosederror-consolidation" title="Permanent link">&para;</a></h3>
+<p><code>BackendClosedError</code> itself SHALL survive unchanged. What changes is the catch topology:</p>
+<ul>
+<li><strong>Before</strong>: three ad-hoc sites each <code>try/except BackendClosedError: return</code> (enrichment_loop has one, <code>_drain_enrichment_queue</code> has one, consolidation has none — hence the 17:25 UTC incident).</li>
+<li><strong>After</strong>: one catch in <code>_enrichment_loop</code> that terminates the worker, plus the <code>_accepting</code> flag guard in any iterator-style caller. Individual ops inside the worker do not need their own handlers — if one op raises <code>BackendClosedError</code> mid-loop, the outer <code>except</code> cleanly ends the thread.</li>
+</ul>
+<h3 id="46-state-diagram">4.6 State diagram<a class="headerlink" href="#46-state-diagram" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>         start()            shutdown() entered          close() done
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  [INIT] ───────▶ [RUNNING] ──────────────▶ [SHUTTING_DOWN] ──────────▶ [STOPPED]
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>                      │                           │
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>                      │ accepting=True            │ accepting=False
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>                      │ store.state=OPEN          │ store.state=DRAINING → CLOSED
+</code></pre></div>
+<h3 id="47-diff-level-change-summary">4.7 Diff-level change summary<a class="headerlink" href="#47-diff-level-change-summary" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>memory_manager.py:141-142</code></strong>: delete both <code>atexit.register(...)</code> lines; replace with <code>atexit.register(self.shutdown)</code> and introduce <code>self._accepting = True</code> / <code>self._state = RUNNING</code> in <code>__init__</code>. Add <code>shutdown()</code> method near <code>_enrichment_loop</code>.</li>
+<li><strong><code>consolidation.py:224</code></strong>: add guard <code>if not self._mm._accepting: return report</code> immediately before the <code>for note in self._mm.store.iterate_notes():</code> loop. No try/except needed.</li>
+<li><strong><code>sqlite_backend.py</code></strong>: add <code>BackendState</code> enum, <code>stop_accepting()</code> method, extend <code>BackendClosedError</code>-raising decorator to distinguish read vs. write. <code>BackendClosedError</code> class unchanged.</li>
+<li><strong><code>_enrichment_loop</code> catch block</strong> (currently at line ~891-893 from PR #84): unchanged. This is the pattern the other two sites converge on.</li>
+</ul>
+<hr />
+<h2 id="section-5-three-tier-evaluation-loop">Section 5: Three-tier evaluation loop<a class="headerlink" href="#section-5-three-tier-evaluation-loop" title="Permanent link">&para;</a></h2>
+<h3 id="51-tier-1-synthetic-benchmarks-existing-keep-as-is">5.1 Tier 1 — Synthetic benchmarks (existing; keep as-is)<a class="headerlink" href="#51-tier-1-synthetic-benchmarks-existing-keep-as-is" title="Permanent link">&para;</a></h3>
+<p>LOCOMO (<code>benchmarks/locomo_benchmark.py</code>), CTIBench, RAGAS. End-to-end answer quality on curated corpora.</p>
+<p><strong>Known blind spot (MUST be documented in each benchmark's README):</strong> Tier 1 measures retrieval + synthesis quality <em>given whatever backend state exists</em>. When LLM enrichment returns empty, ZettelForge degrades to vector-only recall on raw content, which still scores within tolerance on these test sets. A backend producing literal <code>""</code> to every NER and causal-extraction prompt — the exact failure of 2026-04-24 — is <strong>invisible to Tier 1</strong>. Tier 1 is therefore necessary but not sufficient for release gating.</p>
+<p><strong>Non-goal:</strong> extending Tier 1 corpora to probe enrichment yield. The right tool is Tier 2.</p>
+<h3 id="52-tier-2-slo-gated-shadow-workload-v251-release-blocking-after-bootstrap">5.2 Tier 2 — SLO-gated shadow workload (v2.5.1; release-blocking AFTER bootstrap)<a class="headerlink" href="#52-tier-2-slo-gated-shadow-workload-v251-release-blocking-after-bootstrap" title="Permanent link">&para;</a></h3>
+<p>Replays one hour of sanitized Vigil production traffic against a throwaway staging instance on every release candidate and asserts SLOs on RFC-007 telemetry.</p>
+<p><strong>Corpus:</strong> <code>benchmarks/shadow-corpus/2026-*.jsonl</code>. Weekly refresh from production, PII-scrubbed (entity-level redaction of person/email/host/IP where not CTI-relevant). Retention: 4 rolling weeks.</p>
+<p><strong>Replay harness:</strong> new script <code>scripts/replay_shadow_corpus.py</code>. Boots a fresh instance at <code>~/.amem-ci-shadow/</code>, feeds the corpus through <code>remember()</code> at realistic wall-clock pacing, allows enrichment to drain, halts telemetry, emits summary JSON.</p>
+<p><strong>[v1.1 F10 fix — dedicated Ollama]</strong> The replay runs against a dedicated <code>ollama-ci</code> instance (separate host/port/model-cache), NOT production Ollama. Per-agent contention is otherwise a confound that would make SLO violations unrelated to the change under test.</p>
+<p><strong>CI integration:</strong> new workflow <code>.github/workflows/shadow-eval.yml</code>. <strong>[v1.1 C9 fix]</strong> Triggers ONLY on PRs labeled <code>release-candidate</code>, as a required check via branch protection (so it can actually block the merge). The <code>master</code>-push trigger is dropped (post-merge runs can't gate anything; use PagerDuty alerts for drift detection if needed).</p>
+<p><strong>[v1.1 F07 fix — SLO bootstrap, not hard-coded thresholds]</strong></p>
+<p>The v1.0 draft hard-coded thresholds (<code>&gt;95%</code> success, <code>&lt;5%</code> parse-fail, etc.) without reference to any measured baseline. Given today's Vigil baseline is ~0% enrichment success, gating at 95% before ANY fixes land guarantees every future release is blocked.</p>
+<p>RFC-009 therefore splits Tier 2 into two sub-phases:</p>
+<p><strong>Phase 7a — bootstrap (2 weeks after v2.5.0 ships):</strong> Shadow-eval runs on every PR, emits metrics, but <strong>does not fail CI on threshold violation</strong>. Result is a <code>shadow-eval-summary.json</code> artifact attached to the PR for human review. During this window, collect the post-fix baseline for:</p>
+<ul>
+<li><code>enrichment_success_rate</code> per job type (causal, ner, evolution)</li>
+<li><code>parse_failed_rate</code> per schema</li>
+<li><code>outbox_queue_saturation_rate</code></li>
+<li><code>p95 / p99 remember_latency</code></li>
+<li><code>consolidation_failed</code> event count</li>
+</ul>
+<p><strong>Phase 7b — gate activation (end of bootstrap):</strong> Re-open RFC-009 to set SLO thresholds at <code>0.9 × measured_p50</code> for the success-rate metrics and <code>1.25 × measured_p95</code> for latency metrics. Specific numbers go in a separate small RFC that amends this one. <strong>Only after those thresholds are codified does shadow-eval block merges.</strong> Numbers written into this RFC now would be guessed.</p>
+<p><strong>Would Tier 2 have caught 2026-04-24?</strong> In theory yes — but only retrospectively. The audit data shows enrichment success at 0% on v2.4.1; any SLO above 1% trips. The point is that we need post-fix numbers to gate against, not pre-fix aspirations.</p>
+<h3 id="53-tier-3-adversarial-chaos-missing-recommended-not-release-blocking">5.3 Tier 3 — Adversarial chaos (MISSING; recommended, not release-blocking)<a class="headerlink" href="#53-tier-3-adversarial-chaos-missing-recommended-not-release-blocking" title="Permanent link">&para;</a></h3>
+<p>Fault injectors at the LLM-provider boundary, wired via a decorator on the provider registry: <code>ollama.with_injector(EmptyResponseInjector(rate=1.0))</code>. Required injectors:</p>
+<ul>
+<li><code>EmptyResponseInjector(rate)</code> — returns <code>""</code> for a fraction of calls.</li>
+<li><code>TimeoutInjector(rate, delay_s)</code> — sleeps past the configured timeout.</li>
+<li><code>OOMInjector(rate)</code> — raises <code>MemoryError</code>.</li>
+<li><code>ConnectionResetInjector(rate)</code> — raises <code>ConnectionResetError</code>.</li>
+</ul>
+<p>Assertions (exercised in <code>tests/test_chaos_enrichment.py</code>, nightly CI):</p>
+<ul>
+<li><strong>(a) No data loss:</strong> under 100% fault, note count unchanged; outbox depth equals total enrichment job count (no silent drops).</li>
+<li><strong>(b) Recovery:</strong> within 30s of fault clearing, <code>enrichment_success_rate</code> MUST return to the Tier 2 baseline.</li>
+<li><strong>(c) Bounded resources:</strong> queue size, RSS, open file handles, live thread count MUST remain below configured ceilings across the full fault window.</li>
+</ul>
+<p><strong>Would have prevented 2026-04-24?</strong> <code>EmptyResponseInjector(rate=1.0)</code> reproduces today's failure mode exactly. A passing Tier 3 test for this injector is a standing regression guarantee.</p>
+<hr />
+<h2 id="section-6-empty-response-content-policy">Section 6: Empty-response content policy<a class="headerlink" href="#section-6-empty-response-content-policy" title="Permanent link">&para;</a></h2>
+<p>This section defines the <strong>semantic contract</strong> ZettelForge honors when LLM enrichment yields nothing usable. Mechanics (retry, circuit breaker, <code>LLMEmptyResponseError</code>) live in Section 3; the policy below describes what a note <em>is</em> after enrichment fails.</p>
+<h3 id="61-fallback-behavior-per-job-type">6.1 Fallback behavior per job type<a class="headerlink" href="#61-fallback-behavior-per-job-type" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>NER — graceful degradation (preserve existing behavior).</strong> <code>entity_indexer.EntityExtractor.extract_regex()</code> already runs unconditionally before the LLM NER call and populates CTI + IOC + conversational entities. LLM NER failure MUST NOT block note creation; the note is indexed on regex-extracted entities alone. This is the current behavior on <code>master</code> and RFC-009 codifies it: <strong>regex extraction is the contractual floor for <code>Semantic.entities</code></strong>. Any future change that makes LLM NER load-bearing for indexing is a breaking change.</p>
+</li>
+<li>
+<p><strong>Causal triple extraction — no fallback exists.</strong> Failure means <code>Links.causal_chain</code> stays empty for that note. RFC-009 does <strong>not</strong> introduce a regex causal extractor in the hot path. Instead, the note metadata is flagged <code>enrichment_degraded: ["causal"]</code> (see below) and the outbox handles retry out-of-band.</p>
+</li>
+<li>
+<p><strong>Neighbor evolution — no fallback exists.</strong> Failure means <code>metadata.evolution_count</code> stays 0 and no <code>Links.related</code> edges are added from this pass. Same flag: <code>enrichment_degraded: ["evolution"]</code>.</p>
+</li>
+</ul>
+<h3 id="62-enrichment_degraded-metadata-transient-vs-permanent">6.2 <code>enrichment_degraded</code> metadata — transient vs. permanent<a class="headerlink" href="#62-enrichment_degraded-metadata-transient-vs-permanent" title="Permanent link">&para;</a></h3>
+<p><strong>[v1.1 F01 fix — two-state distinction]</strong> The v1.0 draft claimed transient failures were "invisible to the note," but because <code>max_attempts=20</code> produces a ~13h retry horizon (see Section 2.3), a multi-hour Ollama outage IS a transient event that stays in the outbox — we need a way to surface it while it's still being retried, without prematurely poisoning.</p>
+<p><code>Metadata</code> in <code>src/zettelforge/note_schema.py</code> gains two distinct fields:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">currently_degraded</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># Job types with at least one pending outbox row AND failed attempts &gt; 0.</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Transient. Cleared on successful completion of the job.</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">permanently_degraded</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Job types that exhausted max_attempts and got poisoned. Sticky.</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Only cleared by operator action (manual retry / flag reset).</span>
+</code></pre></div>
+<p><strong>Lifecycle:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Outbox state</th>
+<th>Metadata reflects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Row created, <code>attempts=0</code></td>
+<td><em>(neither flag set — job hasn't failed yet)</em></td>
+</tr>
+<tr>
+<td><code>attempts &gt; 0</code>, not poisoned</td>
+<td><code>currently_degraded</code> contains <code>job_type</code></td>
+</tr>
+<tr>
+<td><code>completed_at</code> set (success)</td>
+<td><code>currently_degraded</code> removes <code>job_type</code></td>
+</tr>
+<tr>
+<td><code>poison = 1</code> (poison-pill)</td>
+<td><code>permanently_degraded</code> adds <code>job_type</code>; <code>currently_degraded</code> removes it</td>
+</tr>
+<tr>
+<td>Operator reset</td>
+<td><code>permanently_degraded</code> removes <code>job_type</code>; new outbox row created</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Write path:</strong> both fields are maintained by the outbox sweeper and worker paths, not by <code>remember()</code>. The note row in SQLite is updated via a small <code>UPDATE notes SET metadata = ? WHERE id = ?</code> each time a transition happens. Writes are idempotent (list-diff, not list-rewrite) to tolerate race conditions between the sweeper and the worker.</p>
+<p><strong>Valid values:</strong> <code>"ner"</code>, <code>"causal"</code>, <code>"evolution"</code>. Extensible as future job types arrive.</p>
+<p><strong>Telemetry:</strong> both lists surface in RFC-007 telemetry's per-note <code>notes</code> list at DEBUG level. Operators can triage:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Transient issues (retry in progress)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>jq<span class="w"> </span><span class="s1">&#39;select(.currently_degraded | length &gt; 0)&#39;</span><span class="w"> </span>~/.amem/telemetry/telemetry_<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.jsonl
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Permanent failures (operator action required)</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>jq<span class="w"> </span><span class="s1">&#39;select(.permanently_degraded | length &gt; 0)&#39;</span><span class="w"> </span>~/.amem/telemetry/telemetry_<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.jsonl
+</code></pre></div></p>
+<p><strong>Constraints:</strong>
+- MUST NOT affect retrieval ranking (observability only, not a quality signal).
+- MUST serialize to the same JSON-blob column as the rest of <code>Metadata</code> (no SQLite migration needed — see Section 8.3).
+- Daily aggregator (RFC-007 US-003) gains two new summary fields: <code>currently_degraded_note_count</code>, <code>permanently_degraded_note_count</code>.</p>
+<h3 id="63-api-level-signal-open-question">6.3 API-level signal — OPEN QUESTION<a class="headerlink" href="#63-api-level-signal-open-question" title="Permanent link">&para;</a></h3>
+<p>Software Architect proposed that <code>remember()</code> return an <code>enrichment_pending</code> token so callers know the note isn't fully processed. <strong>Current position: do NOT ship this in RFC-009.</strong> Rationale:</p>
+<ul>
+<li>Enrichment is already asynchronous; every returned note is "pending" in some sense, and a token formalizes a leak of the pipeline into every caller.</li>
+<li>The DEBUG telemetry flag gives operators the same signal without an API break.</li>
+<li>No caller today (Vigil, Nexus, Tamara) has expressed a need to block on enrichment completion.</li>
+</ul>
+<p><strong>Flag for separate alignment</strong> before any API change lands; do not merge into RFC-009.</p>
+<hr />
+<h2 id="section-7-implementation-plan">Section 7: Implementation plan<a class="headerlink" href="#section-7-implementation-plan" title="Permanent link">&para;</a></h2>
+<p><strong>[v1.1 F08 fix — phase order reversed. LLM hardening (highest-leverage, small, touches only <code>ollama_provider.py</code>) moves to Phase 1. Outbox + queue refactor follow because they need the fail-fast semantics LLM hardening provides in order to be useful.]</strong></p>
+<p><strong>[v1.1 scope-cut — v2.5.0 ships Phases 0-5. Phases 6-8 (Tier 2 + Tier 3 evaluation) defer to v2.5.1, not release-blocking on v2.5.0.]</strong></p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Scope</th>
+<th>Effort</th>
+<th>Owner</th>
+<th>Blocks</th>
+<th>Ships in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0</strong></td>
+<td>Hotfix (RFC-010): OllamaProvider timeout + consolidation guard. Separate PR.</td>
+<td>1h</td>
+<td>claude-code</td>
+<td>nothing</td>
+<td><strong>v2.4.2 (this week)</strong></td>
+</tr>
+<tr>
+<td><strong>0.5</strong></td>
+<td>~~Profile one production <code>remember()</code> call~~ — superseded by v2.4.2 <code>phase_timings_ms</code> instrumentation (PR #90), which produced first-party per-phase data without needing a profiler. <strong>Status: complete; attribution confirmed end-to-end.</strong> WHERE: 98%+ in <code>lance_index</code> (PR #93/#97). WHY: version-chain walking on insert (not fragment count). FIX: <code>cleanup_old_versions()</code> — verified 2026-04-25 with 32× avg / 44× max latency improvement and zero tail events on the post-cleanup retest. See <code>docs/superpowers/research/2026-04-25-phase-0.5-attribution.md</code>.</td>
+<td>n/a</td>
+<td>done</td>
+<td>—</td>
+<td>v2.4.2 (instrumentation), v2.4.3 (cleanup tooling)</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td>LLM provider hardening: new <code>errors.py</code>, <code>LLMError</code> base class, <code>LLMEmptyResponseError</code>, <code>LLMTimeoutError</code>, <code>LLMCircuitOpenError</code>; empty-body detection; circuit breaker with retuned thresholds (Section 3). Does NOT require outbox to be useful.</td>
+<td>5h</td>
+<td>claude-code</td>
+<td>Phase 2</td>
+<td><strong>v2.5.0</strong></td>
+</tr>
+<tr>
+<td><strong>1.5</strong></td>
+<td><strong>Periodic LanceDB version cleanup</strong> (Section 1.5 below). Daemon thread per <code>notes_&lt;domain&gt;.lance</code> table on <code>MemoryStore</code>, late-binds via <code>_register_table_for_cleanup</code> so domains created lazily after startup also get coverage. Each iteration calls <code>table.cleanup_old_versions(older_than=timedelta(seconds=lance.cleanup_older_than_seconds))</code> after sleeping <code>lance.cleanup_interval_minutes</code>. Per-cleanup telemetry event: <code>bytes_freed</code>, <code>versions_pruned</code>, <code>elapsed_seconds</code>. Both config knobs use <code>0</code> as the disable sentinel. Prevents the 2-versions-per-insert bloat that produced the 5.69 GB / 55s-tail problem on Vigil's <code>notes_cti</code> shard. Independent of LLM hardening; can ship in parallel with Phases 1-4.</td>
+<td>3h</td>
+<td>claude-code</td>
+<td>—</td>
+<td><strong>v2.5.0</strong></td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>Outbox schema (Section 2.1) + <code>write_note</code> transactional extension (Section 2.2) + backoff/poison policy (Section 2.3)</td>
+<td>5h</td>
+<td>claude-code</td>
+<td>Phase 3</td>
+<td><strong>v2.5.0</strong></td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>Outbox sweeper thread + observability events (Section 2.4-2.5)</td>
+<td>3h</td>
+<td>claude-code</td>
+<td>Phase 4</td>
+<td><strong>v2.5.0</strong></td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>Single <code>PriorityQueue</code> with <code>(priority, counter, job)</code> tuple contract; worker pool configurable via <code>LLMConfig.enrichment_workers</code> (default 1 until Vigil's Ollama parallelism is measured); delete three <code>_queue_full</code> log labels, unify to <code>outbox_enqueued{reason: "queue_full"}</code> (Section 1.2)</td>
+<td>3h</td>
+<td>claude-code</td>
+<td>Phase 5</td>
+<td><strong>v2.5.0</strong></td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>Lifecycle state machine: <code>BackendState</code> enum, cursor tracking, <code>stop_accepting()</code>, <code>MemoryManager.shutdown()</code>, <code>_accepting</code> flag pre-check, single <code>atexit.register()</code> (Section 4). Remove the two v2.4.1 <code>try/except BackendClosedError</code> sites now that the state machine prevents the race structurally; retain RFC-010's consolidation guard as a fast-path check</td>
+<td>5h</td>
+<td>claude-code</td>
+<td>—</td>
+<td><strong>v2.5.0</strong></td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td><code>enrichment_degraded</code> metadata field + outbox poison → flag wiring + RFC-007 telemetry surface (Section 6.2). Metadata serialization confirmed to be JSON blob (no ALTER TABLE needed per C10)</td>
+<td>1h</td>
+<td>claude-code</td>
+<td>—</td>
+<td><strong>v2.5.0</strong></td>
+</tr>
+<tr>
+<td><strong>7</strong></td>
+<td>Tier 2 evaluation loop: shadow corpus scaffolding, <code>replay_shadow_corpus.py</code>, <code>shadow-eval.yml</code> CI, dedicated <code>ollama-ci</code> instance (Section 5.2). <strong>Bootstrap period</strong>: 2 weeks running without gates to establish baselines, THEN activate SLO gating</td>
+<td>10h (~6h impl + 2wk passive)</td>
+<td>claude-code</td>
+<td>—</td>
+<td><strong>v2.5.1</strong></td>
+</tr>
+<tr>
+<td><strong>8</strong></td>
+<td>Tier 3 evaluation loop: fault injectors + <code>test_chaos_enrichment.py</code> (Section 5.3)</td>
+<td>4h</td>
+<td>claude-code</td>
+<td>—</td>
+<td><strong>v2.5.1</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>v2.5.0 engineering:</strong> ~22 hours (Phases 1-6) = ~3 focused days of work. The critical path is Phase 1 → 2 → 3 → 4 (LLM hardening + outbox stack); Phases 5 and 6 are parallelizable.</p>
+<p><strong>v2.5.1 engineering:</strong> ~14 hours + 2 weeks baseline bootstrap.</p>
+<p><strong>Target milestone:</strong> v2.5.0 ships the operational fixes for today's audit. v2.5.1 ships the evaluation architecture that prevents regression.</p>
+<h3 id="ownership">Ownership<a class="headerlink" href="#ownership" title="Permanent link">&para;</a></h3>
+<p>Assigned 2026-04-24 by Patrick: <strong>claude-code owns all repair phases.</strong> Escalation path remains Patrick (product + final merge authority); any Vigil-host-required work (Phase 0.5 profiling) requires Patrick to run the profiling tool or grant shell access.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Assigned</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tech lead (owns RFC + escalations)</td>
+<td><strong>Patrick Roland</strong></td>
+</tr>
+<tr>
+<td>Phase 0 (hotfix PR — RFC-010)</td>
+<td><strong>claude-code</strong></td>
+</tr>
+<tr>
+<td>Phase 0.5 (profile)</td>
+<td><strong>claude-code</strong> (Patrick grants / runs py-spy on Vigil host)</td>
+</tr>
+<tr>
+<td>Phase 1 (LLM hardening)</td>
+<td><strong>claude-code</strong></td>
+</tr>
+<tr>
+<td>Phases 2-4 (outbox + queue)</td>
+<td><strong>claude-code</strong></td>
+</tr>
+<tr>
+<td>Phase 5 (lifecycle)</td>
+<td><strong>claude-code</strong></td>
+</tr>
+<tr>
+<td>Phase 6 (metadata flags)</td>
+<td><strong>claude-code</strong></td>
+</tr>
+<tr>
+<td>Phase 7 (Tier 2 eval)</td>
+<td><strong>claude-code</strong> (v2.5.1)</td>
+</tr>
+<tr>
+<td>Phase 8 (Tier 3 chaos)</td>
+<td><strong>claude-code</strong> (v2.5.1)</td>
+</tr>
+</tbody>
+</table>
+<p>All owner slots filled. Ownership gate resolved.</p>
+<hr />
+<h2 id="section-8-rollout-and-rollback">Section 8: Rollout and rollback<a class="headerlink" href="#section-8-rollout-and-rollback" title="Permanent link">&para;</a></h2>
+<h3 id="81-feature-flags">8.1 Feature flags<a class="headerlink" href="#81-feature-flags" title="Permanent link">&para;</a></h3>
+<p><strong>[v1.1 F09 fix — reduced from 4 flags to 2]</strong> The v1.0 four-flag model admitted 16 combinations most of which don't make sense (e.g., priority queue enabled without outbox reintroduces the drop-on-full bug this RFC exists to fix). Semantically coupled changes ship together under one flag.</p>
+<table>
+<thead>
+<tr>
+<th>Config key</th>
+<th>Phases gated</th>
+<th>Default (pre-flip)</th>
+<th>Flip behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enrichment.pipeline_v2_enabled</code></td>
+<td>1, 2, 3, 4, 6</td>
+<td><code>false</code> (v2.4.x behavior)</td>
+<td><code>true</code> → LLM hardening + outbox + sweeper + priority queue + <code>enrichment_degraded</code> flag all on. Packaged because they fail-closed without each other.</td>
+</tr>
+<tr>
+<td><code>backend.lifecycle_v2_enabled</code></td>
+<td>5</td>
+<td><code>false</code> (RFC-010 hotfix + v2.4.1 guards still active)</td>
+<td><code>true</code> → <code>BackendState</code> enum + cursor tracking + <code>shutdown()</code> orchestrator + single <code>atexit</code> hook. Independent because the enrichment pipeline keeps working whether or not shutdown is formalized.</td>
+</tr>
+</tbody>
+</table>
+<p>Two flags means four combinations. Matrix coverage:</p>
+<table>
+<thead>
+<tr>
+<th><code>pipeline_v2</code></th>
+<th><code>lifecycle_v2</code></th>
+<th>Tested?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>off</td>
+<td>off</td>
+<td>Yes — this is v2.4.x (already tested)</td>
+</tr>
+<tr>
+<td>on</td>
+<td>off</td>
+<td>Yes — Phase 1-4+6 on, RFC-010 hotfix provides shutdown safety</td>
+</tr>
+<tr>
+<td>off</td>
+<td>on</td>
+<td>Yes — lifecycle refactor without pipeline changes (test during v2.5.0 QA)</td>
+</tr>
+<tr>
+<td>on</td>
+<td>on</td>
+<td>Yes — full v2.5.0 target state</td>
+</tr>
+</tbody>
+</table>
+<p>All four combinations have explicit CI coverage. No "untested combo" blind spots as in v1.0.</p>
+<h3 id="82-rollback">8.2 Rollback<a class="headerlink" href="#82-rollback" title="Permanent link">&para;</a></h3>
+<p>Each flag is boolean at startup; no mid-process toggling. Rollback = set flag to <code>false</code> and restart. The outbox table is additive — disabling the flag stops writing new rows; existing rows remain and will be consumed on next re-enable.</p>
+<h3 id="83-database-migration-safety">8.3 Database migration safety<a class="headerlink" href="#83-database-migration-safety" title="Permanent link">&para;</a></h3>
+<p><code>CREATE TABLE IF NOT EXISTS</code> is idempotent. <code>write_note</code>'s signature grows a default-empty <code>outbox_jobs</code> parameter; callers that don't pass it retain the old single-INSERT semantics. No downgrade migration required.</p>
+<hr />
+<h2 id="open-questions">Open questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong><code>enrichment_pending</code> API-level token</strong> (Section 6.3). Position: defer. Revisit after RFC-009 lands + 1-month telemetry data.</li>
+<li><strong>Cross-process circuit breaker state.</strong> Section 3.6 scopes out; if Vigil/Patton/Tamara each open their own breaker and all three hammer Ollama during a recovery window, we have a thundering-herd risk. Revisit in RFC covering per-agent LLM quota (tracked separately).</li>
+<li><strong>Shadow-corpus size / weekly refresh.</strong> Section 5.2 says "one hour of sanitized Vigil traffic." Is 1h of one agent enough to exercise the full SLO set? Initial data suggests yes; validate after Tier 2 ships.</li>
+<li><strong>Priority re-weighting.</strong> Section 1.2 orders NER &gt; causal &gt; evolution. Evolution is the expensive job; if Ollama capacity improves (RFC-002 Phase 2 <code>openai_compat</code> lands), priority may invert. Re-evaluate after the provider-pool expansion lands.</li>
+<li><strong>Outbox size management.</strong> No retention policy for <code>completed_at IS NOT NULL</code> rows. Expected growth: ~2k rows/day today, ~1MB SQLite. Add a nightly <code>DELETE WHERE completed_at &lt; now()-30d</code> sweeper in a follow-up RFC once we have operational data.</li>
+</ol>
+<hr />
+<h2 id="related-files">Related files<a class="headerlink" href="#related-files" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>/home/rolandpg/zettelforge/tasks/vigil-telemetry-audit-2026-04-24.md</code> — operational evidence</li>
+<li><code>/home/rolandpg/zettelforge/docs/rfcs/RFC-007-operational-telemetry.md</code> — telemetry this RFC builds on</li>
+<li><code>/home/rolandpg/zettelforge/docs/rfcs/RFC-002-universal-llm-provider.md</code> — provider registry this RFC hardens</li>
+<li><code>/home/rolandpg/zettelforge/src/zettelforge/memory_manager.py</code> — remember(), enrichment loop, atexit hooks</li>
+<li><code>/home/rolandpg/zettelforge/src/zettelforge/llm_providers/ollama_provider.py</code> — timeout-drop bug (line 27, 55)</li>
+<li><code>/home/rolandpg/zettelforge/src/zettelforge/consolidation.py:224</code> — third shutdown-race site</li>
+<li><code>/home/rolandpg/zettelforge/src/zettelforge/sqlite_backend.py</code> — <code>BackendClosedError</code>, future <code>BackendState</code></li>
+<li><code>/home/rolandpg/zettelforge/src/zettelforge/note_schema.py</code> — future <code>enrichment_degraded</code> field</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/cf-analytics.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,122 @@
+---
+config:
+  theme: dark
+  layout: elk
+---
+flowchart TB
+    accTitle: ZettelForge ingestion and enrichment detail
+    accDescr {
+        This diagram shows the write path in detail. Entry points are the
+        MCP server tools zettelforge_remember, zettelforge_entity, and
+        zettelforge_graph, plus the LangChain retriever. All entry points
+        call into MemoryManager, which exposes remember, remember with
+        extraction, and remember report methods. Ingestion validates input
+        against controls.yaml via the Governance Validator, builds a
+        MemoryNote via the Note Constructor, chunks reports into sentence
+        bounded segments, extracts salient facts with an LLM, and applies
+        ADD UPDATE DELETE or NOOP operations via the Memory Updater.
+        Entity processing indexes 10 entity types using regex with LLM
+        fallback and resolves aliases via a JSON alias map. Background
+        enrichment runs asynchronously: an enrichment queue dispatches
+        causal triple extraction and A-Mem memory evolution jobs, with
+        HGAM consolidation triggered when semantic shift is detected.
+        Final state lands in the pluggable storage layer: SQLite notes
+        table, kg_nodes and kg_edges for the knowledge graph, and the
+        LanceDB vector index with 768 dimensional embeddings.
+    }
+
+ subgraph MCP["MCP Server (stdio)"]
+    direction TB
+        MCP_REM["zettelforge_remember"]
+        MCP_ENT["zettelforge_entity"]
+        MCP_GRF["zettelforge_graph"]
+  end
+ subgraph LANGCHAIN["LangChain"]
+        LCR["ZettelForgeRetriever<br>BaseRetriever wrapper"]
+  end
+ subgraph API["MemoryManager — Core API"]
+    direction TB
+        REM["remember<br>remember_with_extraction<br>remember_report"]
+  end
+ subgraph INGEST["Ingestion Pipeline"]
+    direction TB
+        GOV["Governance Validator<br>controls.yaml spec-driven"]
+        NC["Note Constructor<br>Enriched MemoryNote, ~45ms"]
+        FE["Fact Extractor<br>Phase 1 LLM extract"]
+        CHK["Chunker<br>Sentence-boundary, max 3000 chars"]
+        MU["Memory Updater<br>ADD / UPDATE / DELETE / NOOP"]
+  end
+ subgraph ENTITY["Entity Processing"]
+    direction TB
+        EI["Entity Indexer<br>10 types, regex + LLM fallback"]
+        AR["Alias Resolver<br>JSON entity aliases"]
+  end
+ subgraph ENRICH["Background Enrichment"]
+    direction TB
+        EQ["Enrichment Queue<br>Async job dispatch"]
+        CAUSAL["Causal Extractor<br>MAGMA-style triples"]
+        EVOLVER["Memory Evolver<br>A-Mem neighbor refinement"]
+        CONSOL["Consolidation<br>HGAM, EPG to TAN"]
+  end
+ subgraph STORAGE["Storage Layer"]
+    direction TB
+     subgraph SQLITE["SQLite (Default)"]
+            SQL_N["notes<br>35 columns, WAL, ACID"]
+            SQL_KG["kg_nodes + kg_edges<br>Temporal and causal"]
+            SQL_EI["entity_index<br>O(1) lookup"]
+      end
+     subgraph LANCE["LanceDB — Vector Index"]
+            VEC["768-dim embeddings<br>IVF_FLAT, per-domain tables"]
+      end
+  end
+
+    %% Entry points to API
+    MCP_REM & MCP_ENT & MCP_GRF --> REM
+    LCR --> REM
+
+    %% Write path
+    REM -- "content" --> GOV
+    GOV -- "validated" --> NC
+    REM -- "facts" --> FE
+    REM -- "reports" --> CHK
+    CHK -- "chunks" --> FE
+    FE -- "salient facts" --> MU
+    NC -- "enriched note" --> EI
+    MU -- "fact updates" --> EI
+    EI -- "indexed" --> AR
+    AR -- "resolved" --> STORAGE
+
+    %% Background enrichment
+    NC -. "enqueue" .-> EQ
+    EQ --> CAUSAL & EVOLVER
+    EVOLVER -. "semantic shift" .-> CONSOL
+    CAUSAL -. "causal edges" .-> SQL_KG
+    EVOLVER -. "evolved notes" .-> SQL_N
+
+     MCP_REM:::mcp
+     MCP_ENT:::mcp
+     MCP_GRF:::mcp
+     LCR:::mcp
+     REM:::api
+     GOV:::ingest
+     NC:::ingest
+     FE:::ingest
+     CHK:::ingest
+     MU:::ingest
+     EQ:::enrich
+     CAUSAL:::enrich
+     EVOLVER:::enrich
+     CONSOL:::enrich
+     EI:::entity
+     AR:::entity
+     SQL_N:::storage
+     SQL_KG:::storage
+     SQL_EI:::storage
+     VEC:::storage
+
+    classDef mcp fill:#1a2744,stroke:#00d4ff,color:#b8e6ff,stroke-width:2px
+    classDef api fill:#142850,stroke:#00b4d8,color:#caf0f8
+    classDef ingest fill:#203354,stroke:#4a9eff,color:#bcdfff
+    classDef enrich fill:#1b3a2f,stroke:#2ecc71,color:#a8f0c0
+    classDef entity fill:#1b3a2f,stroke:#2ecc71,color:#a8f0c0
+    classDef storage fill:#332c46,stroke:#e67e22,color:#ffe0bf

@@ -1,0 +1,3605 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+      
+      
+        <meta name="author" content="Patrick Roland">
+      
+      
+        <link rel="canonical" href="https://docs.threatrecall.ai/rfcs/RFC-015-zettelforge-web-gui/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>RFC-015: ZettelForge Web Management Interface - ZettelForge Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+
+  
+  
+  <link rel="canonical" href="https://docs.threatrecall.ai/rfcs/RFC-015-zettelforge-web-gui/">
+  
+
+  
+  
+  
+  
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ZettelForge Documentation">
+  <meta property="og:title" content="RFC-015: ZettelForge Web Management Interface — ZettelForge Documentation">
+  <meta property="og:description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+  <meta property="og:url" content="https://docs.threatrecall.ai/rfcs/RFC-015-zettelforge-web-gui/">
+  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RFC-015: ZettelForge Web Management Interface — ZettelForge Documentation">
+  <meta name="twitter:description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta name="twitter:site" content="@Deuslogica">
+  <meta name="twitter:creator" content="@Deuslogica">
+
+  
+  
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rfc-015-zettelforge-web-management-interface" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZettelForge Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RFC-015: ZettelForge Web Management Interface
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/01-quickstart/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+          
+  
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../explanation/architecture/" class="md-tabs__link">
+          
+  
+  
+  Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../brand/brandIdentity/" class="md-tabs__link">
+          
+  
+  
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../narrative/2026-04-16-the-memory-problem/" class="md-tabs__link">
+          
+  
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    ZettelForge Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-first-cti-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First CTI Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-opencti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure OpenCTI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-typedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure TypeDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest News Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-llm-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate LLM Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-with-crewai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with CrewAI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-with-langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with LangChain
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve Aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Passive OSINT Enrichment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run Temporal Query
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set Up MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Store Threat Actor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Detection Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-Phase Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX in ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Budgets & Timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection Rules Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Indexer Concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG Edge Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/memory-manager-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Manager API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module Inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/stix-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/web-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/yara-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YARA Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brand/brandIdentity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brand Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RFC-001-conversational-entity-extractor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-001 Conversational Entity Extractor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RFC-002-universal-llm-provider/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-002 Universal LLM Provider Interface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RFC-003-read-path-depth-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-003 Read-Path Depth Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    About
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../narrative/2026-04-16-the-memory-problem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Motivation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Motivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-user-explicitly-asked-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the user explicitly asked for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-ive-added-based-on-gap-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What I've added based on gap analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-api-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend API Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#views-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Views Detail
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Views Detail">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dashboard-system-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Dashboard (system health)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-knowledge-graph-3d-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Knowledge Graph (3D viewer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-logs-and-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Logs and Telemetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-manual-ingestion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Manual Ingestion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-configuration-and-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Configuration and Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-entity-browser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Entity Browser
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-session-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Session History
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-system-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design System Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-inventory-from-design-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Inventory (from design system)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3d-graph-rendering-library-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3D Graph Rendering Library Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-implementation-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend Implementation Notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Backend Implementation Notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#api-apihealth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API: /api/health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-apigraphnodes-and-apigraphedges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API: /api/graph/nodes and /api/graph/edges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sse-log-streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSE Log Streaming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-put-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config PUT Endpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ingest-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingest Endpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-dependency-frontend-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-Dependency Frontend Approach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsive-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsive Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-backend-api-extensions-frontend-scaffold-v250" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Backend API Extensions + Frontend Scaffold (v2.5.0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-knowledge-graph-3d-viewer-v250-or-v260" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Knowledge Graph 3D Viewer (v2.5.0 or v2.6.0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-logs-telemetry-config-history-ingestion-v250-or-v260" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Logs, Telemetry, Config, History, Ingestion (v2.5.0 or v2.6.0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-polish-and-edge-cases-v260" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4: Polish and Edge Cases (v2.6.0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollout-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollout Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="rfc-015-zettelforge-web-management-interface">RFC-015: ZettelForge Web Management Interface<a class="headerlink" href="#rfc-015-zettelforge-web-management-interface" title="Permanent link">&para;</a></h1>
+<h2 id="metadata">Metadata<a class="headerlink" href="#metadata" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Author</strong>: Patrick Roland</li>
+<li><strong>Status</strong>: Draft</li>
+<li><strong>Created</strong>: 2026-04-25</li>
+<li><strong>Last Updated</strong>: 2026-04-25</li>
+<li><strong>Reviewers</strong>: TBD</li>
+<li><strong>Related Tickets</strong>: ZF-015</li>
+<li><strong>Related RFCs</strong>: RFC-003 (adversarial review), RFC-007 (operational telemetry), RFC-011 (local LLM backend), RFC-012 (LiteLLM provider), RFC-013 (PII detection), RFC-014 (content limits)</li>
+</ul>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>Replace ZettelForge's inline HTML page (<code>web/app.py</code>, ~180 lines of embedded HTML+CSS+JS) with a full-featured single-page application that serves as the product's primary management interface. The new GUI provides: a 3D interactive knowledge graph viewer with orbital navigation, a live logs and telemetry dashboard, manual data ingestion panel, configuration editor with YAML schema support, feature toggles, system health monitoring, and session history — all styled with the ZettelForge Design System (Neural Dark, Neuropol + Inter + JetBrains Mono, <code>#00FFA3</code> signal accent).</p>
+<h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">&para;</a></h2>
+<p>The current web UI at <code>GET /</code> serves a single ~180-line inline HTML page with basic search, synthesis, remember, and OpenCTI sync tabs. It is functional for quick querying but lacks the depth needed for three core user personas:</p>
+<p><strong>1. CTI analysts</strong> need to explore the knowledge graph visually — not just read JSON-shaped results, but see entity nodes, edges, temporal relationships, and alias clusters in a 3D space they can navigate. The <code>KnowledgeGraph</code> module stores rich entity data (CVEs, actors, tools, campaigns) with causal triples and temporal edges, but the current UI renders only flat text results.</p>
+<p><strong>2. System operators</strong> need a dashboard showing telemetry (per-query latency, recall rates, synthesis quality), live log streaming (structlog events, OCSF audit events, JSONL telemetry), and system health indicators (LanceDB compaction status, enrichment queue depth, embedding model loaded, LLM provider status). The <code>TelemetryCollector</code> already writes detailed per-query JSONL files, but there is no way to inspect them without reading raw files.</p>
+<p><strong>3. Configuration managers</strong> need to view and edit <code>config.yaml</code> settings from the UI — toggle PII detection, switch LLM providers, adjust governance limits, select local backend engine (llama-cpp-python vs onnxruntime-genai), enable/disable features, and see which features are enterprise-gated vs community-available.</p>
+<h3 id="what-the-user-explicitly-asked-for">What the user explicitly asked for<a class="headerlink" href="#what-the-user-explicitly-asked-for" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Logs and telemetry visibility</li>
+<li>Knowledge graph representation with 3D navigation</li>
+<li>Manual ingestion (input CTI text and store it)</li>
+<li>Configuration and feature management</li>
+</ul>
+<h3 id="what-ive-added-based-on-gap-analysis">What I've added based on gap analysis<a class="headerlink" href="#what-ive-added-based-on-gap-analysis" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>System health panel</strong>: embedding model status, storage backend type, enrichment queue depth, LLM provider connectivity, memory usage, data directory size</li>
+<li><strong>Session history / query log</strong>: browse past searches, synthesis calls, and remember operations with timestamps, latency, and result counts</li>
+<li><strong>Entity browser</strong>: table view of all indexed entities (actors, CVEs, tools, campaigns) with filter and search, linked to graph view</li>
+<li><strong>Synthesis format selector</strong>: choose between direct_answer, synthesized_brief, timeline_analysis, and relationship_map from the UI</li>
+<li><strong>YAML config editor</strong>: direct YAML editing with syntax highlighting, validation, and real-time apply (no restart) where possible</li>
+<li><strong>Dark theme by default</strong>: the ZettelForge Design System specifies Neural Dark as canonical; no light mode for the app</li>
+</ul>
+<h2 id="proposed-design">Proposed Design<a class="headerlink" href="#proposed-design" title="Permanent link">&para;</a></h2>
+<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
+<p>The GUI is served as a static SPA from a new <code>web/ui/</code> directory. The existing FastAPI backend (<code>web/app.py</code>) is extended with new REST endpoints. The SPA communicates with the backend exclusively via JSON APIs — no server-side rendering, no templates.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>web/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  app.py              # Extended with new endpoints
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  auth.py             # Unchanged
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  mcp_server.py       # Unchanged
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  ui/                 # NEW — static SPA
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    index.html        # Entry point (minimal shell)
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    colors_and_type.css   # Design tokens (copied from design system)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    fonts/Neuropol.otf   # Brand font
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    favicon.svg           # Brand favicon
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    assets/               # Logo SVGs, mark icons
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    js/
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>      app.js            # Main SPA — React-like vanilla JS framework
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>      router.js         # URL hash routing (#/dashboard, #/graph, #/logs, etc.)
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>      components/       # Reusable UI components
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>        header.js       # Top bar with brand mark, navigation, stats
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        sidebar.js      # Navigation sidebar with sections
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>        search-bar.js   # CTI search input
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>        result-card.js  # Memory note display card
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        tabs.js         # Tab bar component
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        panel.js        # Config panel component
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>        modal.js        # Modal overlay
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        toast.js        # Notification toast
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>        spinner.js      # Loading indicator
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>      views/            # Page-level views
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        dashboard.js    # System health overview
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        search.js       # Recall / synthesize search view
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        graph.js        # 3D knowledge graph viewer
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        logs.js         # Telemetry and log viewer
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        ingest.js       # Manual ingestion panel
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        config.js       # Configuration editor
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        entities.js     # Entity browser
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        history.js      # Session history
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>      lib/
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        api.js          # fetch wrapper for all backend endpoints
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        state.js        # Simple reactive state manager
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        graph-3d.js     # Three.js-based 3D knowledge graph renderer
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>        yaml-editor.js  # Simple YAML editor with validation
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>        telemetry-charts.js   # Chart rendering (Chart.js via CDN)
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>        log-stream.js   # Server-Sent Events log stream consumer
+</code></pre></div>
+<h3 id="backend-api-extensions">Backend API Extensions<a class="headerlink" href="#backend-api-extensions" title="Permanent link">&para;</a></h3>
+<p>New endpoints added to <code>web/app.py</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/health</code></td>
+<td>System health: version, edition, storage backend, embedding status, LLM status, enrichment queue depth, memory usage, data dir size</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/config</code></td>
+<td>Current config (redacted secrets) as YAML or JSON</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/api/config</code></td>
+<td>Apply config changes (subset supported at runtime, full reload requires restart)</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/telemetry</code></td>
+<td>Telemetry summary: daily aggregates, recent queries, top intents</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/telemetry/stream</code></td>
+<td>Server-Sent Events stream of live telemetry events</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/logs</code></td>
+<td>Recent structlog events (last N lines from log file)</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/logs/stream</code></td>
+<td>Server-Sent Events stream of live log entries</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/graph/nodes</code></td>
+<td>All entity nodes for graph rendering</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/graph/edges</code></td>
+<td>All relationship edges for graph rendering</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/graph/search?q=...</code></td>
+<td>Search graph nodes by entity name/type/alias</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/entities</code></td>
+<td>Paginated entity index with filters (type, tier, date range)</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/entities/:id</code></td>
+<td>Single entity detail with connected entities and timeline</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/history</code></td>
+<td>Recent session activity (recall/synthesize/remember calls)</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/storage</code></td>
+<td>Storage stats: total notes, entity count, graph size, db size</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/ingest</code></td>
+<td>Bulk ingestion endpoint (accept text, URL fetch, or JSON report)</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/restart</code></td>
+<td>Trigger graceful restart after config changes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="views-detail">Views Detail<a class="headerlink" href="#views-detail" title="Permanent link">&para;</a></h3>
+<h4 id="1-dashboard-system-health">1. Dashboard (system health)<a class="headerlink" href="#1-dashboard-system-health" title="Permanent link">&para;</a></h4>
+<p>A tiled overview of system status:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>+--------------------------------------------------------------+
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|  ZETTELFORGE / SYSTEM HEALTH                                 |
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>|                                                              |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|  [Storage]        [LLM]            [Embedding]    [Queue]    |
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>|  SQLite + LanceDB  Ollama / LlamaCpp  Fastembed   0 pending  |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|  4,060 notes       qwen3.5:9b       loaded        idle      |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>|  847 entities      47ms avg         7ms/chunk     --------  |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|  25 MB             97% uptime       768-dim       --------  |
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>|                                                              |
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|  [Telemetry Today]              [Top Intents This Week]      |
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>|  142 queries · 47ms avg         factual   ████████ 48%      |
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>|  28 syntheses · 312ms avg       temporal  ████     22%      |
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|  15 remembers · 45ms avg        causal    ███      17%      |
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>|                                 relational ██      10%      |
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|  [Quick Actions]               exploratory █       3%       |
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>|  [Run Compaction]  [Force Sync]                              |
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>+--------------------------------------------------------------+
+</code></pre></div>
+<p>Telemetry data from <code>TelemetryCollector</code> JSONL files is aggregated server-side into daily summaries. Client renders using Chart.js (lightweight, no build step) for bar/line charts of query volume and latency over time.</p>
+<h4 id="2-knowledge-graph-3d-viewer">2. Knowledge Graph (3D viewer)<a class="headerlink" href="#2-knowledge-graph-3d-viewer" title="Permanent link">&para;</a></h4>
+<p>Three.js-based 3D force-directed graph with orbital navigation:</p>
+<ul>
+<li><strong>Camera controls</strong>: orbit (drag to rotate), pan (right-drag or shift-drag), zoom (scroll wheel or pinch). Inspired by the existing <code>DesignCanvas.jsx</code> in the design system (pan/zoom with gesture support), extended to 3D.</li>
+<li><strong>Nodes</strong>: entity types rendered as distinct shapes — threat actors as hexagons (<code>#58A6FF</code>), CVEs as diamonds (<code>#F85149</code>), tools as squares (<code>#A371F7</code>), campaigns as circles (<code>#D29922</code>), notes as small dots (<code>#8B949E</code>). Active/selected node gets the <code>#00FFA3</code> signal glow.</li>
+<li><strong>Edges</strong>: relationship types color-coded — <code>uses</code> (blue <code>#58A6FF</code>), <code>targets</code> (red <code>#F85149</code>), <code>attributed_to</code> (purple <code>#A371F7</code>), temporal <code>before</code>/<code>after</code> (orange <code>#F0883E</code>), <code>supersedes</code> (pink <code>#DB61A2</code>). Dashed lines for temporal edges, solid for semantic.</li>
+<li><strong>Interaction</strong>: click a node to show entity detail panel (name, aliases, tier, confidence, connected entities, timeline of events). Double-click to center and zoom. Hover to show label. Mouse wheel zooms.</li>
+<li><strong>Search</strong>: text input to highlight matching nodes. Alias resolution — searching "Fancy Bear" highlights the APT28 node.</li>
+<li><strong>Controls panel</strong>: toggle edge labels, filter by entity type, filter by tier (A/B/C), time-range slider for temporal edges, reset camera button, export as SVG.</li>
+<li><strong>Performance</strong>: node count capped at 2,000 visible nodes with distance-based LOD. Beyond that, clusters are collapsed into aggregate nodes with count badges.</li>
+</ul>
+<p>Rendering approach: use Three.js via CDN (<code>https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js</code>) plus OrbitControls. The force-directed layout runs in a Web Worker to keep the UI responsive. Spring-based force simulation (repulsion between nodes, attraction along edges, centering force) runs at ~30fps on the GPU.</p>
+<h4 id="3-logs-and-telemetry">3. Logs and Telemetry<a class="headerlink" href="#3-logs-and-telemetry" title="Permanent link">&para;</a></h4>
+<p>Two-panel layout:</p>
+<p><strong>Log panel</strong> (left / top):
+- Virtual-scrolled list of recent structlog events, one row per event
+- Columns: timestamp, level (color-coded badge: ERROR=red, WARNING=amber, INFO=default, DEBUG=dim), logger name, message
+- Filter by level, logger name, text search
+- Auto-scroll with pause toggle (when paused, new entries append silently; a "N new" badge appears)
+- Server-Sent Events stream for live updates (<code>/api/logs/stream</code>)
+- Expand row to show full structured context (JSON dict)</p>
+<p><strong>Telemetry panel</strong> (right / bottom):
+- Tabbed: Query Volume, Latency, Intent Distribution, Feedback
+- Charts from Chart.js: daily query count bar chart, latency percentile line chart (p50/p95/p99), intent distribution donut, feedback utility histogram (1-5)
+- Date range picker (today, 7 days, 30 days, custom)
+- Data source: aggregated from <code>~/.amem/telemetry/telemetry_YYYY-MM-DD.jsonl</code> files
+- Export as CSV button</p>
+<h4 id="4-manual-ingestion">4. Manual Ingestion<a class="headerlink" href="#4-manual-ingestion" title="Permanent link">&para;</a></h4>
+<p>Evolution of the current "Remember" tab with additional capabilities:</p>
+<ul>
+<li><strong>Text input</strong>: large textarea (same as current <code>RememberPanel.jsx</code>) with placeholder "Paste threat intelligence text, IOCs, or report content..."</li>
+<li><strong>Source metadata</strong>: domain selector (cti, sigma, yara, report, general), source type selector (manual, report, feed, api), source ref text input (URL or document ID), tier override (auto/A/B/C)</li>
+<li><strong>File upload</strong>: drag-and-drop area or file picker for .txt, .json (STIX bundle), .md, .csv (IOC list). Server extracts entities client-side preview before submission.</li>
+<li><strong>Bulk mode</strong>: submit multiple items at once with progress indicator (N/M stored, per-item status)</li>
+<li><strong>Feedback row</strong>: after ingestion, show what was detected — extracted entities list, aliases resolved, tier assigned, confidence score. Collapsible detail section.</li>
+</ul>
+<h4 id="5-configuration-and-features">5. Configuration and Features<a class="headerlink" href="#5-configuration-and-features" title="Permanent link">&para;</a></h4>
+<p>Dual-mode panel:</p>
+<p><strong>Feature flags view</strong> (default):
+- Grouped section cards: Core, Retrieval, Synthesis, Governance, LLM, Embedding, Storage, Extensions
+- Each feature shows name, current value, description, and whether it requires enterprise edition
+- Toggle switches for boolean configs (governance.enabled, pii.enabled, etc.)
+- Dropdown selects for constrained values (llm.provider, embedding.provider, governance.pii.action)
+- Number inputs for numeric configs (retrieval.default_k, governance.limits.max_content_length)
+- "Requires restart" badge next to fields that need a process restart
+- "Apply Changes" button pushes <code>PUT /api/config</code> with only changed values</p>
+<p><strong>YAML editor view</strong> (advanced):
+- Full config.yaml display in a monospace textarea with YAML syntax highlighting (client-side, simple regex-based)
+- Validation indicator (green checkmark / red error with line number)
+- "Apply" button sends the full YAML to <code>PUT /api/config</code> (server validates, rejects invalid fields)
+- "Reset to defaults" button
+- Warning banner: "Some changes require a restart. Click 'Restart Now' when ready."</p>
+<p><strong>Secrets redaction</strong>: both views show <code>***</code> for sensitive fields (api_key, password, license_key). The <code>PUT /api/config</code> endpoint accepts the redacted value as a no-op sentinel (skip field if value is <code>***</code>).</p>
+<h4 id="6-entity-browser">6. Entity Browser<a class="headerlink" href="#6-entity-browser" title="Permanent link">&para;</a></h4>
+<p>Table view of all indexed entities:</p>
+<ul>
+<li>Columns: entity name, type (actor, CVE, tool, campaign, etc.), tier, confidence, aliases, first seen, last seen, connected count</li>
+<li>Sortable columns, client-side pagination (50 per page)</li>
+<li>Filter bar: type dropdown, tier checkboxes, text search across name and aliases</li>
+<li>Click row to expand inline detail: full entity JSON, timeline of related notes, connected entities graph (small 2D force graph in a modal)</li>
+<li>Link to graph view ("View in Knowledge Graph") that pre-fills the graph view with the entity highlighted</li>
+</ul>
+<h4 id="7-session-history">7. Session History<a class="headerlink" href="#7-session-history" title="Permanent link">&para;</a></h4>
+<p>Chronological activity log:</p>
+<ul>
+<li>One row per <code>start_query()</code> call tracked by <code>TelemetryCollector</code></li>
+<li>Columns: timestamp, query text (truncated), type (recall/synthesize/remember), latency (ms), result count, intent</li>
+<li>Click to expand: show full query, all retrieved note IDs, synthesis result text, feedback events</li>
+<li>Date range filter</li>
+<li>Export as JSON or CSV</li>
+<li>"Re-run query" button that navigates to search view and executes the same query</li>
+</ul>
+<h3 id="navigation">Navigation<a class="headerlink" href="#navigation" title="Permanent link">&para;</a></h3>
+<p>Left sidebar with icon-labeled items:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>|  ZF  |  ZettelForge v2.4.3
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|------|
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>|  [~] |  Dashboard
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>|  [/] |  Search / Explore
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>|  [G] |  Knowledge Graph
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>|  [L] |  Logs &amp; Telemetry
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>|  [+] |  Ingest Data
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>|  [E] |  Entities
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>|  [H] |  History
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>|  [*] |  Configuration
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>|------|
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>|  [i] |  System Info
+</code></pre></div>
+<p>Sidebar collapses to icon-only at &lt;960px viewport width. Active section is highlighted with the <code>#00FFA3</code> signal green left border accent.</p>
+<h3 id="design-system-integration">Design System Integration<a class="headerlink" href="#design-system-integration" title="Permanent link">&para;</a></h3>
+<p>All visual decisions follow <code>colors_and_type.css</code> from the design system archive:</p>
+<ul>
+<li><strong>Background</strong>: <code>#0A0E17</code> (graphite-0) — the canonical Neural Dark canvas</li>
+<li><strong>Surfaces</strong>: <code>#161B22</code> (graphite-3) with <code>1px solid #30363D</code> (graphite-5) borders</li>
+<li><strong>Typographic hierarchy</strong>: Inter for UI labels and body, JetBrains Mono for all data (entity IDs, CVEs, timestamps, metrics, config YAML, log lines), Neuropol for the wordmark only</li>
+<li><strong>Signal accent</strong>: <code>#00FFA3</code> reserved for one element per view — the active navigation item, the currently selected graph node, the status indicator</li>
+<li><strong>Card radius</strong>: <code>8px</code> for panels and cards, <code>6px</code> for inputs/buttons, <code>9999px</code> for entity pill tags</li>
+<li><strong>No shadows</strong> in the app UI (flat per design system rules). Focus states use <code>0 0 0 3px rgba(88,166,255,0.10)</code> halo</li>
+<li><strong>Hover</strong>: border color shifts to <code>#58A6FF</code> (the link/info-blue)</li>
+<li><strong>Spacing</strong>: <code>--sp-4: 16px</code> interior card padding, <code>--sp-6: 24px</code> page padding, <code>--sp-8: 32px</code> section spacing</li>
+<li><strong>Icons</strong>: Lucide via CDN (<code>16px</code> inline, <code>currentColor</code>). The design system explicitly recommends Lucide for UI icons.</li>
+<li><strong>Font loading</strong>: Neuropol via <code>@font-face { src: url('fonts/Neuropol.otf') }</code>, Inter + JetBrains Mono via Google Fonts CDN</li>
+</ul>
+<h3 id="component-inventory-from-design-system">Component Inventory (from design system)<a class="headerlink" href="#component-inventory-from-design-system" title="Permanent link">&para;</a></h3>
+<p>The existing <code>ui_kits/web_ui/</code> components are directly reusable:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Design System File</th>
+<th>Reuse in New GUI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Header</td>
+<td><code>Header.jsx</code></td>
+<td>Direct — brand mark, stats, user avatar</td>
+</tr>
+<tr>
+<td>SearchBar</td>
+<td><code>SearchBar.jsx</code></td>
+<td>Direct — query input with focus styling</td>
+</tr>
+<tr>
+<td>TabBar</td>
+<td><code>TabBar.jsx</code></td>
+<td>Adapted — sub-navigation within views</td>
+</tr>
+<tr>
+<td>ResultCard</td>
+<td><code>ResultCard.jsx</code></td>
+<td>Direct — memory note display</td>
+</tr>
+<tr>
+<td>SynthesisBlock</td>
+<td><code>SynthesisBlock.jsx</code></td>
+<td>Direct — synthesis answer display</td>
+</tr>
+<tr>
+<td>RememberPanel</td>
+<td><code>RememberPanel.jsx</code></td>
+<td>Extended — source metadata + file upload</td>
+</tr>
+<tr>
+<td>EmptyState</td>
+<td><code>Misc.jsx</code> (EmptyState)</td>
+<td>Direct</td>
+</tr>
+<tr>
+<td>MetaBar</td>
+<td><code>Misc.jsx</code> (MetaBar)</td>
+<td>Direct</td>
+</tr>
+<tr>
+<td>SyncPanel</td>
+<td><code>Misc.jsx</code> (SyncPanel)</td>
+<td>Kept for enterprise-gated sync UI</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3d-graph-rendering-library-options">3D Graph Rendering Library Options<a class="headerlink" href="#3d-graph-rendering-library-options" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Pros</th>
+<th>Cons</th>
+<th>Decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Three.js (CDN)</td>
+<td>Battle-tested, GPU-accelerated, OrbitControls support, large ecosystem, ~140KB gzipped</td>
+<td>Higher learning curve, no built-in graph layout</td>
+<td><strong>Chosen</strong> — best performance with thousands of nodes</td>
+</tr>
+<tr>
+<td>D3-force + canvas</td>
+<td>Lighter (single D3 module), familiar force layout</td>
+<td>No 3D, 2D only, slower with 500+ nodes</td>
+<td>Rejected — user explicitly asked for 3D navigation</td>
+</tr>
+<tr>
+<td>Vis.js Network</td>
+<td>Drop-in graph component, built-in physics</td>
+<td>No 3D, limited styling, unmaintained</td>
+<td>Rejected — no 3D, stale project</td>
+</tr>
+<tr>
+<td>Sigma.js</td>
+<td>WebGL-accelerated 2D graph, fast</td>
+<td>No 3D, dependency on WebGL without 3D benefit</td>
+<td>Rejected — 2D only</td>
+</tr>
+</tbody>
+</table>
+<p>Three.js is preferred despite the size because:
+- It supports true 3D orbital navigation (the user's explicit requirement)
+- GPU rendering handles 2,000+ nodes at 60fps
+- OrbitControls provides camera rotation, pan, and zoom out of the box
+- The existing design system's <code>DesignCanvas.jsx</code> proves pan/zoom is a first-class pattern in the brand</p>
+<h3 id="file-changes">File Changes<a class="headerlink" href="#file-changes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Change Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>web/app.py</code></td>
+<td>Modify</td>
+<td>Add 15+ new API endpoints, SSE stream handlers</td>
+</tr>
+<tr>
+<td><code>web/ui/index.html</code></td>
+<td>Create</td>
+<td>SPA shell — CSS, JS imports, root div, no server-side content</td>
+</tr>
+<tr>
+<td><code>web/ui/colors_and_type.css</code></td>
+<td>Copy</td>
+<td>Design tokens from ZettelForge Design System archive</td>
+</tr>
+<tr>
+<td><code>web/ui/fonts/Neuropol.otf</code></td>
+<td>Copy</td>
+<td>Brand display font</td>
+</tr>
+<tr>
+<td><code>web/ui/favicon.svg</code></td>
+<td>Copy</td>
+<td>Brand favicon from design system assets</td>
+</tr>
+<tr>
+<td><code>web/ui/assets/logo.svg</code></td>
+<td>Copy</td>
+<td>Shield-and-neuron mark</td>
+</tr>
+<tr>
+<td><code>web/ui/assets/threatrecall-lockup.svg</code></td>
+<td>Copy</td>
+<td>Wordmark variant</td>
+</tr>
+<tr>
+<td><code>web/ui/assets/zettelforge_architecture.svg</code></td>
+<td>Copy</td>
+<td>Architecture diagram (system info view)</td>
+</tr>
+<tr>
+<td><code>web/ui/js/app.js</code></td>
+<td>Create</td>
+<td>Main application shell, route switching, state management</td>
+</tr>
+<tr>
+<td><code>web/ui/js/router.js</code></td>
+<td>Create</td>
+<td>Hash-based SPA router</td>
+</tr>
+<tr>
+<td><code>web/ui/js/lib/api.js</code></td>
+<td>Create</td>
+<td>fetch wrapper with auth headers, error handling, retry</td>
+</tr>
+<tr>
+<td><code>web/ui/js/lib/state.js</code></td>
+<td>Create</td>
+<td>Reactive state store (pub/sub pattern, no framework)</td>
+</tr>
+<tr>
+<td><code>web/ui/js/lib/graph-3d.js</code></td>
+<td>Create</td>
+<td>Three.js 3D graph renderer with force layout, orbit controls, node/edge styling</td>
+</tr>
+<tr>
+<td><code>web/ui/js/lib/yaml-editor.js</code></td>
+<td>Create</td>
+<td>YAML text editor with syntax highlighting and validation</td>
+</tr>
+<tr>
+<td><code>web/ui/js/lib/telemetry-charts.js</code></td>
+<td>Create</td>
+<td>Chart.js wrapper for dashboard charts</td>
+</tr>
+<tr>
+<td><code>web/ui/js/lib/log-stream.js</code></td>
+<td>Create</td>
+<td>EventSource consumer for SSE log and telemetry streams</td>
+</tr>
+<tr>
+<td><code>web/ui/js/components/*.js</code> (10 files)</td>
+<td>Create</td>
+<td>Reusable UI components</td>
+</tr>
+<tr>
+<td><code>web/ui/js/views/*.js</code> (8 files)</td>
+<td>Create</td>
+<td>Page-level view modules</td>
+</tr>
+<tr>
+<td><code>config.default.yaml</code></td>
+<td>Modify</td>
+<td>Add <code>web.ui</code> config section (port, ui_dir path, etc.)</td>
+</tr>
+<tr>
+<td><code>src/zettelforge/config.py</code></td>
+<td>Modify</td>
+<td>Add <code>WebConfig</code> dataclass with ui settings</td>
+</tr>
+<tr>
+<td><code>tests/test_web_api.py</code></td>
+<td>Create</td>
+<td>Integration tests for new API endpoints</td>
+</tr>
+<tr>
+<td><code>pyproject.toml</code></td>
+<td>Modify</td>
+<td>Add <code>web</code> extra with optional deps (three.js not needed — CDN)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="backend-implementation-notes">Backend Implementation Notes<a class="headerlink" href="#backend-implementation-notes" title="Permanent link">&para;</a></h3>
+<h4 id="api-apihealth">API: <code>/api/health</code><a class="headerlink" href="#api-apihealth" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/health&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">health</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="kn">import</span><span class="w"> </span><span class="nn">psutil</span>  <span class="c1"># optional, graceful fallback</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">mm</span> <span class="o">=</span> <span class="n">get_mm_for_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.telemetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_telemetry</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="n">__version__</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="s2">&quot;edition&quot;</span><span class="p">:</span> <span class="s2">&quot;enterprise&quot;</span> <span class="k">if</span> <span class="n">is_enterprise</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;community&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="s2">&quot;storage_backend&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ZETTELFORGE_BACKEND&quot;</span><span class="p">,</span> <span class="s2">&quot;sqlite&quot;</span><span class="p">),</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="s2">&quot;embedding_provider&quot;</span><span class="p">:</span> <span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">embedding</span><span class="o">.</span><span class="n">provider</span><span class="p">,</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="s2">&quot;embedding_model&quot;</span><span class="p">:</span> <span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">embedding</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="s2">&quot;llm_provider&quot;</span><span class="p">:</span> <span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">provider</span><span class="p">,</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="s2">&quot;llm_model&quot;</span><span class="p">:</span> <span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="s2">&quot;llm_local_backend&quot;</span><span class="p">:</span> <span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">local_backend</span><span class="p">,</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        <span class="s2">&quot;enrichment_queue_depth&quot;</span><span class="p">:</span> <span class="n">mm</span><span class="o">.</span><span class="n">_enrichment_queue</span><span class="o">.</span><span class="n">qsize</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">mm</span><span class="p">,</span> <span class="s1">&#39;_enrichment_queue&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        <span class="s2">&quot;governance_enabled&quot;</span><span class="p">:</span> <span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">governance</span><span class="o">.</span><span class="n">enabled</span><span class="p">,</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>        <span class="s2">&quot;pii_enabled&quot;</span><span class="p">:</span> <span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">governance</span><span class="o">.</span><span class="n">pii</span><span class="o">.</span><span class="n">enabled</span><span class="p">,</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>        <span class="s2">&quot;uptime_seconds&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">monotonic</span><span class="p">()</span> <span class="o">-</span> <span class="n">_start_time</span><span class="p">,</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        <span class="s2">&quot;data_dir&quot;</span><span class="p">:</span> <span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">data_dir</span><span class="p">,</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>        <span class="s2">&quot;memory_usage_mb&quot;</span><span class="p">:</span> <span class="n">_get_memory_mb</span><span class="p">(),</span>  <span class="c1"># psutil or /proc/self/status</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>        <span class="s2">&quot;data_size_mb&quot;</span><span class="p">:</span> <span class="n">_get_data_dir_size_mb</span><span class="p">(),</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="p">}</span>
+</code></pre></div>
+<h4 id="api-apigraphnodes-and-apigraphedges">API: <code>/api/graph/nodes</code> and <code>/api/graph/edges</code><a class="headerlink" href="#api-apigraphnodes-and-apigraphedges" title="Permanent link">&para;</a></h4>
+<p>These endpoints serialize the in-memory <code>KnowledgeGraph</code> caches into a format Three.js can consume:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/graph/nodes&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">graph_nodes</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">mm</span> <span class="o">=</span> <span class="n">get_mm_for_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">kg</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">_knowledge_graph</span>  <span class="c1"># access the KG instance</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="k">for</span> <span class="n">nid</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">kg</span><span class="o">.</span><span class="n">_nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">nid</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">nid</span><span class="p">),</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;entity_type&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">),</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>            <span class="s2">&quot;tier&quot;</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tier&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">),</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>            <span class="s2">&quot;aliases&quot;</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;aliases&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>            <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;confidence&quot;</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>            <span class="s2">&quot;created_at&quot;</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;created_at&quot;</span><span class="p">),</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        <span class="p">})</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="n">nodes</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)}</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/graph/edges&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">graph_edges</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    <span class="n">mm</span> <span class="o">=</span> <span class="n">get_mm_for_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="n">kg</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">_knowledge_graph</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    <span class="k">for</span> <span class="n">eid</span><span class="p">,</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">kg</span><span class="o">.</span><span class="n">_edges</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>        <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">eid</span><span class="p">,</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>            <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">edge</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_id&quot;</span><span class="p">),</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>            <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">edge</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;target_id&quot;</span><span class="p">),</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>            <span class="s2">&quot;relationship&quot;</span><span class="p">:</span> <span class="n">edge</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;relationship&quot;</span><span class="p">),</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>            <span class="s2">&quot;created_at&quot;</span><span class="p">:</span> <span class="n">edge</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;created_at&quot;</span><span class="p">),</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>        <span class="p">})</span>
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;edges&quot;</span><span class="p">:</span> <span class="n">edges</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">)}</span>
+</code></pre></div>
+<h4 id="sse-log-streaming">SSE Log Streaming<a class="headerlink" href="#sse-log-streaming" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nd">@app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/api/logs/stream&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">log_stream</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">event_generator</span><span class="p">():</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="c1"># Tail the structlog file</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="n">log_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">get_config</span><span class="p">()</span><span class="o">.</span><span class="n">logging</span><span class="o">.</span><span class="n">log_file</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">log_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>            <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;data: </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s1">&#39;event&#39;</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;log file not found&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;level&#39;</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;WARNING&#39;</span><span class="p">})</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>            <span class="k">return</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># tail end</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>                <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>                <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>                    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>                        <span class="n">event</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>                        <span class="k">yield</span> <span class="sa">f</span><span class="s2">&quot;data: </span><span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">event</span><span class="p">)</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>                    <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>                        <span class="k">pass</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>                <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>                    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    <span class="k">return</span> <span class="n">StreamingResponse</span><span class="p">(</span><span class="n">event_generator</span><span class="p">(),</span> <span class="n">media_type</span><span class="o">=</span><span class="s2">&quot;text/event-stream&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h4 id="config-put-endpoint">Config PUT Endpoint<a class="headerlink" href="#config-put-endpoint" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nd">@app</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;/api/config&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">update_config</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">):</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="c1"># Validate incoming keys match known config fields</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="c1"># Apply changes to in-memory config (subset supported)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="c1"># For changes requiring restart, set a flag</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="c1"># Return list of applied changes + list of pending-restart changes</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="k">pass</span>
+</code></pre></div>
+<h4 id="ingest-endpoint">Ingest Endpoint<a class="headerlink" href="#ingest-endpoint" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">IngestItem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">source_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;manual&quot;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">source_ref</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;cti&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    <span class="n">evolve</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="n">tier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># override auto-tiering</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="k">class</span><span class="w"> </span><span class="nc">IngestRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">IngestItem</span><span class="p">]</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="nd">@app</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/api/ingest&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ingest</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span> <span class="n">req</span><span class="p">:</span> <span class="n">IngestRequest</span><span class="p">):</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    <span class="n">tenant_mm</span> <span class="o">=</span> <span class="n">get_mm_for_request</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">req</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>            <span class="n">note</span><span class="p">,</span> <span class="n">status_text</span> <span class="o">=</span> <span class="n">tenant_mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>                <span class="n">content</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">content</span><span class="p">,</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>                <span class="n">source_type</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">source_type</span><span class="p">,</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>                <span class="n">source_ref</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">source_ref</span><span class="p">,</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>                <span class="n">domain</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>                <span class="n">evolve</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">evolve</span><span class="p">,</span>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>            <span class="p">)</span>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>                <span class="s2">&quot;note_id&quot;</span><span class="p">:</span> <span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">status_text</span><span class="p">,</span>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>                <span class="s2">&quot;entities&quot;</span><span class="p">:</span> <span class="n">note</span><span class="o">.</span><span class="n">semantic</span><span class="o">.</span><span class="n">entities</span><span class="p">[:</span><span class="mi">10</span><span class="p">],</span>
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>                <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>            <span class="p">})</span>
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>                <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>                <span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>                <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>            <span class="p">})</span>
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>    <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">),</span>
+<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>        <span class="s2">&quot;succeeded&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">]),</span>
+<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>        <span class="s2">&quot;failed&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;success&quot;</span><span class="p">]),</span>
+<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a>        <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">,</span>
+<a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a>    <span class="p">}</span>
+</code></pre></div>
+<h3 id="zero-dependency-frontend-approach">Zero-Dependency Frontend Approach<a class="headerlink" href="#zero-dependency-frontend-approach" title="Permanent link">&para;</a></h3>
+<p>The SPA is built with vanilla JavaScript — no React, no build step, no npm, no Webpack. Rationale:</p>
+<ol>
+<li><strong>CDN-loaded libraries</strong> (Three.js, Chart.js, Lucide) are the only external dependencies. The application code is pure ES6 modules served as static files.</li>
+<li><strong>No build step</strong> means the UI ships as plain HTML/CSS/JS in the repo. Users can hack on it in any text editor. No <code>npm install</code>, no <code>node_modules</code>, no build errors.</li>
+<li><strong>Zero npm supply chain risk</strong> — every dependency is loaded from a pinned CDN URL with integrity hashes. No transitive dependency surprises.</li>
+<li><strong>Fast cold start</strong> — <code>python web/app.py</code> serves the UI immediately. No npm install step in setup or CI.</li>
+<li><strong>Consistent with project philosophy</strong> — the project explicitly avoids heavy frameworks (no LangChain, no LiteLLM as a framework). The UI follows the same principle.</li>
+</ol>
+<p>The <code>app.js</code> module uses a lightweight reactive pattern:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// Simple observable store</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nx">_state</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">view</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;dashboard&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">sidebar</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nx">_listeners</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nx">get</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_state</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nx">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">_state</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">value</span><span class="p">;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">[]).</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">fn</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">fn</span><span class="p">(</span><span class="nx">value</span><span class="p">));</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="nx">on</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="w"> </span><span class="nx">fn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="nx">_listeners</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">[]).</span><span class="nx">push</span><span class="p">(</span><span class="nx">fn</span><span class="p">);</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="p">};</span>
+</code></pre></div>
+<p>Routing uses <code>hashchange</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">&#39;hashchange&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">view</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">location</span><span class="p">.</span><span class="nx">hash</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s1">&#39;dashboard&#39;</span><span class="p">;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nx">renderView</span><span class="p">(</span><span class="nx">view</span><span class="p">);</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">});</span>
+</code></pre></div>
+<h3 id="responsive-layout">Responsive Layout<a class="headerlink" href="#responsive-layout" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>&gt;960px</strong>: sidebar visible + content area. Sidebar is fixed-width (200px) with the header above.</li>
+<li><strong>&lt;960px</strong>: sidebar collapses to icon-only (64px). Content fills remaining width. Header stats move to a collapsible menu.</li>
+<li><strong>&lt;640px</strong>: sidebar becomes a bottom tab bar (mobile-style). Header compresses to brand mark only.</li>
+<li>The 960px content max-width from the design system is preserved for search and reading views. Dashboard and config views use full width within the sidebar-constrained area.</li>
+</ul>
+<h2 id="migration">Migration<a class="headerlink" href="#migration" title="Permanent link">&para;</a></h2>
+<p><strong>Existing users:</strong> Zero changes. The existing <code>GET /</code> inline HTML page is replaced by the SPA at the same route. All existing API endpoints (<code>/api/recall</code>, <code>/api/remember</code>, <code>/api/synthesize</code>, <code>/api/sync</code>, <code>/api/stats</code>, <code>/api/edition</code>, <code>/auth/*</code>) remain unchanged and functional. The old inline HTML is removed.</p>
+<p><strong>Programmatic API consumers:</strong> Unaffected. All new endpoints are additive. The existing REST API surface is preserved.</p>
+<p><strong>Design System archive:</strong> The <code>colors_and_type.css</code>, <code>fonts/Neuropol.otf</code>, and <code>assets/</code> are copied into <code>web/ui/</code> at build/setup time. The original archive at <code>/mnt/usb-hdd/ZettelForge Design System.zip</code> remains the canonical source.</p>
+<h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Dependency</th>
+<th>Version</th>
+<th>Source</th>
+<th>Size (gzip)</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Three.js</td>
+<td>r152+</td>
+<td>CDN</td>
+<td>~140 KB</td>
+<td>3D graph rendering</td>
+</tr>
+<tr>
+<td>OrbitControls</td>
+<td>r152+</td>
+<td>CDN</td>
+<td>~8 KB</td>
+<td>3D camera controls</td>
+</tr>
+<tr>
+<td>Chart.js</td>
+<td>v4+</td>
+<td>CDN</td>
+<td>~70 KB</td>
+<td>Telemetry charts</td>
+</tr>
+<tr>
+<td>Lucide</td>
+<td>latest</td>
+<td>CDN</td>
+<td>~30 KB (tree-shaken via icons used)</td>
+<td>UI icons</td>
+</tr>
+<tr>
+<td>psutil</td>
+<td>5.9+</td>
+<td>PyPI (optional)</td>
+<td>~1 MB</td>
+<td>System health metrics</td>
+</tr>
+</tbody>
+</table>
+<p>psutil is added as an optional dependency (<code>pip install zettelforge[web]</code>). The health endpoint degrades gracefully without it (returns <code>null</code> for memory/disk metrics instead of raising).</p>
+<h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<p><strong>Alternative 1: React SPA with Vite build.</strong> React 18 + Vite + npm build pipeline. Rejected because: (a) adds a build step to a currently zero-build project; (b) introduces npm audit, supply chain risk, and dependency churn; (c) the project's CLAUDE.md explicitly avoids adding frameworks; (d) the existing design system's web UI kit is vanilla JSX (Babel-transpiled in-browser), not a React project with a build system.</p>
+<p><strong>Alternative 2: Keep the old inline HTML, add tabs.</strong> Extend the existing <code>HTML_PAGE</code> constant with more tabs. Rejected because: (a) the page is already 180+ lines of inline HTML+CSS+JS — adding 8 views to a single string is not maintainable; (b) inline HTML precludes modular JS, CDN library loading, and SSE streaming; (c) the 3D graph viewer cannot be embedded in an inline string.</p>
+<p><strong>Alternative 3: Multi-page server-rendered templates (Jinja2).</strong> FastAPI + Jinja2 templates for each page. Rejected because: (a) server-rendered pages mean reload on every navigation — worse UX than SPA; (b) the 3D graph viewer is inherently client-side; (c) SSE log streaming is harder to integrate with page reloads; (d) the design system explicitly describes the UI as "a single-page search tool, not a dashboard shell" — but the user is now asking for a dashboard.</p>
+<p><strong>Alternative 4: Grafana for telemetry, separate GraphDB UI.</strong> Use existing tools instead of building. Rejected because: (a) adds external service dependencies; (b) the project philosophy is in-process, no external services; (c) Grafana cannot render the knowledge graph; (d) the user explicitly wants one integrated interface.</p>
+<h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Should the 3D graph viewer support AR/VR (WebXR)?</strong> Three.js has WebXR support. Could be useful for SOC wall displays. Deferred to v2 — v1 focuses on desktop orbital navigation.</p>
+</li>
+<li>
+<p><strong>Should the config editor support live-reload for all fields?</strong> Some config fields (data_dir, provider switches) require full restart. A restart endpoint (<code>POST /api/restart</code>) is proposed, but async restart handling (wait for active queries to drain, then restart the process) needs design. Proposal for v1: mark restart-required fields in the UI, provide a manual restart button. Streamlined zero-downtime restart is v2.</p>
+</li>
+<li>
+<p><strong>What about WebSocket-based log streaming instead of SSE?</strong> SSE is simpler (no reconnect logic needed, browser-native EventSource API) and sufficient for one-way log streaming. WebSocket would allow bidirectional (e.g., sending commands from the UI to the server). Proposal: SSE for v1. WebSocket for v2 if needed.</p>
+</li>
+<li>
+<p><strong>Should the entity browser support bulk tag/edit operations?</strong> v1 is browse-only. Bulk operations (merge entities, retier, delete) are v2.</p>
+</li>
+<li>
+<p><strong>How should the 3D graph handle very large graphs (10,000+ nodes)?</strong> Proposal for v1: cap at 2,000 visible nodes with hierarchical clustering. Entities with &gt;50 connections become "supernodes" with expandable subgraphs. Full graph export to JSONL available via download. Proper LOD and spatial indexing deferred to v2.</p>
+</li>
+</ol>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p><strong>Decision</strong>: [Pending review]
+<strong>Date</strong>: [Pending]
+<strong>Decision Maker</strong>: [Pending]
+<strong>Rationale</strong>: [Pending]</p>
+<h2 id="implementation-plan">Implementation Plan<a class="headerlink" href="#implementation-plan" title="Permanent link">&para;</a></h2>
+<h3 id="phase-1-backend-api-extensions-frontend-scaffold-v250">Phase 1: Backend API Extensions + Frontend Scaffold (v2.5.0)<a class="headerlink" href="#phase-1-backend-api-extensions-frontend-scaffold-v250" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Add health, config, telemetry, graph nodes/edges, entities, history, ingest API endpoints to <code>web/app.py</code></li>
+<li>Add SSE log streaming endpoint to <code>web/app.py</code></li>
+<li>Create <code>web/ui/</code> directory with <code>index.html</code> SPA shell, <code>colors_and_type.css</code> (from design system), favicon/logo assets</li>
+<li>Create <code>web/ui/js/app.js</code>, <code>router.js</code>, <code>lib/api.js</code>, <code>lib/state.js</code></li>
+<li>Create all component files in <code>web/ui/js/components/</code></li>
+<li>Create Dashboard and Search views</li>
+<li>Update <code>config.default.yaml</code> and <code>config.py</code> with <code>WebConfig</code></li>
+<li>Add <code>web</code> extra to <code>pyproject.toml</code></li>
+<li>Write integration tests for new API endpoints</li>
+<li>Replace <code>GET /</code> inline HTML with SPA redirect (or inline embed of the SPA shell)</li>
+</ol>
+<h3 id="phase-2-knowledge-graph-3d-viewer-v250-or-v260">Phase 2: Knowledge Graph 3D Viewer (v2.5.0 or v2.6.0)<a class="headerlink" href="#phase-2-knowledge-graph-3d-viewer-v250-or-v260" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create <code>web/ui/js/lib/graph-3d.js</code> — Three.js scene setup, OrbitControls, force layout</li>
+<li>Create the Graph view (<code>web/ui/js/views/graph.js</code>)</li>
+<li>Wire up <code>/api/graph/nodes</code> and <code>/api/graph/edges</code> to the 3D renderer</li>
+<li>Handle node click/interaction/selection with entity detail panel</li>
+<li>Add search, filter, and export controls</li>
+<li>Performance testing with 500/1000/2000 node graphs</li>
+</ol>
+<h3 id="phase-3-logs-telemetry-config-history-ingestion-v250-or-v260">Phase 3: Logs, Telemetry, Config, History, Ingestion (v2.5.0 or v2.6.0)<a class="headerlink" href="#phase-3-logs-telemetry-config-history-ingestion-v250-or-v260" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create Logs &amp; Telemetry view with SSE streaming and Chart.js charts</li>
+<li>Create Config view with feature flags and YAML editor</li>
+<li>Create Entity Browser view with table and detail</li>
+<li>Create History view with session activity log</li>
+<li>Enhance Ingestion view with file upload and bulk mode</li>
+<li>Create Ingest and Config views</li>
+<li>Add responsive layout breakpoints</li>
+</ol>
+<h3 id="phase-4-polish-and-edge-cases-v260">Phase 4: Polish and Edge Cases (v2.6.0)<a class="headerlink" href="#phase-4-polish-and-edge-cases-v260" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Error boundaries in all views (API failure fallbacks)</li>
+<li>Loading states and skeleton screens</li>
+<li>Keyboard shortcuts (Shift+/ to focus search, Escape to close panels, etc.)</li>
+<li>Browser history integration (back/forward navigation)</li>
+<li>Performance optimization (lazy view loading, request debouncing)</li>
+<li>Documentation in <code>docs/</code> for the web interface</li>
+</ol>
+<h2 id="rollout-strategy">Rollout Strategy<a class="headerlink" href="#rollout-strategy" title="Permanent link">&para;</a></h2>
+<p><strong>Phase 1</strong> (v2.5.0): New API endpoints ship alongside existing endpoints. The old inline HTML is removed; <code>GET /</code> serves the new SPA. If the SPA fails to load (missing assets), the API endpoints still work from curl/scripts.</p>
+<p><strong>Rollback:</strong> <code>git revert web/app.py</code> and restore the old <code>HTML_PAGE</code> constant. The SPA directory can be removed without breaking the API.</p>
+<p><strong>Backward compatibility:</strong> All existing API endpoints, auth flows, and integration points (MCP server, LangChain retriever) are untouched.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/cf-analytics.js"></script>
+      
+    
+  </body>
+</html>

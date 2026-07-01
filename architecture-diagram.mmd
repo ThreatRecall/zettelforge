@@ -1,0 +1,202 @@
+---
+config:
+  theme: dark
+  layout: fixed
+---
+flowchart TB
+ subgraph MCP["MCP Server (stdio) 🔌"]
+    direction TB
+        MCP_REM["fa:fa-upload zettelforge_remember"]
+        MCP_REC["fa:fa-search zettelforge_recall"]
+        MCP_SYN["fa:fa-lightbulb zettelforge_synthesize"]
+        MCP_ENT["fa:fa-tag zettelforge_entity"]
+        MCP_GRF["fa:fa-project-diagram zettelforge_graph"]
+        MCP_STAT["fa:fa-chart-bar zettelforge_stats"]
+  end
+ subgraph LANGCHAIN["LangChain 🦜"]
+        LCR["fa:fa-plug ZettelForgeRetriever<br>BaseRetriever wrapper<br>recall() → Document"]
+  end
+ subgraph API["MemoryManager — Core API 🧭"]
+    direction TB
+        REM["fa:fa-upload remember()<br>fa:fa-copy remember_with_extraction()<br>fa:fa-file-alt remember_report()"]
+        REC["fa:fa-search recall()<br>fa:fa-tag recall_entity()"]
+        SYN["fa:fa-lightbulb synthesize()<br>fa:fa-compass get_context()"]
+  end
+ subgraph INGEST["Ingestion Pipeline 🧱"]
+    direction TB
+        GOV["fa:fa-gavel Governance Validator<br>controls.yaml spec-driven<br>CI drift detection"]
+        NC["fa:fa-pen Note Constructor<br>Enriched MemoryNote builder<br>~45ms fast path"]
+        FE["fa:fa-brain Fact Extractor<br>Phase 1: LLM extract<br>importance 1-10 scoring"]
+        CHK["fa:fa-clone Chunker<br>Sentence-boundary splitting<br>max 3000 chars"]
+        MU["fa:fa-sync-alt Memory Updater<br>Phase 2: ADD / UPDATE / DELETE / NOOP<br>Supersession tracking"]
+  end
+ subgraph ENRICH["Background Enrichment ⚙️"]
+    direction TB
+        EQ["fa:fa-layer-group Enrichment Queue<br>Async job dispatch<br>causal + evolution jobs"]
+        CAUSAL["fa:fa-link Causal Extractor<br>MAGMA-style triples<br>Bidirectional traversal"]
+        EVOLVER["fa:fa-dna Memory Evolver<br>A-Mem neighbor refinement<br>evaluate → evolve / keep / rollback"]
+        CONSOL["fa:fa-compress Consolidation<br>HGAM: EPG → TAN<br>Semantic shift detection"]
+  end
+ subgraph ENTITY["Entity Processing 🏷️"]
+    direction TB
+        EI["fa:fa-network-wired Entity Indexer<br>10 types: actor · intrusion_set · tool<br>campaign · cve · person · location<br>org · event · temporal<br>Regex fast-path + LLM fallback"]
+        AR["fa:fa-user-tag Alias Resolver<br>JSON entity aliases"]
+  end
+ subgraph STORAGE["Storage Layer 🗄️"]
+    direction TB
+     subgraph BACKEND["StorageBackend ABC (33 methods)"]
+         subgraph SQLITE["SQLite (Default)"]
+                SQL_N["fa:fa-table notes table<br>35 columns · WAL mode<br>ACID guarantees"]
+                SQL_KG["fa:fa-table kg_nodes + kg_edges<br>Temporal index · Causal edges<br>BFS/DFS traversal"]
+                SQL_EI["fa:fa-table entity_index<br>O(1) entity → note lookup"]
+          end
+         subgraph LANCE["LanceDB — Vector Index"]
+                VEC["fa:fa-braille 768-dim Embeddings<br>nomic-embed-text-v1.5-Q<br>IVF_FLAT · per-domain tables"]
+          end
+      end
+  end
+ subgraph RETRIEVE["Retrieval Pipeline 🔎"]
+    direction TB
+        IC["fa:fa-compass Intent Classifier<br>factual · temporal · relational<br>causal · exploratory"]
+        VR["fa:fa-vector-square Vector Retriever<br>LanceDB cosine similarity<br>threshold 0.15 · entity boost 2.5x"]
+        GR["fa:fa-project-diagram Graph Retriever<br>BFS traversal · max depth 2<br>score = 1/(1+hops)"]
+        BR["fa:fa-magnifying-glass Blended Retriever<br>Intent-adaptive weighting<br>vector_w + graph_w = 1.0"]
+        TB["fa:fa-clock Temporal Booster<br>Date-pattern matching<br>dateparser normalization"]
+        CB["fa:fa-arrow-right Causal Booster<br>Bidirectional BFS<br>provenance_chain()"]
+        XE["fa:fa-crosshairs Cross-Encoder Reranker<br>ms-marco-MiniLM-L-6-v2<br>~80MB · loaded once"]
+  end
+ subgraph OUTPUT["Synthesis & Validation 💡"]
+    direction TB
+        SG["fa:fa-robot Synthesis Generator<br>RAG-as-Answer · top-10 context<br>Format: direct_answer · brief · timeline · relationship_map"]
+        SV["fa:fa-check-circle Synthesis Validator<br>confidence > 0.3 · quality scoring<br>EXCELLENT ≥0.8 · GOOD ≥0.5"]
+  end
+ subgraph OBSERVE["Observability 📊"]
+    direction TB
+        OBS["fa:fa-eye Observability<br>Latency · error rate · cache stats"]
+        OCSF["fa:fa-clipboard-list OCSF v1.3 Events<br>6002 API · 3001 Auth · 3003 AuthZ<br>5002 Config · 1001 File · 1007 Process"]
+        LOG["fa:fa-file-alt Structured Logging<br>structlog + rotating files<br>Audit log separation"]
+  end
+ subgraph INFRA["Infrastructure 🧰"]
+    direction TB
+        OLL["fa:fa-brain Ollama<br>qwen3.5:9b — LLM"]
+        FEM["fa:fa-chart-line fastembed<br>nomic-embed-text-v1.5-Q<br>ONNX in-process (~130MB)"]
+        CACHE["fa:fa-bolt SmartCache<br>LRU + TTL<br>Embeddings & query results"]
+        RETRY["fa:fa-redo Retry<br>Exponential backoff + jitter<br>GOV-011 compliant"]
+  end
+ subgraph EXT["Extension Points 🧩"]
+    direction TB
+        EXT_DESC["fa:fa-puzzle-piece Optional packages via extensions.py<br>TypeDB STIX 2.1 ontology<br>OpenCTI bi-directional sync<br>Multi-tenant OAuth/JWT<br>Sigma rule generation"]
+  end
+
+    %% Entry points → API
+    MCP_REM & MCP_REC & MCP_SYN & MCP_ENT & MCP_GRF & MCP_STAT --> API
+    LCR --> REC
+
+    %% API → Ingestion
+    REM -- "content" --> GOV
+    GOV -- "validated" --> NC
+    REM -- "facts" --> FE
+    REM -- "reports" --> CHK
+    CHK -- "chunks" --> FE
+    FE -- "salient facts" --> MU
+    NC -- "enriched note" --> ENTITY
+    MU -- "fact updates" --> ENTITY
+
+    %% Entity Processing → Storage
+    EI -- "indexed entities" --> AR
+    AR -- "resolved" --> STORAGE
+
+    %% Enrichment (background)
+    NC -. "enqueue" .-> EQ
+    EQ --> CAUSAL & EVOLVER
+    EVOLVER -. "semantic shift?" .-> CONSOL
+    CAUSAL -. "causal edges" .-> SQL_KG
+    EVOLVER -. "evolved notes" .-> SQL_N
+
+    %% Recall flow
+    REC -- "query" --> IC
+    IC -- "intent routing" --> BR
+    IC -. "temporal?" .-> TB
+    IC -. "causal?" .-> CB
+    VR -- "vector matches" --> BR
+    GR -- "graph results" --> BR
+    TB -. "boosted" .-> BR
+    CB -. "causal chain" .-> BR
+    BR -- "blended results" --> XE
+    XE -- "reranked" --> SG
+
+    %% Storage → Retrieval
+    LANCE -- "embeddings" --> VR
+    SQL_KG -- "graph" --> GR
+
+    %% Synthesis
+    SG --> SV
+    SYN -- "format" --> SG
+
+    %% Infrastructure wiring
+    OLL -. "LLM" .-> FE & SG & IC & MU & CAUSAL & EVOLVER
+    FEM -. "embeddings" .-> VEC
+    CACHE -. "cache" .-> VR & IC
+    RETRY -. "resilience" .-> OLL
+
+    %% Observability
+    API -. "metrics" .-> OBS
+    STORAGE -. "file events" .-> OCSF
+    API -. "audit" .-> LOG
+
+    %% Extensions
+    EXT -.- STORAGE
+
+     MCP_REM:::mcp
+     MCP_REC:::mcp
+     MCP_SYN:::mcp
+     MCP_ENT:::mcp
+     MCP_GRF:::mcp
+     MCP_STAT:::mcp
+     LCR:::mcp
+     REM:::api
+     REC:::api
+     SYN:::api
+     GOV:::ingest
+     NC:::ingest
+     FE:::ingest
+     CHK:::ingest
+     MU:::ingest
+     EQ:::enrich
+     CAUSAL:::enrich
+     EVOLVER:::enrich
+     CONSOL:::enrich
+     EI:::entity
+     AR:::entity
+     SQL_N:::storage
+     SQL_KG:::storage
+     SQL_EI:::storage
+     VEC:::storage
+     IC:::retrieve
+     VR:::retrieve
+     GR:::retrieve
+     BR:::retrieve
+     TB:::retrieve
+     CB:::retrieve
+     XE:::retrieve
+     SG:::output
+     SV:::output
+     OBS:::observe
+     OCSF:::observe
+     LOG:::observe
+     OLL:::infra
+     FEM:::infra
+     CACHE:::infra
+     RETRY:::infra
+     EXT_DESC:::ext
+    classDef mcp fill:#1a2744,stroke:#00d4ff,color:#b8e6ff,stroke-width:2px
+    classDef api fill:#142850,stroke:#00b4d8,color:#caf0f8
+    classDef ingest fill:#203354,stroke:#4a9eff,color:#bcdfff
+    classDef enrich fill:#1b3a2f,stroke:#2ecc71,color:#a8f0c0
+    classDef entity fill:#1b3a2f,stroke:#2ecc71,color:#a8f0c0
+    classDef storage fill:#332c46,stroke:#e67e22,color:#ffe0bf
+    classDef retrieve fill:#453026,stroke:#e67e22,color:#ffd7b3
+    classDef output fill:#3a2a35,stroke:#e83e8c,color:#ffcce5
+    classDef observe fill:#2a2a3d,stroke:#9b59b6,color:#d7bde2
+    classDef infra fill:#2f2f2f,stroke:#7f8c8d,color:#e0e0e0
+    classDef ext fill:#2f3d2f,stroke:#7f8c7f,color:#d0e0d0,stroke-dasharray:5 5

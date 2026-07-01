@@ -1,0 +1,4194 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Complete inventory of all ZettelForge modules with purpose, key functions, and relationships.">
+      
+      
+        <meta name="author" content="Patrick Roland">
+      
+      
+        <link rel="canonical" href="https://docs.threatrecall.ai/reference/module-inventory/">
+      
+      
+        <link rel="prev" href="../memory-manager-api/">
+      
+      
+        <link rel="next" href="../retrieval-policies/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Module Inventory - ZettelForge Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+
+  
+  
+  <link rel="canonical" href="https://docs.threatrecall.ai/reference/module-inventory/">
+  
+
+  
+  
+  
+  
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ZettelForge Documentation">
+  <meta property="og:title" content="Module Inventory">
+  <meta property="og:description" content="Complete inventory of all ZettelForge modules with purpose, key functions, and relationships.">
+  <meta property="og:url" content="https://docs.threatrecall.ai/reference/module-inventory/">
+  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Module Inventory">
+  <meta name="twitter:description" content="Complete inventory of all ZettelForge modules with purpose, key functions, and relationships.">
+  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta name="twitter:site" content="@Deuslogica">
+  <meta name="twitter:creator" content="@Deuslogica">
+
+  
+  
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#module-inventory" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZettelForge Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Module Inventory
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/01-quickstart/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+          
+  
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../explanation/architecture/" class="md-tabs__link">
+          
+  
+  
+  Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../architecture-deep-dive/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../brand/brandIdentity/" class="md-tabs__link">
+          
+  
+  
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../narrative/2026-04-16-the-memory-problem/" class="md-tabs__link">
+          
+  
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    ZettelForge Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-first-cti-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First CTI Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-opencti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure OpenCTI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-typedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure TypeDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest News Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-llm-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate LLM Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-with-crewai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with CrewAI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-with-langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with LangChain
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve Aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Passive OSINT Enrichment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run Temporal Query
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set Up MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Store Threat Actor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Detection Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-Phase Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX in ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Budgets & Timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection Rules Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Indexer Concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG Edge Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory-manager-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Manager API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module Inventory
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module Inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-api-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core API Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core API Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory_managerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memory_manager.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#__init__py" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __init__.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage_backendpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        storage_backend.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlite_backendpy-33k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sqlite_backend.py (33K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory_storepy-14k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memory_store.py (14K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vector_memorypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vector_memory.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieval-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieval Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Retrieval Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vector_retrieverpy-14k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vector_retriever.py (14K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph_retrieverpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        graph_retriever.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blended_retrieverpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        blended_retriever.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowledge-graph-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge Graph Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Knowledge Graph Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#knowledge_graphpy-18k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        knowledge_graph.py (18K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontologypy-20k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ontology.py (20K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity_indexerpy-18k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        entity_indexer.py (18K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alias_resolverpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alias_resolver.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synthesis-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthesis Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Synthesis Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#synthesis_generatorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        synthesis_generator.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synthesis_validatorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        synthesis_validator.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm-integration-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM Integration Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LLM Integration Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#llm_clientpy-10k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        llm_client.py (10K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm_providers-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        llm_providers/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intent_classifierpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        intent_classifier.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#processing-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Processing Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Processing Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#note_constructorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        note_constructor.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note_schemapy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        note_schema.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fact_extractorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fact_extractor.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory_updaterpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memory_updater.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory_evolverpy-9k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memory_evolver.py (9K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection-rules-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detection Rules Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detection Rules Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sigma-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sigma/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yara-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        yara/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detection-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        detection/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#utility-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utility Modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Utility Modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configpy-15k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        config.py (15K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ocsfpy-10k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ocsf.py (10K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cache.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        retry.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#json_parsepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        json_parse.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observabilitypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        observability.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-server-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Server Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCP Server Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mcp-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mcp/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#integrations-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        integrations/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#web-frontend-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web Frontend Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Web Frontend Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#webapppy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        web/app.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webui-23-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        web/ui/ (23 files)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other Modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#consolidationpy-18k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        consolidation.py (18K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#governance_validatorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        governance_validator.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#editionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        edition.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demopy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        demo.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensionspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extensions.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend_factorypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        backend_factory.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-dependency-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Dependency Graph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stix-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../web-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../yara-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YARA Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brand/brandIdentity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brand Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rfcs/RFC-001-conversational-entity-extractor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-001 Conversational Entity Extractor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rfcs/RFC-002-universal-llm-provider/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-002 Universal LLM Provider Interface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rfcs/RFC-003-read-path-depth-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-003 Read-Path Depth Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    About
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../narrative/2026-04-16-the-memory-problem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#core-api-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core API Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core API Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memory_managerpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memory_manager.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#__init__py" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __init__.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#storage_backendpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        storage_backend.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlite_backendpy-33k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sqlite_backend.py (33K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory_storepy-14k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memory_store.py (14K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vector_memorypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vector_memory.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retrieval-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieval Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Retrieval Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vector_retrieverpy-14k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vector_retriever.py (14K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph_retrieverpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        graph_retriever.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blended_retrieverpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        blended_retriever.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowledge-graph-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge Graph Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Knowledge Graph Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#knowledge_graphpy-18k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        knowledge_graph.py (18K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontologypy-20k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ontology.py (20K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity_indexerpy-18k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        entity_indexer.py (18K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alias_resolverpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        alias_resolver.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#synthesis-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synthesis Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Synthesis Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#synthesis_generatorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        synthesis_generator.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synthesis_validatorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        synthesis_validator.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#llm-integration-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM Integration Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LLM Integration Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#llm_clientpy-10k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        llm_client.py (10K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm_providers-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        llm_providers/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#intent_classifierpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        intent_classifier.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#processing-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Processing Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Processing Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#note_constructorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        note_constructor.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#note_schemapy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        note_schema.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fact_extractorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        fact_extractor.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory_updaterpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memory_updater.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory_evolverpy-9k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        memory_evolver.py (9K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection-rules-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detection Rules Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detection Rules Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sigma-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sigma/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#yara-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        yara/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detection-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        detection/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#utility-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utility Modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Utility Modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configpy-15k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        config.py (15K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        log.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ocsfpy-10k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ocsf.py (10K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cachepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cache.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        retry.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#json_parsepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        json_parse.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observabilitypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        observability.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-server-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MCP Server Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCP Server Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mcp-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        mcp/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#integrations-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        integrations/ (directory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#web-frontend-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web Frontend Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Web Frontend Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#webapppy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        web/app.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#webui-23-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        web/ui/ (23 files)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#other-modules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Modules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Other Modules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#consolidationpy-18k-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        consolidation.py (18K lines)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#governance_validatorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        governance_validator.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#editionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        edition.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demopy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        demo.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensionspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extensions.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend_factorypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        backend_factory.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-dependency-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Dependency Graph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="module-inventory">Module Inventory<a class="headerlink" href="#module-inventory" title="Permanent link">&para;</a></h1>
+<p>Complete reference of all 57 core modules in ZettelForge v2.4.0.</p>
+<h2 id="core-api-layer">Core API Layer<a class="headerlink" href="#core-api-layer" title="Permanent link">&para;</a></h2>
+<h3 id="memory_managerpy"><code>memory_manager.py</code><a class="headerlink" href="#memory_managerpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Primary interface for all memory operations.</p>
+<p><strong>Key Classes:</strong>
+- <code>MemoryManager</code> — Main entry point
+- <code>_EnrichmentJob</code> — Background work items</p>
+<p><strong>Key Methods:</strong>
+- <code>remember()</code> — Store content with entity extraction
+- <code>recall()</code> — Retrieve via hybrid search
+- <code>recall_actor()</code> — Entity-based retrieval
+- <code>synthesize()</code> — RAG answer generation
+- <code>stats()</code> — System statistics</p>
+<p><strong>Dependencies:</strong> All other modules</p>
+<h3 id="__init__py"><code>__init__.py</code><a class="headerlink" href="#__init__py" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Public API exports.</p>
+<p><strong>Exports:</strong> 24 items in <code>__all__</code> including:
+- Core: <code>MemoryManager</code>, <code>MemoryNote</code>
+- Retrieval: <code>VectorRetriever</code>, <code>BlendedRetriever</code>
+- Knowledge Graph: <code>KnowledgeGraph</code>, <code>ENTITY_TYPES</code>
+- Synthesis: <code>SynthesisGenerator</code>, <code>SynthesisValidator</code></p>
+<h2 id="storage-layer">Storage Layer<a class="headerlink" href="#storage-layer" title="Permanent link">&para;</a></h2>
+<h3 id="storage_backendpy"><code>storage_backend.py</code><a class="headerlink" href="#storage_backendpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Abstract base class for all storage backends.</p>
+<p><strong>Key Class:</strong> <code>StorageBackend</code> (ABC)</p>
+<p><strong>Methods:</strong> 25 abstract methods including:
+- Note operations: <code>write_note()</code>, <code>get_note_by_id()</code>, <code>iterate_notes()</code>
+- KG operations: <code>add_kg_node()</code>, <code>add_kg_edge()</code>, <code>traverse_kg()</code>
+- Entity operations: <code>add_entity_mapping()</code>, <code>search_entities()</code></p>
+<h3 id="sqlite_backendpy-33k-lines"><code>sqlite_backend.py</code> (33K lines)<a class="headerlink" href="#sqlite_backendpy-33k-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> SQLite implementation with WAL mode.</p>
+<p><strong>Key Features:</strong>
+- WAL mode for concurrent reads
+- 35-column notes table
+- Full-text search indexes
+- ACID transactions</p>
+<p><strong>Tables:</strong>
+- <code>notes</code> — Primary storage
+- <code>kg_nodes</code> — Knowledge graph entities
+- <code>kg_edges</code> — Knowledge graph relationships</p>
+<h3 id="memory_storepy-14k-lines"><code>memory_store.py</code> (14K lines)<a class="headerlink" href="#memory_storepy-14k-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> JSONL + LanceDB hybrid storage.</p>
+<p><strong>Key Class:</strong> <code>MemoryStore</code></p>
+<p><strong>Features:</strong>
+- JSONL persistence for notes
+- LanceDB vector indexing
+- Lazy connection handling
+- Access count tracking</p>
+<h3 id="vector_memorypy"><code>vector_memory.py</code><a class="headerlink" href="#vector_memorypy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Cross-session semantic memory.</p>
+<p><strong>Key Functions:</strong>
+- <code>get_embedding()</code> — Generate embeddings (fastembed/Ollama)
+- <code>get_embedding_batch()</code> — Batch processing</p>
+<p><strong>Key Class:</strong> <code>VectorMemory</code>
+- Chunking: 512 tokens, 128 overlap
+- Deduplication: SHA256 content hash</p>
+<h2 id="retrieval-layer">Retrieval Layer<a class="headerlink" href="#retrieval-layer" title="Permanent link">&para;</a></h2>
+<h3 id="vector_retrieverpy-14k-lines"><code>vector_retriever.py</code> (14K lines)<a class="headerlink" href="#vector_retrieverpy-14k-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Vector similarity search.</p>
+<p><strong>Key Class:</strong> <code>VectorRetriever</code></p>
+<p><strong>Features:</strong>
+- LanceDB vector search (IVF_FLAT)
+- In-memory cosine similarity fallback
+- Entity boost (2.5x)
+- Similarity threshold: 0.15
+- Embedding validation &amp; regeneration</p>
+<h3 id="graph_retrieverpy"><code>graph_retriever.py</code><a class="headerlink" href="#graph_retrieverpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Knowledge graph traversal.</p>
+<p><strong>Key Classes:</strong>
+- <code>GraphRetriever</code> — BFS traversal
+- <code>ScoredResult</code> — Result with score, hops, path</p>
+<p><strong>Algorithm:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">score</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">hop_distance</span><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">max_depth</span> <span class="o">=</span> <span class="mi">2</span>
+</code></pre></div></p>
+<h3 id="blended_retrieverpy"><code>blended_retriever.py</code><a class="headerlink" href="#blended_retrieverpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Fuse vector and graph results.</p>
+<p><strong>Key Class:</strong> <code>BlendedRetriever</code></p>
+<p><strong>Fusion Methods:</strong>
+- <code>blend()</code> — Normalized score fusion (default)
+- <code>blend_rrf()</code> — Reciprocal Rank Fusion</p>
+<p><strong>Formula:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">combined</span> <span class="o">=</span> <span class="p">(</span><span class="n">vector_norm</span> <span class="o">*</span> <span class="n">w_v</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">graph_norm</span> <span class="o">*</span> <span class="n">w_g</span><span class="p">)</span>
+</code></pre></div></p>
+<h2 id="knowledge-graph-layer">Knowledge Graph Layer<a class="headerlink" href="#knowledge-graph-layer" title="Permanent link">&para;</a></h2>
+<h3 id="knowledge_graphpy-18k-lines"><code>knowledge_graph.py</code> (18K lines)<a class="headerlink" href="#knowledge_graphpy-18k-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> JSONL-based knowledge graph.</p>
+<p><strong>Key Class:</strong> <code>KnowledgeGraph</code></p>
+<p><strong>Features:</strong>
+- Node/edge storage in JSONL
+- Temporal indexing
+- BFS traversal
+- In-memory caching</p>
+<p><strong>Files:</strong>
+- <code>kg_nodes.jsonl</code> — Entity nodes
+- <code>kg_edges.jsonl</code> — Relationships</p>
+<h3 id="ontologypy-20k-lines"><code>ontology.py</code> (20K lines)<a class="headerlink" href="#ontologypy-20k-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> STIX 2.1 ontology definitions.</p>
+<p><strong>Key Constants:</strong>
+- <code>ENTITY_TYPES</code> — 15+ entity type schemas
+- <code>RELATION_TYPES</code> — 8 relationship types</p>
+<p><strong>Key Classes:</strong>
+- <code>OntologyValidator</code> — Schema validation
+- <code>TypedEntityStore</code> — Type-aware storage</p>
+<h3 id="entity_indexerpy-18k-lines"><code>entity_indexer.py</code> (18K lines)<a class="headerlink" href="#entity_indexerpy-18k-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Entity extraction and indexing.</p>
+<p><strong>Key Class:</strong> <code>EntityExtractor</code></p>
+<p><strong>Features:</strong>
+- 12 regex patterns for CTI entities
+- LLM NER for conversational entities
+- 19 total entity types
+- Code context filtering for hash extraction</p>
+<p><strong>Entity Types:</strong>
+- CTI: CVE, intrusion_set, actor, tool, campaign, attack_pattern
+- IOCs: IPv4, domain, URL, MD5, SHA1, SHA256, email
+- Conversational: person, location, organization, event, activity, temporal</p>
+<h3 id="alias_resolverpy"><code>alias_resolver.py</code><a class="headerlink" href="#alias_resolverpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Resolve entity aliases.</p>
+<p><strong>Key Class:</strong> <code>AliasResolver</code></p>
+<p><strong>Examples:</strong>
+- APT28 = Fancy Bear = STRONTIUM = Sofacy</p>
+<h2 id="synthesis-layer">Synthesis Layer<a class="headerlink" href="#synthesis-layer" title="Permanent link">&para;</a></h2>
+<h3 id="synthesis_generatorpy"><code>synthesis_generator.py</code><a class="headerlink" href="#synthesis_generatorpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> RAG answer generation.</p>
+<p><strong>Key Class:</strong> <code>SynthesisGenerator</code></p>
+<p><strong>Formats:</strong>
+- <code>direct_answer</code> — Quick facts
+- <code>synthesized_brief</code> — Executive summary
+- <code>timeline_analysis</code> — Chronological events
+- <code>relationship_map</code> — Entity connections</p>
+<p><strong>Context:</strong>
+- Max 10 notes
+- 500 chars per note
+- 3000 tokens total</p>
+<h3 id="synthesis_validatorpy"><code>synthesis_validator.py</code><a class="headerlink" href="#synthesis_validatorpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Validate synthesis outputs.</p>
+<p><strong>Key Functions:</strong>
+- Schema validation
+- Confidence threshold checking
+- Source attribution verification</p>
+<h2 id="llm-integration-layer">LLM Integration Layer<a class="headerlink" href="#llm-integration-layer" title="Permanent link">&para;</a></h2>
+<h3 id="llm_clientpy-10k-lines"><code>llm_client.py</code> (10K lines)<a class="headerlink" href="#llm_clientpy-10k-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Unified LLM interface.</p>
+<p><strong>Key Functions:</strong>
+- <code>generate()</code> — Text generation
+- <code>generate_structured()</code> — JSON output</p>
+<p><strong>Providers:</strong> local, ollama, mock</p>
+<h3 id="llm_providers-directory"><code>llm_providers/</code> (directory)<a class="headerlink" href="#llm_providers-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- <code>base.py</code> — Provider ABC
+- <code>local_provider.py</code> — llama-cpp-python
+- <code>ollama_provider.py</code> — Ollama HTTP
+- <code>mock_provider.py</code> — Test responses
+- <code>registry.py</code> — Provider registration</p>
+<h3 id="intent_classifierpy"><code>intent_classifier.py</code><a class="headerlink" href="#intent_classifierpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Classify query intent.</p>
+<p><strong>Key Class:</strong> <code>IntentClassifier</code></p>
+<p><strong>Intents:</strong>
+- <code>FACTUAL</code> — Entity lookup
+- <code>TEMPORAL</code> — Time-based
+- <code>RELATIONAL</code> — Graph traversal
+- <code>CAUSAL</code> — Cause-effect
+- <code>EXPLORATORY</code> — General research</p>
+<p><strong>Method:</strong> Keyword matching + LLM fallback</p>
+<h2 id="processing-layer">Processing Layer<a class="headerlink" href="#processing-layer" title="Permanent link">&para;</a></h2>
+<h3 id="note_constructorpy"><code>note_constructor.py</code><a class="headerlink" href="#note_constructorpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Build MemoryNote objects.</p>
+<p><strong>Key Class:</strong> <code>NoteConstructor</code></p>
+<p><strong>Features:</strong>
+- ID generation
+- Timestamp management
+- Content hashing
+- Entity extraction delegation</p>
+<h3 id="note_schemapy"><code>note_schema.py</code><a class="headerlink" href="#note_schemapy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Pydantic schemas for notes.</p>
+<p><strong>Key Classes:</strong>
+- <code>MemoryNote</code> — Complete note schema
+- <code>Content</code> — Raw content + source
+- <code>Semantic</code> — LLM enrichment
+- <code>Embedding</code> — Vector metadata
+- <code>Metadata</code> — Lifecycle + access
+- <code>Links</code> — Relationships
+- <code>VulnerabilityMeta</code> — CVE scoring</p>
+<h3 id="fact_extractorpy"><code>fact_extractor.py</code><a class="headerlink" href="#fact_extractorpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Extract facts for two-phase pipeline.</p>
+<p><strong>Key Classes:</strong>
+- <code>FactExtractor</code>
+- <code>ExtractedFact</code></p>
+<h3 id="memory_updaterpy"><code>memory_updater.py</code><a class="headerlink" href="#memory_updaterpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Update existing notes.</p>
+<p><strong>Key Classes:</strong>
+- <code>MemoryUpdater</code>
+- <code>UpdateOperation</code> (ADD, UPDATE, DELETE, NOOP)</p>
+<h3 id="memory_evolverpy-9k-lines"><code>memory_evolver.py</code> (9K lines)<a class="headerlink" href="#memory_evolverpy-9k-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Evolve memory over time.</p>
+<p><strong>Key Class:</strong> <code>MemoryEvolver</code></p>
+<p><strong>Features:</strong>
+- Compare new intel to existing
+- Decide ADD/UPDATE/DELETE/NOOP
+- Handle contradictions
+- Supersession tracking</p>
+<h2 id="detection-rules-layer">Detection Rules Layer<a class="headerlink" href="#detection-rules-layer" title="Permanent link">&para;</a></h2>
+<h3 id="sigma-directory"><code>sigma/</code> (directory)<a class="headerlink" href="#sigma-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- <code>__init__.py</code> — Package exports
+- <code>parser.py</code> — Rule parsing
+- <code>ingest.py</code> — Rule ingestion
+- <code>entities.py</code> — Entity extraction
+- <code>tags.py</code> — Tag handling
+- <code>cli.py</code> — Command-line interface
+- <code>schemas/</code> — Sigma JSON schemas</p>
+<h3 id="yara-directory"><code>yara/</code> (directory)<a class="headerlink" href="#yara-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- <code>__init__.py</code> — Package exports
+- <code>parser.py</code> — plyara integration
+- <code>ingest.py</code> — Rule ingestion
+- <code>entities.py</code> — Entity extraction
+- <code>tags.py</code> — Tag handling
+- <code>cli.py</code> — Command-line interface
+- <code>cccs_metadata.py</code> — CCCS metadata handling</p>
+<h3 id="detection-directory"><code>detection/</code> (directory)<a class="headerlink" href="#detection-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- <code>base.py</code> — DetectionRule superclass
+- <code>explainer.py</code> — LLM rule explanation
+- <code>consumers.py</code> — Rule consumers</p>
+<h2 id="utility-modules">Utility Modules<a class="headerlink" href="#utility-modules" title="Permanent link">&para;</a></h2>
+<h3 id="configpy-15k-lines"><code>config.py</code> (15K lines)<a class="headerlink" href="#configpy-15k-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Configuration management.</p>
+<p><strong>Key Classes:</strong>
+- <code>StorageConfig</code>, <code>TypeDBConfig</code>
+- <code>EmbeddingConfig</code>, <code>LLMConfig</code></p>
+<p><strong>Resolution Order:</strong>
+1. Environment variables
+2. config.yaml (working dir)
+3. config.yaml (project root)
+4. config.default.yaml
+5. Hardcoded defaults</p>
+<h3 id="logpy"><code>log.py</code><a class="headerlink" href="#logpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Structured logging.</p>
+<p><strong>Key Function:</strong> <code>get_logger()</code></p>
+<p><strong>Most imported module</strong> (19 imports)</p>
+<h3 id="ocsfpy-10k-lines"><code>ocsf.py</code> (10K lines)<a class="headerlink" href="#ocsfpy-10k-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> OCSF-compliant audit logging.</p>
+<p><strong>Key Functions:</strong>
+- <code>log_api_activity()</code>
+- <code>log_authorization()</code>
+- <code>log_file_activity()</code></p>
+<h3 id="cachepy"><code>cache.py</code><a class="headerlink" href="#cachepy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> In-memory caching.</p>
+<p><strong>Features:</strong>
+- TTL support
+- Max entry limits
+- TypeDB result caching</p>
+<h3 id="retrypy"><code>retry.py</code><a class="headerlink" href="#retrypy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Retry logic with backoff.</p>
+<h3 id="json_parsepy"><code>json_parse.py</code><a class="headerlink" href="#json_parsepy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Safe JSON extraction.</p>
+<p><strong>Key Function:</strong> <code>extract_json()</code></p>
+<h3 id="observabilitypy"><code>observability.py</code><a class="headerlink" href="#observabilitypy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Metrics and monitoring.</p>
+<h2 id="mcp-server-layer">MCP Server Layer<a class="headerlink" href="#mcp-server-layer" title="Permanent link">&para;</a></h2>
+<h3 id="mcp-directory"><code>mcp/</code> (directory)<a class="headerlink" href="#mcp-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- <code>server.py</code> — MCP server implementation
+- <code>__init__.py</code></p>
+<p><strong>Tools:</strong>
+- <code>zettelforge_remember</code>
+- <code>zettelforge_recall</code>
+- <code>zettelforge_synthesize</code>
+- <code>zettelforge_entity</code>
+- <code>zettelforge_graph</code>
+- <code>zettelforge_stats</code></p>
+<h2 id="integration-layer">Integration Layer<a class="headerlink" href="#integration-layer" title="Permanent link">&para;</a></h2>
+<h3 id="integrations-directory"><code>integrations/</code> (directory)<a class="headerlink" href="#integrations-directory" title="Permanent link">&para;</a></h3>
+<p><strong>Files:</strong>
+- <code>langchain_retriever.py</code> — LangChain integration
+- <code>__init__.py</code></p>
+<h2 id="web-frontend-layer">Web Frontend Layer<a class="headerlink" href="#web-frontend-layer" title="Permanent link">&para;</a></h2>
+<h3 id="webapppy"><code>web/app.py</code><a class="headerlink" href="#webapppy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> FastAPI server serving the SPA and all REST API endpoints.</p>
+<p><strong>Endpoints (existing):</strong> recall, remember, synthesize, stats, edition, sync
+<strong>Endpoints (RFC-015):</strong> health, config (GET+PUT), graph/nodes, graph/edges, entities, history, ingest, telemetry, storage, logs, logs/stream (SSE), telemetry/stream (SSE)</p>
+<p><strong>Authentication:</strong> API key via <code>X-API-Key</code> header or <code>Authorization: Bearer</code>, with loopback allowlist for local-only deployments.</p>
+<h3 id="webui-23-files"><code>web/ui/</code> (23 files)<a class="headerlink" href="#webui-23-files" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Vanilla JS single-page application (no React, no npm, no build step).</p>
+<p><strong>Library layer:</strong>
+- <code>js/lib/state.js</code> — Reactive pub/sub state store
+- <code>js/lib/api.js</code> — Fetch wrapper with auth headers</p>
+<p><strong>Components (6):</strong>
+- <code>header.js</code> — Top bar with shield-neuron SVG mark, Neuropol wordmark, stats
+- <code>sidebar.js</code> — 220px nav with Lucide icons, active accent
+- <code>result-card.js</code> — Memory note row styled per design system
+- <code>tabs.js</code>, <code>toast.js</code>, <code>spinner.js</code> — Reusable UI primitives</p>
+<p><strong>Views (8):</strong>
+- <code>dashboard.js</code> — System health tiles, telemetry stats, intent bar chart
+- <code>search.js</code> — Recall/synthesize/remember with format selector
+- <code>knowledge-graph.js</code> — 2D SVG force-directed graph, color-coded by type
+- <code>logs.js</code> — Filterable log table with auto-refresh and expandable detail
+- <code>ingest.js</code> — Manual/bulk ingestion with file upload
+- <code>entities.js</code> — Paginated entity browser with filters and sort
+- <code>history.js</code> — Session activity timeline with re-run and export
+- <code>configuration.js</code> — Feature flag toggles + YAML editor</p>
+<p><strong>Design System:</strong> <code>colors_and_type.css</code> (286 lines of CSS custom properties), <code>fonts/Neuropol.otf</code>, SVG logo marks from the ZettelForge Design System archive.</p>
+<h2 id="other-modules">Other Modules<a class="headerlink" href="#other-modules" title="Permanent link">&para;</a></h2>
+<h3 id="consolidationpy-18k-lines"><code>consolidation.py</code> (18K lines)<a class="headerlink" href="#consolidationpy-18k-lines" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Memory consolidation.</p>
+<p><strong>Key Class:</strong> <code>ConsolidationMiddleware</code></p>
+<h3 id="governance_validatorpy"><code>governance_validator.py</code><a class="headerlink" href="#governance_validatorpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Data governance validation.</p>
+<p><strong>Key Class:</strong> <code>GovernanceValidator</code></p>
+<p><strong>Checks:</strong>
+- Content length
+- TLP markings
+- Retention policies</p>
+<h3 id="editionpy"><code>edition.py</code><a class="headerlink" href="#editionpy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Edition detection (community vs enterprise).</p>
+<p><strong>Key Functions:</strong>
+- <code>is_community()</code>
+- <code>is_enterprise()</code>
+- <code>edition_name()</code></p>
+<h3 id="demopy"><code>demo.py</code><a class="headerlink" href="#demopy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Interactive demonstration.</p>
+<h3 id="extensionspy"><code>extensions.py</code><a class="headerlink" href="#extensionspy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Extension loading.</p>
+<h3 id="backend_factorypy"><code>backend_factory.py</code><a class="headerlink" href="#backend_factorypy" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Storage backend factory.</p>
+<p><strong>Key Function:</strong> <code>get_storage_backend()</code></p>
+<h2 id="module-dependency-graph">Module Dependency Graph<a class="headerlink" href="#module-dependency-graph" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>memory_manager
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── storage_backend
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│   └── sqlite_backend
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>├── vector_retriever
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   ├── vector_memory
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   └── entity_indexer
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>├── graph_retriever
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   └── knowledge_graph
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>├── blended_retriever
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   ├── vector_retriever
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   └── graph_retriever
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>├── synthesis_generator
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│   ├── vector_retriever
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│   └── llm_client
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>├── entity_indexer
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│   └── note_schema
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>├── note_constructor
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   └── entity_indexer
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>└── intent_classifier
+</code></pre></div>
+<h2 id="statistics">Statistics<a class="headerlink" href="#statistics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core modules</td>
+<td>57</td>
+</tr>
+<tr>
+<td>Test files</td>
+<td>44</td>
+</tr>
+<tr>
+<td>Detection rule modules</td>
+<td>12</td>
+</tr>
+<tr>
+<td>LLM provider modules</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Web UI views</td>
+<td>8</td>
+</tr>
+<tr>
+<td>Web UI components</td>
+<td>6</td>
+</tr>
+<tr>
+<td>Most lines</td>
+<td>memory_manager.py (52K)</td>
+</tr>
+<tr>
+<td>Most imported</td>
+<td>log.py (19 imports)</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/cf-analytics.js"></script>
+      
+    
+  </body>
+</html>

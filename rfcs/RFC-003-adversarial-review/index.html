@@ -1,0 +1,3138 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+      
+      
+        <meta name="author" content="Patrick Roland">
+      
+      
+        <link rel="canonical" href="https://docs.threatrecall.ai/rfcs/RFC-003-adversarial-review/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>RFC-003 Adversarial Review - ZettelForge Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+
+  
+  
+  <link rel="canonical" href="https://docs.threatrecall.ai/rfcs/RFC-003-adversarial-review/">
+  
+
+  
+  
+  
+  
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ZettelForge Documentation">
+  <meta property="og:title" content="RFC-003 Adversarial Review — ZettelForge Documentation">
+  <meta property="og:description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+  <meta property="og:url" content="https://docs.threatrecall.ai/rfcs/RFC-003-adversarial-review/">
+  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RFC-003 Adversarial Review — ZettelForge Documentation">
+  <meta name="twitter:description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta name="twitter:site" content="@Deuslogica">
+  <meta name="twitter:creator" content="@Deuslogica">
+
+  
+  
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rfc-003-adversarial-review" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZettelForge Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RFC-003 Adversarial Review
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/01-quickstart/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+          
+  
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../explanation/architecture/" class="md-tabs__link">
+          
+  
+  
+  Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../brand/brandIdentity/" class="md-tabs__link">
+          
+  
+  
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../narrative/2026-04-16-the-memory-problem/" class="md-tabs__link">
+          
+  
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    ZettelForge Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-first-cti-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First CTI Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-opencti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure OpenCTI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-typedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure TypeDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest News Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-llm-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate LLM Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-with-crewai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with CrewAI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-with-langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with LangChain
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve Aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Passive OSINT Enrichment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run Temporal Query
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set Up MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Store Threat Actor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Detection Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-Phase Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX in ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Budgets & Timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection Rules Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Indexer Concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG Edge Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/memory-manager-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Manager API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module Inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/stix-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/web-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/yara-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YARA Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brand/brandIdentity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brand Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RFC-001-conversational-entity-extractor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-001 Conversational Entity Extractor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RFC-002-universal-llm-provider/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-002 Universal LLM Provider Interface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RFC-003-read-path-depth-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-003 Read-Path Depth Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    About
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../narrative/2026-04-16-the-memory-problem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#verdict-request-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verdict: REQUEST CHANGES
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blockers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blockers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Blockers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#b1-motivating-example-is-misrouted-to-system-1-under-the-proposed-weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B1. Motivating example is misrouted to System 1 under the proposed weights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b2-metatop_vector_score-does-not-exist-in-the-current-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B2. meta["top_vector_score"] does not exist in the current pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b3-system-2-candidate-filter-will-bust-the-800ms-budget-if-llm-ner-is-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B3. System 2 candidate filter will bust the 800ms budget if LLM NER is used
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b4-two-storage-primitives-assume-indexes-that-are-not-stated-to-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B4. Two storage primitives assume indexes that are not stated to exist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b5-signal-9-shortcut-is-one-way-and-bypasses-the-upgrade-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B5. Signal 9 shortcut is one-way and bypasses the upgrade path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#warnings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warnings
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Warnings">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#w1-unknown-intent-is-dead-code-in-the-gate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W1. UNKNOWN intent is dead code in the gate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w2-is_ambiguous-threshold-hardcoded-collides-with-system1_confidence_floor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W2. is_ambiguous threshold hardcoded, collides with system1_confidence_floor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w3-upgrade_eligible-score-04-another-magic-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W3. upgrade_eligible ... score &gt;= 0.4 — another magic 0.4
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w4-candidate-budget-cap-is-non-deterministic-when-paths-overlap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W4. Candidate budget cap is non-deterministic when paths overlap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w5-supersededexpired-filtering-is-missing-from-system-2-candidate-filter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W5. Superseded/expired filtering is missing from System 2 candidate filter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w6-_extract_time_window-is-referenced-but-never-defined" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W6. _extract_time_window() is referenced but never defined
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w7-centrality-sub-score-risks-dominating-chunks-with-generic-high-degree-nouns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W7. Centrality sub-score risks dominating chunks with generic high-degree nouns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w8-comparison-pattern-requires-trailing-preposition-that-natural-queries-often-omit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W8. Comparison pattern requires trailing preposition that natural queries often omit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w9-aggregation-query-just-below-threshold-system-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W9. Aggregation query, just below threshold → System 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w10-multi-hop-markers-under-recall-on-natural-paraphrase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W10. Multi-hop markers under-recall on natural paraphrase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w11-upgrade-rate-auto-tuning-is-under-specified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W11. Upgrade-rate auto-tuning is under-specified
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w12-concurrency-and-stateful-singletons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W12. Concurrency and stateful singletons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w13-locomo-p95-post-routing-is-not-committed-to-a-number" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W13. LOCOMO p95 post-routing is not committed to a number
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w14-enterprise-extension-boundary-is-ignored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W14. Enterprise extension boundary is ignored
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w15-alias-resolution-is-inconsistent-between-write-and-chunk-scoring-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W15. Alias resolution is inconsistent between write and chunk-scoring paths
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w16-open-question-4s-proposed-llm-intent-adjustment-has-the-wrong-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W16. Open Question 4's proposed LLM-intent adjustment has the wrong rationale
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w17-phase-2-parity-test-needs-to-check-ordering-not-just-membership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W17. Phase 2 parity test needs to check ordering, not just membership
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w18-logging-payload-may-break-the-ocsf-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W18. Logging payload may break the OCSF emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w19-phase-5-default-flip-lacks-an-exit-criterion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W19. Phase 5 default flip lacks an exit criterion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#w20-no-rollback-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        W20. No rollback test
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nits
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Nits">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#n1-bvsb-fails-on-apt28-vs-at-end-of-string" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        N1. \bvs\.?\b fails on "APT28 vs." at end-of-string
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#n2-_choose_bucket_size-cases-do-not-cover-explicit-chunk_size-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        N2. _choose_bucket_size cases do not cover explicit chunk_size config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#n3-per-signal-reasons-strings-use-inconsistent-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        N3. Per-signal reasons strings use inconsistent formatting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#n4-queryprofilebuild-dependencies-vs-system1retrievermemory_manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        N4. QueryProfile.build() dependencies vs. System1Retriever(memory_manager)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#n5-cti-keyword-sets-in-markers-hardcode-domain-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        N5. CTI keyword sets in markers hardcode domain assumptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#n6-get_quality_gate-is-proposed-but-not-shown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        N6. get_quality_gate() is proposed but not shown
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#misrouted-query-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Misrouted Query Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Misrouted Query Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#m1-the-rfcs-own-motivating-example-system-1-should-be-system-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M1. The RFC's own motivating example → System 1 (should be System 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m2-comparison-query-system-1-should-be-system-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M2. Comparison query → System 1 (should be System 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m3-aggregation-query-system-1-should-be-system-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M3. Aggregation query → System 1 (should be System 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m4-root-cause-query-system-1-borderline-should-be-system-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M4. Root-cause query → System 1 (borderline; should be System 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m5-paraphrased-multi-hop-system-1-should-be-system-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M5. Paraphrased multi-hop → System 1 (should be System 2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m6-aggregate-factual-query-shortcut-bypass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M6. Aggregate factual query — shortcut bypass
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#m7-unknown-is-unreachable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        M7. UNKNOWN is unreachable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-coverage-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Coverage Gaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#positive-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Positive Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="rfc-003-adversarial-review">RFC-003 Adversarial Review<a class="headerlink" href="#rfc-003-adversarial-review" title="Permanent link">&para;</a></h1>
+<p><strong>Reviewer</strong>: Senior AI Engineering (adversarial pass)
+<strong>Date</strong>: 2026-04-16
+<strong>Target</strong>: <code>docs/rfcs/RFC-003-read-path-depth-routing.md</code>
+<strong>Code under review</strong>: <code>memory_manager.py</code>, <code>intent_classifier.py</code>, <code>blended_retriever.py</code>, <code>consolidation.py</code></p>
+<hr />
+<h2 id="verdict-request-changes">Verdict: REQUEST CHANGES<a class="headerlink" href="#verdict-request-changes" title="Permanent link">&para;</a></h2>
+<p>The design is sound in spirit and the phased rollout is defensive, but the RFC contains <strong>multiple blockers that will cause the motivating example to be misrouted</strong>, understates the delta between System 1 and the current <code>recall()</code>, and relies on storage primitives and extraction modes that are either unspecified or incompatible with the claimed latency budget. Fix the blockers, clarify the ambiguities in Warnings 9–20, and this is a solid APPROVE.</p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>RFC-003 proposes a deterministic Quality Gate that routes queries to System 1 (current blended pipeline) or System 2 (new exhaustive-scan + temporal chunking). The Gate is cleanly specified as additive, bounded scoring over cheap features. Rollback posture is excellent (one-line config flip). However:</p>
+<ol>
+<li><strong>The gate's weight table misroutes the RFC's own motivating query to System 1.</strong> The <code>Which threat actor used CVE-2024-3400 in campaigns targeting healthcare between Q3 2024 and Q1 2025?</code> example scores 0.40 under the proposed weights — below the 0.70 threshold.</li>
+<li><strong>System 1 is NOT a verbatim lift.</strong> Reading <code>profile.*</code> instead of re-calling classifier/extractor is semantic parity, fine. But <code>meta["top_vector_score"]</code> is required by the upgrade path and does not exist anywhere in the current <code>VectorRetriever</code> return shape. That is an unreported API change.</li>
+<li><strong>System 2's latency budget (p95 ≤ 800ms) is incompatible with LLM NER.</strong> Current <code>recall()</code> calls <code>extract_all(query)</code> with the default <code>use_llm=True</code>. If CandidateFilter runs <code>extract_all</code> across 200–500 candidate notes, that is an LLM-call-per-note cost well above budget. The RFC never pins <code>use_llm=False</code> for System 2.</li>
+<li><strong>Two of three "thin SQLite wrappers" require indexes that are not stated to exist.</strong> <code>iterate_notes_in_range(start, end)</code> assumes an index on <code>created_at</code>; <code>get_entity_degree</code> assumes an incidence index. Phase 2 will regress if these indexes are missing and a full scan substitutes.</li>
+</ol>
+<hr />
+<h2 id="blockers">Blockers<a class="headerlink" href="#blockers" title="Permanent link">&para;</a></h2>
+<h3 id="b1-motivating-example-is-misrouted-to-system-1-under-the-proposed-weights">B1. Motivating example is misrouted to System 1 under the proposed weights<a class="headerlink" href="#b1-motivating-example-is-misrouted-to-system-1-under-the-proposed-weights" title="Permanent link">&para;</a></h3>
+<p>The RFC cites this as its motivating query (RFC line 32):</p>
+<blockquote>
+<p><em>"which threat actor used CVE-2024-3400 in campaigns that targeted healthcare between Q3 2024 and Q1 2025?"</em></p>
+</blockquote>
+<p>Score trace under the RFC's own rules:</p>
+<ul>
+<li><code>intent_classifier.py</code> matches <code>"which actor"</code> (RELATIONAL) and <code>"between"</code> (RELATIONAL) — best_score ≥ 2 → <strong>RELATIONAL, confidence 0.5</strong>. <code>is_ambiguous=False</code>.</li>
+<li>Intent prior: <code>RELATIONAL = +0.20</code>.</li>
+<li>Multi-hop pattern <code>\bused by .+ (?:to|in|for|against)\b</code> — query contains <code>"used CVE"</code> not <code>"used by"</code>. <strong>No match.</strong></li>
+<li>Temporal span <code>\b(?:q[1-4]|quarter) \d{4}\b.+\b(?:q[1-4]|quarter) \d{4}\b</code> — matches <code>"Q3 2024 ... Q1 2025"</code>. <strong>+0.20.</strong></li>
+<li>Causal chain: no match. <strong>0.</strong></li>
+<li>Aggregation: no match. <strong>0.</strong></li>
+<li>Comparison: no match. <strong>0.</strong></li>
+<li>Entity density: CVE-2024-3400 = 1; <code>"healthcare"</code> is not an extracted asset in the current entity extractor. entity_count ≤ 2, <strong>no bonus</strong>.</li>
+</ul>
+<p><strong>Total: 0.40. System 1.</strong> The gate sends the exact query class the RFC exists to fix to the exact path it already fails on.</p>
+<p><strong>Fix options</strong> (pick one and document):</p>
+<ul>
+<li>Add a multi-hop pattern for <code>\bused .+ (?:in|against|to target) .+</code>.</li>
+<li>Raise RELATIONAL intent prior from 0.20 → 0.30.</li>
+<li>Fire multi-hop when <code>entity_type_count ≥ 2</code> regardless of regex markers.</li>
+<li>Lower <code>system2_threshold</code> default to 0.5 (but quantify the System 2 rate increase — 0.5 may push well past the "3% of queries" target).</li>
+</ul>
+<p>Without a change, Phase 4 validation ("CTI accuracy ≥ 75%, LOCOMO materially improves") is at serious risk of failing on exactly the example the RFC promises to fix.</p>
+<h3 id="b2-metatop_vector_score-does-not-exist-in-the-current-pipeline">B2. <code>meta["top_vector_score"]</code> does not exist in the current pipeline<a class="headerlink" href="#b2-metatop_vector_score-does-not-exist-in-the-current-pipeline" title="Permanent link">&para;</a></h3>
+<p>The upgrade path (RFC line 610–617) reads <code>meta.get("top_vector_score")</code>. The current <code>VectorRetriever.retrieve()</code> returns <code>List[MemoryNote]</code> — scalar scores are not exposed. The current <code>recall()</code> body (<code>memory_manager.py:470</code>) captures nothing of the sort.</p>
+<p>To deliver this, <code>VectorRetriever.retrieve()</code> must be extended to return either scored tuples or a metadata dict. That is <strong>not a verbatim lift</strong>. The RFC presents it as a no-op change ("System 1 is the current recall() body, unmodified") but Phase 2 cannot deliver without patching <code>VectorRetriever</code>. At minimum, the RFC must:</p>
+<ol>
+<li>Acknowledge the <code>VectorRetriever</code> signature or return-shape change.</li>
+<li>Add a parity test that confirms the scored-tuple version produces identical ordering when scores are stripped.</li>
+<li>Note the API compatibility implications for other callers of <code>retriever.retrieve()</code> (there is at least one in <code>get_context()</code> at <code>memory_manager.py:670</code>).</li>
+</ol>
+<h3 id="b3-system-2-candidate-filter-will-bust-the-800ms-budget-if-llm-ner-is-used">B3. System 2 candidate filter will bust the 800ms budget if LLM NER is used<a class="headerlink" href="#b3-system-2-candidate-filter-will-bust-the-800ms-budget-if-llm-ner-is-used" title="Permanent link">&para;</a></h3>
+<p>Current <code>recall()</code> at <code>memory_manager.py:464</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">query_entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexer</span><span class="o">.</span><span class="n">extractor</span><span class="o">.</span><span class="n">extract_all</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</code></pre></div>
+<p>No <code>use_llm=False</code>, so this uses the default — and per <code>remember()</code> at line 231 the explicit-regex-only path sets <code>use_llm=False</code>. This asymmetry means <strong>recall path uses LLM NER, write path does not</strong>. The RFC's ChunkScorer comments state:</p>
+<blockquote>
+<p>"entity extractor is run once per candidate note during filter (cached on <code>QueryProfile._entity_cache</code>). No re-extraction during scoring."</p>
+</blockquote>
+<p>If each candidate note (200–500) runs <code>extract_all(note.content.raw)</code> with <code>use_llm=True</code> — at, say, 50–200ms per LLM NER call on Qwen2.5-3B — that is 10–100 seconds. Budget blown by 10–100×.</p>
+<p><strong>Required clarifications:</strong></p>
+<ol>
+<li>Pin explicit <code>use_llm=False</code> for all per-candidate extraction in System 2, OR</li>
+<li>Reuse the entity index (<code>store.get_note_ids_for_entity</code>) as the coverage source — do not re-extract at all; trust the indexed entities written during <code>remember()</code>. (This is probably the correct answer — the indexer already stored resolved entities at write time.)</li>
+<li>Document which path and add a bench assertion: System 2 p95 ≤ 800ms with 300 candidates.</li>
+</ol>
+<p>Also: the RFC says entities are cached on <code>QueryProfile._entity_cache</code>, but the <code>QueryProfile</code> dataclass in §QueryProfile has no such field. Either add it or drop the claim.</p>
+<h3 id="b4-two-storage-primitives-assume-indexes-that-are-not-stated-to-exist">B4. Two storage primitives assume indexes that are not stated to exist<a class="headerlink" href="#b4-two-storage-primitives-assume-indexes-that-are-not-stated-to-exist" title="Permanent link">&para;</a></h3>
+<p>RFC lines 775–784:</p>
+<blockquote>
+<p><em>"All three are thin SQLite queries on existing indexes. No schema migrations required."</em></p>
+</blockquote>
+<ul>
+<li><code>iterate_notes_in_range(start, end)</code> — requires a SQLite index on <code>notes.created_at</code>. Nothing in the read code confirms this index exists. If absent, Phase 2 introduces a silent O(N) scan and the temporal-window path latency becomes unbounded.</li>
+<li><code>get_entity_degree(etype, evalue)</code> — requires an efficient incidence count on the KG edge table. Achievable via <code>COUNT(*)</code> on an indexed <code>(from_type, from_value)</code> + <code>(to_type, to_value)</code>, but not guaranteed by this RFC.</li>
+</ul>
+<p><strong>Fix:</strong> Add an "Indexes required / added" subsection. If new indexes are needed, that is a schema migration and belongs in Phase 2 with a migration test, not in the "no schema migrations required" bucket.</p>
+<h3 id="b5-signal-9-shortcut-is-one-way-and-bypasses-the-upgrade-path">B5. Signal 9 shortcut is one-way and bypasses the upgrade path<a class="headerlink" href="#b5-signal-9-shortcut-is-one-way-and-bypasses-the-upgrade-path" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">if</span> <span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">intent</span> <span class="o">==</span> <span class="n">QueryIntent</span><span class="o">.</span><span class="n">FACTUAL</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="ow">and</span> <span class="n">profile</span><span class="o">.</span><span class="n">entity_count</span> <span class="o">&lt;=</span> <span class="mi">1</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="ow">and</span> <span class="ow">not</span> <span class="n">profile</span><span class="o">.</span><span class="n">has_multi_hop_markers</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="ow">and</span> <span class="ow">not</span> <span class="n">profile</span><span class="o">.</span><span class="n">has_aggregation_markers</span><span class="p">):</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="k">return</span> <span class="n">GateDecision</span><span class="p">(</span><span class="n">Depth</span><span class="o">.</span><span class="n">SYSTEM_1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span> <span class="n">upgrade_eligible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+<p>Setting <code>upgrade_eligible=False</code> means a FACTUAL single-entity query that returns <strong>zero results</strong> or very weak results cannot be rescued by the upgrade path. This is the most common failure mode for genuine questions with novel entities (e.g., a freshly-minted CVE not yet well-indexed).</p>
+<p><strong>Fix:</strong> Either (a) allow upgrade after zero/weak results even on the shortcut path (<code>upgrade_eligible=True</code> when <code>system1_result_count == 0</code>), or (b) document the intentional tradeoff and log a distinct diagnostic when the shortcut returns empty so operators can observe the cost.</p>
+<hr />
+<h2 id="warnings">Warnings<a class="headerlink" href="#warnings" title="Permanent link">&para;</a></h2>
+<h3 id="w1-unknown-intent-is-dead-code-in-the-gate">W1. UNKNOWN intent is dead code in the gate<a class="headerlink" href="#w1-unknown-intent-is-dead-code-in-the-gate" title="Permanent link">&para;</a></h3>
+<p>The gate's intent_prior table assigns <code>QueryIntent.UNKNOWN: 0.25</code>. But <code>intent_classifier.py</code> <strong>has no code path that returns UNKNOWN</strong> — the keyword fallback emits EXPLORATORY, the LLM fallback emits EXPLORATORY. UNKNOWN is declared but never produced. Remove the entry, or wire UNKNOWN into the classifier's real fallback.</p>
+<h3 id="w2-is_ambiguous-threshold-hardcoded-collides-with-system1_confidence_floor">W2. <code>is_ambiguous</code> threshold hardcoded, collides with <code>system1_confidence_floor</code><a class="headerlink" href="#w2-is_ambiguous-threshold-hardcoded-collides-with-system1_confidence_floor" title="Permanent link">&para;</a></h3>
+<p><code>QueryProfile.is_ambiguous</code> uses <code>intent_confidence &lt; 0.4</code> (hardcoded). <code>system1_confidence_floor=0.4</code> is config-exposed and uses the same number. Either (a) unify these into one config key, or (b) document why the two <code>0.4</code>s are semantically independent. As written, operators will tune one and not the other and get subtle routing shifts.</p>
+<h3 id="w3-upgrade_eligible-score-04-another-magic-04">W3. <code>upgrade_eligible ... score &gt;= 0.4</code> — another magic 0.4<a class="headerlink" href="#w3-upgrade_eligible-score-04-another-magic-04" title="Permanent link">&para;</a></h3>
+<p>Three different <code>0.4</code> thresholds in gate logic, none cross-referenced. Promote to a named constant or config.</p>
+<h3 id="w4-candidate-budget-cap-is-non-deterministic-when-paths-overlap">W4. Candidate budget cap is non-deterministic when paths overlap<a class="headerlink" href="#w4-candidate-budget-cap-is-non-deterministic-when-paths-overlap" title="Permanent link">&para;</a></h3>
+<p>§CandidateFilter picks "keep most recent" when <code>len(candidates) &gt; max_candidates</code>. With 3 query entities → up to 3×50=150 from entity-index, up to 3×100=300 from 1-hop neighbors, always 200 from vector fallback = up to 650 pre-dedup. Dedup by id, cap at 500 by recency.</p>
+<p>Problem: <strong>entity-index matches (highest precision) get discarded in favor of recency-sorted neighbors/vector hits.</strong> For CTI campaigns spanning 2+ years, the cap policy actively harms the multi-hop path.</p>
+<p><strong>Fix:</strong> Give explicit priority — entity-index &gt; 1-hop &gt; vector fallback &gt; temporal-window — and cap per-source before the union. Or score candidates before capping.</p>
+<h3 id="w5-supersededexpired-filtering-is-missing-from-system-2-candidate-filter">W5. Superseded/expired filtering is missing from System 2 candidate filter<a class="headerlink" href="#w5-supersededexpired-filtering-is-missing-from-system-2-candidate-filter" title="Permanent link">&para;</a></h3>
+<p>System 1 filters superseded and expired notes after the pipeline (<code>memory_manager.py:581–591</code>). System 2's CandidateFilter returns raw candidates. Running chunk-scoring on notes that get dropped at the end wastes budget and risks top-M chunks dominated by superseded content. Add the filter to CandidateFilter, or document why post-filter is preferable.</p>
+<h3 id="w6-_extract_time_window-is-referenced-but-never-defined">W6. <code>_extract_time_window()</code> is referenced but never defined<a class="headerlink" href="#w6-_extract_time_window-is-referenced-but-never-defined" title="Permanent link">&para;</a></h3>
+<p>RFC line 484 calls <code>self._extract_time_window(profile.query)</code> to extract a date range for temporal candidate expansion. The function is nowhere in the RFC. Parsing natural-language ranges (<code>"between Q3 2024 and Q1 2025"</code>, <code>"last 6 months"</code>, <code>"since the MOVEit incident"</code>) is non-trivial. The RFC needs at least a sketch: dateparser? custom regex? timezone? behavior on unparseable spans?</p>
+<h3 id="w7-centrality-sub-score-risks-dominating-chunks-with-generic-high-degree-nouns">W7. Centrality sub-score risks dominating chunks with generic high-degree nouns<a class="headerlink" href="#w7-centrality-sub-score-risks-dominating-chunks-with-generic-high-degree-nouns" title="Permanent link">&para;</a></h3>
+<p>Degree centrality is O(1) but high-degree entities in CTI are exactly the low-information ones (<code>Windows</code>, <code>PowerShell</code>, <code>Mimikatz</code>). A chunk that scores high on centrality is likely a chunk about nothing in particular. Open Question 3 acknowledges this but defers. At minimum, subtract a "popularity penalty" or use inverse-degree weighting as a baseline so Phase 3 does not ship an observably broken default.</p>
+<h3 id="w8-comparison-pattern-requires-trailing-preposition-that-natural-queries-often-omit">W8. Comparison pattern requires trailing preposition that natural queries often omit<a class="headerlink" href="#w8-comparison-pattern-requires-trailing-preposition-that-natural-queries-often-omit" title="Permanent link">&para;</a></h3>
+<p><code>_COMPARISON_PATTERNS = [r"\bcompare (?:to|with|between)\b", ...]</code></p>
+<p>Real queries: <code>"compare APT28 and APT29 tactics"</code>, <code>"compare ransomware families"</code>. Neither has <code>"compare to|with|between"</code>. The comparison marker will miss almost every comparison query. Either loosen the pattern, or accept that comparison detection is low-recall and rely on entity_count ≥ 2 as a proxy (which currently only adds 0.10 and requires ≥ 3 entities, not 2).</p>
+<h3 id="w9-aggregation-query-just-below-threshold-system-1">W9. Aggregation query, just below threshold → System 1<a class="headerlink" href="#w9-aggregation-query-just-below-threshold-system-1" title="Permanent link">&para;</a></h3>
+<p>See Misrouted Example M3. The clearest aggregation example misses System 2 by 0.05. Raise aggregation weight to 0.35, or lower default threshold to 0.65.</p>
+<h3 id="w10-multi-hop-markers-under-recall-on-natural-paraphrase">W10. Multi-hop markers under-recall on natural paraphrase<a class="headerlink" href="#w10-multi-hop-markers-under-recall-on-natural-paraphrase" title="Permanent link">&para;</a></h3>
+<p>Patterns require exact connectives: <code>"and then"</code>, <code>"used by X to"</code>, <code>"attributed to X via"</code>. Typical analyst phrasing:</p>
+<ul>
+<li><code>"APT28 leveraged CVE-X on healthcare targets"</code> — no marker.</li>
+<li><code>"the group behind the breach used CVE-X"</code> — no marker.</li>
+<li><code>"Mustang Panda ran PlugX against Taiwan"</code> — no marker.</li>
+</ul>
+<p>All multi-hop queries, all route to System 1 because regexes are prescriptive rather than semantic. Consider a <strong>structural</strong> multi-hop signal: <code>entity_type_count ≥ 2 AND intent in {RELATIONAL, CAUSAL}</code> contributes +0.15.</p>
+<h3 id="w11-upgrade-rate-auto-tuning-is-under-specified">W11. Upgrade-rate auto-tuning is under-specified<a class="headerlink" href="#w11-upgrade-rate-auto-tuning-is-under-specified" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><em>"Config caps the upgrade with <code>max_upgrade_rate</code> — if &gt; X% of queries upgrade in a rolling window, raise the gate threshold automatically."</em></p>
+</blockquote>
+<p>Open:</p>
+<ul>
+<li>Where is the rolling window stored? In-process? Shared across processes?</li>
+<li>Concurrency — is the window state locked across threads?</li>
+<li>What is the step size for raising the threshold? How does it fall back down?</li>
+<li>If threshold creeps 0.7 → 0.85 due to a workload burst, does it ever return to 0.7?</li>
+</ul>
+<p>This needs a state machine or it is a bug farm. Alternative: drop the auto-tune and only emit a warning log + metric when upgrade rate exceeds the cap. Let operators tune manually.</p>
+<h3 id="w12-concurrency-and-stateful-singletons">W12. Concurrency and stateful singletons<a class="headerlink" href="#w12-concurrency-and-stateful-singletons" title="Permanent link">&para;</a></h3>
+<p><code>get_quality_gate()</code> is described as a singleton. If it holds the upgrade-rate window, it is mutable shared state and needs a lock. If it does not, the auto-tune mechanism has no natural home. The RFC should pick one and state the concurrency model.</p>
+<h3 id="w13-locomo-p95-post-routing-is-not-committed-to-a-number">W13. LOCOMO p95 post-routing is not committed to a number<a class="headerlink" href="#w13-locomo-p95-post-routing-is-not-committed-to-a-number" title="Permanent link">&para;</a></h3>
+<p>The motivation sets up LOCOMO p95 at 2282ms as a problem. System 2 budget is 800ms. The RFC does <strong>not</strong> state expected LOCOMO p95 post-routing. Worst case for upgraded queries is <code>System1 + System2 ≈ 1000ms+</code>. If 15% of LOCOMO queries upgrade, p95 could still be dominated by the upgrade path. Add a concrete Phase 4 target: <em>"LOCOMO p95 ≤ 900ms with routing enabled, ≥ 90% of queries routed correctly on first pass."</em></p>
+<h3 id="w14-enterprise-extension-boundary-is-ignored">W14. Enterprise extension boundary is ignored<a class="headerlink" href="#w14-enterprise-extension-boundary-is-ignored" title="Permanent link">&para;</a></h3>
+<p><code>memory_manager.py:1143</code> caps <code>traverse_graph</code> depth at 2 without the <code>enterprise</code> extension. System 2's ChunkScorer uses <code>store.get_causal_edges(... max_depth=3 ...)</code>. Does System 2 require the enterprise extension? If so, state it. If not, confirm non-enterprise compatibility.</p>
+<h3 id="w15-alias-resolution-is-inconsistent-between-write-and-chunk-scoring-paths">W15. Alias resolution is inconsistent between write and chunk-scoring paths<a class="headerlink" href="#w15-alias-resolution-is-inconsistent-between-write-and-chunk-scoring-paths" title="Permanent link">&para;</a></h3>
+<p><code>remember()</code> resolves entities via <code>AliasResolver</code> before indexing (<code>memory_manager.py:234–237</code>). The RFC's ChunkScorer coverage/density must compare <strong>resolved</strong> entity sets. But <code>indexer.extractor.extract_all()</code> returns raw entities. Either resolve in ChunkScorer, or document that coverage uses raw-match and accept that <code>APT28</code> vs <code>FANCY BEAR</code> will not match across notes.</p>
+<h3 id="w16-open-question-4s-proposed-llm-intent-adjustment-has-the-wrong-rationale">W16. Open Question 4's proposed LLM-intent adjustment has the wrong rationale<a class="headerlink" href="#w16-open-question-4s-proposed-llm-intent-adjustment-has-the-wrong-rationale" title="Permanent link">&para;</a></h3>
+<p>Open Question 4: <em>"when intent_method == "llm", bias toward System 1 by subtracting 0.10 ... already reflected in is_ambiguous."</em></p>
+<p>But <code>is_ambiguous</code> is <code>intent_confidence &lt; 0.4</code>. LLM fallback returns confidence 0.8 on success → <code>is_ambiguous=False</code>. So the LLM path actually <strong>loses</strong> the ambiguity signal, it does not preserve it. Subtracting 0.10 for LLM intent is defensible, but the stated reason is wrong. Consider: if LLM fallback fired, the keyword scorer could not decide — evidence of complexity. Arguably LLM-fallback should <strong>raise</strong> the score.</p>
+<h3 id="w17-phase-2-parity-test-needs-to-check-ordering-not-just-membership">W17. Phase 2 parity test needs to check ordering, not just membership<a class="headerlink" href="#w17-phase-2-parity-test-needs-to-check-ordering-not-just-membership" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><em>"test_system1_parity.py replays the CTI benchmark queries and asserts output equality with git HEAD before Phase 2."</em></p>
+</blockquote>
+<p>Equality of what — set of IDs? Order? Only order matters for cross-encoder-reranked result lists. Specify: <code>assert [n.id for n in before] == [n.id for n in after]</code>.</p>
+<h3 id="w18-logging-payload-may-break-the-ocsf-emitter">W18. Logging payload may break the OCSF emitter<a class="headerlink" href="#w18-logging-payload-may-break-the-ocsf-emitter" title="Permanent link">&para;</a></h3>
+<p><code>log_api_activity(..., gate_reasons=decision.reasons)</code> passes a <code>list[str]</code>. OCSF activity logging traditionally serializes flat fields. Check whether <code>log_api_activity</code> accepts list values or coerces them. If it JSON-stringifies, fine — but pin the expected serialization so downstream dashboard parsers do not silently break.</p>
+<h3 id="w19-phase-5-default-flip-lacks-an-exit-criterion">W19. Phase 5 default flip lacks an exit criterion<a class="headerlink" href="#w19-phase-5-default-flip-lacks-an-exit-criterion" title="Permanent link">&para;</a></h3>
+<p><em>"After two weeks of telemetry..."</em> is a schedule, not a criterion. Specify: <em>"flip when System 2 rate ∈ [2%, 8%], upgrade rate &lt; max_upgrade_rate, CTI accuracy ≥ 75%, LOCOMO accuracy improved by ≥ 5 points vs. pre-routing baseline."</em></p>
+<h3 id="w20-no-rollback-test">W20. No rollback test<a class="headerlink" href="#w20-no-rollback-test" title="Permanent link">&para;</a></h3>
+<p>Migration covers forward compatibility. There is no test for: enable routing → observe production issue → flip <code>enabled: false</code> → assert zero residual state, zero new files, zero queries stuck in System 2. Standard kill-switch requirement.</p>
+<hr />
+<h2 id="nits">Nits<a class="headerlink" href="#nits" title="Permanent link">&para;</a></h2>
+<h3 id="n1-bvsb-fails-on-apt28-vs-at-end-of-string">N1. <code>\bvs\.?\b</code> fails on <code>"APT28 vs."</code> at end-of-string<a class="headerlink" href="#n1-bvsb-fails-on-apt28-vs-at-end-of-string" title="Permanent link">&para;</a></h3>
+<p><code>\b</code> after <code>\.?</code> will not match at end-of-string when the preceding char is <code>.</code>. Real queries like <code>"APT28 vs. APT29."</code> may or may not trigger depending on punctuation. Minor; the comparison path is brittle anyway (W8).</p>
+<h3 id="n2-_choose_bucket_size-cases-do-not-cover-explicit-chunk_size-config">N2. <code>_choose_bucket_size</code> cases do not cover explicit <code>chunk_size</code> config<a class="headerlink" href="#n2-_choose_bucket_size-cases-do-not-cover-explicit-chunk_size-config" title="Permanent link">&para;</a></h3>
+<p>Config has <code>chunk_size: "auto" | "hourly" | "daily" | "weekly"</code>. <code>TemporalChunker._choose_bucket_size</code> is described as auto-selecting based on temporal markers. What if config says <code>"hourly"</code> explicitly? Is config honored or overridden? Unclear.</p>
+<h3 id="n3-per-signal-reasons-strings-use-inconsistent-formatting">N3. Per-signal <code>reasons</code> strings use inconsistent formatting<a class="headerlink" href="#n3-per-signal-reasons-strings-use-inconsistent-formatting" title="Permanent link">&para;</a></h3>
+<p><code>"intent:causal(+0.35)"</code> vs <code>"ambiguous_intent(+0.15)"</code> vs <code>"entity_count:3(+0.10)"</code>. Pick one convention.</p>
+<h3 id="n4-queryprofilebuild-dependencies-vs-system1retrievermemory_manager">N4. <code>QueryProfile.build()</code> dependencies vs. <code>System1Retriever(memory_manager)</code><a class="headerlink" href="#n4-queryprofilebuild-dependencies-vs-system1retrievermemory_manager" title="Permanent link">&para;</a></h3>
+<p>Prose: <code>QueryProfile.build(query, intent_classifier, entity_extractor, alias_resolver)</code>. But <code>System1Retriever</code> takes <code>memory_manager</code>. Transitively fine, but document: System1Retriever is not stateless; it reuses mm's <code>retriever</code>, <code>store</code>, <code>indexer</code>, and reranker singleton.</p>
+<h3 id="n5-cti-keyword-sets-in-markers-hardcode-domain-assumptions">N5. CTI keyword sets in markers hardcode domain assumptions<a class="headerlink" href="#n5-cti-keyword-sets-in-markers-hardcode-domain-assumptions" title="Permanent link">&para;</a></h3>
+<p>For <code>domain="general"</code> or <code>domain="conversational"</code>, the CTI-flavored markers (<code>"targeted"</code>, <code>"compromised"</code>, <code>"campaign"</code>, <code>"APT"</code>) will almost never fire. Non-CTI users effectively get System 1 for everything, making the gate a no-op for them. State this explicitly in Motivation so non-CTI operators set expectations correctly.</p>
+<h3 id="n6-get_quality_gate-is-proposed-but-not-shown">N6. <code>get_quality_gate()</code> is proposed but not shown<a class="headerlink" href="#n6-get_quality_gate-is-proposed-but-not-shown" title="Permanent link">&para;</a></h3>
+<p>Mentioned in the modified <code>recall()</code> body, never defined in any §. Minor.</p>
+<hr />
+<h2 id="misrouted-query-examples">Misrouted Query Examples<a class="headerlink" href="#misrouted-query-examples" title="Permanent link">&para;</a></h2>
+<p>Traced under the exact rules in §QualityGate. Threshold = 0.70.</p>
+<h3 id="m1-the-rfcs-own-motivating-example-system-1-should-be-system-2">M1. The RFC's own motivating example → System 1 (should be System 2)<a class="headerlink" href="#m1-the-rfcs-own-motivating-example-system-1-should-be-system-2" title="Permanent link">&para;</a></h3>
+<p>Query: <code>"which threat actor used CVE-2024-3400 in campaigns that targeted healthcare between Q3 2024 and Q1 2025?"</code></p>
+<ul>
+<li>Intent: RELATIONAL (<code>"which actor"</code>, <code>"between"</code> both match). confidence=0.5, not ambiguous.</li>
+<li><code>intent_prior(RELATIONAL) = +0.20</code></li>
+<li><code>temporal_span</code> on <code>"Q3 2024 ... Q1 2025"</code> = +0.20</li>
+<li><code>multi_hop</code> does NOT fire (query has <code>"used ... in"</code>, pattern requires <code>"used by ... to|in|for|against"</code>)</li>
+<li>Causal / aggregation / comparison: none</li>
+<li>entity_count / entity_type_count bonuses: none (too few)</li>
+</ul>
+<p><strong>Total: 0.40. Routes to System 1.</strong> See Blocker B1.</p>
+<h3 id="m2-comparison-query-system-1-should-be-system-2">M2. Comparison query → System 1 (should be System 2)<a class="headerlink" href="#m2-comparison-query-system-1-should-be-system-2" title="Permanent link">&para;</a></h3>
+<p>Query: <code>"compare APT28 and APT29 tactics"</code></p>
+<ul>
+<li>Intent: no keyword match → EXPLORATORY default, confidence 0.3, ambiguous.</li>
+<li><code>intent_prior(EXPLORATORY) = +0.20</code></li>
+<li><code>ambiguous_intent = +0.15</code></li>
+<li><code>comparison</code> does NOT fire (regex requires <code>"compare to|with|between"</code>; query has only <code>"compare"</code>).</li>
+<li>entity_count = 2 → no bonus (requires ≥ 3).</li>
+<li>entity_type_count = 1 → no bonus.</li>
+</ul>
+<p><strong>Total: 0.35. Routes to System 1.</strong></p>
+<p>Fix: loosen comparison regex, or bonus <code>entity_count==2 AND entity_type_count==1</code> (same-type comparison).</p>
+<h3 id="m3-aggregation-query-system-1-should-be-system-2">M3. Aggregation query → System 1 (should be System 2)<a class="headerlink" href="#m3-aggregation-query-system-1-should-be-system-2" title="Permanent link">&para;</a></h3>
+<p>Query: <code>"show me every instance of PowerShell abuse this quarter"</code></p>
+<ul>
+<li>Intent: EXPLORATORY default (no keyword match), confidence 0.3, ambiguous.</li>
+<li><code>intent_prior(EXPLORATORY) = +0.20</code></li>
+<li><code>ambiguous = +0.15</code></li>
+<li><code>aggregation</code> fires on <code>"every instance"</code> = +0.30</li>
+<li><code>temporal_span</code> on <code>"this quarter"</code> — not in patterns. NO match.</li>
+<li>No other signals.</li>
+</ul>
+<p><strong>Total: 0.65 &lt; 0.70. Routes to System 1.</strong></p>
+<p>Off by 0.05. Raise aggregation weight to 0.35 or lower threshold to 0.65.</p>
+<h3 id="m4-root-cause-query-system-1-borderline-should-be-system-2">M4. Root-cause query → System 1 (borderline; should be System 2)<a class="headerlink" href="#m4-root-cause-query-system-1-borderline-should-be-system-2" title="Permanent link">&para;</a></h3>
+<p>Query: <code>"what's the root cause of the MOVEit incident and what actor was responsible?"</code></p>
+<ul>
+<li><code>"what is"/"what was"</code> do not match <code>"what's"</code> (contraction).</li>
+<li>No other intent keywords → EXPLORATORY default, confidence 0.3, ambiguous.</li>
+<li><code>intent_prior = +0.20</code></li>
+<li><code>ambiguous = +0.15</code></li>
+<li><code>causal_chain</code> on <code>"root cause"</code> = +0.25</li>
+<li>No aggregation, no temporal span, no multi-hop pattern match.</li>
+<li>entity_count likely 0–1 (MOVEit may or may not be extracted).</li>
+</ul>
+<p><strong>Total: 0.60. Routes to System 1.</strong></p>
+<p>Classic multi-hop causal attribution — misrouted.</p>
+<h3 id="m5-paraphrased-multi-hop-system-1-should-be-system-2">M5. Paraphrased multi-hop → System 1 (should be System 2)<a class="headerlink" href="#m5-paraphrased-multi-hop-system-1-should-be-system-2" title="Permanent link">&para;</a></h3>
+<p>Query: <code>"Mustang Panda ran PlugX against Taiwanese government targets last year"</code></p>
+<ul>
+<li>No intent keyword match → EXPLORATORY default, confidence 0.3, ambiguous.</li>
+<li><code>intent_prior = +0.20</code></li>
+<li><code>ambiguous = +0.15</code></li>
+<li><code>multi_hop</code> does NOT fire (no <code>"used by"</code>, no <code>"attributed to"</code>, no <code>"then"</code>). Semantically multi-hop but lexically invisible.</li>
+<li><code>temporal_span</code> on <code>"last year"</code> — not in patterns.</li>
+<li>entity_count: actor + tool + location ≈ 3 → +0.10.</li>
+<li>entity_type_count = 3 → +0.05.</li>
+</ul>
+<p><strong>Total: 0.50. Routes to System 1.</strong></p>
+<p>Exactly the "crossing 3+ entity boundaries with temporal constraints" class the RFC names as its target.</p>
+<h3 id="m6-aggregate-factual-query-shortcut-bypass">M6. Aggregate factual query — shortcut bypass<a class="headerlink" href="#m6-aggregate-factual-query-shortcut-bypass" title="Permanent link">&para;</a></h3>
+<p>Query: <code>"all known CVEs affecting Windows 11 22H2"</code></p>
+<ul>
+<li><code>"cve"</code> keyword → FACTUAL. score=1, unambiguous keyword path → confidence 0.6.</li>
+<li>Shortcut check: FACTUAL, <strong>has_aggregation_markers=True</strong> (<code>"all known"</code> matches) → shortcut does NOT fire.</li>
+<li><code>intent_prior(FACTUAL) = 0.00</code></li>
+<li><code>aggregation = +0.30</code></li>
+<li>entity_count 2–3, entity_type_count 2 → +0.15 max.</li>
+</ul>
+<p><strong>Total: 0.35–0.45. Routes to System 1.</strong></p>
+<p>This routes to System 1 — plausibly correct for a factual index lookup, but note that the shortcut opt-out for <code>has_aggregation_markers</code> intentionally blocks the fast path. Whether that is desirable depends on whether the analyst wants "look up the entity" (System 1 fine) or "enumerate every CVE" (System 2 needed). The shortcut design bakes in the latter assumption but does not quantify the tradeoff.</p>
+<h3 id="m7-unknown-is-unreachable">M7. <code>UNKNOWN</code> is unreachable<a class="headerlink" href="#m7-unknown-is-unreachable" title="Permanent link">&para;</a></h3>
+<p>No query routes through <code>QueryIntent.UNKNOWN</code> because the classifier never returns it (W1). Dead code.</p>
+<hr />
+<h2 id="test-coverage-gaps">Test Coverage Gaps<a class="headerlink" href="#test-coverage-gaps" title="Permanent link">&para;</a></h2>
+<p>Missing tests (implied but not in the RFC's test matrix):</p>
+<ol>
+<li><strong>Upgrade-rate window concurrency.</strong> Multi-threaded <code>recall()</code> — does upgrade-rate state remain consistent under race?</li>
+<li><strong>Upgrade when System 1 returns 0 results.</strong> <code>should_upgrade</code> checks <code>system1_result_count &lt; 3</code> only for CAUSAL/EXPLORATORY. A RELATIONAL query returning 0 results is ineligible to upgrade — desired?</li>
+<li><strong>Shortcut + zero-result path.</strong> B5: FACTUAL single-entity with no matches, <code>upgrade_eligible=False</code>. Assert the diagnostic log fires.</li>
+<li><strong>Entity-extractor casing disagreement.</strong> Note indexed as <code>"APT28"</code> at write time, query extracts <code>"apt28"</code> — test normalization.</li>
+<li><strong>Missing <code>created_at</code> in candidate overflow sort.</strong> Empty-string sort is stable but untested.</li>
+<li><strong>Regex compilation failure at import.</strong> A typo in <code>query_markers.py</code> bricks the package. Pin a regression test that imports the module.</li>
+<li><strong><code>max_candidates=0</code> misconfig.</strong> What happens? Empty results? Filter to vector-only?</li>
+<li><strong><code>chunk_size: "auto"</code> with 10 candidates.</strong> What bucket size? Does the chunker degenerate to 1 chunk?</li>
+<li><strong>Query with only stop-words.</strong> <code>"the when of"</code> — defaults, no entities, no markers. Should degrade cleanly to vector-only.</li>
+<li><strong><code>has_extension("enterprise") == False</code> with System 2's max_depth=3 call.</strong> Does System 2 honor the 2-hop cap or bypass it?</li>
+<li><strong>Parity test asserts ordering, not just set equality</strong> (W17).</li>
+<li><strong>Upgrade-path latency ceiling.</strong> Assert <code>p95(System1 + System2 latency) &lt; 2× System 2 budget</code> under upgrade load.</li>
+<li><strong>Disabled state bit-identical.</strong> <code>enabled: false</code> produces <strong>identical</strong> output (not just similar) to pre-RFC HEAD across the full CTI + LOCOMO suite.</li>
+<li><strong>Non-CTI domain.</strong> General-domain query with no CTI markers — does the gate behave sensibly?</li>
+<li><strong>Adversarial marker input.</strong> Long queries (10KB+) should not blow up regex engines. Pin a length limit or confirm linear-time behavior.</li>
+<li><strong>Truth-table test in <code>test_quality_gate.py</code></strong> is claimed; confirm it actually enumerates every signal-combination that produces a different Decision (≥ 128 rows for 7 bool markers × 6 intents × ambiguous flag).</li>
+</ol>
+<hr />
+<h2 id="positive-notes">Positive Notes<a class="headerlink" href="#positive-notes" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Deterministic, inspectable gate is the right call.</strong> The <code>reasons</code> list is first-rate for operator debugging and for generating training data for a future learned router. This decision alone justifies the architecture.</p>
+</li>
+<li>
+<p><strong>Phased rollout is genuinely defensive.</strong> Phase-by-phase decoupling, disabled-by-default shipping, parity tests at each boundary — this is how you de-risk a significant refactor.</p>
+</li>
+<li>
+<p><strong>System 1 as a verbatim lift</strong> (modulo B2) is the correct minimum-delta approach. Most RFCs at this scope would over-reach; this one does not.</p>
+</li>
+<li>
+<p><strong>Alternatives Considered is thorough and honest.</strong> Each alternative is engaged with, not strawmanned. The learned-router rejection with follow-up-RFC posture is mature.</p>
+</li>
+<li>
+<p><strong>Explicit LLM-free fast-path constraint.</strong> Tied to the Qwen2.5-3B/DGX Spark reality. Many RFCs hand-wave provider costs; this one names the constraint up front.</p>
+</li>
+<li>
+<p><strong>Upgrade path as a safety valve</strong> (not a default) correctly reflects that the gate will sometimes be wrong and that shipping the wrong answer fast is worse than shipping the right answer slow.</p>
+</li>
+<li>
+<p><strong>Configurable chunk weights with a load-time validation</strong> (must sum to 1.0) is a small touch that prevents a class of production footguns.</p>
+</li>
+<li>
+<p><strong>Related-RFC references</strong> (001 for entities, 002 for LLM-free constraint) are accurate — the author read the neighboring docs.</p>
+</li>
+<li>
+<p><strong>D-Mem citation with specific numbers</strong> (96.7%, ~3%) is better than hand-wave grounding. The claim is testable in Phase 3 benchmarks.</p>
+</li>
+<li>
+<p><strong>Open Questions are real open questions</strong>, not rhetorical. Each has an actual proposal a reviewer can agree or disagree with. That is how Open Questions are supposed to work.</p>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/cf-analytics.js"></script>
+      
+    
+  </body>
+</html>

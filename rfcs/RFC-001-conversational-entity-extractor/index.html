@@ -1,0 +1,3653 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+      
+      
+        <meta name="author" content="Patrick Roland">
+      
+      
+        <link rel="canonical" href="https://docs.threatrecall.ai/rfcs/RFC-001-conversational-entity-extractor/">
+      
+      
+        <link rel="prev" href="../../brand/brandIdentity/">
+      
+      
+        <link rel="next" href="../RFC-002-universal-llm-provider/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>RFC-001 Conversational Entity Extractor - ZettelForge Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+
+  
+  
+  <link rel="canonical" href="https://docs.threatrecall.ai/rfcs/RFC-001-conversational-entity-extractor/">
+  
+
+  
+  
+  
+  
+  
+
+  
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="ZettelForge Documentation">
+  <meta property="og:title" content="RFC-001 Conversational Entity Extractor — ZettelForge Documentation">
+  <meta property="og:description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+  <meta property="og:url" content="https://docs.threatrecall.ai/rfcs/RFC-001-conversational-entity-extractor/">
+  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="640">
+
+  
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RFC-001 Conversational Entity Extractor — ZettelForge Documentation">
+  <meta name="twitter:description" content="ZettelForge — agentic memory for Python agents with CTI entity extraction, STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
+  <meta name="twitter:site" content="@Deuslogica">
+  <meta name="twitter:creator" content="@Deuslogica">
+
+  
+  
+
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rfc-001-conversational-entity-extractor" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ZettelForge Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RFC-001 Conversational Entity Extractor
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorials/01-quickstart/" class="md-tabs__link">
+          
+  
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+          
+  
+  
+  How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../explanation/architecture/" class="md-tabs__link">
+          
+  
+  
+  Concepts
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../brand/brandIdentity/" class="md-tabs__link">
+          
+  
+  
+  Design
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../narrative/2026-04-16-the-memory-problem/" class="md-tabs__link">
+          
+  
+  
+  About
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
+      
+  <img src="../../assets/logo.svg" alt="logo">
+
+    </a>
+    ZettelForge Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/rolandpg/zettelforge" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rolandpg/zettelforge
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/01-quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/02-first-cti-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First CTI Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How-To Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    How-To Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build Extensions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-opencti/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure OpenCTI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-typedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure TypeDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA Ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest News Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-llm-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate LLM Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-with-crewai/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with CrewAI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/integrate-with-langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with LangChain
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve Aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Passive OSINT Enrichment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run Temporal Query
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set Up MCP Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Store Threat Actor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use Detection Rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-Phase Pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX in ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic Tiers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Budgets & Timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection Rules Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/editions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Editions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Indexer Concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance Controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG Edge Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/memory-manager-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory Manager API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module Inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval Policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/stix-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/web-api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/yara-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YARA Schema Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Design
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../brand/brandIdentity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brand Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-001 Conversational Entity Extractor
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-001 Conversational Entity Extractor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Motivation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current Status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-shipped-v200-v220" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What shipped (v2.0.0 -- v2.2.0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#locomo-benchmark-trajectory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOCOMO benchmark trajectory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regex-patterns-implemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regex Patterns (Implemented)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#false-positive-hash-filter-_code_context_pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        False Positive Hash Filter (_CODE_CONTEXT_PATTERN)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-ner-pipeline-implemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM NER Pipeline (Implemented)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entityindexer-persistence-implemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EntityIndexer Persistence (Implemented)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dual-storage-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dual Storage Situation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-model-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Model Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-refactor-entityextractor-to-single-source-of-truth-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Refactor EntityExtractor to single source of truth -- COMPLETE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-llm-based-ner-extraction-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add LLM-based NER extraction -- COMPLETE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-expand-entity-index-schema-and-knowledge-graph-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Expand entity index schema and knowledge graph -- COMPLETE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-enhance-benchmark-answer-extraction-not-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Enhance benchmark answer extraction -- NOT STARTED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-tests-and-benchmark-validation-partial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Tests and benchmark validation -- PARTIAL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollout-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollout Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Open Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolved
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unresolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unresolved
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adversarial-review-findings-2026-04-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adversarial Review Findings (2026-04-16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lessons-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lessons Learned
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lessons Learned">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#locomo-score-22-not-80" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOCOMO score: 22%, not 80%
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-worked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What worked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-did-not-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What did not work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendations-for-future-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations for future work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RFC-002-universal-llm-provider/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-002 Universal LLM Provider Interface
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RFC-003-read-path-depth-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFC-003 Read-Path Depth Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    About
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../narrative/2026-04-16-the-memory-problem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Why ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Motivation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Status
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Current Status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-shipped-v200-v220" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What shipped (v2.0.0 -- v2.2.0)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#locomo-benchmark-trajectory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOCOMO benchmark trajectory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proposed-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed Design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Proposed Design">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#architecture-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regex-patterns-implemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regex Patterns (Implemented)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#false-positive-hash-filter-_code_context_pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        False Positive Hash Filter (_CODE_CONTEXT_PATTERN)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-ner-pipeline-implemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM NER Pipeline (Implemented)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entityindexer-persistence-implemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EntityIndexer Persistence (Implemented)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dual-storage-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dual Storage Situation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-model-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Model Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives Considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Plan
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Implementation Plan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-refactor-entityextractor-to-single-source-of-truth-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Refactor EntityExtractor to single source of truth -- COMPLETE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-llm-based-ner-extraction-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Add LLM-based NER extraction -- COMPLETE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-expand-entity-index-schema-and-knowledge-graph-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Expand entity index schema and knowledge graph -- COMPLETE
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-enhance-benchmark-answer-extraction-not-started" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Enhance benchmark answer extraction -- NOT STARTED
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-tests-and-benchmark-validation-partial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Tests and benchmark validation -- PARTIAL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollout-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollout Strategy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Open Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolved
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unresolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unresolved
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adversarial-review-findings-2026-04-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adversarial Review Findings (2026-04-16)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lessons-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lessons Learned
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Lessons Learned">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#locomo-score-22-not-80" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOCOMO score: 22%, not 80%
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-worked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What worked
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-did-not-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What did not work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendations-for-future-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations for future work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="rfc-001-conversational-entity-extractor">RFC-001: Conversational Entity Extractor<a class="headerlink" href="#rfc-001-conversational-entity-extractor" title="Permanent link">&para;</a></h1>
+<h2 id="metadata">Metadata<a class="headerlink" href="#metadata" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Author</strong>: Patrick Roland</li>
+<li><strong>Status</strong>: Partially Implemented (LLM NER built but not wired into ingest path)</li>
+<li><strong>Created</strong>: 2026-04-09</li>
+<li><strong>Last Updated</strong>: 2026-04-16</li>
+<li><strong>Reviewers</strong>: Solo dev (self-approved); Backend architect adversarial review 2026-04-16 (2 blockers, 7 warnings)</li>
+<li><strong>Related Tickets</strong>: LOCOMO benchmark improvement</li>
+<li><strong>Related RFCs</strong>: RFC-002 (Universal LLM Provider Interface — depends on <code>generate()</code> stability)</li>
+</ul>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>Replace the regex-based CTI-only entity extractor with an LLM-powered NER pipeline that recognizes conversational entities (persons, locations, organizations, events, activities, temporal references). This enables the knowledge graph to index and traverse the entity types present in the LOCOMO benchmark, targeting 80%+ overall accuracy (up from 15%).</p>
+<h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">&para;</a></h2>
+<p>LOCOMO benchmark results at 15% overall accuracy trail the leaderboard by 4x. Root cause analysis (BENCHMARK_REPORT.md) identifies entity extraction mismatch as the #1 blocker: ZettelForge only recognizes CVEs, APT groups, tools, and campaigns. LOCOMO conversations contain person names, locations, hobbies, life events, and temporal references -- all invisible to the current <code>EntityExtractor</code>.</p>
+<p>RAGAS data confirms retrieval finds the right documents (75.9% keyword presence) but the graph retrieval path is dead for LOCOMO queries because no recognized entities match. The keyword-overlap judge scores low because retrieved context is long and unfocused -- entity-indexed graph traversal would both boost relevant results and filter noise.</p>
+<p>The gap between keyword presence (75.9%) and answer accuracy (15%) also indicates the answer extraction pipeline needs improvement. Adding conversational entities to the graph enables multi-hop traversal which directly addresses the 0% multi-hop and 0% temporal scores.</p>
+<h2 id="current-status">Current Status<a class="headerlink" href="#current-status" title="Permanent link">&para;</a></h2>
+<h3 id="what-shipped-v200-v220">What shipped (v2.0.0 -- v2.2.0)<a class="headerlink" href="#what-shipped-v200-v220" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Step 1: EntityExtractor as single source of truth</td>
+<td>Complete</td>
+<td><code>NoteConstructor.extract_entities()</code> delegates to <code>EntityExtractor</code></td>
+</tr>
+<tr>
+<td>Step 2: LLM-based NER extraction</td>
+<td><strong>Built but NOT WIRED IN</strong></td>
+<td><code>extract_llm()</code> exists with retry logic, but <code>use_llm=True</code> is never called by any code path. <code>remember()</code>, <code>build()</code>, and <code>NoteConstructor</code> all use <code>use_llm=False</code> (default). LLM NER is dead code.</td>
+</tr>
+<tr>
+<td>Step 3: Expanded entity index + knowledge graph</td>
+<td>Complete</td>
+<td>19 entity types (13 regex, 6 LLM). <code>EntityIndexer</code> with deferred flush</td>
+</tr>
+<tr>
+<td>Step 4: Benchmark answer extraction (SynthesisGenerator)</td>
+<td>Not started</td>
+<td>Raw context still returned as answer in <code>locomo_benchmark.py</code></td>
+</tr>
+<tr>
+<td>Step 5: Tests and benchmark validation</td>
+<td>Partial</td>
+<td>23 unit tests passing (not 18 as previously stated). LOCOMO at 22%, not 80%. No tests for IOC regex, hash false-positive filter, remove_note, search_entities, or flush timing.</td>
+</tr>
+<tr>
+<td>Async batching for production NER</td>
+<td>Not started</td>
+<td>Open question from original RFC</td>
+</tr>
+<tr>
+<td>SQLite entity_index table</td>
+<td>Shipped (v2.2.0)</td>
+<td>Dual storage: <code>entity_index.json</code> (JSONL legacy) + SQLite <code>entity_index</code> table</td>
+</tr>
+</tbody>
+</table>
+<h3 id="locomo-benchmark-trajectory">LOCOMO benchmark trajectory<a class="headerlink" href="#locomo-benchmark-trajectory" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Score</th>
+<th>Key change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.5.0</td>
+<td>15%</td>
+<td>Baseline (regex-only CTI entities)</td>
+</tr>
+<tr>
+<td>v2.0.0</td>
+<td>18%</td>
+<td>Conversational entity extraction added</td>
+</tr>
+<tr>
+<td>v2.1.1</td>
+<td>22%</td>
+<td>Supersession perf fix, background enrichment, Ollama cloud judge</td>
+</tr>
+</tbody>
+</table>
+<p>Target was 80%. Actual is 22%. See Lessons Learned for analysis.</p>
+<h2 id="proposed-design">Proposed Design<a class="headerlink" href="#proposed-design" title="Permanent link">&para;</a></h2>
+<h3 id="architecture-changes">Architecture Changes<a class="headerlink" href="#architecture-changes" title="Permanent link">&para;</a></h3>
+<p><strong>Replace regex-based <code>EntityExtractor</code> with hybrid regex+LLM NER.</strong> The original <code>entity_indexer.py</code> used 4 hardcoded regex patterns. The new implementation uses the existing <code>llm_client.py</code> to extract typed entities from any text, with regex as a fast-path for CTI entities and IOCs.</p>
+<p><strong>Unified entity schema</strong> across <code>entity_indexer.py</code> and <code>note_constructor.py</code>. <code>EntityExtractor</code> is the single source of truth -- <code>NoteConstructor.extract_entities()</code> delegates to it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># note_constructor.py</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">extract_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.entity_indexer</span><span class="w"> </span><span class="kn">import</span> <span class="n">EntityExtractor</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">extractor</span> <span class="o">=</span> <span class="n">EntityExtractor</span><span class="p">()</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="k">return</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract_all</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>19 entity types</strong> (expanded from the originally proposed 10):</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Types</th>
+<th>Extraction method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CTI</td>
+<td><code>cve</code>, <code>intrusion_set</code>, <code>actor</code>, <code>tool</code>, <code>campaign</code>, <code>attack_pattern</code></td>
+<td>Regex</td>
+</tr>
+<tr>
+<td>IOC (STIX Cyber Observables)</td>
+<td><code>ipv4</code>, <code>domain</code>, <code>url</code>, <code>md5</code>, <code>sha1</code>, <code>sha256</code>, <code>email</code></td>
+<td>Regex</td>
+</tr>
+<tr>
+<td>Conversational</td>
+<td><code>person</code>, <code>location</code>, <code>organization</code>, <code>event</code>, <code>activity</code>, <code>temporal</code></td>
+<td>LLM NER (+ regex fallback for person and location)</td>
+</tr>
+</tbody>
+</table>
+<p>The IOC types were not in the original RFC but were added during implementation to support CTIBench and real-world CTI workflows.</p>
+<h3 id="regex-patterns-implemented">Regex Patterns (Implemented)<a class="headerlink" href="#regex-patterns-implemented" title="Permanent link">&para;</a></h3>
+<p>All regex patterns are compiled class-level constants on <code>EntityExtractor.REGEX_PATTERNS</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">REGEX_PATTERNS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">Pattern</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;cve&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(CVE-\d</span><span class="si">{4}</span><span class="s2">-\d{4,})&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;intrusion_set&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b((?:apt|unc|ta|fin|temp)\s*-?\s*\d+)\b&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;actor&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(lazarus|sandworm|volt\s+typhoon)\b&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(cobalt\s+strike|metasploit|mimikatz|bloodhound|dropbear|empire|covenant)\b&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="s2">&quot;campaign&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(operation\s+\w+)\b&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">),</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="s2">&quot;attack_pattern&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\bT\d</span><span class="si">{4}</span><span class="s2">(?:\.\d</span><span class="si">{3}</span><span class="s2">)?\b&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="s2">&quot;ipv4&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.)</span><span class="si">{3}</span><span class="s2">(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="s2">&quot;domain&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+(?:com|net|org|...)\b&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;https?://[^\s&lt;&gt;</span><span class="se">\&quot;</span><span class="s2">&#39;)\]]+&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="s2">&quot;md5&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b[a-fA-F0-9]</span><span class="si">{32}</span><span class="s2">\b&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="s2">&quot;sha1&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b[a-fA-F0-9]</span><span class="si">{40}</span><span class="s2">\b&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    <span class="s2">&quot;sha256&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b[a-fA-F0-9]</span><span class="si">{64}</span><span class="s2">\b&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b&quot;</span><span class="p">),</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="p">}</span>
+</code></pre></div>
+<p>Additionally, two regex patterns handle conversational entities without LLM:
+- <code>_PERSON_PATTERN</code>: Matches dialogue format <code>Name: text</code> with a stopword filter (40+ common words and day/month names excluded).
+- <code>_LOCATION_PATTERN</code>: Matches 40+ major world cities by name.</p>
+<h3 id="false-positive-hash-filter-_code_context_pattern">False Positive Hash Filter (<code>_CODE_CONTEXT_PATTERN</code>)<a class="headerlink" href="#false-positive-hash-filter-_code_context_pattern" title="Permanent link">&para;</a></h3>
+<p>Hash IOCs (<code>md5</code>, <code>sha1</code>, <code>sha256</code>) match any 32/40/64-character hex string, producing false positives on git commit SHAs, variable assignments, and code fences. The <code>_CODE_CONTEXT_PATTERN</code> is a compiled <code>re.VERBOSE</code> regex that detects lines containing code or VCS context:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">_CODE_CONTEXT_PATTERN</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&quot;&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="s2">    (?:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s2">        [a-zA-Z_]\w*\s*=\s*[&quot;&#39;]?[a-fA-F0-9]{32,64}   # var = hash (assignment)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s2">      | \bcommit\s+[a-fA-F0-9]{7,40}\b                # git commit entry</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s2">      | \bmerge\s+[a-fA-F0-9]{7,40}\b                 # git merge line</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">      | \btree\s+[a-fA-F0-9]{7,40}\b                  # git tree line</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">      | \bparent\s+[a-fA-F0-9]{7,40}\b                # git parent line</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">      | \bAuthor:\s                                    # git log header</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">      | ```                                            # code fence marker</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">      | \bdef\s+\w                                     # function definition</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">      | [a-zA-Z_]\w*\([^)]*[a-fA-F0-9]{32,64}        # function call with hash arg</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">    )</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+</code></pre></div>
+<p>The filter works per-line: for each line in the source text that matches <code>_CODE_CONTEXT_PATTERN</code>, every hex string on that line is added to a false-positive set. Hash candidates are then excluded if they appear in that set. This avoids per-match lookahead assertions and keeps the main hash regex simple.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">_filter_false_positive_hashes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">fp_hashes</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">text</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_CODE_CONTEXT_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">):</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b[a-fA-F0-9]{32,64}\b&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>                <span class="n">fp_hashes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">candidates</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fp_hashes</span><span class="p">]</span>
+</code></pre></div>
+<h3 id="llm-ner-pipeline-implemented">LLM NER Pipeline (Implemented)<a class="headerlink" href="#llm-ner-pipeline-implemented" title="Permanent link">&para;</a></h3>
+<p><strong>System prompt</strong> (exact text used in production):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>You are a named entity recognizer. Extract entities from the text.
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Return ONLY a JSON object with these keys:
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>person, location, organization, event, activity, temporal.
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Each key maps to a list of strings.
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Use empty lists for types not found. Example: {&quot;person&quot;: [&quot;Alice&quot;],
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>&quot;location&quot;: [&quot;Paris&quot;], &quot;organization&quot;: [], &quot;event&quot;: [&quot;birthday party&quot;],
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>&quot;activity&quot;: [&quot;swimming&quot;], &quot;temporal&quot;: [&quot;last Tuesday&quot;]}
+</code></pre></div>
+<p><strong>User prompt</strong> construction:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Extract named entities from this text:</span><span class="se">\n\n</span><span class="si">{</span><span class="n">text</span><span class="p">[:</span><span class="mi">2000</span><span class="p">]</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">JSON:&quot;</span>
+</code></pre></div>
+<p>Text is truncated to 2000 characters to stay within context budgets for small models. <code>max_tokens=300</code>, <code>temperature=0.0</code>.</p>
+<p><strong>Retry logic for JSON parse failures:</strong></p>
+<ol>
+<li>First attempt: call <code>generate()</code> with <code>temperature=0.0</code>, parse output with <code>extract_json(output, expect="object")</code>.</li>
+<li>If parse fails and output is non-empty: retry with <code>temperature=0.3</code>, <code>json_mode=True</code>, appending <code>"\n\nRespond with valid JSON only."</code> to the prompt.</li>
+<li>If retry also fails: log warning, return empty entity dict.</li>
+</ol>
+<p>On total exception (LLM unavailable, network error): catch-all returns empty entity dict with <code>exc_info=True</code> logging.</p>
+<p><strong>Normalization</strong> (<code>_parse_ner_output_from_parsed</code>):</p>
+<ul>
+<li>Each expected type is extracted from the parsed JSON with <code>parsed.get(etype, [])</code>.</li>
+<li>Values are filtered: must be <code>str</code>, non-empty after strip, length &gt; 1 character.</li>
+<li>All values are lowercased and stripped.</li>
+<li>Duplicates removed via <code>set()</code>.</li>
+<li>Missing types get empty lists.</li>
+</ul>
+<h3 id="entityindexer-persistence-implemented">EntityIndexer Persistence (Implemented)<a class="headerlink" href="#entityindexer-persistence-implemented" title="Permanent link">&para;</a></h3>
+<p><code>EntityIndexer</code> maintains an inverted index mapping <code>{entity_type -&gt; {entity_value -&gt; Set[note_id]}}</code>.</p>
+<p><strong>Storage</strong>: JSON file at <code>&lt;data_dir&gt;/entity_index.json</code> using <code>fcntl.flock(LOCK_EX)</code> for concurrent-process safety. (As of v2.2.0, the SQLite backend also has an <code>entity_index</code> table -- see Dual Storage below.)</p>
+<p><strong>Deferred flush</strong>: Writes are batched via a 5-second <code>threading.Timer</code>. After <code>add_note()</code> or <code>remove_note()</code>, the index is marked dirty and a daemon timer is scheduled. If no timer is already running, a new one fires in 5 seconds to call <code>_flush_sync()</code>. The <code>atexit</code> handler ensures a final flush on process exit.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">_schedule_flush</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flush_lock</span><span class="p">:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flush_timer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flush_timer</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_flush_timer</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flush_sync</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_flush_timer</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_flush_timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</code></pre></div>
+<p><strong><code>build()</code> method</strong>: Full reindex. Iterates all notes via <code>MemoryStore.iterate_notes()</code>, extracts entities with <code>extract_all()</code> (regex-only, no LLM), adds each to the index, cancels any pending timer, and flushes immediately. Returns <code>{"notes_indexed": count, "stats": self.stats()}</code>.</p>
+<p><strong><code>search_entities()</code> method</strong>: Case-insensitive prefix search across all entity types. For each type, returns entity values whose key starts with the query string, limited to <code>limit</code> results per type. Used by <code>recall_entity()</code> when the entity type is unknown.</p>
+<h3 id="dual-storage-situation">Dual Storage Situation<a class="headerlink" href="#dual-storage-situation" title="Permanent link">&para;</a></h3>
+<p>As of v2.2.0, entity data lives in two places:</p>
+<ol>
+<li><strong><code>entity_index.json</code></strong> -- The original JSONL/JSON file written by <code>EntityIndexer.save()</code> with <code>fcntl.flock()</code>. Still the primary store used by <code>EntityIndexer</code> at runtime.</li>
+<li><strong>SQLite <code>entity_index</code> table</strong> -- Written by <code>SQLiteBackend</code> as part of the unified storage migration. Used by SQLite-aware code paths.</li>
+</ol>
+<p>The <code>EntityIndexer</code> class itself still reads/writes the JSON file. The SQLite backend mirrors this data but the two are not kept in sync by a single authoritative writer. This is a known inconsistency that should be resolved by making <code>EntityIndexer</code> backend-aware (reading/writing through the <code>StorageBackend</code> ABC rather than directly to disk).</p>
+<h3 id="data-model-changes">Data Model Changes<a class="headerlink" href="#data-model-changes" title="Permanent link">&para;</a></h3>
+<p>Entity index gained new type keys. The <code>EntityIndexer.index</code> dict expanded from <code>{cve, actor, tool, campaign}</code> to all 19 types listed in <code>EntityExtractor.ENTITY_TYPES</code>. Backward-compatible -- old indexes simply lack new keys until rebuilt.</p>
+<p>Knowledge graph gained conversational node types. <code>NoteConstructor._infer_entity_type()</code> accepts <code>entity_type_hint</code> from LLM NER output, trusting the LLM classification for <code>{person, location, organization, event, activity, temporal}</code>. CTI types are still inferred from value patterns.</p>
+<h3 id="api-changes">API Changes<a class="headerlink" href="#api-changes" title="Permanent link">&para;</a></h3>
+<p>No public API changes. <code>EntityExtractor.extract_all()</code> returns <code>Dict[str, List[str]]</code> with more keys. The <code>use_llm</code> parameter controls whether LLM NER is invoked (default <code>False</code> for performance). <code>MemoryManager.recall_entity()</code> gains the ability to query by conversational entity types.</p>
+<h3 id="security-considerations">Security Considerations<a class="headerlink" href="#security-considerations" title="Permanent link">&para;</a></h3>
+<p>LLM-generated entity data enters the knowledge graph. Entities are extracted from note content (already governance-validated on input per GOV-011), and entity values are normalized to lowercase strings with no executable content. No new attack surface.</p>
+<h3 id="observability">Observability<a class="headerlink" href="#observability" title="Permanent link">&para;</a></h3>
+<p>Extraction metrics logged via <code>structlog</code> (GOV-012 compliant): LLM NER parse failures (<code>parse_failed</code>), retry attempts (<code>retry_parse</code>), extraction exceptions (<code>llm_entity_extraction_failed</code> with <code>exc_info</code>). Entity count by type available via <code>EntityIndexer.stats()</code>.</p>
+<h2 id="alternatives-considered">Alternatives Considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<p><strong>Alternative 1: More regex patterns for conversational entities.</strong> Rejected -- person names, locations, and events cannot be reliably matched with regex. "Sarah" vs "sarah" vs "SARAH" is tractable but "my friend from college" referring to a person is not. Regex would give maybe 30-40% recall on LOCOMO entities. The implementation does include a limited regex fallback for dialogue-format person names (<code>Name: text</code> pattern) and major city names, but these are supplementary to LLM NER, not a replacement.</p>
+<p><strong>Alternative 2: External NER library (spaCy, GLiNER).</strong> Rejected -- adds a heavy dependency (spaCy model ~500MB) or requires a separate model download. The project already has an LLM client; using it for NER keeps the dependency tree minimal and leverages the existing Qwen2.5-3B model.</p>
+<p><strong>Alternative 3: Hybrid approach (LLM NER + regex fast-path).</strong> Selected -- use regex for the CTI types where patterns are reliable (CVE, APT groups, IOCs), and LLM for conversational types where regex fails. Best of both worlds: fast and deterministic for CTI, flexible for everything else.</p>
+<h2 id="implementation-plan">Implementation Plan<a class="headerlink" href="#implementation-plan" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-refactor-entityextractor-to-single-source-of-truth-complete">Step 1: Refactor EntityExtractor to single source of truth -- COMPLETE<a class="headerlink" href="#step-1-refactor-entityextractor-to-single-source-of-truth-complete" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Removed duplicated patterns from <code>note_constructor.py</code></li>
+<li><code>NoteConstructor.extract_entities()</code> delegates to <code>EntityExtractor</code></li>
+<li>CTI regex preserved as fast-path</li>
+<li><strong>Files</strong>: <code>entity_indexer.py</code>, <code>note_constructor.py</code></li>
+</ul>
+<h3 id="step-2-add-llm-based-ner-extraction-complete">Step 2: Add LLM-based NER extraction -- COMPLETE<a class="headerlink" href="#step-2-add-llm-based-ner-extraction-complete" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>extract_llm()</code> method on <code>EntityExtractor</code> using <code>llm_client.generate()</code></li>
+<li>NER system prompt extracts: person, location, organization, event, activity, temporal</li>
+<li>Retry on JSON parse failure with <code>json_mode=True</code> and elevated temperature</li>
+<li><code>_parse_ner_output_from_parsed()</code> normalization</li>
+<li><strong>Files</strong>: <code>entity_indexer.py</code></li>
+</ul>
+<h3 id="step-3-expand-entity-index-schema-and-knowledge-graph-complete">Step 3: Expand entity index schema and knowledge graph -- COMPLETE<a class="headerlink" href="#step-3-expand-entity-index-schema-and-knowledge-graph-complete" title="Permanent link">&para;</a></h3>
+<ul>
+<li>19 entity types in <code>EntityExtractor.ENTITY_TYPES</code> (up from proposed 10)</li>
+<li>Added 7 IOC regex types not in original proposal: <code>ipv4</code>, <code>domain</code>, <code>url</code>, <code>md5</code>, <code>sha1</code>, <code>sha256</code>, <code>email</code></li>
+<li>Added <code>attack_pattern</code> (MITRE ATT&amp;CK TID) regex</li>
+<li><code>_infer_entity_type()</code> accepts <code>entity_type_hint</code> for LLM-classified types</li>
+<li><code>_CODE_CONTEXT_PATTERN</code> false positive filter for hash IOCs</li>
+<li><strong>Files</strong>: <code>entity_indexer.py</code>, <code>note_constructor.py</code></li>
+</ul>
+<h3 id="step-4-enhance-benchmark-answer-extraction-not-started">Step 4: Enhance benchmark answer extraction -- NOT STARTED<a class="headerlink" href="#step-4-enhance-benchmark-answer-extraction-not-started" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>SynthesisGenerator</code> integration into <code>locomo_benchmark.py</code> has not been implemented</li>
+<li>Raw context is still returned as the "answer" in the benchmark pipeline</li>
+<li>This is the primary remaining lever for LOCOMO score improvement</li>
+<li><strong>Files</strong>: <code>locomo_benchmark.py</code></li>
+</ul>
+<h3 id="step-5-tests-and-benchmark-validation-partial">Step 5: Tests and benchmark validation -- PARTIAL<a class="headerlink" href="#step-5-tests-and-benchmark-validation-partial" title="Permanent link">&para;</a></h3>
+<ul>
+<li>18 unit tests in <code>test_conversational_entities.py</code> passing:</li>
+<li><code>TestRegexExtraction</code> (5 tests): CVE, actor, tool, campaign, no-match</li>
+<li><code>TestLLMExtraction</code> (3 tests, CI-skipped): person, location, short-text-empty</li>
+<li><code>TestHybridExtraction</code> (2 tests, CI-skipped): regex-only CTI, combined types</li>
+<li><code>TestNERParsing</code> (3 tests): valid JSON, markdown-fenced JSON, empty output</li>
+<li><code>TestNoteConstructorDelegation</code> (2 tests): delegation wiring</li>
+<li><code>TestInferEntityType</code> (5 tests): CVE, APT, tool, type hints, unknown</li>
+<li><code>TestEntityIndexerConversational</code> (3 tests): all types present, add/lookup, cross-type search</li>
+<li>LLM tests gated with <code>@pytest.mark.skipif(CI)</code> due to llama-cpp segfault in CI</li>
+<li>LOCOMO benchmark at 22%, not the 80% target. See Lessons Learned.</li>
+<li><strong>Files</strong>: <code>tests/test_conversational_entities.py</code></li>
+</ul>
+<h2 id="rollout-strategy">Rollout Strategy<a class="headerlink" href="#rollout-strategy" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Feature branch <code>feature/RFC-001-conversational-entity-extractor</code> from <code>master</code> -- DONE</li>
+<li>Steps 1-3 implemented and merged in v2.0.0 -- DONE</li>
+<li>P0 performance fixes (supersession O(n), file locking) shipped in v2.1.1 -- DONE</li>
+<li>SQLite backend with entity_index table shipped in v2.2.0 -- DONE</li>
+<li>Step 4 (SynthesisGenerator in benchmark) -- OUTSTANDING</li>
+<li>Full benchmark re-run after Step 4 -- OUTSTANDING</li>
+</ol>
+<h2 id="open-questions">Open Questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
+<h3 id="resolved">Resolved<a class="headerlink" href="#resolved" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Should the LLM NER call be cached per note to avoid re-extraction on rebuild?</strong> Decision: yes, cache in note metadata. Implementation: <code>build()</code> uses regex-only extraction (<code>use_llm=False</code>) for speed. <strong>CORRECTION (2026-04-16 adversarial review):</strong> The original answer claimed "LLM NER runs at ingest time via <code>extract_all(use_llm=True)</code>" — this is false. No code path ever calls <code>use_llm=True</code>. <code>remember()</code>, <code>build()</code>, and <code>NoteConstructor</code> all default to <code>use_llm=False</code>. LLM NER is implemented but never activated. This is the #1 outstanding item.</p>
+</li>
+<li>
+<p><strong>What's the acceptable latency budget for NER per note?</strong> Current ingestion is 0.4 notes/s. LLM NER adds ~2-3s per call. Decision: acceptable for benchmark; add async batching for production later. Async batching has not been implemented.</p>
+</li>
+</ul>
+<h3 id="unresolved">Unresolved<a class="headerlink" href="#unresolved" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Async batching for production NER.</strong> At 2-3s per LLM call, NER is the ingestion bottleneck for batch operations. The <code>build()</code> method works around this by using regex-only extraction, but individual <code>remember()</code> calls with <code>use_llm=True</code> are synchronous and slow. No timeline set.</p>
+</li>
+<li>
+<p><strong>EntityIndexer backend unification.</strong> The dual storage (JSON file + SQLite table) should be resolved by making <code>EntityIndexer</code> write through the <code>StorageBackend</code> ABC. Currently the JSON file is authoritative at runtime.</p>
+</li>
+</ul>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Status</strong>: Partially Implemented</li>
+<li><strong>Date</strong>: 2026-04-09 (accepted), 2026-04-16 (adversarial review, status corrected)</li>
+<li><strong>Decision Maker</strong>: Patrick Roland</li>
+<li><strong>Rationale</strong>: The hybrid LLM+regex approach is the most practical path to improving LOCOMO. The entity type expansion (10 to 19 types) was a natural extension. However, adversarial review revealed that the LLM NER path was never wired into any ingest code path — the feature is built but dormant. Two outstanding items remain: (1) wire <code>use_llm=True</code> into the ingest path, (2) implement Step 4 (SynthesisGenerator in benchmark). Additionally, 2 code bugs were fixed: <code>load()</code> log event name was wrong, <code>attack_pattern</code> regex lacked a capture group.</li>
+</ul>
+<h3 id="adversarial-review-findings-2026-04-16">Adversarial Review Findings (2026-04-16)<a class="headerlink" href="#adversarial-review-findings-2026-04-16" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Severity</th>
+<th>Finding</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>BLOCKER</td>
+<td><code>use_llm=True</code> never called — LLM NER is dead code</td>
+<td>Documented, fix pending</td>
+</tr>
+<tr>
+<td>2</td>
+<td>BLOCKER</td>
+<td><code>load()</code> logs <code>entity_index_save_failed</code> instead of <code>load_failed</code></td>
+<td><strong>Fixed</strong> in code</td>
+</tr>
+<tr>
+<td>3</td>
+<td>WARNING</td>
+<td><code>attack_pattern</code> regex lacks capture group</td>
+<td><strong>Fixed</strong> in code</td>
+</tr>
+<tr>
+<td>4</td>
+<td>WARNING</td>
+<td><code>save()</code> truncates before flock — race condition</td>
+<td>Documented, fix pending</td>
+</tr>
+<tr>
+<td>5</td>
+<td>WARNING</td>
+<td><code>remove_note()</code> deletes entity type keys</td>
+<td>Documented, fix pending</td>
+</tr>
+<tr>
+<td>6</td>
+<td>WARNING</td>
+<td><code>_flush_sync()</code> not thread-safe on <code>self.index</code></td>
+<td>Documented, fix pending</td>
+</tr>
+<tr>
+<td>7</td>
+<td>WARNING</td>
+<td><code>extract_all(use_llm=True)</code> overwrites regex results</td>
+<td>Documented, fix pending</td>
+</tr>
+<tr>
+<td>8</td>
+<td>WARNING</td>
+<td>No tests for IOCs, hash filter, remove_note, search_entities</td>
+<td>Documented</td>
+</tr>
+<tr>
+<td>9</td>
+<td>WARNING</td>
+<td>Root cause analysis omits LLM NER not activated</td>
+<td><strong>Fixed</strong> in RFC (reason #5)</td>
+</tr>
+<tr>
+<td>10</td>
+<td>NIT</td>
+<td>Test count was 18, actual is 23</td>
+<td><strong>Fixed</strong> in RFC</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lessons-learned">Lessons Learned<a class="headerlink" href="#lessons-learned" title="Permanent link">&para;</a></h2>
+<h3 id="locomo-score-22-not-80">LOCOMO score: 22%, not 80%<a class="headerlink" href="#locomo-score-22-not-80" title="Permanent link">&para;</a></h3>
+<p>The RFC targeted 80%+ LOCOMO accuracy. After three releases, the score is 22% (up from 15%). The 80% target was overly optimistic for several reasons:</p>
+<ol>
+<li>
+<p><strong>Entity extraction was necessary but not sufficient.</strong> The hypothesis was that adding conversational entities to the knowledge graph would unlock multi-hop and temporal queries. Entity extraction works -- the graph now has person, location, and organization nodes -- but the benchmark's keyword-overlap scoring penalizes long, unfocused retrieved context. Without Step 4 (SynthesisGenerator distilling focused answers from context), the judge sees a wall of text and scores it low even when the answer is present.</p>
+</li>
+<li>
+<p><strong>The 3B model ceiling.</strong> Qwen2.5-3B produces NER output that is adequate for common entities (person names, well-known locations) but struggles with implicit references ("my friend from college"), abstract events, and temporal reasoning. The LOCOMO benchmark relies heavily on these. Larger models (GPT-4o, Claude) would likely improve NER quality, but the local-first philosophy constrains the default model.</p>
+</li>
+<li>
+<p><strong>Multi-hop and temporal remain at 0%.</strong> These categories were the primary motivation for RFC-001. Zero improvement after three releases indicates the bottleneck is not entity extraction alone -- it is the lack of multi-hop graph traversal in the benchmark recall path, and the absence of temporal normalization (resolving "last Tuesday" to a date and matching it against stored events).</p>
+</li>
+<li>
+<p><strong>The move from 15% to 22% came mostly from non-entity improvements.</strong> The 7-point gain was driven by supersession performance fixes (P0-1), file locking correctness (P0-2), ghost row cleanup (P0-4), and switching to an Ollama cloud model for the LLM judge -- not from conversational entity extraction specifically. This suggests the retrieval and scoring pipeline has more low-hanging fruit than entity coverage.</p>
+</li>
+<li>
+<p><strong>LLM NER was never activated.</strong> (Identified by adversarial review, 2026-04-16.) The <code>extract_llm()</code> method exists and works when called directly, but no code path in the codebase passes <code>use_llm=True</code> to <code>extract_all()</code>. <code>remember()</code>, <code>NoteConstructor</code>, and <code>build()</code> all use the default <code>use_llm=False</code>. The conversational entity types (person, location, organization, event, activity, temporal) are populated only by the limited regex fallback patterns — dialogue-format names and 40 hardcoded city names. This means the core value proposition of RFC-001 (LLM-powered NER for LOCOMO) was built but never deployed. Wiring <code>use_llm=True</code> into the ingest path is the single highest-priority fix.</p>
+</li>
+</ol>
+<h3 id="what-worked">What worked<a class="headerlink" href="#what-worked" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>Hybrid regex+LLM design.</strong> Regex fast-path for CTI entities is reliable, fast, and testable without an LLM. The LLM path is cleanly separated and can be improved independently (better model, better prompt, or even swapped for spaCy) without touching CTI extraction.</p>
+</li>
+<li>
+<p><strong>EntityExtractor as single source of truth.</strong> Eliminating pattern duplication between <code>entity_indexer.py</code> and <code>note_constructor.py</code> prevented divergence and simplified testing.</p>
+</li>
+<li>
+<p><strong>False positive hash filter.</strong> The <code>_CODE_CONTEXT_PATTERN</code> approach (per-line context detection rather than per-match lookahead) was the right trade-off. It is easy to extend with new context patterns and does not complicate the core hash regexes.</p>
+</li>
+<li>
+<p><strong>Deferred flush with threading.Timer.</strong> The 5-second write batching significantly reduced I/O during batch ingestion without risking data loss (atexit handler + explicit flush in <code>build()</code>).</p>
+</li>
+</ul>
+<h3 id="what-did-not-work">What did not work<a class="headerlink" href="#what-did-not-work" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><strong>80% target without SynthesisGenerator.</strong> The RFC bundled entity extraction (Steps 1-3) and answer synthesis (Step 4) into one proposal but only Steps 1-3 shipped. The benchmark score improvement was attributed almost entirely to entity work, when in reality it required both. Step 4 should have been a prerequisite, not an afterthought.</p>
+</li>
+<li>
+<p><strong>LLM NER in CI.</strong> The llama-cpp native library segfaults in CI (GitHub Actions), so all LLM extraction tests are skipped. This means the NER pipeline has no automated regression protection. Fixing this requires either a mock-based test strategy or a CI-compatible LLM runtime.</p>
+</li>
+</ul>
+<h3 id="recommendations-for-future-work">Recommendations for future work<a class="headerlink" href="#recommendations-for-future-work" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Implement Step 4 (SynthesisGenerator in benchmark)</strong> -- highest expected impact on LOCOMO score.</li>
+<li><strong>Add mock-based NER tests</strong> that exercise <code>_parse_ner_output_from_parsed()</code> with realistic LLM output without requiring a live model. The <code>TestNERParsing</code> class already does this for parse logic; extend it to cover the full <code>extract_llm()</code> path with a mocked <code>generate()</code>.</li>
+<li><strong>Unify EntityIndexer storage</strong> to write through <code>StorageBackend</code> and eliminate the JSON/SQLite dual-write inconsistency.</li>
+<li><strong>Evaluate RFC-002 impact</strong> -- once the universal LLM provider ships, re-run LOCOMO with a larger model to measure the NER quality ceiling independent of the 3B model constraint.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../assets/cf-analytics.js"></script>
+      
+    
+  </body>
+</html>
