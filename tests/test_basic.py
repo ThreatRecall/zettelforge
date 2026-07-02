@@ -296,6 +296,14 @@ class TestEntityExtractor:
 
         assert "win_susp_powershell_encoded_cmd" in entities["sigma_rule"]
 
+    def test_sigma_rule_bare_id_extraction(self):
+        """Bare SigmaHQ-style rule IDs are extracted."""
+        extractor = EntityExtractor()
+        text = "Detection matched win_susp_powershell_encoded_cmd during triage."
+        entities = extractor.extract_all(text)
+
+        assert "win_susp_powershell_encoded_cmd" in entities["sigma_rule"]
+
     def test_sigma_rule_absent_returns_empty(self):
         """Text without Sigma references should not produce sigma_rule entities."""
         extractor = EntityExtractor()
