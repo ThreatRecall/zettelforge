@@ -50,6 +50,12 @@ class EntityExtractor:
             re.IGNORECASE,
         ),
         "attack_pattern": re.compile(r"\b(T\d{4}(?:\.\d{3})?)\b"),
+        "sigma_rule": re.compile(
+            r"\b(?:sigma:\s*|sigma\s+rule:\s*)?"
+            r"((?:win|linux|lnx|macos|aws|azure|gcp|okta|zeek|web|net|proc|file|apt)\w*"
+            r"_[a-z0-9]+(?:_[a-z0-9]+)+)\b",
+            re.IGNORECASE,
+        ),
         # IOC patterns (STIX Cyber Observables)
         "ipv4": re.compile(
             r"\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b",
@@ -78,6 +84,7 @@ class EntityExtractor:
         "tool",
         "campaign",
         "attack_pattern",
+        "sigma_rule",
         # IOC / STIX Cyber Observables (regex)
         "ipv4",
         "domain",
