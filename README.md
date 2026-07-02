@@ -15,6 +15,7 @@ It extracts CVEs, threat actors, IOCs, and ATT&CK techniques from analyst notes 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/rolandpg/zettelforge/actions/workflows/ci.yml/badge.svg)](https://github.com/rolandpg/zettelforge/actions)
 [![Open Issues](https://img.shields.io/github/issues/rolandpg/zettelforge?color=blue)](https://github.com/rolandpg/zettelforge/issues)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ThreatRecall/zettelforge)
 
 **[Star](https://github.com/rolandpg/zettelforge) · [`pip install zettelforge`](https://pypi.org/project/zettelforge/) · [Docs](https://docs.threatrecall.ai/) · [ThreatRecall (hosted)](https://threatrecall.ai) · [Changelog](CHANGELOG.md)**
 
