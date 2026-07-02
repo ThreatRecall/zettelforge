@@ -31,6 +31,21 @@ def test_ingest_rule_creates_note_and_relations(mm: MemoryManager) -> None:
     assert any(r["to_type"] == "YaraTag" for r in relations)
 
 
+def test_ingest_rule_persists_detection_metadata(mm: MemoryManager) -> None:
+    note, _ = ingest_rule(FIXTURES / "technique_loader.yar", mm, tier="warn")
+    assert note is not None
+
+    fetched = mm.store.get_note_by_id(note.id)
+    assert fetched is not None
+    assert fetched.metadata.detection is not None
+    assert fetched.metadata.detection.cccs_tier == "warn"
+    assert fetched.metadata.detection.source_path == str(FIXTURES / "technique_loader.yar")
+    assert fetched.metadata.detection.mitre_att == ["T1218"]
+    assert fetched.metadata.detection.category == "TECHNIQUE"
+    assert fetched.metadata.detection.technique == "loader:memorymodule"
+    assert fetched.metadata.detection.author == "analyst@CCCS"
+
+
 def test_ingest_rule_accepts_raw_text(mm: MemoryManager) -> None:
     src = (FIXTURES / "malware_hash.yar").read_text()
     note, _ = ingest_rule(src, mm, tier="non_cccs")

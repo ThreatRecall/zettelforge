@@ -19,6 +19,7 @@ import logging
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from zettelforge.note_schema import DetectionMeta, Metadata
 from zettelforge.yara.entities import YaraRule, rule_to_entities
 from zettelforge.yara.parser import parse_file, parse_yara
 
@@ -105,11 +106,20 @@ def ingest_rule(
         return None, []
 
     rule_dict = rules[0]
+    source_path = None
+    if isinstance(rule_source, Path):
+        source_path = str(rule_source)
+    elif isinstance(rule_source, str) and "\n" not in rule_source:
+        maybe_path = Path(rule_source).expanduser()
+        if maybe_path.exists():
+            source_path = str(maybe_path)
+
     note, relations, _is_new = _ingest_single(
         rule_dict,
         mm,
         domain=domain,
         tier=tier,
+        source_path=source_path,
         sync=sync,
     )
     return note, relations
@@ -276,23 +286,37 @@ def _ingest_single(
         return existing, relations, False
 
     content = _build_note_content(entity, rule_dict_for_content, source_path=source_path)
+    detection_meta = DetectionMeta(
+        cccs_tier=entity.extra.get("cccs_compliant"),
+        source_path=source_path,
+        mitre_att=[
+            rel.get("properties", {}).get("technique_id")
+            for rel in relations
+            if rel.get("rel") == "detects"
+            and rel.get("properties", {}).get("technique_id")
+        ],
+        category=entity.category,
+        technique=entity.technique_tag,
+        author=entity.author,
+        fingerprint=entity.fingerprint,
+        hash_of_sample=entity.hash_of_sample,
+    )
     note, _status = mm.remember(
         content=content,
         source_type="yara",
         source_ref=source_ref,
         domain=domain,
         sync=sync,
+        metadata=Metadata(domain=domain, tier="A", detection=detection_meta),
     )
 
     # CR-B1: persist every relation as a KG edge keyed on the YaraRule's
     # ``entity.rule_id`` / note id. Mirrors ``sigma/ingest._persist_relations``.
     _persist_relations(mm, relations, note_id=note.id)
 
-    # source_path, cccs_tier, mitre refs are recorded inside the note body
-    # (see _build_note_content) and on the returned entity/relations. The
-    # Metadata schema doesn't expose an extras bucket yet, so we avoid
-    # mutating it here — Phase 4 can add a typed metadata extension if
-    # downstream consumers need keyed access without re-parsing.
+    # The body still carries the human-readable summary, but the typed
+    # detection metadata slot now preserves the structured values for
+    # downstream keyed access without reparsing the note content.
     return note, relations, True
 
 
