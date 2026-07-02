@@ -71,6 +71,7 @@ rules["GOV-003"] = {
 ```python
 rules["GOV-007"] = {
     "testing": True,
+    # governance target; CI currently enforces --cov-fail-under=67
     "coverage": 0.8
 }
 ```
