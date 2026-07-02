@@ -30,7 +30,10 @@ controls:
     enforcement: ci
     rules:
       - id: coverage
-        description: "Minimum 67% line coverage"
+        description: "Coverage ratchet: current CI gate 67%, target 80%"
+        current_threshold_percent: 67
+        target_threshold_percent: 80
+        ratchet_policy: "Raise --cov-fail-under as tests increase coverage; never lower the 80% target."
         ci_step: "Test with pytest"
         tool: "pytest-cov --cov-fail-under=67"
 
