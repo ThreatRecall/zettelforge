@@ -280,6 +280,46 @@ class TestEntityExtractor:
         assert "attacker@evil.org" in entities["email"]
         assert "victim@corp.com" in entities["email"]
 
+    def test_sigma_rule_prefixed_extraction(self):
+        """Sigma rules in sigma:<id> format are extracted."""
+        extractor = EntityExtractor()
+        text = "Detection via sigma:apt28_cobalt_strike in SIEM."
+        entities = extractor.extract_all(text)
+
+        assert "apt28_cobalt_strike" in entities["sigma_rule"]
+
+    def test_sigma_rule_label_extraction(self):
+        """Sigma rules in 'Sigma Rule: <id>' format are extracted."""
+        extractor = EntityExtractor()
+        text = "Sigma Rule: win_susp_powershell_encoded_cmd fired last night."
+        entities = extractor.extract_all(text)
+
+        assert "win_susp_powershell_encoded_cmd" in entities["sigma_rule"]
+
+    def test_sigma_rule_bare_id_extraction(self):
+        """Bare SigmaHQ-style rule IDs are extracted."""
+        extractor = EntityExtractor()
+        text = "Detection matched win_susp_powershell_encoded_cmd during triage."
+        entities = extractor.extract_all(text)
+
+        assert "win_susp_powershell_encoded_cmd" in entities["sigma_rule"]
+
+    def test_sigma_rule_absent_returns_empty(self):
+        """Text without Sigma references should not produce sigma_rule entities."""
+        extractor = EntityExtractor()
+        text = "No detection rule identifier is present in this sentence."
+        entities = extractor.extract_all(text)
+
+        assert entities["sigma_rule"] == []
+
+    def test_sigma_rule_ignores_common_snake_case(self):
+        """Common snake_case identifiers should not be treated as Sigma rules."""
+        extractor = EntityExtractor()
+        text = "Parsed fields included user_id, error_code, and retry_count."
+        entities = extractor.extract_all(text)
+
+        assert entities["sigma_rule"] == []
+
 
 class TestNoteConstructor:
     """Test note construction"""
@@ -327,6 +367,18 @@ class TestMemoryManager:
             # Recall by entity
             results = mm.recall_cve("CVE-2024-3094")
             assert len(results) >= 0  # May be 0 if embedding not available
+
+    def test_remember_includes_sigma_rule_entities(self):
+        """remember() stores extracted Sigma rule IDs in semantic entities."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mm = MemoryManager(jsonl_path=f"{tmpdir}/notes.jsonl", lance_path=f"{tmpdir}/vectordb")
+            note, status = mm.remember(
+                "Detection via sigma:apt28_cobalt_strike",
+                domain="security_ops",
+            )
+
+            assert status == "created"
+            assert "apt28_cobalt_strike" in note.semantic.entities
 
     def test_remember_with_evolve_false(self):
         """Test that evolve=False stores directly (default backward-compat path)."""
