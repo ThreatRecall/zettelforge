@@ -52,8 +52,7 @@ class EntityExtractor:
         "attack_pattern": re.compile(r"\b(T\d{4}(?:\.\d{3})?)\b"),
         "sigma_rule": re.compile(
             r"\b(?:sigma:\s*|sigma\s+rule:\s*)?"
-            r"((?:win|linux|lnx|macos|aws|azure|gcp|okta|zeek|web|net|proc|file|apt\d*)"
-            r"_[a-z0-9]+(?:_[a-z0-9]+)*)\b",
+            r"([a-z][a-z0-9]*(?:_[a-z0-9]+)+)\b",
             re.IGNORECASE,
         ),
         # IOC patterns (STIX Cyber Observables)
