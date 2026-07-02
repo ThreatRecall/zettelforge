@@ -150,3 +150,14 @@ class TestGovernanceSpecDrift:
             f"Manifest references test files that don't exist:\n" +
             "\n".join(f"  - {m}" for m in missing)
         )
+
+    def test_gov_007_coverage_ratchet_metadata(self):
+        """GOV-007 must track current and target coverage for ratcheting."""
+        manifest = _load_manifest()
+        rules = manifest["controls"]["GOV-007"]["rules"]
+        coverage_rule = next(r for r in rules if r["id"] == "coverage")
+
+        assert coverage_rule["tool"] == "pytest-cov --cov-fail-under=67"
+        assert coverage_rule["current_threshold_percent"] == 67
+        assert coverage_rule["target_threshold_percent"] == 80
+        assert coverage_rule["delta_to_target_percent"] == 13

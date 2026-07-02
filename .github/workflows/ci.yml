@@ -129,9 +129,9 @@ jobs:
         ZETTELFORGE_EMBEDDING_PROVIDER: fastembed
       run: |
         # GOV-007 §"Coverage Requirements" mandates ≥80% line / ≥70% branch.
-        # We start the ratchet at 67 (matches governance/controls.yaml's
-        # current declaration) so today's pipeline does not break, and #51
-        # tracks raising it toward 80% across v2.5.x. Audit finding H-2.
+        # CI currently enforces 67% so today's pipeline does not regress.
+        # Ratchet delta is +13 points (67 -> 80); bump this gate upward as
+        # coverage increases. Do not lower the 80% target to match reality.
         pytest tests/ -v --cov=zettelforge --cov-report=xml --cov-report=term-missing --cov-fail-under=67
 
     - name: Upload coverage
