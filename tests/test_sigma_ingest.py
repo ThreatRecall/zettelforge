@@ -73,6 +73,22 @@ def test_ingest_rule_single_file(mm: MemoryManager) -> None:
     assert len(relations) >= 1
 
 
+def test_ingest_rule_persists_detection_metadata(mm: MemoryManager) -> None:
+    from zettelforge.sigma.ingest import ingest_rule
+
+    note, _relations = ingest_rule(FIXTURES / "cloud_example.yml", mm)
+    assert note is not None
+
+    fetched = mm.store.get_note_by_id(note.id)
+    assert fetched is not None
+    assert fetched.metadata.detection is not None
+    assert fetched.metadata.detection.logsource == {"product": "windows", "service": "security"}
+    assert fetched.metadata.detection.rule_level == "high"
+    assert fetched.metadata.detection.rule_status is None
+    assert fetched.metadata.detection.references == []
+    assert fetched.metadata.detection.fields == []
+
+
 def test_ingest_rule_emits_kg_edges_for_logsource(mm: MemoryManager) -> None:
     """Verify edges land in the SQLite backend and are queryable by
     ``get_kg_neighbors`` — the detection-rule equivalent of the

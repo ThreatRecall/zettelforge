@@ -21,6 +21,7 @@ from typing import Any
 
 import yaml
 
+from zettelforge.note_schema import DetectionMeta, Metadata
 from zettelforge.sigma.entities import SigmaRule, from_rule_dict
 from zettelforge.sigma.parser import (
     SigmaParseError,
@@ -84,12 +85,29 @@ def ingest_rule(
             return existing, relations
 
     content = _build_content(rule_dict, entity)
+    detection_meta = DetectionMeta(
+        logsource={
+            facet: value
+            for facet, value in (
+                ("product", entity.logsource_product),
+                ("service", entity.logsource_service),
+                ("category", entity.logsource_category),
+            )
+            if value
+        },
+        rule_level=entity.rule_level,
+        rule_status=entity.rule_status,
+        references=list(rule_dict.get("references") or []),
+        falsepositives=list(rule_dict.get("falsepositives") or []),
+        fields=list(rule_dict.get("fields") or []),
+    )
     note, _status = mm.remember(
         content=content,
         source_type="sigma_rule",
         source_ref=effective_source_ref,
         domain=domain,
         sync=sync,
+        metadata=Metadata(domain=domain, tier="A", detection=detection_meta),
     )
 
     _persist_relations(mm, relations, note_id=note.id)

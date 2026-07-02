@@ -35,7 +35,7 @@ from zettelforge.memory_defense import MemoryAnomalyError, MemoryAnomalyGate
 from zettelforge.memory_store import MemoryStore, get_default_data_dir
 from zettelforge.memory_updater import MemoryUpdater
 from zettelforge.note_constructor import NoteConstructor
-from zettelforge.note_schema import MemoryNote
+from zettelforge.note_schema import MemoryNote, Metadata
 from zettelforge.ocsf import (
     SEVERITY_HIGH,
     STATUS_FAILURE,
@@ -189,6 +189,7 @@ class MemoryManager:
         domain: str = "general",
         evolve: bool = False,
         sync: bool = False,
+        metadata: Metadata | None = None,
     ) -> tuple[MemoryNote, str]:
         """
         Create a new memory note from content.
@@ -233,6 +234,7 @@ class MemoryManager:
                 domain=domain,
                 evolve=evolve,
                 sync=sync,
+                metadata=metadata,
                 request_id=request_id,
                 start=start,
             )
@@ -247,6 +249,7 @@ class MemoryManager:
         domain: str,
         evolve: bool,
         sync: bool,
+        metadata: Metadata | None,
         request_id: str,
         start: float,
     ) -> tuple[MemoryNote, str]:
@@ -312,7 +315,11 @@ class MemoryManager:
 
         _p = time.perf_counter()
         note = self.constructor.construct(
-            raw_content=content, source_type=source_type, source_ref=source_ref, domain=domain
+            raw_content=content,
+            source_type=source_type,
+            source_ref=source_ref,
+            domain=domain,
+            metadata=metadata,
         )
         phase_timings_ms["construct"] = (time.perf_counter() - _p) * 1000
 
