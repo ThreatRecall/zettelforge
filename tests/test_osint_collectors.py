@@ -166,6 +166,11 @@ def test_whois_domain_returns_empty_when_library_missing() -> None:
         assert whois_collector.collect("DomainName", "example.com") == []
 
 
+def test_whois_domain_returns_empty_when_lookup_raises() -> None:
+    with patch.object(whois_collector, "_lookup_domain", side_effect=RuntimeError("boom")):
+        assert whois_collector.collect("DomainName", "example.com") == []
+
+
 def test_whois_domain_handles_list_valued_org_field() -> None:
     fake = _FakeWhoisRecord(org=["Example Corp", "Other Ltd"])
     with patch.object(whois_collector, "_lookup_domain", return_value=fake):
