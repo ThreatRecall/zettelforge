@@ -312,6 +312,14 @@ class TestEntityExtractor:
 
         assert entities["sigma_rule"] == []
 
+    def test_sigma_rule_ignores_common_snake_case(self):
+        """Common snake_case identifiers should not be treated as Sigma rules."""
+        extractor = EntityExtractor()
+        text = "Parsed fields included user_id, error_code, and retry_count."
+        entities = extractor.extract_all(text)
+
+        assert entities["sigma_rule"] == []
+
 
 class TestNoteConstructor:
     """Test note construction"""
