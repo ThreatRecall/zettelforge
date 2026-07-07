@@ -1,0 +1,140 @@
+---
+config:
+  theme: dark
+  layout: elk
+---
+flowchart TB
+    accTitle: ZettelForge retrieval and synthesis detail
+    accDescr {
+        This diagram shows the read path in detail. Entry points are the
+        MCP server tools zettelforge_recall, zettelforge_synthesize, and
+        zettelforge_stats, plus the LangChain retriever. MemoryManager
+        exposes recall, recall_entity, synthesize, and get_context methods.
+        Retrieval begins with intent classification into factual, temporal,
+        relational, causal, or exploratory categories. Intent routes
+        queries through parallel vector and graph retrievers against
+        LanceDB and SQLite respectively. Vector retrieval uses cosine
+        similarity with threshold 0.15, graph retrieval uses breadth
+        first search up to depth 2. A blended retriever combines results
+        with intent-adaptive weighting; temporal and causal boosters
+        adjust scores when the intent matches. A cross-encoder reranker
+        using ms-marco-MiniLM-L-6-v2 produces the final ordering. The
+        synthesis generator uses RAG-as-Answer with the top-10 context
+        and produces outputs validated by a quality scorer where
+        EXCELLENT is 0.8 or higher and GOOD is 0.5 or higher. Infrastructure
+        provides Ollama for LLM inference (used by the fact extractor,
+        synthesis generator, intent classifier, memory updater, causal
+        extractor, and memory evolver), fastembed for embedding generation
+        consumed by the LanceDB index, SmartCache for vector and intent
+        results, and retry logic wrapping all LLM calls. Observability
+        emits metrics, OCSF v1.3 security events, and structured logs.
+    }
+
+ subgraph MCP["MCP Server (stdio)"]
+    direction TB
+        MCP_REC["zettelforge_recall"]
+        MCP_SYN["zettelforge_synthesize"]
+        MCP_STAT["zettelforge_stats"]
+  end
+ subgraph LANGCHAIN["LangChain"]
+        LCR["ZettelForgeRetriever<br>BaseRetriever wrapper"]
+  end
+ subgraph API["MemoryManager — Core API"]
+    direction TB
+        REC["recall<br>recall_entity"]
+        SYN["synthesize<br>get_context"]
+  end
+ subgraph STORAGE["Storage Layer"]
+    direction TB
+        SQL_KG["kg_nodes + kg_edges<br>Temporal and causal"]
+        VEC["LanceDB<br>768-dim embeddings"]
+  end
+ subgraph RETRIEVE["Retrieval Pipeline"]
+    direction TB
+        IC["Intent Classifier<br>factual / temporal / relational / causal / exploratory"]
+        VR["Vector Retriever<br>Cosine sim, threshold 0.15"]
+        GR["Graph Retriever<br>BFS, max depth 2"]
+        BR["Blended Retriever<br>Intent-adaptive weighting"]
+        TB_NODE["Temporal Booster<br>dateparser normalization"]
+        CB["Causal Booster<br>Bidirectional BFS"]
+        XE["Cross-Encoder Reranker<br>ms-marco-MiniLM-L-6-v2"]
+  end
+ subgraph OUTPUT["Synthesis & Validation"]
+    direction TB
+        SG["Synthesis Generator<br>RAG-as-Answer, top-10 context"]
+        SV["Synthesis Validator<br>EXCELLENT ≥0.8, GOOD ≥0.5"]
+  end
+ subgraph INFRA["Infrastructure"]
+    direction TB
+        OLL["Ollama<br>qwen3.5:9b LLM<br>Used by IC, SG and write path"]
+        FEM["fastembed<br>nomic-embed-text-v1.5-Q<br>Used by LanceDB vector index"]
+        CACHE["SmartCache<br>LRU + TTL<br>Used by VR, IC"]
+        RETRY["Retry<br>Exponential backoff + jitter<br>Wraps all LLM calls"]
+  end
+ subgraph OBSERVE["Observability"]
+    direction TB
+        OBS["Metrics<br>Latency, error rate, cache"]
+        OCSF["OCSF v1.3 Events<br>6002 / 3001 / 3003 / 5002 / 1001 / 1007"]
+        LOG["Structured Logging<br>structlog + rotating files"]
+  end
+
+    %% Entry points to API
+    MCP_REC & MCP_STAT --> REC
+    MCP_SYN --> SYN
+    LCR --> REC
+
+    %% Read path
+    REC -- "query" --> IC
+    IC -- "routing" --> BR
+    IC -. "temporal" .-> TB_NODE
+    IC -. "causal" .-> CB
+    VR -- "matches" --> BR
+    GR -- "results" --> BR
+    TB_NODE -. "boost" .-> BR
+    CB -. "chain" .-> BR
+    BR -- "blended" --> XE
+    XE -- "reranked" --> SG
+    SG --> SV
+    SYN -- "format" --> SG
+
+    %% Storage to Retrieval
+    VEC -- "embeddings" --> VR
+    SQL_KG -- "graph" --> GR
+
+    %% Observability attachments (dashed, no crossings)
+    REC -. "metrics" .-> OBS
+    REC -. "audit" .-> LOG
+    STORAGE -. "file events" .-> OCSF
+
+     MCP_REC:::mcp
+     MCP_SYN:::mcp
+     MCP_STAT:::mcp
+     LCR:::mcp
+     REC:::api
+     SYN:::api
+     SQL_KG:::storage
+     VEC:::storage
+     IC:::retrieve
+     VR:::retrieve
+     GR:::retrieve
+     BR:::retrieve
+     TB_NODE:::retrieve
+     CB:::retrieve
+     XE:::retrieve
+     SG:::output
+     SV:::output
+     OBS:::observe
+     OCSF:::observe
+     LOG:::observe
+     OLL:::infra
+     FEM:::infra
+     CACHE:::infra
+     RETRY:::infra
+
+    classDef mcp fill:#1a2744,stroke:#00d4ff,color:#b8e6ff,stroke-width:2px
+    classDef api fill:#142850,stroke:#00b4d8,color:#caf0f8
+    classDef storage fill:#332c46,stroke:#e67e22,color:#ffe0bf
+    classDef retrieve fill:#453026,stroke:#e67e22,color:#ffd7b3
+    classDef output fill:#3a2a35,stroke:#e83e8c,color:#ffcce5
+    classDef observe fill:#2a2a3d,stroke:#9b59b6,color:#d7bde2
+    classDef infra fill:#2f2f2f,stroke:#7f8c7f,color:#e0e0e0

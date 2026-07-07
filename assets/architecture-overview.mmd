@@ -1,0 +1,57 @@
+---
+config:
+  theme: dark
+  layout: elk
+---
+flowchart TB
+    accTitle: ZettelForge high-level architecture overview
+    accDescr {
+        ZettelForge is organized as a five-stage pipeline. Entry points are
+        the MCP server and LangChain retriever, both of which call into the
+        MemoryManager core API. The API dispatches writes through ingestion,
+        entity processing, and background enrichment into the pluggable
+        storage layer. Reads flow from the API through the retrieval
+        pipeline and synthesis stage back to the caller. Storage is
+        backed by SQLite by default with an optional LanceDB vector index.
+        Infrastructure services (Ollama, fastembed, cache, retry) and
+        observability (metrics, OCSF events, structured logs) support the
+        pipeline. Optional extensions attach to the storage layer.
+    }
+
+    ENTRY["Entry Points<br>MCP Server · LangChain Retriever"]:::entry
+    API["MemoryManager — Core API<br>remember · recall · synthesize"]:::api
+    INGEST["Ingestion Pipeline<br>Validate · Build note · Extract facts · Update"]:::ingest
+    ENTITY["Entity Processing<br>Index · Resolve aliases"]:::entity
+    ENRICH["Background Enrichment<br>Causal · A-Mem evolution · HGAM"]:::enrich
+    STORAGE["Storage Layer<br>SQLite default · LanceDB vector index"]:::storage
+    RETRIEVE["Retrieval Pipeline<br>Intent · Vector + Graph · Rerank"]:::retrieve
+    OUTPUT["Synthesis & Validation<br>RAG-as-Answer · Quality scoring"]:::output
+    INFRA["Infrastructure<br>Ollama · fastembed · Cache · Retry"]:::infra
+    OBSERVE["Observability<br>Metrics · OCSF events · Logs"]:::observe
+    EXT["Extension Points<br>TypeDB · OpenCTI · OAuth/JWT · Sigma"]:::ext
+
+    ENTRY --> API
+    API -- "write" --> INGEST
+    INGEST --> ENTITY
+    ENTITY --> STORAGE
+    INGEST -. "enqueue" .-> ENRICH
+    ENRICH -. "updates" .-> STORAGE
+    API -- "read" --> RETRIEVE
+    STORAGE --> RETRIEVE
+    RETRIEVE --> OUTPUT
+    OUTPUT --> API
+    INFRA -.- API
+    OBSERVE -.- API
+    EXT -.- STORAGE
+
+    classDef entry fill:#1a2744,stroke:#00d4ff,color:#b8e6ff,stroke-width:2px
+    classDef api fill:#142850,stroke:#00b4d8,color:#caf0f8,stroke-width:2px
+    classDef ingest fill:#203354,stroke:#4a9eff,color:#bcdfff
+    classDef enrich fill:#1b3a2f,stroke:#2ecc71,color:#a8f0c0
+    classDef entity fill:#1b3a2f,stroke:#2ecc71,color:#a8f0c0
+    classDef storage fill:#332c46,stroke:#e67e22,color:#ffe0bf
+    classDef retrieve fill:#453026,stroke:#e67e22,color:#ffd7b3
+    classDef output fill:#3a2a35,stroke:#e83e8c,color:#ffcce5
+    classDef observe fill:#2a2a3d,stroke:#9b59b6,color:#d7bde2
+    classDef infra fill:#2f2f2f,stroke:#7f8c7f,color:#e0e0e0
+    classDef ext fill:#2f3d2f,stroke:#a0b4a0,color:#d0e0d0,stroke-dasharray:5 5

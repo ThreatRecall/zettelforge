@@ -1,0 +1,25 @@
+# awesome-selfhosted-data entry for ZettelForge
+# Target file in the upstream repo: software/zettelforge.yml
+# Format reference: https://github.com/awesome-selfhosted/awesome-selfhosted-data/blob/master/.github/CONTRIBUTING.md
+#
+# NOTE: Only the human-authored fields below are submitted. The maintainer bot
+# auto-populates stargazers_count, updated_at, archived, current_release and
+# commit_history from the GitHub API on merge — do NOT add them by hand.
+
+name: ZettelForge
+website_url: https://docs.threatrecall.ai/
+source_code_url: https://github.com/rolandpg/zettelforge
+description: >-
+  Knowledge management and retrieval system for cyber threat intelligence.
+  Extracts CVEs, threat actors, IOCs and MITRE ATT&CK techniques from analyst
+  notes and reports, resolves actor aliases (APT28 = Fancy Bear), builds a
+  STIX 2.1 knowledge graph, and serves past investigations back through a web
+  management UI, REST API and an MCP server. Runs in-process with no external
+  API keys required.
+licenses:
+  - MIT
+platforms:
+  - Python
+  - Docker
+tags:
+  - Knowledge Management Tools

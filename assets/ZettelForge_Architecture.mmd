@@ -1,0 +1,185 @@
+---
+config:
+  theme: dark
+  layout: elk
+---
+flowchart TB
+    accTitle: ZettelForge system architecture
+    accDescr {
+        ZettelForge exposes an MCP server and LangChain retriever that call into
+        MemoryManager, the core API. Writes flow through a governance validator,
+        note constructor, fact extractor, chunker, and memory updater, then into
+        entity processing and the pluggable storage layer. Background enrichment
+        runs causal extraction, A-Mem memory evolution, and HGAM consolidation.
+        Reads flow through an intent classifier, parallel vector and graph
+        retrievers, blended scoring with temporal and causal boosters,
+        cross-encoder reranking, and synthesis with quality validation.
+        Infrastructure provides Ollama for LLM, fastembed for embeddings,
+        SmartCache, and retry logic. Observability emits OCSF v1.3 events
+        and structured logs. Optional extensions add TypeDB, OpenCTI,
+        OAuth/JWT, and Sigma rule generation.
+    }
+
+ subgraph MCP["MCP Server (stdio)"]
+    direction TB
+        MCP_REM["zettelforge_remember"]
+        MCP_REC["zettelforge_recall"]
+        MCP_SYN["zettelforge_synthesize"]
+        MCP_ENT["zettelforge_entity"]
+        MCP_GRF["zettelforge_graph"]
+        MCP_STAT["zettelforge_stats"]
+  end
+ subgraph LANGCHAIN["LangChain"]
+        LCR["ZettelForgeRetriever<br>BaseRetriever wrapper"]
+  end
+ subgraph API["MemoryManager — Core API"]
+    direction TB
+        REM["remember / remember_with_extraction / remember_report"]
+        REC["recall / recall_entity"]
+        SYN["synthesize / get_context"]
+  end
+ subgraph INGEST["Ingestion Pipeline"]
+    direction TB
+        GOV["Governance Validator<br>controls.yaml spec-driven"]
+        NC["Note Constructor<br>Enriched MemoryNote, ~45ms"]
+        FE["Fact Extractor<br>Phase 1 LLM extract"]
+        CHK["Chunker<br>Sentence-boundary, max 3000 chars"]
+        MU["Memory Updater<br>ADD / UPDATE / DELETE / NOOP"]
+  end
+ subgraph ENRICH["Background Enrichment"]
+    direction TB
+        EQ["Enrichment Queue<br>Async job dispatch"]
+        CAUSAL["Causal Extractor<br>MAGMA-style triples"]
+        EVOLVER["Memory Evolver<br>A-Mem neighbor refinement"]
+        CONSOL["Consolidation<br>HGAM, EPG to TAN"]
+  end
+ subgraph ENTITY["Entity Processing"]
+    direction TB
+        EI["Entity Indexer<br>10 types, regex + LLM fallback"]
+        AR["Alias Resolver<br>JSON entity aliases"]
+  end
+ subgraph STORAGE["Storage Layer"]
+    direction TB
+     subgraph BACKEND["StorageBackend ABC (33 methods)"]
+         subgraph SQLITE["SQLite (Default)"]
+                SQL_N["notes<br>35 columns, WAL, ACID"]
+                SQL_KG["kg_nodes + kg_edges<br>Temporal and causal"]
+                SQL_EI["entity_index<br>O(1) lookup"]
+          end
+         subgraph LANCE["LanceDB — Vector Index"]
+                VEC["768-dim embeddings<br>IVF_FLAT, per-domain tables"]
+          end
+      end
+  end
+ subgraph RETRIEVE["Retrieval Pipeline"]
+    direction TB
+        IC["Intent Classifier<br>factual / temporal / relational / causal / exploratory"]
+        VR["Vector Retriever<br>Cosine sim, threshold 0.15"]
+        GR["Graph Retriever<br>BFS, max depth 2"]
+        BR["Blended Retriever<br>Intent-adaptive weighting"]
+        TB_NODE["Temporal Booster<br>dateparser normalization"]
+        CB["Causal Booster<br>Bidirectional BFS"]
+        XE["Cross-Encoder Reranker<br>ms-marco-MiniLM-L-6-v2"]
+  end
+ subgraph OUTPUT["Synthesis & Validation"]
+    direction TB
+        SG["Synthesis Generator<br>RAG-as-Answer, top-10 context"]
+        SV["Synthesis Validator<br>EXCELLENT ≥0.8, GOOD ≥0.5"]
+  end
+
+
+ subgraph EXT["Extension Points"]
+    direction TB
+        EXT_DESC["Optional packages via extensions.py<br>TypeDB STIX 2.1 · OpenCTI sync<br>OAuth/JWT · Sigma rule generation"]
+  end
+
+    %% Entry points to API
+    MCP_REM & MCP_REC & MCP_SYN & MCP_ENT & MCP_GRF & MCP_STAT --> API
+    LCR --> REC
+
+    %% Write path: API to Ingestion to Entity to Storage
+    REM -- "content" --> GOV
+    GOV -- "validated" --> NC
+    REM -- "facts" --> FE
+    REM -- "reports" --> CHK
+    CHK -- "chunks" --> FE
+    FE -- "salient facts" --> MU
+    NC -- "enriched note" --> ENTITY
+    MU -- "fact updates" --> ENTITY
+    EI -- "indexed" --> AR
+    AR -- "resolved" --> STORAGE
+
+    %% Background enrichment
+    NC -. "enqueue" .-> EQ
+    EQ --> CAUSAL & EVOLVER
+    EVOLVER -. "semantic shift" .-> CONSOL
+    CAUSAL -. "causal edges" .-> SQL_KG
+    EVOLVER -. "evolved notes" .-> SQL_N
+
+    %% Read path: API to Retrieval to Synthesis
+    REC -- "query" --> IC
+    IC -- "routing" --> BR
+    IC -. "temporal" .-> TB_NODE
+    IC -. "causal" .-> CB
+    VR -- "matches" --> BR
+    GR -- "results" --> BR
+    TB_NODE -. "boost" .-> BR
+    CB -. "chain" .-> BR
+    BR -- "blended" --> XE
+    XE -- "reranked" --> SG
+    SG --> SV
+    SYN -- "format" --> SG
+
+    %% Storage to Retrieval
+    LANCE -- "embeddings" --> VR
+    SQL_KG -- "graph" --> GR
+
+    %% Extensions attach to storage
+    EXT -.- STORAGE
+
+     MCP_REM:::mcp
+     MCP_REC:::mcp
+     MCP_SYN:::mcp
+     MCP_ENT:::mcp
+     MCP_GRF:::mcp
+     MCP_STAT:::mcp
+     LCR:::mcp
+     REM:::api
+     REC:::api
+     SYN:::api
+     GOV:::ingest
+     NC:::ingest
+     FE:::ingest
+     CHK:::ingest
+     MU:::ingest
+     EQ:::enrich
+     CAUSAL:::enrich
+     EVOLVER:::enrich
+     CONSOL:::enrich
+     EI:::entity
+     AR:::entity
+     SQL_N:::storage
+     SQL_KG:::storage
+     SQL_EI:::storage
+     VEC:::storage
+     IC:::retrieve
+     VR:::retrieve
+     GR:::retrieve
+     BR:::retrieve
+     TB_NODE:::retrieve
+     CB:::retrieve
+     XE:::retrieve
+     SG:::output
+     SV:::output
+     EXT_DESC:::ext
+    classDef mcp fill:#1a2744,stroke:#00d4ff,color:#b8e6ff,stroke-width:2px
+    classDef api fill:#142850,stroke:#00b4d8,color:#caf0f8
+    classDef ingest fill:#203354,stroke:#4a9eff,color:#bcdfff
+    classDef enrich fill:#1b3a2f,stroke:#2ecc71,color:#a8f0c0
+    classDef entity fill:#1b3a2f,stroke:#2ecc71,color:#a8f0c0
+    classDef storage fill:#332c46,stroke:#e67e22,color:#ffe0bf
+    classDef retrieve fill:#453026,stroke:#e67e22,color:#ffd7b3
+    classDef output fill:#3a2a35,stroke:#e83e8c,color:#ffcce5
+    classDef observe fill:#2a2a3d,stroke:#9b59b6,color:#d7bde2
+    classDef infra fill:#2f2f2f,stroke:#7f8c7f,color:#e0e0e0
+    classDef ext fill:#2f3d2f,stroke:#a0b4a0,color:#d0e0d0,stroke-dasharray:5 5
