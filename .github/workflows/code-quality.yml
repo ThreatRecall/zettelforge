@@ -1,0 +1,80 @@
+name: Code Quality
+
+# Non-blocking code-quality signals that complement the hard gates in
+# ci.yml (ruff lint + format, pip-audit, tests, coverage). This surfaces
+# the static-typing (mypy) and ruff annotation (ANN) backlogs so they can
+# be ratcheted down, and feeds ruff findings to the code-scanning
+# dashboard. Everything here is report-only: it never fails the build.
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '17 6 * * 1'   # weekly Monday 06:17 UTC — catch drift on master
+
+permissions:
+  contents: read
+
+jobs:
+  mypy:
+    name: Type check (mypy)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+
+    - name: Set up Python
+      uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+      with:
+        python-version: '3.12'
+
+    - name: Install project + dev tools
+      run: |
+        python -m pip install --upgrade pip
+        # See ci.yml: fall back to a bare install + mypy if the [dev]
+        # extra can't resolve. Type checking wants the deps importable.
+        pip install -e ".[dev]" || (pip install -e "." && pip install mypy)
+
+    - name: Run mypy (report-only)
+      # Report-only: the codebase has a known static-typing backlog
+      # (audit finding H-3) being ratcheted per-module, so surface type
+      # findings without failing the build. Drop continue-on-error to make
+      # mypy a hard gate once it is clean. Config lives in [tool.mypy].
+      continue-on-error: true
+      run: mypy src/zettelforge/
+
+  ruff-scan:
+    name: Ruff → code scanning
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write   # upload SARIF to the code-scanning dashboard
+    steps:
+    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+
+    - name: Set up Python
+      uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+      with:
+        python-version: '3.12'
+
+    - name: Install ruff
+      run: pip install ruff
+
+    - name: Ruff check -> SARIF
+      # ci.yml already hard-gates the active ruff rule set (so master is
+      # clean against it). Here we also --extend-select the deferred ANN
+      # (type-annotation) rules and emit SARIF so the ratchet backlog is
+      # visible in the code-scanning dashboard. The `|| true` is required:
+      # findings are expected and must not fail the job — they surface as
+      # code-scanning alerts instead.
+      run: |
+        ruff check --extend-select ANN --output-format sarif \
+          src/zettelforge/ > ruff.sarif || true
+
+    - name: Upload SARIF to code scanning
+      uses: github/codeql-action/upload-sarif@54f647b7e1bb85c95cddabcd46b0c578ec92bc1a
+      with:
+        sarif_file: ruff.sarif
+        category: ruff
+      continue-on-error: true
