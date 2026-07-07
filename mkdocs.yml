@@ -102,6 +102,11 @@ nav:
     - RFC-001 Conversational Entity Extractor: rfcs/RFC-001-conversational-entity-extractor.md
     - RFC-002 Universal LLM Provider Interface: rfcs/RFC-002-universal-llm-provider.md
     - RFC-003 Read-Path Depth Routing: rfcs/RFC-003-read-path-depth-routing.md
+    - Architecture Decision Records: adr/README.md
+    - ADR-001 JSONL for Community Storage: adr/0001-jsonl-for-community-storage.md
+    - ADR-002 Blended Retrieval (Vector + Graph): adr/0002-blended-retrieval-vector-plus-graph.md
+    - ADR-003 In-Process LLM (llama-cpp-python): adr/0003-in-process-llm-llama-cpp-python.md
+    - ADR-004 STIX 2.1 Entity Types: adr/0004-stix-2.1-entity-types.md
   - About:
     - Why ZettelForge: narrative/2026-04-16-the-memory-problem.md
 
