@@ -9,13 +9,14 @@
 name: ZettelForge
 website_url: https://docs.threatrecall.ai/
 source_code_url: https://github.com/rolandpg/zettelforge
+# description must be < 250 characters, sentence case, and must NOT contain
+# "self-hosted", "open-source" or "free" (linter rejects those). Current
+# length is ~235 chars — keep any edits under the limit.
 description: >-
-  Knowledge management and retrieval system for cyber threat intelligence.
-  Extracts CVEs, threat actors, IOCs and MITRE ATT&CK techniques from analyst
-  notes and reports, resolves actor aliases (APT28 = Fancy Bear), builds a
-  STIX 2.1 knowledge graph, and serves past investigations back through a web
-  management UI, REST API and an MCP server. Runs in-process with no external
-  API keys required.
+  Threat-intelligence knowledge base that extracts CVEs, threat actors, IOCs
+  and MITRE ATT&CK techniques from analyst notes and reports, resolves actor
+  aliases, and builds a STIX 2.1 knowledge graph served over a web UI, REST
+  API and MCP.
 licenses:
   - MIT
 platforms:

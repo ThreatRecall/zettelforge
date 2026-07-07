@@ -26,11 +26,11 @@ description cell). Drop this row in, alphabetically, matching the surrounding
         <a href="https://github.com/rolandpg/zettelforge" target="_blank">ZettelForge</a>
     </td>
     <td>
-        ZettelForge is an in-process memory and knowledge-graph system for cyber
-        threat intelligence. It extracts CVEs, threat actors, IOCs and MITRE
-        ATT&amp;CK techniques from analyst notes and reports, resolves actor
-        aliases (APT28 = Fancy Bear), and builds a STIX 2.1 knowledge graph
-        queryable through a web UI, REST API and an MCP server.
+        ZettelForge is a threat-intelligence knowledge base that extracts CVEs,
+        threat actors, IOCs and MITRE ATT&amp;CK techniques from analyst notes
+        and reports, resolves actor aliases (APT28 = Fancy Bear), and builds a
+        STIX 2.1 knowledge graph queryable through a web UI, REST API and an
+        MCP server.
     </td>
 </tr>
 ```
@@ -42,7 +42,7 @@ Pipe-table format with columns
 Add, alphabetically:
 
 ```
-| ZettelForge | In-process memory + knowledge graph purpose-built for cyber threat intelligence: extracts CVEs, actors, IOCs and ATT&CK techniques, resolves actor aliases, builds a STIX 2.1 graph, blended vector + graph retrieval, served over web UI / REST / MCP | https://docs.threatrecall.ai/ | Managed, Open source | https://github.com/rolandpg/zettelforge | Memory Tool | Graph, Vector |
+| ZettelForge | Threat-intelligence memory and knowledge graph: extracts CVEs, actors, IOCs and ATT&CK techniques from analyst notes, resolves actor aliases, builds a STIX 2.1 graph with blended vector + graph retrieval, served over web UI, REST and MCP | https://docs.threatrecall.ai/ | Managed, Open source | https://github.com/rolandpg/zettelforge | Memory Tool | Graph, Vector |
 ```
 
 (ZettelForge is already named as a peer of Mem0/Graphiti/Cognee in its own
