@@ -100,9 +100,10 @@ def ingest_rule(
         existing = store.get_note_by_source_ref(effective_source_ref)
         if existing is not None:
             if existing.metadata.detection is None:
-                # Backfill notes ingested before the typed detection slot existed.
+                # Backfill notes ingested before the typed detection slot
+                # existed. Prefer rewrite_note so updated_at is refreshed.
                 existing.metadata.detection = detection_meta
-                store.write_note(existing)
+                getattr(store, "rewrite_note", store.write_note)(existing)
             return existing, relations
 
     content = _build_content(rule_dict, entity)

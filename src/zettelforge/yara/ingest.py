@@ -299,9 +299,10 @@ def _ingest_single(
     existing = mm.store.get_note_by_source_ref(source_ref)
     if existing is not None:
         if existing.metadata.detection is None:
-            # Backfill notes ingested before the typed detection slot existed.
+            # Backfill notes ingested before the typed detection slot
+            # existed. Prefer rewrite_note so updated_at is refreshed.
             existing.metadata.detection = detection_meta
-            mm.store.write_note(existing)
+            getattr(mm.store, "rewrite_note", mm.store.write_note)(existing)
         return existing, relations, False
 
     content = _build_note_content(entity, rule_dict_for_content, source_path=source_path)
