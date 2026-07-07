@@ -46,6 +46,14 @@ class EntityExtractor:
         "proc",
         "file",
         "sysmon",
+        # SigmaHQ event-type filename prefixes
+        "registry",
+        "dns",
+        "pipe",
+        "image",
+        "posh",
+        "wmi",
+        "driver",
     )
 
     # Regex fast-path for CTI entities — deterministic, zero-latency
@@ -69,13 +77,16 @@ class EntityExtractor:
         ),
         "attack_pattern": re.compile(r"\b(T\d{4}(?:\.\d{3})?)\b"),
         # Two forms: an explicit label (``sigma:x`` / ``Sigma Rule: x``)
-        # accepts any snake_case rule name, while bare SigmaHQ-style IDs
-        # must start with a known logsource prefix AND carry at least two
-        # more segments so common identifiers (``win_rate``, ``file_name``)
-        # don't false-positive.
+        # accepts any snake_case name or canonical UUID rule id, while bare
+        # SigmaHQ-style IDs must start with a known logsource prefix AND
+        # carry at least two more segments so common identifiers
+        # (``win_rate``, ``file_name``) don't false-positive. Bare IDs
+        # ending in generic metadata suffixes (``aws_access_key_id``,
+        # ``file_create_time``) are excluded via lookbehinds.
         "sigma_rule": re.compile(
-            r"\bsigma(?:\s+rule)?:\s*([a-z0-9]+(?:_[a-z0-9]+)+)\b"
-            rf"|\b((?:{'|'.join(_SIGMA_RULE_PREFIXES)}|apt\d+)_[a-z0-9]+(?:_[a-z0-9]+)+)\b",
+            r"\bsigma(?:\s+rule)?:\s*([a-z0-9][a-z0-9_-]+[a-z0-9])\b"
+            rf"|\b((?:{'|'.join(_SIGMA_RULE_PREFIXES)}|apt\d+)_[a-z0-9]+(?:_[a-z0-9]+)+)\b"
+            r"(?<!_id)(?<!_key)(?<!_time)(?<!_name)(?<!_type)(?<!_count)(?<!_token)(?<!_url)",
             re.IGNORECASE,
         ),
         # IOC patterns (STIX Cyber Observables)

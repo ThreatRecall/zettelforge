@@ -332,6 +332,38 @@ class TestEntityExtractor:
         assert "lateral_movement_smb_admin_share" in entities["sigma_rule"]
         assert "susp_powershell_download" in entities["sigma_rule"]
 
+    def test_sigma_rule_labeled_accepts_uuid(self):
+        """Canonical Sigma YAML UUID rule ids are accepted after a label."""
+        extractor = EntityExtractor()
+        text = "Sigma Rule: 929a690e-bef0-4204-a928-ef5e620d6fcb fired."
+        entities = extractor.extract_all(text)
+
+        assert "929a690e-bef0-4204-a928-ef5e620d6fcb" in entities["sigma_rule"]
+
+    def test_sigma_rule_bare_event_type_prefixes(self):
+        """SigmaHQ event-type filename prefixes are recognized bare."""
+        extractor = EntityExtractor()
+        text = (
+            "Matched registry_set_office_trust_record, dns_query_win_regsvr32_network, "
+            "and posh_ps_wmi_persistence."
+        )
+        entities = extractor.extract_all(text)
+
+        assert "registry_set_office_trust_record" in entities["sigma_rule"]
+        assert "dns_query_win_regsvr32_network" in entities["sigma_rule"]
+        assert "posh_ps_wmi_persistence" in entities["sigma_rule"]
+
+    def test_sigma_rule_ignores_generic_metadata_suffixes(self):
+        """Three-segment cloud/file fields with generic suffixes are not rules."""
+        extractor = EntityExtractor()
+        text = (
+            "Fields: aws_access_key_id, gcp_project_id, file_create_time, "
+            "and image_file_name."
+        )
+        entities = extractor.extract_all(text)
+
+        assert entities["sigma_rule"] == []
+
     def test_sigma_rule_ignores_prefixed_two_token_identifiers(self):
         """Bare two-segment identifiers with logsource-like prefixes are not rules."""
         extractor = EntityExtractor()
