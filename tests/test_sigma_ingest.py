@@ -172,7 +172,7 @@ def test_ingest_rules_dir_bulk_defers_enrichment_and_flushes() -> None:
             self.calls = []
             self.flushed = False
 
-        def remember(self, *, content, source_type, source_ref, domain, sync):
+        def remember(self, *, content, source_type, source_ref, domain, sync, metadata=None):
             self.calls.append({"source_ref": source_ref, "sync": sync})
             note = MemoryNote(
                 id=f"note-{len(self.calls)}",

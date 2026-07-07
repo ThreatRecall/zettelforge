@@ -292,8 +292,7 @@ def _ingest_single(
         mitre_att=[
             rel.get("properties", {}).get("technique_id")
             for rel in relations
-            if rel.get("rel") == "detects"
-            and rel.get("properties", {}).get("technique_id")
+            if rel.get("rel") == "detects" and rel.get("properties", {}).get("technique_id")
         ],
         category=entity.category,
         technique=entity.technique_tag,

@@ -15,8 +15,8 @@ import sqlite3
 import threading
 import uuid
 from collections import defaultdict, deque
-from dataclasses import asdict
 from collections.abc import Iterator
+from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -189,7 +189,9 @@ def _note_to_row(note: MemoryNote) -> dict:
         "evolved_by": json.dumps(note.evolved_by),
         "vuln_meta": json.dumps(note.metadata.vuln.model_dump()) if note.metadata.vuln else None,
         "detection_meta": (
-            json.dumps(asdict(note.metadata.detection)) if note.metadata.detection is not None else None
+            json.dumps(asdict(note.metadata.detection))
+            if note.metadata.detection is not None
+            else None
         ),
     }
 
@@ -249,7 +251,9 @@ def _row_to_note(row: sqlite3.Row) -> MemoryNote:
             else -1,
             vuln=VulnerabilityMeta(**json.loads(r["vuln_meta"])) if r.get("vuln_meta") else None,
             detection=(
-                DetectionMeta(**json.loads(r["detection_meta"])) if r.get("detection_meta") else None
+                DetectionMeta(**json.loads(r["detection_meta"]))
+                if r.get("detection_meta")
+                else None
             ),
         ),
     )
@@ -346,9 +350,7 @@ class SQLiteBackend(StorageBackend):
             conn.execute("PRAGMA foreign_keys=ON")
             conn.execute("PRAGMA busy_timeout=5000")
             conn.executescript(_SCHEMA_DDL)
-            existing_columns = {
-                row[1] for row in conn.execute("PRAGMA table_info(notes)")
-            }
+            existing_columns = {row[1] for row in conn.execute("PRAGMA table_info(notes)")}
             if "detection_meta" not in existing_columns:
                 conn.execute("ALTER TABLE notes ADD COLUMN detection_meta TEXT DEFAULT NULL")
             conn.commit()
