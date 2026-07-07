@@ -280,6 +280,101 @@ class TestEntityExtractor:
         assert "attacker@evil.org" in entities["email"]
         assert "victim@corp.com" in entities["email"]
 
+    def test_sigma_rule_prefixed_extraction(self):
+        """Sigma rules in sigma:<id> format are extracted."""
+        extractor = EntityExtractor()
+        text = "Detection via sigma:apt28_cobalt_strike in SIEM."
+        entities = extractor.extract_all(text)
+
+        assert "apt28_cobalt_strike" in entities["sigma_rule"]
+
+    def test_sigma_rule_label_extraction(self):
+        """Sigma rules in 'Sigma Rule: <id>' format are extracted."""
+        extractor = EntityExtractor()
+        text = "Sigma Rule: win_susp_powershell_encoded_cmd fired last night."
+        entities = extractor.extract_all(text)
+
+        assert "win_susp_powershell_encoded_cmd" in entities["sigma_rule"]
+
+    def test_sigma_rule_bare_id_extraction(self):
+        """Bare SigmaHQ-style rule IDs are extracted."""
+        extractor = EntityExtractor()
+        text = "Detection matched win_susp_powershell_encoded_cmd during triage."
+        entities = extractor.extract_all(text)
+
+        assert "win_susp_powershell_encoded_cmd" in entities["sigma_rule"]
+
+    def test_sigma_rule_absent_returns_empty(self):
+        """Text without Sigma references should not produce sigma_rule entities."""
+        extractor = EntityExtractor()
+        text = "No detection rule identifier is present in this sentence."
+        entities = extractor.extract_all(text)
+
+        assert entities["sigma_rule"] == []
+
+    def test_sigma_rule_ignores_common_snake_case(self):
+        """Common snake_case identifiers should not be treated as Sigma rules."""
+        extractor = EntityExtractor()
+        text = "Parsed fields included user_id, error_code, and retry_count."
+        entities = extractor.extract_all(text)
+
+        assert entities["sigma_rule"] == []
+
+    def test_sigma_rule_labeled_accepts_any_rule_name(self):
+        """An explicit sigma label accepts names outside the prefix whitelist."""
+        extractor = EntityExtractor()
+        text = (
+            "Detection via sigma:lateral_movement_smb_admin_share and "
+            "Sigma Rule: susp_powershell_download."
+        )
+        entities = extractor.extract_all(text)
+
+        assert "lateral_movement_smb_admin_share" in entities["sigma_rule"]
+        assert "susp_powershell_download" in entities["sigma_rule"]
+
+    def test_sigma_rule_labeled_accepts_uuid(self):
+        """Canonical Sigma YAML UUID rule ids are accepted after a label."""
+        extractor = EntityExtractor()
+        text = "Sigma Rule: 929a690e-bef0-4204-a928-ef5e620d6fcb fired."
+        entities = extractor.extract_all(text)
+
+        assert "929a690e-bef0-4204-a928-ef5e620d6fcb" in entities["sigma_rule"]
+
+    def test_sigma_rule_bare_event_type_prefixes(self):
+        """SigmaHQ event-type filename prefixes are recognized bare."""
+        extractor = EntityExtractor()
+        text = (
+            "Matched registry_set_office_trust_record, dns_query_win_regsvr32_network, "
+            "and posh_ps_wmi_persistence."
+        )
+        entities = extractor.extract_all(text)
+
+        assert "registry_set_office_trust_record" in entities["sigma_rule"]
+        assert "dns_query_win_regsvr32_network" in entities["sigma_rule"]
+        assert "posh_ps_wmi_persistence" in entities["sigma_rule"]
+
+    def test_sigma_rule_ignores_generic_metadata_suffixes(self):
+        """Three-segment cloud/file fields with generic suffixes are not rules."""
+        extractor = EntityExtractor()
+        text = (
+            "Fields: aws_access_key_id, gcp_project_id, file_create_time, "
+            "and image_file_name."
+        )
+        entities = extractor.extract_all(text)
+
+        assert entities["sigma_rule"] == []
+
+    def test_sigma_rule_ignores_prefixed_two_token_identifiers(self):
+        """Bare two-segment identifiers with logsource-like prefixes are not rules."""
+        extractor = EntityExtractor()
+        text = (
+            "The file_name column, net_income figures, win_rate metric, "
+            "web_server host, proc_id output, and apt_get install logs."
+        )
+        entities = extractor.extract_all(text)
+
+        assert entities["sigma_rule"] == []
+
 
 class TestNoteConstructor:
     """Test note construction"""
@@ -327,6 +422,62 @@ class TestMemoryManager:
             # Recall by entity
             results = mm.recall_cve("CVE-2024-3094")
             assert len(results) >= 0  # May be 0 if embedding not available
+
+    def test_remember_includes_sigma_rule_entities(self):
+        """remember() stores extracted Sigma rule IDs in semantic entities."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mm = MemoryManager(jsonl_path=f"{tmpdir}/notes.jsonl", lance_path=f"{tmpdir}/vectordb")
+            note, status = mm.remember(
+                "Detection via sigma:apt28_cobalt_strike",
+                domain="security_ops",
+            )
+
+            assert status == "created"
+            assert "apt28_cobalt_strike" in note.semantic.entities
+
+    def test_remember_metadata_preserves_requested_domain(self):
+        """A partial caller Metadata must not clobber the domain argument."""
+        from zettelforge.note_schema import DetectionMeta, Metadata
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mm = MemoryManager(jsonl_path=f"{tmpdir}/notes.jsonl", lance_path=f"{tmpdir}/vectordb")
+            note, status = mm.remember(
+                "Sigma rule fired on host",
+                domain="security_ops",
+                metadata=Metadata(detection=DetectionMeta(rule_level="high")),
+            )
+
+            assert status == "created"
+            assert note.metadata.domain == "security_ops"
+            assert note.metadata.detection.rule_level == "high"
+
+    def test_remember_metadata_template_not_shared_between_notes(self):
+        """Reusing one Metadata template must not share state across notes."""
+        from zettelforge.note_schema import DetectionMeta, Metadata
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mm = MemoryManager(jsonl_path=f"{tmpdir}/notes.jsonl", lance_path=f"{tmpdir}/vectordb")
+            template = Metadata(detection=DetectionMeta(rule_level="high"))
+            note1, _ = mm.remember("First rule fired", domain="security_ops", metadata=template)
+            note2, _ = mm.remember("Second rule fired", domain="security_ops", metadata=template)
+
+            assert note1.metadata is not note2.metadata
+            note1.metadata.detection.rule_level = "low"
+            assert note2.metadata.detection.rule_level == "high"
+            assert template.detection.rule_level == "high"
+
+    def test_remember_metadata_rejected_with_evolve(self):
+        """metadata= is incompatible with the multi-fact evolve pipeline."""
+        from zettelforge.note_schema import DetectionMeta, Metadata
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mm = MemoryManager(jsonl_path=f"{tmpdir}/notes.jsonl", lance_path=f"{tmpdir}/vectordb")
+            with pytest.raises(ValueError, match="not supported with evolve=True"):
+                mm.remember(
+                    "Some content",
+                    evolve=True,
+                    metadata=Metadata(detection=DetectionMeta(rule_level="low")),
+                )
 
     def test_remember_with_evolve_false(self):
         """Test that evolve=False stores directly (default backward-compat path)."""

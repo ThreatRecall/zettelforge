@@ -30,6 +30,32 @@ _logger = get_logger("zettelforge.entity_indexer")
 class EntityExtractor:
     """Extract entities from text using regex (CTI) and LLM (conversational) patterns."""
 
+    _SIGMA_RULE_PREFIXES: ClassVar[tuple[str, ...]] = (
+        "win",
+        "linux",
+        "lnx",
+        "macos",
+        "aws",
+        "azure",
+        "gcp",
+        "okta",
+        "zeek",
+        "proxy",
+        "web",
+        "net",
+        "proc",
+        "file",
+        "sysmon",
+        # SigmaHQ event-type filename prefixes
+        "registry",
+        "dns",
+        "pipe",
+        "image",
+        "posh",
+        "wmi",
+        "driver",
+    )
+
     # Regex fast-path for CTI entities — deterministic, zero-latency
     REGEX_PATTERNS: ClassVar[dict[str, re.Pattern]] = {
         "cve": re.compile(r"(CVE-\d{4}-\d{4,})", re.IGNORECASE),
@@ -50,6 +76,19 @@ class EntityExtractor:
             re.IGNORECASE,
         ),
         "attack_pattern": re.compile(r"\b(T\d{4}(?:\.\d{3})?)\b"),
+        # Two forms: an explicit label (``sigma:x`` / ``Sigma Rule: x``)
+        # accepts any snake_case name or canonical UUID rule id, while bare
+        # SigmaHQ-style IDs must start with a known logsource prefix AND
+        # carry at least two more segments so common identifiers
+        # (``win_rate``, ``file_name``) don't false-positive. Bare IDs
+        # ending in generic metadata suffixes (``aws_access_key_id``,
+        # ``file_create_time``) are excluded via lookbehinds.
+        "sigma_rule": re.compile(
+            r"\bsigma(?:\s+rule)?:\s*([a-z0-9][a-z0-9_-]+[a-z0-9])\b"
+            rf"|\b((?:{'|'.join(_SIGMA_RULE_PREFIXES)}|apt\d+)_[a-z0-9]+(?:_[a-z0-9]+)+)\b"
+            r"(?<!_id)(?<!_key)(?<!_time)(?<!_name)(?<!_type)(?<!_count)(?<!_token)(?<!_url)",
+            re.IGNORECASE,
+        ),
         # IOC patterns (STIX Cyber Observables)
         "ipv4": re.compile(
             r"\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\b",
@@ -78,6 +117,7 @@ class EntityExtractor:
         "tool",
         "campaign",
         "attack_pattern",
+        "sigma_rule",
         # IOC / STIX Cyber Observables (regex)
         "ipv4",
         "domain",
@@ -309,7 +349,12 @@ class EntityExtractor:
 
         for entity_type, pattern in self.REGEX_PATTERNS.items():
             matches = pattern.findall(text)
-            normalized = list(set(m.lower().replace(" ", "-") for m in matches))
+            # Multi-group patterns (alternations) yield tuples with one
+            # non-empty group per match; single-group patterns yield strings.
+            flattened = (
+                m if isinstance(m, str) else next((g for g in m if g), "") for m in matches
+            )
+            normalized = list(set(m.lower().replace(" ", "-") for m in flattened if m))
             if entity_type in hash_types:
                 normalized = self._filter_false_positive_hashes(normalized, text)
             results[entity_type] = normalized

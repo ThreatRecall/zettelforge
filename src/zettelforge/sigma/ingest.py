@@ -21,6 +21,7 @@ from typing import Any
 
 import yaml
 
+from zettelforge.note_schema import DetectionMeta, Metadata
 from zettelforge.sigma.entities import SigmaRule, from_rule_dict
 from zettelforge.sigma.parser import (
     SigmaParseError,
@@ -77,10 +78,32 @@ def ingest_rule(
     # note instead of creating a duplicate.
     effective_source_ref = source_ref or f"sigma:{entity.rule_id}:{entity.content_sha256[:12]}"
 
+    detection_meta = DetectionMeta(
+        logsource={
+            facet: value
+            for facet, value in (
+                ("product", entity.logsource_product),
+                ("service", entity.logsource_service),
+                ("category", entity.logsource_category),
+            )
+            if value
+        },
+        rule_level=entity.rule_level,
+        rule_status=entity.rule_status,
+        references=list(rule_dict.get("references") or []),
+        falsepositives=list(rule_dict.get("falsepositives") or []),
+        fields=list(rule_dict.get("fields") or []),
+    )
+
     store = getattr(mm, "store", None)
     if store is not None and hasattr(store, "get_note_by_source_ref"):
         existing = store.get_note_by_source_ref(effective_source_ref)
         if existing is not None:
+            if existing.metadata.detection is None:
+                # Backfill notes ingested before the typed detection slot
+                # existed. Prefer rewrite_note so updated_at is refreshed.
+                existing.metadata.detection = detection_meta
+                getattr(store, "rewrite_note", store.write_note)(existing)
             return existing, relations
 
     content = _build_content(rule_dict, entity)
@@ -90,6 +113,7 @@ def ingest_rule(
         source_ref=effective_source_ref,
         domain=domain,
         sync=sync,
+        metadata=Metadata(domain=domain, tier="A", detection=detection_meta),
     )
 
     _persist_relations(mm, relations, note_id=note.id)
