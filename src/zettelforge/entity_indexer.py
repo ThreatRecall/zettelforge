@@ -68,9 +68,14 @@ class EntityExtractor:
             re.IGNORECASE,
         ),
         "attack_pattern": re.compile(r"\b(T\d{4}(?:\.\d{3})?)\b"),
+        # Two forms: an explicit label (``sigma:x`` / ``Sigma Rule: x``)
+        # accepts any snake_case rule name, while bare SigmaHQ-style IDs
+        # must start with a known logsource prefix AND carry at least two
+        # more segments so common identifiers (``win_rate``, ``file_name``)
+        # don't false-positive.
         "sigma_rule": re.compile(
-            r"\b(?:sigma:\s*|sigma\s+rule:\s*)?"
-            rf"((?:{'|'.join(_SIGMA_RULE_PREFIXES)}|apt\d*)_[a-z0-9]+(?:_[a-z0-9]+)*)\b",
+            r"\bsigma(?:\s+rule)?:\s*([a-z0-9]+(?:_[a-z0-9]+)+)\b"
+            rf"|\b((?:{'|'.join(_SIGMA_RULE_PREFIXES)}|apt\d+)_[a-z0-9]+(?:_[a-z0-9]+)+)\b",
             re.IGNORECASE,
         ),
         # IOC patterns (STIX Cyber Observables)
@@ -333,7 +338,12 @@ class EntityExtractor:
 
         for entity_type, pattern in self.REGEX_PATTERNS.items():
             matches = pattern.findall(text)
-            normalized = list(set(m.lower().replace(" ", "-") for m in matches))
+            # Multi-group patterns (alternations) yield tuples with one
+            # non-empty group per match; single-group patterns yield strings.
+            flattened = (
+                m if isinstance(m, str) else next((g for g in m if g), "") for m in matches
+            )
+            normalized = list(set(m.lower().replace(" ", "-") for m in flattened if m))
             if entity_type in hash_types:
                 normalized = self._filter_false_positive_hashes(normalized, text)
             results[entity_type] = normalized

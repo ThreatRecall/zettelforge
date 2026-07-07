@@ -320,6 +320,29 @@ class TestEntityExtractor:
 
         assert entities["sigma_rule"] == []
 
+    def test_sigma_rule_labeled_accepts_any_rule_name(self):
+        """An explicit sigma label accepts names outside the prefix whitelist."""
+        extractor = EntityExtractor()
+        text = (
+            "Detection via sigma:lateral_movement_smb_admin_share and "
+            "Sigma Rule: susp_powershell_download."
+        )
+        entities = extractor.extract_all(text)
+
+        assert "lateral_movement_smb_admin_share" in entities["sigma_rule"]
+        assert "susp_powershell_download" in entities["sigma_rule"]
+
+    def test_sigma_rule_ignores_prefixed_two_token_identifiers(self):
+        """Bare two-segment identifiers with logsource-like prefixes are not rules."""
+        extractor = EntityExtractor()
+        text = (
+            "The file_name column, net_income figures, win_rate metric, "
+            "web_server host, proc_id output, and apt_get install logs."
+        )
+        entities = extractor.extract_all(text)
+
+        assert entities["sigma_rule"] == []
+
 
 class TestNoteConstructor:
     """Test note construction"""
