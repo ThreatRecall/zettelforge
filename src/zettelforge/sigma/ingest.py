@@ -78,13 +78,6 @@ def ingest_rule(
     # note instead of creating a duplicate.
     effective_source_ref = source_ref or f"sigma:{entity.rule_id}:{entity.content_sha256[:12]}"
 
-    store = getattr(mm, "store", None)
-    if store is not None and hasattr(store, "get_note_by_source_ref"):
-        existing = store.get_note_by_source_ref(effective_source_ref)
-        if existing is not None:
-            return existing, relations
-
-    content = _build_content(rule_dict, entity)
     detection_meta = DetectionMeta(
         logsource={
             facet: value
@@ -101,6 +94,18 @@ def ingest_rule(
         falsepositives=list(rule_dict.get("falsepositives") or []),
         fields=list(rule_dict.get("fields") or []),
     )
+
+    store = getattr(mm, "store", None)
+    if store is not None and hasattr(store, "get_note_by_source_ref"):
+        existing = store.get_note_by_source_ref(effective_source_ref)
+        if existing is not None:
+            if existing.metadata.detection is None:
+                # Backfill notes ingested before the typed detection slot existed.
+                existing.metadata.detection = detection_meta
+                store.write_note(existing)
+            return existing, relations
+
+    content = _build_content(rule_dict, entity)
     note, _status = mm.remember(
         content=content,
         source_type="sigma_rule",

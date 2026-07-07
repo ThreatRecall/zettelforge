@@ -89,6 +89,26 @@ def test_ingest_rule_persists_detection_metadata(mm: MemoryManager) -> None:
     assert fetched.metadata.detection.fields == []
 
 
+def test_ingest_rule_backfills_detection_metadata_on_reingest(mm: MemoryManager) -> None:
+    """Re-ingesting an unchanged rule backfills a pre-schema note's detection slot."""
+    from zettelforge.sigma.ingest import ingest_rule
+
+    note, _relations = ingest_rule(FIXTURES / "cloud_example.yml", mm)
+    assert note is not None
+
+    # Simulate a note written before DetectionMeta existed.
+    stale = mm.store.get_note_by_id(note.id)
+    stale.metadata.detection = None
+    mm.store.write_note(stale)
+    assert mm.store.get_note_by_id(note.id).metadata.detection is None
+
+    again, _relations = ingest_rule(FIXTURES / "cloud_example.yml", mm)
+    assert again.id == note.id
+    refetched = mm.store.get_note_by_id(note.id)
+    assert refetched.metadata.detection is not None
+    assert refetched.metadata.detection.rule_level == "high"
+
+
 def test_ingest_rule_emits_kg_edges_for_logsource(mm: MemoryManager) -> None:
     """Verify edges land in the SQLite backend and are queryable by
     ``get_kg_neighbors`` — the detection-rule equivalent of the

@@ -57,11 +57,15 @@ class NoteConstructor:
 
         # Generate embedding
         embedding_vector = get_embedding(raw_content[:1000])
+        # A caller-supplied Metadata keeps only fields it explicitly set;
+        # domain/tier fall back to the construct() arguments so a partial
+        # Metadata(detection=...) doesn't silently land in the default domain.
         effective_metadata = metadata or Metadata(domain=domain, tier="A")
-        if not effective_metadata.domain:
-            effective_metadata.domain = domain
-        if not effective_metadata.tier:
-            effective_metadata.tier = "A"
+        if metadata is not None:
+            if "domain" not in metadata.model_fields_set:
+                effective_metadata.domain = domain
+            if "tier" not in metadata.model_fields_set:
+                effective_metadata.tier = "A"
 
         return MemoryNote(
             id="",  # Will be set by store

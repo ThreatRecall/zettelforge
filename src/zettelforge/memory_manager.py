@@ -277,6 +277,13 @@ class MemoryManager:
 
         # Evolution path: LLM extracts facts and decides ADD/UPDATE/DELETE/NOOP
         if evolve:
+            if metadata is not None:
+                raise ValueError(
+                    "remember(metadata=...) is not supported with evolve=True: "
+                    "the extraction pipeline produces multiple fact notes and "
+                    "cannot attach a single caller-supplied Metadata. "
+                    "Use evolve=False for metadata-bearing writes."
+                )
             results = self.remember_with_extraction(
                 content=content,
                 source_type=source_type,

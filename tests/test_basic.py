@@ -328,6 +328,35 @@ class TestMemoryManager:
             results = mm.recall_cve("CVE-2024-3094")
             assert len(results) >= 0  # May be 0 if embedding not available
 
+    def test_remember_metadata_preserves_requested_domain(self):
+        """A partial caller Metadata must not clobber the domain argument."""
+        from zettelforge.note_schema import DetectionMeta, Metadata
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mm = MemoryManager(jsonl_path=f"{tmpdir}/notes.jsonl", lance_path=f"{tmpdir}/vectordb")
+            note, status = mm.remember(
+                "Sigma rule fired on host",
+                domain="security_ops",
+                metadata=Metadata(detection=DetectionMeta(rule_level="high")),
+            )
+
+            assert status == "created"
+            assert note.metadata.domain == "security_ops"
+            assert note.metadata.detection.rule_level == "high"
+
+    def test_remember_metadata_rejected_with_evolve(self):
+        """metadata= is incompatible with the multi-fact evolve pipeline."""
+        from zettelforge.note_schema import DetectionMeta, Metadata
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            mm = MemoryManager(jsonl_path=f"{tmpdir}/notes.jsonl", lance_path=f"{tmpdir}/vectordb")
+            with pytest.raises(ValueError, match="not supported with evolve=True"):
+                mm.remember(
+                    "Some content",
+                    evolve=True,
+                    metadata=Metadata(detection=DetectionMeta(rule_level="low")),
+                )
+
     def test_remember_with_evolve_false(self):
         """Test that evolve=False stores directly (default backward-compat path)."""
         with tempfile.TemporaryDirectory() as tmpdir:

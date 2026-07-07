@@ -46,6 +46,24 @@ def test_ingest_rule_persists_detection_metadata(mm: MemoryManager) -> None:
     assert fetched.metadata.detection.author == "analyst@CCCS"
 
 
+def test_ingest_rule_backfills_detection_metadata_on_reingest(mm: MemoryManager) -> None:
+    """Re-ingesting an unchanged rule backfills a pre-schema note's detection slot."""
+    note, _ = ingest_rule(FIXTURES / "technique_loader.yar", mm, tier="warn")
+    assert note is not None
+
+    # Simulate a note written before DetectionMeta existed.
+    stale = mm.store.get_note_by_id(note.id)
+    stale.metadata.detection = None
+    mm.store.write_note(stale)
+    assert mm.store.get_note_by_id(note.id).metadata.detection is None
+
+    again, _ = ingest_rule(FIXTURES / "technique_loader.yar", mm, tier="warn")
+    assert again.id == note.id
+    refetched = mm.store.get_note_by_id(note.id)
+    assert refetched.metadata.detection is not None
+    assert refetched.metadata.detection.mitre_att == ["T1218"]
+
+
 def test_ingest_rule_accepts_raw_text(mm: MemoryManager) -> None:
     src = (FIXTURES / "malware_hash.yar").read_text()
     note, _ = ingest_rule(src, mm, tier="non_cccs")

@@ -280,12 +280,6 @@ def _ingest_single(
 
     source_ref = f"yara:{entity.rule_id}:{entity.content_sha256[:12]}"
 
-    # Idempotency — the exact same rule body is only stored once.
-    existing = mm.store.get_note_by_source_ref(source_ref)
-    if existing is not None:
-        return existing, relations, False
-
-    content = _build_note_content(entity, rule_dict_for_content, source_path=source_path)
     detection_meta = DetectionMeta(
         cccs_tier=entity.extra.get("cccs_compliant"),
         source_path=source_path,
@@ -300,6 +294,17 @@ def _ingest_single(
         fingerprint=entity.fingerprint,
         hash_of_sample=entity.hash_of_sample,
     )
+
+    # Idempotency — the exact same rule body is only stored once.
+    existing = mm.store.get_note_by_source_ref(source_ref)
+    if existing is not None:
+        if existing.metadata.detection is None:
+            # Backfill notes ingested before the typed detection slot existed.
+            existing.metadata.detection = detection_meta
+            mm.store.write_note(existing)
+        return existing, relations, False
+
+    content = _build_note_content(entity, rule_dict_for_content, source_path=source_path)
     note, _status = mm.remember(
         content=content,
         source_type="yara",
