@@ -234,9 +234,7 @@ class TestEntityExtractor:
         text = "Malware beaconed to evil.example.com and c2.badactor.net."
         entities = extractor.extract_all(text)
 
-        assert any("example.com" in d for d in entities["domain"])
-        assert any("badactor.net" in d for d in entities["domain"])
-        assert "information" not in entities["domain"]
+        assert set(entities["domain"]) == {"evil.example.com", "c2.badactor.net"}
 
     def test_ioc_hash_extraction(self):
         """MD5, SHA1, and SHA256 hashes are extracted from IOC context."""
@@ -268,8 +266,8 @@ class TestEntityExtractor:
         text = "Download payload from https://evil.com/payload.exe and http://c2.net/gate.php"
         entities = extractor.extract_all(text)
 
-        assert any("evil.com" in u for u in entities["url"])
-        assert any("c2.net" in u for u in entities["url"])
+        assert "https://evil.com/payload.exe" in entities["url"]
+        assert "http://c2.net/gate.php" in entities["url"]
 
     def test_ioc_email_extraction(self):
         """Email addresses are extracted from phishing or threat context."""

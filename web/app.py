@@ -180,6 +180,25 @@ async def require_api_guard(
     _check_rate_limit(supplied_key or client_ip)
 
 
+def _log_and_get_error_id(event: str) -> str:
+    """Log the real exception server-side; return an opaque id for the client.
+
+    Must be called from inside an ``except`` block. Callers must never put
+    the exception's own text in the API response — only this id — since
+    exception detail can carry paths, SQL, or config values (CWE-209).
+    """
+    error_id = secrets.token_hex(8)
+    logger.exception(f"{event} error_id={error_id}")
+    return error_id
+
+
+def _error_response(event: str, *, status_code: int = 500, **extra: Any) -> JSONResponse:
+    """Build a generic 5xx JSON error response, logging the real exception."""
+    content: dict[str, Any] = {"error": "Internal server error", "error_id": _log_and_get_error_id(event)}
+    content.update(extra)
+    return JSONResponse(status_code=status_code, content=content)
+
+
 @app.post("/api/recall", dependencies=[Depends(require_api_guard)])
 async def recall(request: Request, req: RecallRequest):
     tenant_mm = get_mm_for_request(request)
@@ -446,9 +465,8 @@ async def health():
             "graph_node_count": len(kg._nodes),
             "graph_edge_count": len(kg._edges),
         }
-    except Exception as e:
-        logger.exception("health_check_failed")
-        return JSONResponse(status_code=500, content={"error": str(e)})
+    except Exception:
+        return _error_response("health_check_failed")
 
 
 @app.get("/api/config", dependencies=[Depends(require_api_guard)])
@@ -457,9 +475,8 @@ async def get_config_endpoint():
     try:
         cfg = get_config()
         return _redact_secrets(_config_to_dict(cfg))
-    except Exception as e:
-        logger.exception("get_config_failed")
-        return JSONResponse(status_code=500, content={"error": str(e)})
+    except Exception:
+        return _error_response("get_config_failed")
 
 
 @app.get("/api/config/meta", dependencies=[Depends(require_api_guard)])
@@ -507,9 +524,8 @@ async def update_config(req: dict):
             "pending_restart": pending_restart,
             "message": message,
         }
-    except Exception as e:
-        logger.exception("update_config_failed")
-        return JSONResponse(status_code=500, content={"error": str(e)})
+    except Exception:
+        return _error_response("update_config_failed")
 
 
 @app.get("/api/graph/nodes", dependencies=[Depends(require_api_guard)])
@@ -529,9 +545,8 @@ async def graph_nodes():
                 "created_at": node.get("created_at", ""),
             })
         return {"nodes": nodes, "count": len(nodes)}
-    except Exception as e:
-        logger.exception("graph_nodes_failed")
-        return JSONResponse(status_code=500, content={"error": str(e), "nodes": []})
+    except Exception:
+        return _error_response("graph_nodes_failed", nodes=[])
 
 
 @app.get("/api/graph/edges", dependencies=[Depends(require_api_guard)])
@@ -549,9 +564,8 @@ async def graph_edges():
                 "created_at": edge.get("created_at", ""),
             })
         return {"edges": edges, "count": len(edges)}
-    except Exception as e:
-        logger.exception("graph_edges_failed")
-        return JSONResponse(status_code=500, content={"error": str(e), "edges": []})
+    except Exception:
+        return _error_response("graph_edges_failed", edges=[])
 
 
 @app.get("/api/entities", dependencies=[Depends(require_api_guard)])
@@ -594,9 +608,8 @@ async def entities(
         total = len(all_entities)
         page = all_entities[offset:offset + limit]
         return {"entities": page, "total": total, "offset": offset, "limit": limit}
-    except Exception as e:
-        logger.exception("entities_failed")
-        return JSONResponse(status_code=500, content={"error": str(e), "entities": [], "total": 0, "offset": offset, "limit": limit})
+    except Exception:
+        return _error_response("entities_failed", entities=[], total=0, offset=offset, limit=limit)
 
 
 @app.get("/api/history", dependencies=[Depends(require_api_guard)])
@@ -640,9 +653,8 @@ async def history(
                         continue
 
         return entries
-    except Exception as e:
-        logger.exception("History endpoint failed")
-        return JSONResponse(status_code=500, content={"error": str(e)})
+    except Exception:
+        return _error_response("history_endpoint_failed")
 
 
 class BulkIngestItem(BaseModel):
@@ -691,14 +703,15 @@ async def ingest(request: Request, req: BulkIngestRequest):
                 "success": True,
                 "error": None,
             })
-        except Exception as e:
+        except Exception:
             failed += 1
             results.append({
                 "note_id": None,
                 "status": "error",
                 "entities": [],
                 "success": False,
-                "error": str(e),
+                "error": "Internal server error",
+                "error_id": _log_and_get_error_id("bulk_ingest_item_failed"),
             })
         finally:
             _write_slots.release()
@@ -782,9 +795,8 @@ async def telemetry_summary():
             "p95_ms": p95,
             "top_intents": top_intents,
         }
-    except Exception as e:
-        logger.exception("telemetry_summary_failed")
-        return JSONResponse(status_code=500, content={"error": str(e)})
+    except Exception:
+        return _error_response("telemetry_summary_failed")
 
 
 @app.get("/api/storage", dependencies=[Depends(require_api_guard)])
@@ -802,9 +814,8 @@ async def storage_stats():
             "graph_node_count": len(kg._nodes),
             "graph_edge_count": len(kg._edges),
         }
-    except Exception as e:
-        logger.exception("storage_stats_failed")
-        return JSONResponse(status_code=500, content={"error": str(e)})
+    except Exception:
+        return _error_response("storage_stats_failed")
 
 
 @app.get("/api/logs", dependencies=[Depends(require_api_guard)])
@@ -848,9 +859,8 @@ async def logs(
             parsed_logs.append(entry)
 
         return {"logs": parsed_logs, "truncated": truncated}
-    except Exception as e:
-        logger.exception("logs_failed")
-        return JSONResponse(status_code=500, content={"error": str(e), "logs": [], "truncated": False})
+    except Exception:
+        return _error_response("logs_failed", logs=[], truncated=False)
 
 
 @app.get("/api/logs/stream", dependencies=[Depends(require_api_guard)])
@@ -983,9 +993,8 @@ async def version_info():
             "notes": s.get("total_notes", 0),
             "edition": "enterprise" if is_enterprise() else "community",
         }
-    except Exception as e:
-        logger.exception("version_info_failed")
-        return JSONResponse(status_code=500, content={"error": str(e)})
+    except Exception:
+        return _error_response("version_info_failed")
 
 
 if __name__ == "__main__":
