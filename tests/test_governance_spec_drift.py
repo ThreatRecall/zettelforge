@@ -157,10 +157,29 @@ class TestGovernanceSpecDrift:
         rules = manifest["controls"]["GOV-007"]["rules"]
         coverage_rule = next(r for r in rules if r["id"] == "coverage")
 
-        assert coverage_rule["tool"] == "pytest-cov --cov-fail-under=67"
-        assert coverage_rule["current_threshold_percent"] == 67
-        assert coverage_rule["target_threshold_percent"] == 80
-        assert (
-            coverage_rule["target_threshold_percent"] -
-            coverage_rule["current_threshold_percent"]
-        ) == 13
+        current = coverage_rule["current_threshold_percent"]
+        target = coverage_rule["target_threshold_percent"]
+
+        # The 80% target is fixed governance policy — never lower it.
+        assert target == 80
+        # One-way ratchet: the gate may only move upward from today's 67%.
+        assert 67 <= current <= target
+        # The declared tool must always match the declared gate.
+        assert coverage_rule["tool"] == f"pytest-cov --cov-fail-under={current}"
+
+    def test_gov_007_ci_gate_matches_manifest(self):
+        """Every --cov-fail-under gate in CI must equal the manifest's current threshold.
+
+        This is the drift check the ratchet exists for: lowering the CI gate
+        without updating governance/controls.yaml (or vice versa) must fail.
+        """
+        manifest = _load_manifest()
+        rules = manifest["controls"]["GOV-007"]["rules"]
+        coverage_rule = next(r for r in rules if r["id"] == "coverage")
+        current = coverage_rule["current_threshold_percent"]
+
+        gates = re.findall(r"--cov-fail-under=(\d+)", CI_WORKFLOW.read_text())
+        assert gates, "ci.yml no longer declares a --cov-fail-under gate"
+        assert all(int(g) == current for g in gates), (
+            f"CI gates {gates} do not match manifest current_threshold_percent={current}"
+        )
