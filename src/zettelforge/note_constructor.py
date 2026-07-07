@@ -40,6 +40,7 @@ class NoteConstructor:
         source_type: str = "conversation",
         source_ref: str = "",
         domain: str = "general",
+        metadata: Metadata | None = None,
     ) -> MemoryNote:
         """Construct a note from raw content with automatic enrichment."""
 
@@ -56,6 +57,21 @@ class NoteConstructor:
 
         # Generate embedding
         embedding_vector = get_embedding(raw_content[:1000])
+        # A caller-supplied Metadata keeps only fields it explicitly set;
+        # domain/tier fall back to the construct() arguments so a partial
+        # Metadata(detection=...) doesn't silently land in the default domain.
+        # Deep-copy so a caller reusing one Metadata template across several
+        # notes doesn't share (and cross-mutate) a single object.
+        effective_metadata = (
+            metadata.model_copy(deep=True)
+            if metadata is not None
+            else Metadata(domain=domain, tier="A")
+        )
+        if metadata is not None:
+            if "domain" not in metadata.model_fields_set:
+                effective_metadata.domain = domain
+            if "tier" not in metadata.model_fields_set:
+                effective_metadata.tier = "A"
 
         return MemoryNote(
             id="",  # Will be set by store
@@ -66,7 +82,7 @@ class NoteConstructor:
                 context=context, keywords=keywords[:7], tags=tags[:5], entities=all_entities
             ),
             embedding=Embedding(vector=embedding_vector, model="nomic-embed-text"),
-            metadata=Metadata(domain=domain, tier="A"),
+            metadata=effective_metadata,
         )
 
     def _generate_context(self, text: str) -> str:
