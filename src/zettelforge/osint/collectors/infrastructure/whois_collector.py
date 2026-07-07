@@ -51,7 +51,11 @@ def _lookup_domain(domain: str) -> Any | None:
     except ImportError:
         _logger.warning("whois_collector_missing_python_whois", domain=domain)
         return None
-    return whois.whois(domain)
+    try:
+        return whois.whois(domain)
+    except Exception as exc:  # pragma: no cover - exercised via unit test seam
+        _logger.warning("whois_domain_lookup_failed", domain=domain, error=str(exc))
+        return None
 
 
 def _lookup_ip(ip: str) -> dict | None:
@@ -80,6 +84,9 @@ def _lookup_ip(ip: str) -> dict | None:
         _logger.debug("whois_ip_reserved", ip=ip, error=str(exc))
         return None
     except BaseIpwhoisException as exc:
+        _logger.warning("whois_ip_lookup_failed", ip=ip, error=str(exc))
+        return None
+    except Exception as exc:  # pragma: no cover - exercised via unit test seam
         _logger.warning("whois_ip_lookup_failed", ip=ip, error=str(exc))
         return None
 
@@ -147,7 +154,11 @@ def _domain_email(record: Any) -> str | None:
 
 
 def _collect_domain(domain: str) -> list[CollectorTuple]:
-    record = _lookup_domain(domain)
+    try:
+        record = _lookup_domain(domain)
+    except Exception as exc:  # pragma: no cover - exercised via unit test seam
+        _logger.warning("whois_domain_lookup_failed", domain=domain, error=str(exc))
+        return []
     if record is None:
         return []
 

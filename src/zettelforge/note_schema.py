@@ -3,9 +3,11 @@ Memory Note Schema - A-MEM Zettelkasten-inspired
 Roland Fleet Agentic Memory Architecture V1.0
 """
 
+from dataclasses import field as dataclass_field
 from datetime import datetime
 
 from pydantic import BaseModel, Field
+from pydantic.dataclasses import dataclass as pydantic_dataclass
 
 
 class Content(BaseModel):
@@ -59,6 +61,26 @@ class VulnerabilityMeta(BaseModel):
     cisa_kev: bool = False  # True if in CISA Known Exploited Vulnerabilities catalog
 
 
+@pydantic_dataclass
+class DetectionMeta:
+    """Structured detection-rule metadata for Sigma/YARA ingest."""
+
+    cccs_tier: str | None = None
+    source_path: str | None = None
+    mitre_att: list[str] = dataclass_field(default_factory=list)
+    category: str | None = None
+    technique: str | None = None
+    author: str | None = None
+    fingerprint: str | None = None
+    hash_of_sample: list[str] = dataclass_field(default_factory=list)
+    logsource: dict[str, str] = dataclass_field(default_factory=dict)
+    rule_level: str | None = None
+    rule_status: str | None = None
+    references: list[str] = dataclass_field(default_factory=list)
+    falsepositives: list[str] = dataclass_field(default_factory=list)
+    fields: list[str] = dataclass_field(default_factory=list)
+
+
 class Metadata(BaseModel):
     """Note lifecycle and access metadata"""
 
@@ -75,6 +97,7 @@ class Metadata(BaseModel):
     tlp: str = ""  # TLP marking: WHITE, GREEN, AMBER, RED, or empty (unclassified)
     stix_confidence: int = -1  # STIX confidence 0-100, -1 = unset
     vuln: VulnerabilityMeta | None = None  # Populated for CVE notes during OpenCTI sync
+    detection: DetectionMeta | None = None  # Structured detection-rule metadata
 
 
 class MemoryNote(BaseModel):
