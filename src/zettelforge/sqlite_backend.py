@@ -16,6 +16,7 @@ import threading
 import uuid
 from collections import defaultdict, deque
 from collections.abc import Iterator
+from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -23,6 +24,7 @@ from typing import Any
 from zettelforge.enrichment_ledger import EnrichmentJobRecord
 from zettelforge.note_schema import (
     Content,
+    DetectionMeta,
     Embedding,
     Links,
     MemoryNote,
@@ -73,7 +75,8 @@ CREATE TABLE IF NOT EXISTS notes (
     version INTEGER DEFAULT 1,
     evolved_from TEXT,
     evolved_by TEXT DEFAULT '[]',
-    vuln_meta TEXT DEFAULT NULL
+    vuln_meta TEXT DEFAULT NULL,
+    detection_meta TEXT DEFAULT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_notes_domain ON notes(domain);
@@ -185,6 +188,11 @@ def _note_to_row(note: MemoryNote) -> dict:
         "evolved_from": note.evolved_from,
         "evolved_by": json.dumps(note.evolved_by),
         "vuln_meta": json.dumps(note.metadata.vuln.model_dump()) if note.metadata.vuln else None,
+        "detection_meta": (
+            json.dumps(asdict(note.metadata.detection))
+            if note.metadata.detection is not None
+            else None
+        ),
     }
 
 
@@ -242,6 +250,11 @@ def _row_to_note(row: sqlite3.Row) -> MemoryNote:
             if r.get("stix_confidence") is not None
             else -1,
             vuln=VulnerabilityMeta(**json.loads(r["vuln_meta"])) if r.get("vuln_meta") else None,
+            detection=(
+                DetectionMeta(**json.loads(r["detection_meta"]))
+                if r.get("detection_meta")
+                else None
+            ),
         ),
     )
 
@@ -287,6 +300,7 @@ _NOTE_COLUMNS = [
     "evolved_from",
     "evolved_by",
     "vuln_meta",
+    "detection_meta",
 ]
 
 # _NOTE_COLUMNS is a module-level constant; row values are ?-bound. Safe.
@@ -336,6 +350,9 @@ class SQLiteBackend(StorageBackend):
             conn.execute("PRAGMA foreign_keys=ON")
             conn.execute("PRAGMA busy_timeout=5000")
             conn.executescript(_SCHEMA_DDL)
+            existing_columns = {row[1] for row in conn.execute("PRAGMA table_info(notes)")}
+            if "detection_meta" not in existing_columns:
+                conn.execute("ALTER TABLE notes ADD COLUMN detection_meta TEXT DEFAULT NULL")
             conn.commit()
             self._conn = conn
 

@@ -31,6 +31,39 @@ def test_ingest_rule_creates_note_and_relations(mm: MemoryManager) -> None:
     assert any(r["to_type"] == "YaraTag" for r in relations)
 
 
+def test_ingest_rule_persists_detection_metadata(mm: MemoryManager) -> None:
+    note, _ = ingest_rule(FIXTURES / "technique_loader.yar", mm, tier="warn")
+    assert note is not None
+
+    fetched = mm.store.get_note_by_id(note.id)
+    assert fetched is not None
+    assert fetched.metadata.detection is not None
+    assert fetched.metadata.detection.cccs_tier == "warn"
+    assert fetched.metadata.detection.source_path == str(FIXTURES / "technique_loader.yar")
+    assert fetched.metadata.detection.mitre_att == ["T1218"]
+    assert fetched.metadata.detection.category == "TECHNIQUE"
+    assert fetched.metadata.detection.technique == "loader:memorymodule"
+    assert fetched.metadata.detection.author == "analyst@CCCS"
+
+
+def test_ingest_rule_backfills_detection_metadata_on_reingest(mm: MemoryManager) -> None:
+    """Re-ingesting an unchanged rule backfills a pre-schema note's detection slot."""
+    note, _ = ingest_rule(FIXTURES / "technique_loader.yar", mm, tier="warn")
+    assert note is not None
+
+    # Simulate a note written before DetectionMeta existed.
+    stale = mm.store.get_note_by_id(note.id)
+    stale.metadata.detection = None
+    mm.store.write_note(stale)
+    assert mm.store.get_note_by_id(note.id).metadata.detection is None
+
+    again, _ = ingest_rule(FIXTURES / "technique_loader.yar", mm, tier="warn")
+    assert again.id == note.id
+    refetched = mm.store.get_note_by_id(note.id)
+    assert refetched.metadata.detection is not None
+    assert refetched.metadata.detection.mitre_att == ["T1218"]
+
+
 def test_ingest_rule_accepts_raw_text(mm: MemoryManager) -> None:
     src = (FIXTURES / "malware_hash.yar").read_text()
     note, _ = ingest_rule(src, mm, tier="non_cccs")
@@ -65,7 +98,7 @@ def test_ingest_rules_dir_bulk_defers_enrichment_and_flushes() -> None:
             self.calls = []
             self.flushed = False
 
-        def remember(self, *, content, source_type, source_ref, domain, sync):
+        def remember(self, *, content, source_type, source_ref, domain, sync, metadata=None):
             self.calls.append({"source_ref": source_ref, "sync": sync})
             note = MemoryNote(
                 id=f"note-{len(self.calls)}",
