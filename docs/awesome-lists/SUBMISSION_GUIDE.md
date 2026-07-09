@@ -61,34 +61,24 @@ web UI screenshots/endpoints (`/`, `/api/recall`, `/api/graph/*`, config editor)
 
 ---
 
-## 2. sindresorhus/awesome — **not eligible as a project; only via a new list**
+## 2. sindresorhus/awesome — **not eligible as a project; reach it via an existing list**
 
 **ZettelForge cannot be listed here directly.** `sindresorhus/awesome` is a
-"list of awesome lists." Its PR template states it accepts **only curated
-awesome lists**, never individual tools or projects. There is no entry shape
-that puts a single piece of software on that list.
+"list of awesome lists." Its PR template accepts **only curated awesome lists**,
+never individual tools. There is no entry shape for a single piece of software.
 
-The only legitimate route to appear there is to **create and submit your own
-awesome list** (e.g. `awesome-cti-memory`, `awesome-threat-intelligence-tooling`,
-or `awesome-agentic-memory`) in which ZettelForge is one of many entries. That
-list — not ZettelForge — becomes the `sindresorhus/awesome` entry. Requirements
-for such a list:
+**Creating a new list is a dead end too.** The two topics ZettelForge fits both
+already have established lists, and `sindresorhus/awesome` rejects duplicate
+topics:
 
-- Repo named `awesome-<topic>`, **default branch `main`**.
-- At least **30 days old** (from first real commit / open-sourcing).
-- License must be **CC0 / Creative Commons** (a code license like MIT is
-  rejected); `LICENSE` file in root, no license section in the README.
-- Awesome badge on the right of the H1; `Contents` ToC; `contributing.md`.
-- Genuinely curated ("the best, not everything") and **not AI-generated**.
-- Curating a topic that prominently features your own project, with little else,
-  reads as self-promotion and gets rejected — the list has to be broadly useful
-  on its own merits.
+- Threat intelligence → `hslatman/awesome-threat-intelligence` (the widely-used one).
+- AI/agent memory → `topoteretes/awesome-ai-memory` plus ~6 others.
 
-This is a real, multi-week effort and a separate decision from the
-awesome-selfhosted submission. It is **not** scaffolded here because doing it as
-a thin vehicle for one project is exactly what that list rejects. If you want to
-pursue it, build the topic list for its own sake first, let it mature 30+ days,
-then submit.
+**The achievable path: become an entry inside one of those existing lists**,
+which are themselves part of the awesome ecosystem `sindresorhus/awesome`
+indexes. Paste-ready, correctly-formatted entries for both are in
+[`EXISTING_LISTS_ENTRIES.md`](EXISTING_LISTS_ENTRIES.md). You open those PRs
+against the third-party repos yourself and reword them in your own voice.
 
 ---
 
@@ -97,4 +87,14 @@ then submit.
 | List | Verdict | Action |
 |---|---|---|
 | awesome-selfhosted | Eligible (frame as a web service) | Submit `zettelforge.yml` as `software/zettelforge.yml` — by hand, in your own words |
-| sindresorhus/awesome | Not eligible for a single project | Only reachable by creating a separate, mature, CC0-licensed `awesome-<topic>` list |
+| sindresorhus/awesome (directly) | Impossible for a single tool; new list = duplicate reject | — |
+| via `hslatman/awesome-threat-intelligence` | Achievable | Submit the HTML-table entry from `EXISTING_LISTS_ENTRIES.md` |
+| via `topoteretes/awesome-ai-memory` | Achievable | Submit the pipe-table entry from `EXISTING_LISTS_ENTRIES.md` |
+
+## What only you can do (why nothing here is the final step)
+
+Every actual *listing* is a merge into a repo neither this agent nor its
+GitHub scope can touch (`awesome-selfhosted/*`, `hslatman/*`, `topoteretes/*`,
+`sindresorhus/*`), and all of these lists **ban AI-submitted entries**. So the
+agent's job ends at "correct, validated, paste-ready materials"; opening and
+merging the PRs is inherently yours.
