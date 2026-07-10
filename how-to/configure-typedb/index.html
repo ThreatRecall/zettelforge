@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Configure the optional Enterprise TypeDB knowledge graph backend using Docker Compose, load the STIX schema, seed aliases, and verify connectivity.">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -15,21 +15,21 @@
         <link rel="canonical" href="https://docs.threatrecall.ai/how-to/configure-typedb/">
       
       
-        <link rel="prev" href="../configure-sigma-ingestion/">
+        <link rel="prev" href="../run-temporal-query/">
       
       
-        <link rel="next" href="../configure-yara-ingestion/">
+        <link rel="next" href="../configure-lancedb/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Set Up TypeDB for ZettelForge Enterprise - ZettelForge Documentation</title>
+        <title>Configure TypeDB - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/how-to/configure-typedb/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="Set Up TypeDB for ZettelForge Enterprise">
-  <meta property="og:description" content="Configure the optional Enterprise TypeDB knowledge graph backend using Docker Compose, load the STIX schema, seed aliases, and verify connectivity.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/how-to/configure-typedb/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Set Up TypeDB for ZettelForge Enterprise">
-  <meta name="twitter:description" content="Configure the optional Enterprise TypeDB knowledge graph backend using Docker Compose, load the STIX schema, seed aliases, and verify connectivity.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -116,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#set-up-typedb-for-zettelforge-enterprise" class="md-skip">
+        <a href="#configure-typedb" class="md-skip">
           Skip to content
         </a>
       
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Set Up TypeDB for ZettelForge Enterprise
+              Configure TypeDB
             
           </span>
         </div>
@@ -281,11 +240,31 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../build-extensions/" class="md-tabs__link">
+        <a href="../configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -306,26 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -577,8 +533,6 @@
         
         
       
-      
-        
       
     
     
@@ -625,62 +579,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../configure-opencti/" class="md-nav__link">
         
   
@@ -709,14 +607,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -831,10 +841,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-verify-connectivity" class="md-nav__link">
+  <a href="#2-configure-configyaml" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Verify connectivity
+        2. Configure config.yaml
       
     </span>
   </a>
@@ -842,10 +852,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-load-the-stix-schema" class="md-nav__link">
+  <a href="#3-set-environment-variables" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Load the STIX schema
+        3. Set environment variables
       
     </span>
   </a>
@@ -853,10 +863,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-seed-alias-relations" class="md-nav__link">
+  <a href="#4-verify-the-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Seed alias relations
+        4. Verify the configuration
       
     </span>
   </a>
@@ -864,32 +874,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-configure-configyaml" class="md-nav__link">
+  <a href="#5-activate-the-typedb-backend-requires-threatrecallai-saas-extension" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Configure config.yaml
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-override-with-environment-variables-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Override with environment variables (optional)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-verify-the-full-stack" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Verify the full stack
+        5. Activate the TypeDB backend (requires ThreatRecall.ai SaaS extension)
       
     </span>
   </a>
@@ -898,6 +886,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration reference
+      
+    </span>
+  </a>
   
 </li>
       
@@ -906,56 +905,6 @@
     <span class="md-ellipsis">
       
         Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#typedb-container-fails-to-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TypeDB container fails to start
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#connection-refused-on-port-1729" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connection refused on port 1729
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#community-fallback" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Community fallback
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LLM Quick Reference
       
     </span>
   </a>
@@ -978,42 +927,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-yara-ingestion/" class="md-nav__link">
+      <a href="../configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -1041,7 +962,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -1118,146 +1235,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1265,119 +1242,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1426,14 +1291,70 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-detection-rules/" class="md-nav__link">
+      <a href="../troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extend ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-web-interface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use web interface
   
 
     
@@ -1466,17 +1387,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -1486,7 +1403,7 @@
   <span class="md-ellipsis">
     
   
-    Concepts
+    Reference
   
 
     
@@ -1502,235 +1419,6 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Two-Phase Pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reference
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
     Reference
   
 
@@ -1744,14 +1432,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+      <a href="../../reference/terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1800,174 +1488,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/memory-manager-api/" class="md-nav__link">
         
   
@@ -1996,90 +1516,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/stix-schema/" class="md-nav__link">
         
   
@@ -2087,7 +1523,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -2115,7 +1551,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2143,7 +1719,119 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
   
 
     
@@ -2176,7 +1864,230 @@
     
       
       
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2184,9 +2095,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2245,6 +2154,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2337,14 +2296,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2358,113 +2317,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2489,17 +2344,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2627,10 +2478,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-verify-connectivity" class="md-nav__link">
+  <a href="#2-configure-configyaml" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Verify connectivity
+        2. Configure config.yaml
       
     </span>
   </a>
@@ -2638,10 +2489,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-load-the-stix-schema" class="md-nav__link">
+  <a href="#3-set-environment-variables" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Load the STIX schema
+        3. Set environment variables
       
     </span>
   </a>
@@ -2649,10 +2500,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-seed-alias-relations" class="md-nav__link">
+  <a href="#4-verify-the-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Seed alias relations
+        4. Verify the configuration
       
     </span>
   </a>
@@ -2660,32 +2511,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-configure-configyaml" class="md-nav__link">
+  <a href="#5-activate-the-typedb-backend-requires-threatrecallai-saas-extension" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Configure config.yaml
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-override-with-environment-variables-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Override with environment variables (optional)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-verify-the-full-stack" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Verify the full stack
+        5. Activate the TypeDB backend (requires ThreatRecall.ai SaaS extension)
       
     </span>
   </a>
@@ -2694,6 +2523,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration reference
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2702,56 +2542,6 @@
     <span class="md-ellipsis">
       
         Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#typedb-container-fails-to-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TypeDB container fails to start
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#connection-refused-on-port-1729" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connection refused on port 1729
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#community-fallback" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Community fallback
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LLM Quick Reference
       
     </span>
   </a>
@@ -2778,148 +2568,168 @@
   
 
 
-<h1 id="set-up-typedb-for-zettelforge-enterprise">Set Up TypeDB for ZettelForge Enterprise<a class="headerlink" href="#set-up-typedb-for-zettelforge-enterprise" title="Permanent link">&para;</a></h1>
-<p>Configure TypeDB as the optional Enterprise knowledge graph backend. ZettelForge Community defaults to SQLite; TypeDB lives in the separate <code>zettelforge-enterprise</code> extension for deployments that need a schema-enforced STIX 2.1 ontology, inference rules, and TypeQL access.</p>
+<h1 id="configure-typedb">Configure TypeDB<a class="headerlink" href="#configure-typedb" title="Permanent link">&para;</a></h1>
+<p>TypeDB is an optional knowledge graph layer for ZettelForge. The default backend is SQLite + LanceDB, which requires no external server. TypeDB adds a schema-enforced STIX 2.1 ontology with inference rules; this capability ships with ThreatRecall.ai SaaS.</p>
+<p>This guide covers the configuration keys and Docker Compose setup that ship in the OSS repository. Activating the TypeDB backend requires an additional extension included with ThreatRecall.ai SaaS.</p>
+<div class="admonition info">
+<p class="admonition-title">Default backend</p>
+<p>If you are running ZettelForge OSS without ThreatRecall.ai SaaS, keep <code>backend: sqlite</code>. You do not need TypeDB for standard CTI ingestion, recall, and synthesis.</p>
+</div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Docker and Docker Compose installed</li>
-<li>ZettelForge installed (<code>pip install zettelforge</code>)</li>
-<li>Enterprise extension installed (<code>pip install zettelforge-enterprise</code>)</li>
+<li>ZettelForge installed: <code>pip install zettelforge</code></li>
+<li>ThreatRecall.ai SaaS subscription (required to activate the TypeDB backend)</li>
 </ul>
 <h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
 <h3 id="1-start-typedb-with-docker-compose">1. Start TypeDB with Docker Compose<a class="headerlink" href="#1-start-typedb-with-docker-compose" title="Permanent link">&para;</a></h3>
-<p>From the ZettelForge project root:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>docker
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+<p>The OSS repository ships a <code>docker/docker-compose.yml</code> for TypeDB. From the ZettelForge project root:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d
 </code></pre></div>
 <p>Verify the container is running:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>ps
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/docker-compose.yml<span class="w"> </span>ps
 </code></pre></div>
 <p>Expected output:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>NAME              IMAGE                COMMAND    SERVICE   STATUS
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>docker-typedb-1   typedb/typedb:latest ...        typedb    Up (healthy)
+<div class="highlight"><pre><span></span><code>NAME              IMAGE                STATUS
+docker-typedb-1   typedb/typedb:latest Up (healthy)
 </code></pre></div>
-<blockquote>
-<p>[!NOTE]
-TypeDB exposes port <code>1729</code> (gRPC) and port <code>8100</code> (HTTP health). Data persists in the <code>typedb-data</code> Docker volume across restarts.</p>
-</blockquote>
-<h3 id="2-verify-connectivity">2. Verify connectivity<a class="headerlink" href="#2-verify-connectivity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge_enterprise.typedb_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeDBKnowledgeGraph</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">kg</span> <span class="o">=</span> <span class="n">TypeDBKnowledgeGraph</span><span class="p">()</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;TypeDB connection successful&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connection failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p>TypeDB exposes port <code>1729</code> for gRPC connections. Data persists in the <code>typedb-data</code> Docker volume across restarts.</p>
+<p>Verify the health endpoint from your host:</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:8100/health
 </code></pre></div>
-<p>Or via the health endpoint:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:8100/health
+<p>The <code>docker-compose.yml</code> maps host port 8100 to container port 8000 (<code>8100:8000</code>). The host-accessible health URL is <code>http://localhost:8100/health</code>.</p>
+<h3 id="2-configure-configyaml">2. Configure <code>config.yaml</code><a class="headerlink" href="#2-configure-configyaml" title="Permanent link">&para;</a></h3>
+<p>Add or update the TypeDB block in your <code>config.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">typedb</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1729</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zettelforge</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TYPEDB_USERNAME}</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TYPEDB_PASSWORD}</span>
+
+<span class="nt">backend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">typedb</span>
 </code></pre></div>
-<h3 id="3-load-the-stix-schema">3. Load the STIX schema<a class="headerlink" href="#3-load-the-stix-schema" title="Permanent link">&para;</a></h3>
-<p>The schema is loaded automatically on first connection via <code>TypeDBKnowledgeGraph</code>. To verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.knowledge_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_knowledge_graph</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">kg</span> <span class="o">=</span> <span class="n">get_knowledge_graph</span><span class="p">()</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">kg</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p>Do not commit credentials to version control. Use <code>${TYPEDB_USERNAME}</code> and <code>${TYPEDB_PASSWORD}</code> placeholders, and supply values as environment variables.</p>
+<h3 id="3-set-environment-variables">3. Set environment variables<a class="headerlink" href="#3-set-environment-variables" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_HOST</span><span class="o">=</span>localhost
+<span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_PORT</span><span class="o">=</span><span class="m">1729</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_DATABASE</span><span class="o">=</span>zettelforge
+<span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_USERNAME</span><span class="o">=</span>&lt;your-typedb-username&gt;
+<span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_PASSWORD</span><span class="o">=</span>&lt;your-password&gt;
+<span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_BACKEND</span><span class="o">=</span>typedb
 </code></pre></div>
-<p>With <code>ZETTELFORGE_BACKEND=typedb</code> and the Enterprise extension installed, this prints <code>TypeDBKnowledgeGraph</code>. Community builds use the SQLite-backed storage path instead.</p>
-<h3 id="4-seed-alias-relations">4. Seed alias relations<a class="headerlink" href="#4-seed-alias-relations" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>-m<span class="w"> </span>zettelforge.schema.seed_aliases
+<p>Environment variables take priority over <code>config.yaml</code>. Use them for secrets; use <code>config.yaml</code> for structural settings like host and port.</p>
+<h3 id="4-verify-the-configuration">4. Verify the configuration<a class="headerlink" href="#4-verify-the-configuration" title="Permanent link">&para;</a></h3>
+<p>Confirm ZettelForge reads your TypeDB settings correctly:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_config</span>
+
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">get_config</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">typedb</span><span class="p">)</span>
+<span class="c1"># TypeDBConfig(host=&#39;localhost&#39;, port=1729, database=&#39;zettelforge&#39;,</span>
+<span class="c1">#              username=&#39;admin&#39;, password=&#39;***&#39;)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend: </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">backend</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Backend: typedb</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Seeded 42 alias relations into TypeDB.
+<h3 id="5-activate-the-typedb-backend-requires-threatrecallai-saas-extension">5. Activate the TypeDB backend (requires ThreatRecall.ai SaaS extension)<a class="headerlink" href="#5-activate-the-typedb-backend-requires-threatrecallai-saas-extension" title="Permanent link">&para;</a></h3>
+<p>With <code>ZETTELFORGE_BACKEND=typedb</code> set, <code>get_knowledge_graph()</code> loads TypeDB when the extension is present:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.knowledge_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_knowledge_graph</span>
+
+<span class="n">kg</span> <span class="o">=</span> <span class="n">get_knowledge_graph</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">kg</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="c1"># TypeDBKnowledgeGraph  — extension present (ThreatRecall.ai SaaS)</span>
+<span class="c1"># KnowledgeGraph        — extension absent (OSS fallback, JSONL-backed)</span>
 </code></pre></div>
-<p>This inserts <code>alias-of</code> relations for known threat actors (APT28, APT29, Lazarus Group, Volt Typhoon, Sandworm, Kimsuky, Turla, MuddyWater) and tools (Cobalt Strike, Metasploit, Mimikatz).</p>
-<h3 id="5-configure-configyaml">5. Configure <code>config.yaml</code><a class="headerlink" href="#5-configure-configyaml" title="Permanent link">&para;</a></h3>
-<p>Copy the default configuration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>cp<span class="w"> </span>config.default.yaml<span class="w"> </span>config.yaml
-</code></pre></div>
-<p>Edit the TypeDB section:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">typedb</span><span class="p">:</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1729</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zettelforge</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TYPEDB_USERNAME}</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TYPEDB_PASSWORD}</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nt">backend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">typedb</span>
-</code></pre></div>
-<blockquote>
-<p>[!IMPORTANT]
-TypeDB credentials must be supplied via environment variables. <code>config.yaml</code> is in <code>.gitignore</code> so it is safe for local overrides, but the preferred approach is to set <code>TYPEDB_USERNAME</code> and <code>TYPEDB_PASSWORD</code> in your shell or container environment rather than writing them into any config file.</p>
-</blockquote>
-<h3 id="6-override-with-environment-variables-optional">6. Override with environment variables (optional)<a class="headerlink" href="#6-override-with-environment-variables-optional" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_HOST</span><span class="o">=</span>localhost
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_PORT</span><span class="o">=</span><span class="m">1729</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_DATABASE</span><span class="o">=</span>zettelforge
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_USERNAME</span><span class="o">=</span>&lt;your-typedb-username&gt;
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_PASSWORD</span><span class="o">=</span>&lt;your-password&gt;
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_BACKEND</span><span class="o">=</span>typedb
-</code></pre></div>
-<p>Configuration resolution order (highest priority first):</p>
+<p>Without the extension, ZettelForge logs a <code>typedb_unavailable_fallback_jsonl</code> warning and falls back to the JSONL-backed <code>KnowledgeGraph</code>. Ingestion and recall continue using the OSS backend; TypeDB-specific features (STIX ontology, inference rules) are not available in this mode.</p>
+<h2 id="configuration-reference">Configuration reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Config key</th>
+<th>Env var</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>typedb.host</code></td>
+<td><code>TYPEDB_HOST</code></td>
+<td><code>localhost</code></td>
+<td>TypeDB server hostname or IP</td>
+</tr>
+<tr>
+<td><code>typedb.port</code></td>
+<td><code>TYPEDB_PORT</code></td>
+<td><code>1729</code></td>
+<td>TypeDB gRPC port</td>
+</tr>
+<tr>
+<td><code>typedb.database</code></td>
+<td><code>TYPEDB_DATABASE</code></td>
+<td><code>zettelforge</code></td>
+<td>TypeDB database name</td>
+</tr>
+<tr>
+<td><code>typedb.username</code></td>
+<td><code>TYPEDB_USERNAME</code></td>
+<td><code>""</code></td>
+<td>TypeDB username (empty string disables auth)</td>
+</tr>
+<tr>
+<td><code>typedb.password</code></td>
+<td><code>TYPEDB_PASSWORD</code></td>
+<td><code>""</code></td>
+<td>TypeDB password</td>
+</tr>
+<tr>
+<td><code>backend</code></td>
+<td><code>ZETTELFORGE_BACKEND</code></td>
+<td><code>sqlite</code></td>
+<td>Storage backend: <code>sqlite</code> or <code>typedb</code></td>
+</tr>
+</tbody>
+</table>
+<p>Configuration precedence (highest first):</p>
 <ol>
-<li>Environment variables (<code>TYPEDB_HOST</code>, <code>TYPEDB_PORT</code>, etc.)</li>
-<li><code>config.yaml</code> in working directory</li>
-<li><code>config.yaml</code> in project root</li>
-<li><code>config.default.yaml</code> in project root</li>
+<li>Environment variables (<code>TYPEDB_HOST</code>, <code>TYPEDB_PORT</code>, …)</li>
+<li><code>config.yaml</code> in the current working directory</li>
+<li><code>config.yaml</code> in the project root</li>
+<li><code>config.default.yaml</code> in the project root</li>
 <li>Hardcoded defaults in <code>config.py</code></li>
 </ol>
-<h3 id="7-verify-the-full-stack">7. Verify the full stack<a class="headerlink" href="#7-verify-the-full-stack" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Store a test note</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">note</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;APT28 deployed Cobalt Strike against NATO targets in 2026.&quot;</span><span class="p">,</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="p">)</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Store: </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Query the graph</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="n">rels</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">get_entity_relationships</span><span class="p">(</span><span class="s2">&quot;intrusion_set&quot;</span><span class="p">,</span> <span class="s2">&quot;apt28&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Graph relationships: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rels</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># Verify alias resolution through TypeDB</span>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a><span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="s2">&quot;Fancy Bear&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Alias resolution: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span><span class="si">}</span><span class="s2"> notes found for &#39;Fancy Bear&#39;&quot;</span><span class="p">)</span>
-</code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<h3 id="typedb-container-fails-to-start">TypeDB container fails to start<a class="headerlink" href="#typedb-container-fails-to-start" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>typedb
+<p><strong>TypeDB container fails to start</strong></p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/docker-compose.yml<span class="w"> </span>logs<span class="w"> </span>typedb
 </code></pre></div>
-<p>Common causes:
-- Port 1729 already in use: <code>lsof -i :1729</code>
-- Insufficient memory: TypeDB needs ~1GB RAM minimum</p>
-<h3 id="connection-refused-on-port-1729">Connection refused on port 1729<a class="headerlink" href="#connection-refused-on-port-1729" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Check container health</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>ps
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Restart if unhealthy</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>restart<span class="w"> </span>typedb
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Wait for health check to pass</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>typedb<span class="w"> </span>curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:8000/health
+<p>Common causes:</p>
+<ul>
+<li>Port 1729 already in use: <code>lsof -i :1729</code></li>
+<li>Insufficient memory: TypeDB requires approximately 1 GB RAM minimum</li>
+</ul>
+<p><strong>Connection refused on port 1729</strong></p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/docker-compose.yml<span class="w"> </span>restart<span class="w"> </span>typedb
 </code></pre></div>
-<h3 id="community-fallback">Community fallback<a class="headerlink" href="#community-fallback" title="Permanent link">&para;</a></h3>
-<p>If the Enterprise extension is not installed, keep <code>backend: sqlite</code>. Legacy JSONL files should be migrated to SQLite; JSONL is no longer the documented community default.</p>
-<h2 id="llm-quick-reference">LLM Quick Reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
-<p><strong>Task</strong>: Set up TypeDB as the optional ZettelForge Enterprise knowledge graph backend.</p>
-<p><strong>Docker</strong>: <code>docker compose up -d</code> from the <code>docker/</code> directory. Ports: 1729 (gRPC), 8100 (HTTP health). Volume: <code>typedb-data</code>.</p>
-<p><strong>Schema</strong>: Loaded automatically on first <code>TypeDBKnowledgeGraph()</code> instantiation. STIX 2.1 entity types include intrusion-set, threat-actor, tool, malware, vulnerability, campaign, and identity.</p>
-<p><strong>Aliases</strong>: <code>python -m zettelforge.schema.seed_aliases</code> inserts alias-of relations. Covers APT28, APT29, APT31, Lazarus, Sandworm, Volt Typhoon, Kimsuky, Turla, MuddyWater, Cobalt Strike, Metasploit, Mimikatz.</p>
-<p><strong>Config keys</strong>: <code>TYPEDB_HOST</code> (default "localhost"), <code>TYPEDB_PORT</code> (default 1729), <code>TYPEDB_DATABASE</code> (default "zettelforge"), <code>TYPEDB_USERNAME</code>, <code>TYPEDB_PASSWORD</code>, <code>ZETTELFORGE_BACKEND=typedb</code>.</p>
-<p><strong>Community default</strong>: Use <code>backend: sqlite</code> when the Enterprise extension is not installed.</p>
-<p><strong>Health check</strong>: <code>curl -f http://localhost:8100/health</code> or <code>docker compose ps</code> for container status.</p>
+<p>Wait for the container health check to pass (interval 10 s, up to 5 retries) before starting ZettelForge.</p>
+<p><strong>Backend does not activate</strong></p>
+<p>ZettelForge silently falls back if the extension is absent or TypeDB is unreachable. Run with structured logging to see the warning:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">ZETTELFORGE_LOG_LEVEL</span><span class="o">=</span>debug<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from zettelforge.knowledge_graph import get_knowledge_graph; get_knowledge_graph()&quot;</span>
+</code></pre></div>
+<p>Look for <code>typedb_unavailable_fallback_jsonl</code> in the output. If you see it, either TypeDB is not reachable on port 1729, or the ThreatRecall.ai SaaS extension is not installed.</p>
+<p><strong>Remote TypeDB server</strong></p>
+<p>Update <code>typedb.host</code> (or <code>TYPEDB_HOST</code>) to the server address:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">typedb</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.1.50</span>
+<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1729</span>
+<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zettelforge</span>
+<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TYPEDB_USERNAME}</span>
+<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TYPEDB_PASSWORD}</span>
+</code></pre></div>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2963,12 +2773,10 @@ TypeDB credentials must be supplied via environment variables. <code>config.yaml
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

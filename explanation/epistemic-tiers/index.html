@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge's model for tracking intelligence quality and confidence decay">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -24,12 +24,12 @@
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Epistemic Tiers and Confidence - ZettelForge Documentation</title>
+        <title>Epistemic tiers and confidence - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/explanation/epistemic-tiers/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="Epistemic Tiers and Confidence">
-  <meta property="og:description" content="ZettelForge's model for tracking intelligence quality and confidence decay">
-  <meta property="og:url" content="https://docs.threatrecall.ai/explanation/epistemic-tiers/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Epistemic Tiers and Confidence">
-  <meta name="twitter:description" content="ZettelForge's model for tracking intelligence quality and confidence decay">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Epistemic Tiers and Confidence
+              Epistemic tiers and confidence
             
           </span>
         </div>
@@ -279,11 +238,31 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+        <a href="../../how-to/configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -306,26 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -573,17 +529,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -622,62 +574,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/configure-opencti/" class="md-nav__link">
         
   
@@ -706,14 +602,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -762,42 +770,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -825,7 +805,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -902,146 +1078,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1049,119 +1085,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1210,106 +1134,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
+    Troubleshoot
   
 
     
@@ -1330,14 +1162,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../two-phase-pipeline/" class="md-nav__link">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Two-Phase Pipeline
+    Extend ZettelForge
   
 
     
@@ -1358,228 +1190,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../stix-in-zettelforge/" class="md-nav__link">
+      <a href="../../how-to/use-web-interface/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#epistemic-tiers-a-b-c" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Epistemic Tiers (A / B / C)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#confidence-scores-00-10" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Confidence Scores (0.0 - 1.0)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Confidence Scores (0.0 - 1.0)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#confidence-on-relations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Confidence on Relations
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#confidence-decay" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Confidence Decay
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-tiers-affect-retrieval-and-synthesis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How Tiers Affect Retrieval and Synthesis
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-diamond-model-connection" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Diamond Model Connection
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LLM Quick Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
+    Use web interface
   
 
     
@@ -1611,8 +1229,6 @@
     
     
       
-      
-        
       
     
     
@@ -1620,12 +1236,10 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -1643,8 +1257,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1661,14 +1275,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+      <a href="../../reference/terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1717,174 +1331,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/memory-manager-api/" class="md-nav__link">
         
   
@@ -1913,90 +1359,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/stix-schema/" class="md-nav__link">
         
   
@@ -2004,7 +1366,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -2032,7 +1394,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2060,7 +1562,479 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#epistemic-tiers-a-b-c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Epistemic tiers (A / B / C)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#confidence-scores-00-to-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confidence scores (0.0 to 1.0)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Confidence scores (0.0 to 1.0)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#confidence-decay-on-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confidence decay on evolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flagging-for-human-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flagging for human review
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-tiers-affect-synthesis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How tiers affect synthesis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-diamond-model-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Diamond Model connection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#confidence-on-threatrecallai-saas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confidence on ThreatRecall.ai SaaS
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
   
 
     
@@ -2093,17 +2067,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2162,6 +2132,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2254,14 +2274,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2275,113 +2295,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2406,17 +2322,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2513,7 +2425,7 @@
   <a href="#epistemic-tiers-a-b-c" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Epistemic Tiers (A / B / C)
+        Epistemic tiers (A / B / C)
       
     </span>
   </a>
@@ -2521,22 +2433,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confidence-scores-00-10" class="md-nav__link">
+  <a href="#confidence-scores-00-to-10" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confidence Scores (0.0 - 1.0)
+        Confidence scores (0.0 to 1.0)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Confidence Scores (0.0 - 1.0)">
+    <nav class="md-nav" aria-label="Confidence scores (0.0 to 1.0)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#confidence-on-relations" class="md-nav__link">
+  <a href="#confidence-decay-on-evolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confidence on Relations
+        Confidence decay on evolution
       
     </span>
   </a>
@@ -2544,10 +2456,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#confidence-decay" class="md-nav__link">
+  <a href="#flagging-for-human-review" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confidence Decay
+        Flagging for human review
       
     </span>
   </a>
@@ -2560,10 +2472,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-tiers-affect-retrieval-and-synthesis" class="md-nav__link">
+  <a href="#how-tiers-affect-synthesis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How Tiers Affect Retrieval and Synthesis
+        How tiers affect synthesis
       
     </span>
   </a>
@@ -2574,7 +2486,7 @@
   <a href="#the-diamond-model-connection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Diamond Model Connection
+        The Diamond Model connection
       
     </span>
   </a>
@@ -2582,10 +2494,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#confidence-on-threatrecallai-saas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        Confidence on ThreatRecall.ai SaaS
       
     </span>
   </a>
@@ -2612,24 +2524,24 @@
   
 
 
-<h1 id="epistemic-tiers-and-confidence">Epistemic Tiers and Confidence<a class="headerlink" href="#epistemic-tiers-and-confidence" title="Permanent link">&para;</a></h1>
-<p>Not all intelligence is created equal. A verified CISA advisory carries more weight than an anonymous forum post, which carries more weight than an LLM's speculation. ZettelForge tracks this through two complementary mechanisms: epistemic tiers and confidence scores.</p>
-<h2 id="epistemic-tiers-a-b-c">Epistemic Tiers (A / B / C)<a class="headerlink" href="#epistemic-tiers-a-b-c" title="Permanent link">&para;</a></h2>
-<p>Every note and entity in ZettelForge carries a <code>tier</code> classification:</p>
+<h1 id="epistemic-tiers-and-confidence">Epistemic tiers and confidence<a class="headerlink" href="#epistemic-tiers-and-confidence" title="Permanent link">&para;</a></h1>
+<p>Not all intelligence is created equal. A verified CISA advisory carries more weight than an anonymous forum post, which carries more weight than an LLM's inference. ZettelForge tracks this difference through two complementary fields on every <code>MemoryNote</code>: an epistemic tier and a confidence score.</p>
+<h2 id="epistemic-tiers-a-b-c">Epistemic tiers (A / B / C)<a class="headerlink" href="#epistemic-tiers-a-b-c" title="Permanent link">&para;</a></h2>
+<p>Every note stored in ZettelForge carries a <code>tier</code> field in its metadata:</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Tier</th>
 <th style="text-align: left;">Label</th>
 <th style="text-align: left;">Meaning</th>
-<th style="text-align: left;">Typical Sources</th>
+<th style="text-align: left;">Typical sources</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><strong>A</strong></td>
 <td style="text-align: left;">Authoritative</td>
-<td style="text-align: left;">Verified, high-confidence intelligence from trusted sources</td>
+<td style="text-align: left;">Verified intelligence from trusted sources</td>
 <td style="text-align: left;">CISA advisories, MITRE ATT&amp;CK, vendor-confirmed CVEs, court documents</td>
 </tr>
 <tr>
@@ -2642,63 +2554,100 @@
 <td style="text-align: left;"><strong>C</strong></td>
 <td style="text-align: left;">Support</td>
 <td style="text-align: left;">Low-confidence, inferred, or speculative intelligence</td>
-<td style="text-align: left;">LLM-extracted relationships, unverified forum posts, automated correlations, causal triples</td>
+<td style="text-align: left;">Analyst notes flagged for review, notes with high evolution counts</td>
 </tr>
 </tbody>
 </table>
-<p>Tiers are assigned at ingestion time:
-- Notes ingested via <code>remember()</code> default to tier <strong>B</strong>
-- LLM-extracted facts from the two-phase pipeline inherit tier <strong>B</strong> from the source note
-- Causal triples extracted by the <code>NoteConstructor</code> are tier <strong>C</strong> (LLM inference, not human-verified)
-- Analysts can promote notes to tier <strong>A</strong> by modifying <code>note.metadata.tier</code></p>
-<h2 id="confidence-scores-00-10">Confidence Scores (0.0 - 1.0)<a class="headerlink" href="#confidence-scores-00-10" title="Permanent link">&para;</a></h2>
-<p>Every note, entity, and relationship carries a <code>confidence</code> score:</p>
-<ul>
-<li><strong>1.0</strong>: Certain (e.g., CVE-2024-3094 exists — it's in the NVD)</li>
-<li><strong>0.85</strong>: High confidence (e.g., "APT28 uses Cobalt Strike" — multiple corroborating reports)</li>
-<li><strong>0.5</strong>: Moderate (e.g., "Campaign may be attributed to Lazarus Group" — single source)</li>
-<li><strong>0.1</strong>: Low (e.g., "Possible connection between Volt Typhoon and infrastructure X" — speculative)</li>
-</ul>
-<h3 id="confidence-on-relations">Confidence on Relations<a class="headerlink" href="#confidence-on-relations" title="Permanent link">&para;</a></h3>
-<p>In TypeDB, confidence is an attribute on every STIX relationship:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>(user: APT28, used: Cobalt Strike) isa uses, has confidence 0.85
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>(source: Lazarus Group, target: crypto exchanges) isa targets, has confidence 0.6
+<p>The default value in <code>Metadata</code> is <code>"B"</code>. However, notes created through the <code>NoteConstructor.construct()</code> path — which <code>remember()</code> uses — are explicitly assigned <code>tier="A"</code> at ingestion time. You can change this afterward:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
+
+<span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
+<span class="n">note</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
+    <span class="s2">&quot;APT28 exploited CVE-2024-1234 in a campaign targeting NATO logistics.&quot;</span><span class="p">,</span>
+    <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="c1"># note.metadata.tier is &quot;A&quot; after construction</span>
+
+<span class="c1"># Downgrade if you have doubts about the source:</span>
+<span class="n">note</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tier</span> <span class="o">=</span> <span class="s2">&quot;B&quot;</span>
+<span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">rewrite_note</span><span class="p">(</span><span class="n">note</span><span class="p">)</span>
+
+<span class="c1"># Upgrade to authoritative after independent verification:</span>
+<span class="n">note</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tier</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
+<span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">rewrite_note</span><span class="p">(</span><span class="n">note</span><span class="p">)</span>
 </code></pre></div>
-<p>This means the <code>BlendedRetriever</code> can weight results not just by relevance but by reliability. A high-confidence, direct relationship ranks above a low-confidence, inferred one.</p>
-<h3 id="confidence-decay">Confidence Decay<a class="headerlink" href="#confidence-decay" title="Permanent link">&para;</a></h3>
-<p>ZettelForge's <code>MemoryNote</code> tracks <code>evolution_count</code> — how many times a note has been superseded or evolved. Each evolution event reduces confidence:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">increment_evolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">evolved_by_note_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">evolution_count</span> <span class="o">+=</span> <span class="mi">1</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">evolved_by</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evolved_by_note_id</span><span class="p">)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">confidence</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">)</span>
+<p>Tier is just a string — the system enforces no hard constraints beyond what you document for your team. The value is only meaningful in the context of your retrieval and synthesis calls.</p>
+<h2 id="confidence-scores-00-to-10">Confidence scores (0.0 to 1.0)<a class="headerlink" href="#confidence-scores-00-to-10" title="Permanent link">&para;</a></h2>
+<p>Every <code>MemoryNote</code> carries two confidence-related fields:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>metadata.confidence</code></td>
+<td style="text-align: left;"><code>float</code></td>
+<td style="text-align: left;"><code>1.0</code></td>
+<td style="text-align: left;">Note quality score. Decays on each evolution event. Drives <code>should_flag_for_review()</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>metadata.stix_confidence</code></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;"><code>-1</code></td>
+<td style="text-align: left;">STIX 0–100 confidence scale. Stored in SQLite. <code>-1</code> means unset. Set explicitly when ingesting STIX-sourced intelligence.</td>
+</tr>
+</tbody>
+</table>
+<p>Both fields live on the note, not on the knowledge graph edge. KG edges between entities do not carry a guaranteed confidence attribute in the OSS schema.</p>
+<h3 id="confidence-decay-on-evolution">Confidence decay on evolution<a class="headerlink" href="#confidence-decay-on-evolution" title="Permanent link">&para;</a></h3>
+<p>Every time a note is superseded or evolved, <code>increment_evolution()</code> fires:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">increment_evolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">evolved_by_note_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">evolution_count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">evolved_by_note_id</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evolved_by</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evolved_by_note_id</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+    <span class="c1"># Confidence decay: evolved notes lose confidence</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">confidence</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">)</span>
 </code></pre></div>
-<p>A note that has been superseded 5+ times triggers <code>should_flag_for_review()</code>, signaling that this piece of intelligence has been revised frequently and may warrant human review.</p>
-<h2 id="how-tiers-affect-retrieval-and-synthesis">How Tiers Affect Retrieval and Synthesis<a class="headerlink" href="#how-tiers-affect-retrieval-and-synthesis" title="Permanent link">&para;</a></h2>
-<p>The <code>synthesize()</code> method accepts a <code>tier_filter</code> parameter:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Only use authoritative and operational sources</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;APT28 capabilities&quot;</span><span class="p">,</span> <span class="n">tier_filter</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">])</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Include speculative/inferred intelligence</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;APT28 capabilities&quot;</span><span class="p">,</span> <span class="n">tier_filter</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">])</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Strict mode: authoritative only</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;APT28 capabilities&quot;</span><span class="p">,</span> <span class="n">tier_filter</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">])</span>
+<p><code>confidence</code> is capped at 0.95 after the first evolution. It does not decay below that automatically — you manage further decay by calling <code>mm.remember(..., evolve=True)</code> repeatedly as new, conflicting intelligence arrives. A note that has been substantially revised many times naturally accumulates a lower confidence over time.</p>
+<h3 id="flagging-for-human-review">Flagging for human review<a class="headerlink" href="#flagging-for-human-review" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">should_flag_for_review</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">confidence</span> <span class="o">&lt;</span> <span class="mf">0.5</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">evolution_count</span> <span class="o">&gt;</span> <span class="mi">5</span>
 </code></pre></div>
-<p>The default filter is <code>["A", "B"]</code> — operational quality. This means LLM-extracted causal triples (tier C) are excluded from synthesis by default unless explicitly requested.</p>
-<h2 id="the-diamond-model-connection">The Diamond Model Connection<a class="headerlink" href="#the-diamond-model-connection" title="Permanent link">&para;</a></h2>
-<p>CTI practitioners will recognize ZettelForge's confidence model as complementary to the Diamond Model of Intrusion Analysis. Where the Diamond Model describes relationships between adversary, capability, infrastructure, and victim, ZettelForge's epistemic tiers address the meta-question: how much do we trust each relationship?</p>
-<p>A Diamond Model analysis might state "Adversary X uses Capability Y targeting Victim Z." ZettelForge stores this as three typed relationships, each with independent confidence scores and temporal validity. The adversary-capability link might be confidence 0.9 (observed in multiple incidents), while the adversary-victim link might be confidence 0.4 (single report, unconfirmed).</p>
-<h2 id="llm-quick-reference">LLM Quick Reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
-<p>ZettelForge uses a two-layer quality model. Epistemic tiers (A/B/C) classify intelligence by source reliability: A=authoritative (CISA, MITRE, vendor-confirmed), B=operational (threat reports, incident notes, default for remember()), C=support (LLM-extracted causal triples, unverified correlations). Confidence scores (0.0-1.0) provide continuous quality measurement on every note, entity, and TypeDB relationship — a uses relation between APT28 and Cobalt Strike might carry confidence 0.85 while a speculative attribution carries 0.3. Confidence decays on evolution: each time a note is superseded, confidence caps at 0.95 and evolution_count increments; notes with evolution_count &gt;= 5 trigger should_flag_for_review(). The synthesize() method accepts tier_filter (default ["A", "B"]) controlling which quality tiers contribute to RAG answers — tier C is excluded by default, meaning LLM-extracted inferences don't appear in synthesis unless explicitly requested. The BlendedRetriever can weight results by confidence in addition to relevance, ensuring high-confidence direct relationships rank above low-confidence inferred ones. Configuration: default tier for new notes is B (Metadata.tier default), configurable per note. Confidence on TypeDB relations is a double attribute constrained to 0.0-1.0 in the STIX schema.</p>
+<p>A note is flagged when its confidence drops below 0.5 <strong>or</strong> when it has been evolved more than 5 times (at <code>evolution_count</code> of 6 or higher). The <code>memory_defense</code> layer checks this flag and surfaces the note in governance reports.</p>
+<h2 id="how-tiers-affect-synthesis">How tiers affect synthesis<a class="headerlink" href="#how-tiers-affect-synthesis" title="Permanent link">&para;</a></h2>
+<p>The <code>synthesize()</code> method accepts a <code>tier_filter</code> parameter. When you call <code>synthesize()</code> without specifying it, the synthesis generator uses all three tiers by default (<code>["A", "B", "C"]</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Default — all tiers contribute:</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;APT28 capabilities&quot;</span><span class="p">)</span>
+
+<span class="c1"># Operational quality and above only (excludes low-confidence notes):</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;APT28 capabilities&quot;</span><span class="p">,</span> <span class="n">tier_filter</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">])</span>
+
+<span class="c1"># Authoritative sources only:</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;APT28 capabilities&quot;</span><span class="p">,</span> <span class="n">tier_filter</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">])</span>
+</code></pre></div>
+<p>The default <code>["A", "B", "C"]</code> means all notes contribute to synthesis regardless of tier unless you restrict it. If you need to exclude inferred or low-confidence notes from synthesis, pass <code>tier_filter=["A", "B"]</code> explicitly.</p>
+<div class="admonition note">
+<p class="admonition-title">Configuration note</p>
+<p><code>config.retrieval.tier_filter</code> (default <code>["A", "B"]</code>) is used by the CrewAI integration retriever, not by direct <code>mm.synthesize()</code> calls. If you rely on direct API calls, control tier filtering at the call site.</p>
+</div>
+<h2 id="the-diamond-model-connection">The Diamond Model connection<a class="headerlink" href="#the-diamond-model-connection" title="Permanent link">&para;</a></h2>
+<p>CTI practitioners will recognize this confidence model as complementary to the Diamond Model of Intrusion Analysis. Where the Diamond Model maps relationships between adversary, capability, infrastructure, and victim, ZettelForge's epistemic tiers address the meta-question: how much do you trust each piece of intelligence?</p>
+<p>A Diamond Model analysis might state "Adversary X uses Capability Y targeting Victim Z." In ZettelForge, this is stored as notes describing each relationship, each carrying an independent <code>confidence</code> score and <code>tier</code> classification. The adversary–capability note might be <code>tier="A"</code> with <code>confidence=0.9</code> (observed in multiple ISAC reports), while the adversary–victim attribution note might be <code>tier="B"</code> with <code>confidence=0.4</code> (single unconfirmed report). When you synthesize, those scores influence which sources contribute and with what weight.</p>
+<p>For analysts who need STIX-formatted confidence values, set <code>metadata.stix_confidence</code> (0–100) on notes that carry formal STIX provenance. The field is stored in SQLite alongside the float <code>confidence</code> and can be included in STIX export workflows.</p>
+<h2 id="confidence-on-threatrecallai-saas">Confidence on ThreatRecall.ai SaaS<a class="headerlink" href="#confidence-on-threatrecallai-saas" title="Permanent link">&para;</a></h2>
+<p>ThreatRecall.ai extends the confidence model with typed confidence attributes on knowledge graph relationships, enabling queries like "show me all relationships attributed to APT28 with confidence above 0.7." This is not part of the ZettelForge OSS schema, where confidence lives on notes. If your workflow needs per-relationship confidence at scale, see the ThreatRecall.ai documentation.</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2742,12 +2691,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

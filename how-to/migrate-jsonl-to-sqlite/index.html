@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Move a v2.1.x ZettelForge deployment from the legacy JSONL notes store to the v2.2.0 SQLite default backend, with backup and idempotent re-runs.">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -18,18 +18,18 @@
         <link rel="prev" href="../maintain-lancedb/">
       
       
-        <link rel="next" href="../query-apt-tools/">
+        <link rel="next" href="../use-detection-rules/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Migrate JSONL Data to SQLite - ZettelForge Documentation</title>
+        <title>Migrate JSONL to SQLite - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/how-to/migrate-jsonl-to-sqlite/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="Migrate JSONL Data to SQLite">
-  <meta property="og:description" content="Move a v2.1.x ZettelForge deployment from the legacy JSONL notes store to the v2.2.0 SQLite default backend, with backup and idempotent re-runs.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/how-to/migrate-jsonl-to-sqlite/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Migrate JSONL Data to SQLite">
-  <meta name="twitter:description" content="Move a v2.1.x ZettelForge deployment from the legacy JSONL notes store to the v2.2.0 SQLite default backend, with backup and idempotent re-runs.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Migrate JSONL Data to SQLite
+              Migrate JSONL to SQLite
             
           </span>
         </div>
@@ -281,11 +240,31 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../build-extensions/" class="md-tabs__link">
+        <a href="../configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -306,26 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -577,8 +533,6 @@
         
         
       
-      
-        
       
     
     
@@ -625,62 +579,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../configure-opencti/" class="md-nav__link">
         
   
@@ -709,14 +607,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -765,42 +775,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-yara-ingestion/" class="md-nav__link">
+      <a href="../configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -828,7 +810,7 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
   
 
     
@@ -849,42 +831,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../integrate-with-crewai/" class="md-nav__link">
+      <a href="../set-up-mcp-server/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Integrate with CrewAI
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../integrate-with-langchain/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Integrate with LangChain
+    Set up MCP server
   
 
     
@@ -912,7 +866,7 @@
   <span class="md-ellipsis">
     
   
-    Maintain LanceDB
+    Maintain LanceDB indexes
   
 
     
@@ -1085,14 +1039,70 @@
   
   
     <li class="md-nav__item">
-      <a href="../query-apt-tools/" class="md-nav__link">
+      <a href="../use-detection-rules/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Query APT Tools
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
   
 
     
@@ -1120,7 +1130,7 @@
   <span class="md-ellipsis">
     
   
-    Reproduce Benchmarks
+    Reproduce benchmarks
   
 
     
@@ -1141,14 +1151,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../resolve-aliases/" class="md-nav__link">
+      <a href="../integrate-with-crewai/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Resolve Aliases
+    Integrate with CrewAI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integrate-with-langchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integrate with LangChain
   
 
     
@@ -1176,119 +1214,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1337,14 +1263,70 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-detection-rules/" class="md-nav__link">
+      <a href="../troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extend ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-web-interface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use web interface
   
 
     
@@ -1377,17 +1359,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -1397,7 +1375,7 @@
   <span class="md-ellipsis">
     
   
-    Concepts
+    Reference
   
 
     
@@ -1413,235 +1391,6 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Two-Phase Pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reference
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
     Reference
   
 
@@ -1655,14 +1404,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+      <a href="../../reference/terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1711,174 +1460,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/memory-manager-api/" class="md-nav__link">
         
   
@@ -1907,90 +1488,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/stix-schema/" class="md-nav__link">
         
   
@@ -1998,7 +1495,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -2026,7 +1523,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2054,7 +1691,119 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
   
 
     
@@ -2087,7 +1836,230 @@
     
       
       
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2095,9 +2067,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2156,6 +2126,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2248,14 +2268,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2269,113 +2289,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2400,17 +2316,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2600,83 +2512,97 @@
   
 
 
-<h1 id="migrate-jsonl-data-to-sqlite">Migrate JSONL Data to SQLite<a class="headerlink" href="#migrate-jsonl-data-to-sqlite" title="Permanent link">&para;</a></h1>
-<p>Use this guide when you are upgrading an existing ZettelForge install
-from v2.1.x (JSONL) to v2.2.x (SQLite default) and want to carry your
-notes, knowledge graph, and entity index forward.</p>
-<p>Fresh installs do <strong>not</strong> need this — SQLite is the default and
-<code>MemoryManager()</code> will create an empty database in the configured data
-directory on first use.</p>
+<h1 id="migrate-jsonl-data-to-sqlite">Migrate JSONL data to SQLite<a class="headerlink" href="#migrate-jsonl-data-to-sqlite" title="Permanent link">&para;</a></h1>
+<p>Use this guide when you are upgrading an existing ZettelForge installation from <strong>v2.1.x</strong> (JSONL storage) to <strong>v2.2.0 or newer</strong> (SQLite default) and you want to carry your notes, knowledge graph, and entity index forward.</p>
+<p>Fresh installs do not need this. ZettelForge 2.2.0 and later create an empty SQLite database on first use.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
 <li>ZettelForge <strong>v2.2.0 or newer</strong> installed (<code>pip install -U zettelforge</code>)</li>
-<li>Write access to your data directory (<code>~/.amem</code> by default, or whatever
-  <code>AMEM_DATA_DIR</code> / <code>storage.data_dir</code> points at)</li>
-<li>Enough free disk for a full backup of the JSONL files alongside the
-  new <code>zettelforge.db</code> file (expect roughly 1.5× the original size for
-  the duration of the migration)</li>
+<li>Read and write access to your data directory (<code>~/.amem</code> by default, or whatever <code>AMEM_DATA_DIR</code> / <code>storage.data_dir</code> points to)</li>
+<li>Free disk space for a full backup alongside the new database — expect roughly 1.5x the original JSONL size during migration</li>
 </ul>
 <h2 id="what-the-script-does">What the script does<a class="headerlink" href="#what-the-script-does" title="Permanent link">&para;</a></h2>
-<p><code>scripts/migrate_jsonl_to_sqlite.py</code>:</p>
+<p><code>scripts/migrate_jsonl_to_sqlite.py</code> runs five steps:</p>
 <ol>
-<li>Copies <code>notes.jsonl</code>, <code>kg_nodes.jsonl</code>, <code>kg_edges.jsonl</code>, and
-   <code>entity_index.json</code> into <code>&lt;data_dir&gt;/backup_pre_sqlite/</code>.</li>
-<li>Creates or re-uses <code>&lt;data_dir&gt;/zettelforge.db</code> via
-   <code>SQLiteBackend</code> (WAL mode, 33-method ABC). Reads and writes are
-   serialized through an internal <code>threading.RLock</code>, so concurrent
-   background enrichment does not expose mid-write rows to readers.</li>
-<li>Writes every note with <code>INSERT OR REPLACE</code>, every entity with
-   <code>INSERT OR IGNORE</code>, and upserts knowledge-graph nodes and edges.</li>
-<li>Leaves the original JSONL files on disk so you can roll back.</li>
+<li>Copies <code>notes.jsonl</code>, <code>kg_nodes.jsonl</code>, <code>kg_edges.jsonl</code>, and <code>entity_index.json</code> into <code>&lt;data_dir&gt;/backup_pre_sqlite/</code>.</li>
+<li>Opens or creates <code>&lt;data_dir&gt;/zettelforge.db</code> via <code>SQLiteBackend</code> (WAL journal mode, thread-safe via <code>RLock</code>).</li>
+<li>Writes every note using <code>INSERT OR REPLACE</code>.</li>
+<li>Upserts knowledge-graph nodes and edges.</li>
+<li>Adds entity mappings using <code>INSERT OR IGNORE</code>.</li>
 </ol>
-<p>The script is idempotent — running it twice produces the same database.</p>
+<p>The script is <strong>idempotent</strong> — running it a second time produces the same database state. The original JSONL files are never deleted.</p>
+<div class="admonition note">
+<p class="admonition-title">The --dry-run flag does not prevent writes</p>
+<p>Despite the flag name, <code>--dry-run</code> creates the SQLite database and runs the full migration — it only adds a <code>[DRY RUN]</code> label to the console output. This is a known source-level behavior. Because the migration is idempotent, a first run is always safe on an empty or pre-existing database.</p>
+</div>
 <h2 id="run-the-migration">Run the migration<a class="headerlink" href="#run-the-migration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Dry run first — shows what would be imported without writing</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python<span class="w"> </span>scripts/migrate_jsonl_to_sqlite.py<span class="w"> </span>--data-dir<span class="w"> </span>~/.amem<span class="w"> </span>--dry-run
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Execute the migration</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>python<span class="w"> </span>scripts/migrate_jsonl_to_sqlite.py<span class="w"> </span>--data-dir<span class="w"> </span>~/.amem
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/migrate_jsonl_to_sqlite.py<span class="w"> </span>--data-dir<span class="w"> </span>~/.amem
 </code></pre></div>
-<p>Expected output tail:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Migrated 7,193 notes
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Migrated 12,408 KG nodes / 34,117 KG edges
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Migrated 28,442 entity mappings
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>SQLite WAL checkpointed. Done.
+<p>Output format (record counts will match your data):</p>
+<div class="highlight"><pre><span></span><code>ZettelForge JSONL -&gt; SQLite Migration
+Data directory: /home/you/.amem
+
+[1/5] Backing up source files...
+  Backed up notes.jsonl
+  Backed up kg_nodes.jsonl
+  Backed up kg_edges.jsonl
+  Backed up entity_index.json
+  Backup directory: /home/you/.amem/backup_pre_sqlite
+
+[2/5] Migrating notes...
+  Migrated &lt;N&gt; notes
+
+[3/5] Migrating KG nodes...
+  Migrated &lt;N&gt; nodes
+
+[4/5] Migrating KG edges...
+  Migrated &lt;N&gt; edges
+
+[5/5] Migrating entity index...
+  Migrated &lt;N&gt; entity mappings
+
+==================================================
+Migration complete!
+  Notes:           &lt;N&gt;
+  KG nodes:        &lt;N&gt;
+  KG edges:        &lt;N&gt;
+  Entity mappings: &lt;N&gt;
+  Database:        /home/you/.amem/zettelforge.db
+
+JSONL files have NOT been deleted.
+Backup saved to: /home/you/.amem/backup_pre_sqlite
 </code></pre></div>
+<p>The database file is written with <code>0600</code> permissions (owner read/write only).</p>
+<p>If a file is absent from your data directory the script warns and skips it — this is normal if you never used the TypeDB graph or the entity index.</p>
 <h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<p>After the migration completes, point ZettelForge at the same data
-directory and confirm your notes are reachable through SQLite:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>               <span class="c1"># reads ~/.amem by default</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">mm</span><span class="o">.</span><span class="n">get_stats</span><span class="p">())</span>              <span class="c1"># total_notes should match the migration log</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>     <span class="c1"># sanity-check retrieval</span>
+<p>After the migration, confirm your notes are reachable:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
+
+<span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>           <span class="c1"># reads ~/.amem by default</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;total_notes&quot;</span><span class="p">])</span>    <span class="c1"># matches the migration log</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
 </code></pre></div>
 <p>You can also inspect the database directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sqlite3<span class="w"> </span>~/.amem/zettelforge.db<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM notes;&quot;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sqlite3<span class="w"> </span>~/.amem/zettelforge.db<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM kg_edges;&quot;</span>
+<div class="highlight"><pre><span></span><code>sqlite3<span class="w"> </span>~/.amem/zettelforge.db<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM notes;&quot;</span>
+sqlite3<span class="w"> </span>~/.amem/zettelforge.db<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM kg_edges;&quot;</span>
 </code></pre></div>
 <h2 id="roll-back">Roll back<a class="headerlink" href="#roll-back" title="Permanent link">&para;</a></h2>
-<p>If anything looks wrong, set the backend back to the legacy JSONL
-paths (they were not deleted), investigate, and re-run:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ls<span class="w"> </span>~/.amem/backup_pre_sqlite/
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># notes.jsonl, kg_nodes.jsonl, kg_edges.jsonl, entity_index.json</span>
+<p>If anything looks wrong, delete the database and re-migrate from the original JSONL files (which were not deleted):</p>
+<div class="highlight"><pre><span></span><code>ls<span class="w"> </span>~/.amem/backup_pre_sqlite/
+<span class="c1"># notes.jsonl  kg_nodes.jsonl  kg_edges.jsonl  entity_index.json</span>
+rm<span class="w"> </span>~/.amem/zettelforge.db
+python<span class="w"> </span>scripts/migrate_jsonl_to_sqlite.py<span class="w"> </span>--data-dir<span class="w"> </span>~/.amem
 </code></pre></div>
-<p>The <code>zettelforge.db</code> file can be deleted at any time — it is a
-derivative artifact and the migration can be re-run from the JSONL
-originals.</p>
 <h2 id="clean-up-optional">Clean up (optional)<a class="headerlink" href="#clean-up-optional" title="Permanent link">&para;</a></h2>
-<p>Once you are confident SQLite is healthy, move the backup out of your
-data directory so it does not confuse future tooling:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mv<span class="w"> </span>~/.amem/backup_pre_sqlite<span class="w"> </span>~/zettelforge-jsonl-backup-2026-04-16
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># delete once a release cycle has passed with no regressions</span>
+<p>Once you are confident the SQLite store is healthy, move the backup out of your data directory:</p>
+<div class="highlight"><pre><span></span><code>mv<span class="w"> </span>~/.amem/backup_pre_sqlite<span class="w"> </span>~/zettelforge-jsonl-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>
 </code></pre></div>
+<p>Delete the backup only after a full release cycle with no regressions.</p>
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../reference/configuration/">Configuration Reference</a> — <code>backend</code>
-  and <code>storage.data_dir</code> keys.</li>
-<li><a href="https://github.com/rolandpg/zettelforge/blob/master/CHANGELOG.md">CHANGELOG v2.2.0</a> —
-  SQLite default rollout notes.</li>
+<li><a href="../../reference/configuration/">Configuration reference</a> — <code>storage.data_dir</code> and <code>backend</code> keys</li>
+<li><a href="../../explanation/architecture/">Architecture (why SQLite + LanceDB)</a> — why SQLite replaced JSONL as the default</li>
 </ul>
 
 
@@ -2684,9 +2610,6 @@ data directory so it does not confuse future tooling:</p>
 
 
 
-
-  
-  
 
 
 
@@ -2730,12 +2653,10 @@ data directory so it does not confuse future tooling:</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

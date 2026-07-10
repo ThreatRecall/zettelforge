@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="How Niklas Luhmann's note-taking method shapes ZettelForge's memory architecture">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -18,18 +18,18 @@
         <link rel="prev" href="../llm-budgets-and-timeouts/">
       
       
-        <link rel="next" href="../../reference/architecture-deep-dive/">
+        <link rel="next" href="../../brand/brandIdentity/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>The Zettelkasten Philosophy in ZettelForge - ZettelForge Documentation</title>
+        <title>Zettelkasten philosophy - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/explanation/zettelkasten-philosophy/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="The Zettelkasten Philosophy in ZettelForge">
-  <meta property="og:description" content="How Niklas Luhmann's note-taking method shapes ZettelForge's memory architecture">
-  <meta property="og:url" content="https://docs.threatrecall.ai/explanation/zettelkasten-philosophy/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="The Zettelkasten Philosophy in ZettelForge">
-  <meta name="twitter:description" content="How Niklas Luhmann's note-taking method shapes ZettelForge's memory architecture">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              The Zettelkasten Philosophy in ZettelForge
+              Zettelkasten philosophy
             
           </span>
         </div>
@@ -279,11 +238,31 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+        <a href="../../how-to/configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -306,26 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -573,17 +529,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -622,62 +574,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/configure-opencti/" class="md-nav__link">
         
   
@@ -706,14 +602,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -762,42 +770,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -825,7 +805,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -902,146 +1078,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1049,119 +1085,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1210,14 +1134,70 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extend ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-web-interface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use web interface
   
 
     
@@ -1242,8 +1222,6 @@
       
   
   
-    
-  
   
   
     
@@ -1251,379 +1229,6 @@
     
     
       
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../two-phase-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Two-Phase Pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../stix-in-zettelforge/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#five-principles-translated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Five Principles, Translated
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Five Principles, Translated">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-atomic-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Atomic Notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-meaningful-links" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Meaningful Links
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-emergent-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Emergent Structure
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-unique-identifiers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Unique Identifiers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-evolution-over-deletion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Evolution Over Deletion
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-the-analogy-breaks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where the Analogy Breaks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LLM Quick Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
       
     
     
@@ -1631,12 +1236,10 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -1654,8 +1257,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1672,14 +1275,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+      <a href="../../reference/terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1728,174 +1331,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/memory-manager-api/" class="md-nav__link">
         
   
@@ -1924,90 +1359,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/stix-schema/" class="md-nav__link">
         
   
@@ -2015,7 +1366,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -2043,7 +1394,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2071,7 +1562,119 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
   
 
     
@@ -2096,15 +1699,384 @@
       
   
   
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
   
   
     
-    
-    
-    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
         
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#five-principles-translated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Five principles, translated
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Five principles, translated">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-atomic-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Atomic notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-meaningful-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Meaningful links
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-emergent-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Emergent structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-unique-identifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Unique identifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-evolution-over-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Evolution over deletion
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-the-analogy-breaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where the analogy breaks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-deeper-claim" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The deeper claim
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2112,9 +2084,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2173,6 +2143,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2265,14 +2285,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2286,113 +2306,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2417,17 +2333,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2524,19 +2436,19 @@
   <a href="#five-principles-translated" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Five Principles, Translated
+        Five principles, translated
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Five Principles, Translated">
+    <nav class="md-nav" aria-label="Five principles, translated">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#1-atomic-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Atomic Notes
+        1. Atomic notes
       
     </span>
   </a>
@@ -2547,7 +2459,7 @@
   <a href="#2-meaningful-links" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Meaningful Links
+        2. Meaningful links
       
     </span>
   </a>
@@ -2558,7 +2470,7 @@
   <a href="#3-emergent-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Emergent Structure
+        3. Emergent structure
       
     </span>
   </a>
@@ -2569,7 +2481,7 @@
   <a href="#4-unique-identifiers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Unique Identifiers
+        4. Unique identifiers
       
     </span>
   </a>
@@ -2580,7 +2492,7 @@
   <a href="#5-evolution-over-deletion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Evolution Over Deletion
+        5. Evolution over deletion
       
     </span>
   </a>
@@ -2596,7 +2508,7 @@
   <a href="#where-the-analogy-breaks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where the Analogy Breaks
+        Where the analogy breaks
       
     </span>
   </a>
@@ -2604,10 +2516,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#the-deeper-claim" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        The deeper claim
       
     </span>
   </a>
@@ -2634,88 +2546,73 @@
   
 
 
-<h1 id="the-zettelkasten-philosophy-in-zettelforge">The Zettelkasten Philosophy in ZettelForge<a class="headerlink" href="#the-zettelkasten-philosophy-in-zettelforge" title="Permanent link">&para;</a></h1>
-<p>ZettelForge's internal codename — ZettelForge — reveals its intellectual lineage. The system applies Niklas Luhmann's Zettelkasten ("slip box") method to AI agent memory, translating principles designed for a 20th-century sociologist's index cards into a 21st-century CTI knowledge architecture.</p>
-<h2 id="five-principles-translated">Five Principles, Translated<a class="headerlink" href="#five-principles-translated" title="Permanent link">&para;</a></h2>
-<h3 id="1-atomic-notes">1. Atomic Notes<a class="headerlink" href="#1-atomic-notes" title="Permanent link">&para;</a></h3>
+<h1 id="the-zettelkasten-philosophy-in-zettelforge">The Zettelkasten philosophy in ZettelForge<a class="headerlink" href="#the-zettelkasten-philosophy-in-zettelforge" title="Permanent link">&para;</a></h1>
+<p>ZettelForge's name reveals its intellectual lineage. The system applies Niklas Luhmann's Zettelkasten ("slip box") method to AI agent memory, translating principles designed for a 20th-century sociologist's index cards into a modern CTI knowledge architecture.</p>
+<p>Luhmann produced more than 70 books and 400 articles using 90,000 handwritten index cards. The cards were not organized by topic. They were connected by relationship — a network, not a hierarchy. ZettelForge inherits that intuition and adds the machinery to make it work at machine scale.</p>
+<h2 id="five-principles-translated">Five principles, translated<a class="headerlink" href="#five-principles-translated" title="Permanent link">&para;</a></h2>
+<h3 id="1-atomic-notes">1. Atomic notes<a class="headerlink" href="#1-atomic-notes" title="Permanent link">&para;</a></h3>
 <p>Luhmann's rule: each card captures one idea, expressed in your own words.</p>
-<p>ZettelForge's translation: each <code>MemoryNote</code> captures one piece of intelligence. The two-phase extraction pipeline (<code>FactExtractor</code>) enforces this — when an analyst feeds in a 3,000-word threat report, the LLM distills it into 3-5 discrete facts, each stored as a separate note. "APT28 shifted to edge device exploitation" is one note. "DROPBEAR is no longer in active use" is another.</p>
-<p>This atomicity is what makes retrieval precise. A vector search for "edge device exploitation" returns the specific note about APT28's shift, not the entire 3,000-word report.</p>
-<h3 id="2-meaningful-links">2. Meaningful Links<a class="headerlink" href="#2-meaningful-links" title="Permanent link">&para;</a></h3>
-<p>Luhmann didn't file cards by topic — he connected them by relationship. Card 21/3a linked to 15/7b not because they shared a subject tag, but because one idea led to another.</p>
-<p>ZettelForge implements this through TypeDB's typed relationships. A <code>uses</code> relation between APT28 and Cobalt Strike is not a generic "related-to" tag — it's a specific, directional, confidence-scored relationship with temporal validity. The STIX 2.1 schema provides 8 relationship types, each with defined semantics:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Relationship</th>
-<th style="text-align: left;">Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">uses</td>
-<td style="text-align: left;">Actor employs tool/malware</td>
-</tr>
-<tr>
-<td style="text-align: left;">targets</td>
-<td style="text-align: left;">Actor/campaign targets entity</td>
-</tr>
-<tr>
-<td style="text-align: left;">attributed-to</td>
-<td style="text-align: left;">Activity attributed to actor</td>
-</tr>
-<tr>
-<td style="text-align: left;">indicates</td>
-<td style="text-align: left;">Indicator signals threat</td>
-</tr>
-<tr>
-<td style="text-align: left;">mitigates</td>
-<td style="text-align: left;">Control reduces risk</td>
-</tr>
-<tr>
-<td style="text-align: left;">mentioned-in</td>
-<td style="text-align: left;">Entity appears in note</td>
-</tr>
-<tr>
-<td style="text-align: left;">supersedes</td>
-<td style="text-align: left;">Newer intel replaces older</td>
-</tr>
-<tr>
-<td style="text-align: left;">alias-of</td>
-<td style="text-align: left;">Two names for same entity</td>
-</tr>
-</tbody>
-</table>
-<p>These aren't tags — they're first-class objects with their own attributes (confidence, valid-from, valid-until).</p>
-<h3 id="3-emergent-structure">3. Emergent Structure<a class="headerlink" href="#3-emergent-structure" title="Permanent link">&para;</a></h3>
-<p>Luhmann famously said his Zettelkasten surprised him. He didn't impose a hierarchy — structure emerged from the connections between notes.</p>
-<p>ZettelForge achieves this through TypeDB's inference functions. When a campaign is attributed to APT28 and that campaign uses a new malware strain, TypeDB's <code>campaign-tool-attribution</code> function automatically infers that APT28 uses that malware — without anyone explicitly creating that relationship. The knowledge graph grows smarter as it grows larger.</p>
-<p>The <code>BlendedRetriever</code> surfaces these emergent connections during <code>recall()</code>. A query about APT28's capabilities returns not just directly stored facts, but inferred relationships discovered through multi-hop graph traversal.</p>
-<h3 id="4-unique-identifiers">4. Unique Identifiers<a class="headerlink" href="#4-unique-identifiers" title="Permanent link">&para;</a></h3>
-<p>Every Luhmann card had a unique address (21/3a, 15/7b). This was the backbone — without stable addresses, links break.</p>
-<p>ZettelForge uses two ID schemes:
-- <strong>STIX deterministic IDs</strong> for entities: <code>threat-actor--{uuid5(namespace, "apt28")}</code>. The same entity always gets the same ID, regardless of when or how it's ingested.
-- <strong>Timestamped IDs</strong> for notes: <code>note_20260409_102040_1742</code>. Each note gets a unique address in the LanceDB store.</p>
-<p>The <code>mentioned-in</code> bridge connects the two: TypeDB's deterministic STIX IDs reference LanceDB's timestamped note IDs.</p>
-<h3 id="5-evolution-over-deletion">5. Evolution Over Deletion<a class="headerlink" href="#5-evolution-over-deletion" title="Permanent link">&para;</a></h3>
-<p>Luhmann rarely discarded cards. He'd add new cards that refined, corrected, or superseded old ones — creating a visible intellectual history.</p>
-<p>ZettelForge's <code>supersedes</code> relation follows this exactly. When the <code>MemoryUpdater</code> decides a new fact contradicts an existing note (the DELETE operation), it doesn't delete the old note. It creates a correction note and marks the old one as <code>superseded_by</code> the new one. The old note remains in storage, searchable for historical context, but <code>recall()</code> filters it out by default (<code>exclude_superseded=True</code>).</p>
-<p>This means an analyst can always ask "what did we used to think about this?" — the evolution history is preserved.</p>
-<h2 id="where-the-analogy-breaks">Where the Analogy Breaks<a class="headerlink" href="#where-the-analogy-breaks" title="Permanent link">&para;</a></h2>
+<p>ZettelForge's translation: each <code>MemoryNote</code> captures one piece of intelligence. The <code>FactExtractor</code> enforces this by decomposing long reports — a 3,000-word threat writeup, a 40-page DFIR report — into discrete facts. The default is up to five facts per call. Each fact becomes a separate note with its own vector embedding, its own confidence score, and its own place in the knowledge graph.</p>
+<p>"APT28 shifted to edge device exploitation" is one note. "DROPBEAR is no longer in active use" is another. This atomicity is what makes retrieval precise: a vector search for "edge device exploitation" returns the specific note, not the entire report.</p>
+<h3 id="2-meaningful-links">2. Meaningful links<a class="headerlink" href="#2-meaningful-links" title="Permanent link">&para;</a></h3>
+<p>Luhmann did not file cards by topic — he connected them by relationship. Card 21/3a linked to 15/7b not because they shared a subject but because one idea led to another.</p>
+<p>ZettelForge implements this through the SQLite knowledge graph. Each entity extracted from a note (actors, malware families, CVEs, IP addresses) becomes a node. A <code>MENTIONED_IN</code> edge connects that node back to the note that sourced it. Additional edges encode CTI-domain relationships between entities: <code>uses</code>, <code>targets</code>, <code>attributed_to</code>, <code>causes</code>, <code>enables</code>, <code>exploits</code>, and more.</p>
+<p>These are not generic "related-to" tags. Each relationship type carries a specific directional meaning. When APT28 and Cobalt Strike share a <code>uses</code> edge, that edge is a first-class object in the graph — it has its own confidence score, a source note provenance, and a position in the temporal history of the threat actor.</p>
+<p>ThreatRecall.ai additionally backs its knowledge graph with TypeDB, which enables typed inference across multi-hop relationship chains and alias-of resolution. In ZettelForge OSS, the graph uses SQLite storage and BFS traversal.</p>
+<h3 id="3-emergent-structure">3. Emergent structure<a class="headerlink" href="#3-emergent-structure" title="Permanent link">&para;</a></h3>
+<p>Luhmann famously said his Zettelkasten surprised him. He did not impose a hierarchy — structure emerged from the connections between notes.</p>
+<p>ZettelForge achieves this through multi-hop graph traversal and blended retrieval. When <code>recall()</code> runs, the <code>BlendedRetriever</code> does not just scan the vector store. It also queries the knowledge graph: starting from the entities named in your query, it traverses edges outward — finding notes that mention related entities you did not name.</p>
+<p>A question about APT28's capabilities returns not just directly stored facts but notes about campaigns attributed to APT28, tools used in those campaigns, and CVEs those tools exploit. The knowledge graph grows smarter as it grows larger — each new note adds edges that open new traversal paths.</p>
+<p>The <code>BlendedRetriever</code> combines three sources: a <code>VectorRetriever</code> (semantic similarity over LanceDB), a <code>GraphRetriever</code> (entity-scoped KG traversal up to two hops), and a <code>KeywordRetriever</code> (deterministic intent classification). Which blend you get depends on the query's classified intent — factual, relational, or exploratory.</p>
+<h3 id="4-unique-identifiers">4. Unique identifiers<a class="headerlink" href="#4-unique-identifiers" title="Permanent link">&para;</a></h3>
+<p>Every Luhmann card had a unique address. Without stable addresses, links break.</p>
+<p>ZettelForge uses two parallel ID schemes:</p>
+<p><strong>Note IDs</strong> are timestamp-based strings generated at storage time:</p>
+<div class="highlight"><pre><span></span><code>note_20260620_190237_2616
+</code></pre></div>
+<p>The format is <code>note_{YYYYMMDD}_{HHMMSS}_{0000-9999}</code> where the suffix is a random four-digit integer. These IDs are stable once written — a note's ID never changes after it is created.</p>
+<p><strong>Entity keys</strong> are composite strings formed from the entity type and value:</p>
+<div class="highlight"><pre><span></span><code>actor:apt28
+cve:cve-2024-4577
+malware:cobalt_strike
+</code></pre></div>
+<p>In SQLite, the <code>(entity_type, entity_value)</code> pair has a UNIQUE constraint, ensuring the same entity is always the same node regardless of which note surfaced it. In-memory graph nodes use <code>node_{uuid4()[:12]}</code> as an internal handle, but the entity_type + entity_value tuple is the stable canonical identity.</p>
+<p>The <code>MENTIONED_IN</code> edge connects the two worlds: an entity node in the knowledge graph points to the note IDs where that entity appears.</p>
+<h3 id="5-evolution-over-deletion">5. Evolution over deletion<a class="headerlink" href="#5-evolution-over-deletion" title="Permanent link">&para;</a></h3>
+<p>Luhmann rarely discarded cards. He added new cards that refined, corrected, or superseded old ones — creating a visible intellectual history.</p>
+<p>ZettelForge follows this exactly. When <code>MemoryUpdater</code> determines that a new fact contradicts an existing note, it does not delete the old note. Instead, <code>mark_note_superseded()</code> links the old note to the new one via <code>links.superseded_by</code>, and the new note records the old one in <code>links.supersedes</code>.</p>
+<p>The old note remains in storage, available for historical queries. <code>recall()</code> filters superseded notes by default (<code>exclude_superseded=True</code>). To see the history, pass <code>exclude_superseded=False</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
+
+<span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
+
+<span class="c1"># Default: returns only current notes</span>
+<span class="n">current</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;APT28 infrastructure&quot;</span><span class="p">)</span>
+
+<span class="c1"># History mode: includes superseded notes</span>
+<span class="n">with_history</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;APT28 infrastructure&quot;</span><span class="p">,</span> <span class="n">exclude_superseded</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+<p>An analyst can always ask "what did we think about this six months ago?" The evolution history is preserved in the graph.</p>
+<h2 id="where-the-analogy-breaks">Where the analogy breaks<a class="headerlink" href="#where-the-analogy-breaks" title="Permanent link">&para;</a></h2>
 <p>Two important differences between Luhmann's system and ZettelForge:</p>
-<p><strong>Scale.</strong> Luhmann's Zettelkasten had ~90,000 cards over 30 years. ZettelForge can ingest thousands of notes per hour. At this scale, manual linking is impossible — entity extraction and heuristic relationship inference replace the human act of connecting ideas.</p>
-<p><strong>Retrieval.</strong> Luhmann browsed his cards by following links from a starting point. ZettelForge adds vector similarity search — you can find relevant notes even when you don't know the right entity name to start from. The <code>BlendedRetriever</code> combines both approaches: graph traversal (Luhmann's method) and semantic search (the modern addition).</p>
-<h2 id="llm-quick-reference">LLM Quick Reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
-<p>ZettelForge (codename ZettelForge) applies five Zettelkasten principles to AI agent memory. (1) Atomic notes: the two-phase extraction pipeline (FactExtractor) distills reports into discrete facts stored as individual MemoryNote objects, each with its own vector embedding. (2) Meaningful links: TypeDB typed relationships (uses, targets, attributed-to, indicates, mitigates, mentioned-in, supersedes, alias-of) replace generic tags with directional, confidence-scored, temporally-valid STIX 2.1 relationships. (3) Emergent structure: TypeDB inference functions (get_aliases, get_tools_used, campaign-tool-attribution) discover indirect relationships automatically — if a campaign uses malware and is attributed to an actor, the actor-malware relationship is inferred. (4) Unique identifiers: STIX deterministic IDs (uuid5-based) for entities ensure the same entity always gets the same ID; timestamped IDs for notes (note_YYYYMMDD_HHMMSS_xxxx) provide stable LanceDB addresses. The mentioned-in bridge connects STIX entity IDs to note IDs across databases. (5) Evolution over deletion: the supersedes relation preserves intellectual history — old notes are marked superseded_by newer corrections rather than deleted, and recall() filters them by default. The system diverges from classical Zettelkasten in scale (thousands of notes per hour vs manual linking) and retrieval (BlendedRetriever adds vector similarity search alongside Luhmann's link-following approach).</p>
+<p><strong>Scale.</strong> Luhmann's slip box held ~90,000 cards over 30 years. ZettelForge can ingest thousands of notes per hour. At this scale, manual linking is impossible. Entity extraction and heuristic relationship inference replace the human act of connecting ideas.</p>
+<p><strong>Retrieval.</strong> Luhmann browsed his cards by following links from a starting point. ZettelForge adds vector similarity search: you can find relevant notes even when you do not know the right entity name to start from. The <code>BlendedRetriever</code> combines both approaches — graph traversal (Luhmann's method) and semantic search (the modern addition). At larger scale, the graph paths become the signal that filters vector noise.</p>
+<h2 id="the-deeper-claim">The deeper claim<a class="headerlink" href="#the-deeper-claim" title="Permanent link">&para;</a></h2>
+<p>These five principles are design constraints, not marketing copy. They explain why ZettelForge makes certain trade-offs:</p>
+<ul>
+<li>Notes are atomic because merged notes produce imprecise retrieval.</li>
+<li>Links are typed because generic "related-to" edges give the graph no structure to traverse.</li>
+<li>Structure is emergent because a pre-imposed hierarchy would require someone to maintain it.</li>
+<li>IDs are stable because links break when addresses change.</li>
+<li>Deletion is avoided because old intelligence still has value as context.</li>
+</ul>
+<p>The test of any knowledge architecture is whether it survives the analyst who is no longer there to maintain it. A ZettelForge instance should be as useful to the analyst who inherits it as to the one who built it.</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2759,12 +2656,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="How FactExtractor and MemoryUpdater keep memory coherent and non-redundant">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -24,12 +24,12 @@
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>The Two-Phase Extraction Pipeline - ZettelForge Documentation</title>
+        <title>Two-phase extraction pipeline - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/explanation/two-phase-pipeline/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="The Two-Phase Extraction Pipeline">
-  <meta property="og:description" content="How FactExtractor and MemoryUpdater keep memory coherent and non-redundant">
-  <meta property="og:url" content="https://docs.threatrecall.ai/explanation/two-phase-pipeline/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="The Two-Phase Extraction Pipeline">
-  <meta name="twitter:description" content="How FactExtractor and MemoryUpdater keep memory coherent and non-redundant">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              The Two-Phase Extraction Pipeline
+              Two-phase extraction pipeline
             
           </span>
         </div>
@@ -279,11 +238,31 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+        <a href="../../how-to/configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -306,26 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -573,17 +529,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -622,62 +574,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/configure-opencti/" class="md-nav__link">
         
   
@@ -706,14 +602,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -762,42 +770,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -825,7 +805,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -902,146 +1078,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1049,119 +1085,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1210,286 +1134,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Two-Phase Pipeline
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Two-Phase Pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-problem-append-only-memory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Problem: Append-Only Memory
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-1-extraction-factextractor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 1: Extraction (FactExtractor)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#phase-2-update-memoryupdater" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 2: Update (MemoryUpdater)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-the-pipeline-affects-retrieval" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How the Pipeline Affects Retrieval
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#write-latency-fast-path-and-background-enrichment" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Write Latency: Fast Path and Background Enrichment
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-knobs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration Knobs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LLM Quick Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../stix-in-zettelforge/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    STIX in ZettelForge
+    Troubleshoot
   
 
     
@@ -1510,14 +1162,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../epistemic-tiers/" class="md-nav__link">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Epistemic Tiers
+    Extend ZettelForge
   
 
     
@@ -1538,42 +1190,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../llm-budgets-and-timeouts/" class="md-nav__link">
+      <a href="../../how-to/use-web-interface/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
+    Use web interface
   
 
     
@@ -1605,8 +1229,6 @@
     
     
       
-      
-        
       
     
     
@@ -1614,12 +1236,10 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -1637,8 +1257,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1655,14 +1275,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+      <a href="../../reference/terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1711,174 +1331,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/memory-manager-api/" class="md-nav__link">
         
   
@@ -1907,90 +1359,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/stix-schema/" class="md-nav__link">
         
   
@@ -1998,7 +1366,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -2026,7 +1394,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2054,7 +1562,484 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem-append-only-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The problem: append-only memory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-extraction-factextractor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: extraction (FactExtractor)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-update-memoryupdater" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: update (MemoryUpdater)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-the-pipeline-affects-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How the pipeline affects retrieval
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write-latency-fast-path-and-background-enrichment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write latency: fast path and background enrichment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-not-modify-or-delete-old-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why not modify or delete old notes?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-enable-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to enable evolution
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
   
 
     
@@ -2087,17 +2072,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2156,6 +2137,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2248,14 +2279,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2269,113 +2300,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2400,17 +2327,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2507,7 +2430,7 @@
   <a href="#the-problem-append-only-memory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Problem: Append-Only Memory
+        The problem: append-only memory
       
     </span>
   </a>
@@ -2518,7 +2441,7 @@
   <a href="#phase-1-extraction-factextractor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 1: Extraction (FactExtractor)
+        Phase 1: extraction (FactExtractor)
       
     </span>
   </a>
@@ -2529,7 +2452,7 @@
   <a href="#phase-2-update-memoryupdater" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 2: Update (MemoryUpdater)
+        Phase 2: update (MemoryUpdater)
       
     </span>
   </a>
@@ -2540,7 +2463,7 @@
   <a href="#how-the-pipeline-affects-retrieval" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How the Pipeline Affects Retrieval
+        How the pipeline affects retrieval
       
     </span>
   </a>
@@ -2551,7 +2474,7 @@
   <a href="#write-latency-fast-path-and-background-enrichment" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Write Latency: Fast Path and Background Enrichment
+        Write latency: fast path and background enrichment
       
     </span>
   </a>
@@ -2559,10 +2482,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-knobs" class="md-nav__link">
+  <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration Knobs
+        Configuration
       
     </span>
   </a>
@@ -2570,10 +2493,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#why-not-modify-or-delete-old-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        Why not modify or delete old notes?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-enable-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to enable evolution
       
     </span>
   </a>
@@ -2600,129 +2534,182 @@
   
 
 
-<h1 id="the-two-phase-extraction-pipeline">The Two-Phase Extraction Pipeline<a class="headerlink" href="#the-two-phase-extraction-pipeline" title="Permanent link">&para;</a></h1>
-<p>ZettelForge's memory evolution pipeline — activated via <code>remember(..., evolve=True)</code> — implements a Mem0-inspired two-phase process that solves the fundamental problem of append-only memory systems: redundancy, contradiction, and noise. The MCP server and web API enable evolution by default. The underlying <code>remember_with_extraction()</code> method can also be called directly for programmatic use.</p>
-<h2 id="the-problem-append-only-memory">The Problem: Append-Only Memory<a class="headerlink" href="#the-problem-append-only-memory" title="Permanent link">&para;</a></h2>
-<p>The naive approach to agent memory is simple: store everything. Every conversation turn, every report paragraph, every observation — append it to the note store and let vector search find what's relevant later.</p>
-<p>This breaks at scale:</p>
+<h1 id="the-two-phase-extraction-pipeline">The two-phase extraction pipeline<a class="headerlink" href="#the-two-phase-extraction-pipeline" title="Permanent link">&para;</a></h1>
+<p>ZettelForge's memory evolution pipeline — activated with <code>evolve=True</code> on <code>remember()</code> — implements a Mem0-inspired two-phase process that solves the core problem of append-only memory systems: redundancy, contradiction, and noise accumulate over time until retrieval quality degrades.</p>
+<p>The MCP server (<code>zettelforge_remember</code>) and web API (<code>POST /api/remember</code>) both enable evolution by default. You can also call <code>remember_with_extraction()</code> directly for programmatic use.</p>
+<p><strong>Prerequisites</strong>: familiarity with <code>remember()</code> and <code>recall()</code> as covered in the <a href="../../tutorials/01-quickstart/">Quickstart</a>.</p>
+<h2 id="the-problem-append-only-memory">The problem: append-only memory<a class="headerlink" href="#the-problem-append-only-memory" title="Permanent link">&para;</a></h2>
+<p>The naive approach to agent memory is to store everything: every report paragraph, every conversation turn. Append it and let vector search surface what's relevant later.</p>
+<p>This fails at scale in three ways:</p>
 <ul>
 <li><strong>Redundancy</strong>: "APT28 uses Cobalt Strike" stored 47 times across different reports. Each retrieval returns duplicate context, wasting LLM tokens.</li>
-<li><strong>Contradiction</strong>: "Server ALPHA is compromised" stored in January, "Server ALPHA has been remediated" stored in March. Both are retrievable. The agent doesn't know which is current.</li>
-<li><strong>Noise</strong>: "Hi, how's the analysis going?" stored alongside "APT28 shifted to edge device exploitation." Vector search treats them equally.</li>
+<li><strong>Contradiction</strong>: "Server ALPHA is compromised" from January and "Server ALPHA has been remediated" from March are both retrievable. Without evolution, both surface and the agent cannot determine which is current.</li>
+<li><strong>Noise</strong>: Greetings and meta-commentary stored alongside intelligence. Vector search has no way to distinguish them from substantive content.</li>
 </ul>
-<p>Mem0's research demonstrated that selective extraction with update operations reduces these problems dramatically — achieving 66.9% accuracy on LOCOMO versus 52.9% for full-context approaches, with 90% token savings.</p>
-<h2 id="phase-1-extraction-factextractor">Phase 1: Extraction (FactExtractor)<a class="headerlink" href="#phase-1-extraction-factextractor" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>graph LR
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    Raw[&quot;Raw Content&lt;br/&gt;&#39;APT28 has shifted tactics.&lt;br/&gt;They dropped DROPBEAR and now&lt;br/&gt;exploit edge devices using&lt;br/&gt;compromised credentials.&#39;&quot;]
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    LLM[&quot;LLM&lt;br/&gt;(qwen2.5:3b)&quot;]
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    Facts[&quot;Extracted Facts&lt;br/&gt;1. &#39;APT28 shifted to edge devices&#39; (imp: 8)&lt;br/&gt;2. &#39;DROPBEAR no longer in use&#39; (imp: 7)&lt;br/&gt;3. &#39;Compromised credentials used&#39; (imp: 6)&quot;]
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    Raw --&gt; LLM --&gt; Facts
-</code></pre></div>
-<p>The <code>FactExtractor</code> takes raw content and distills it into concise, atomic facts. Each fact gets an importance score (1-10). The LLM is prompted to:</p>
+<p>Mem0's research on memory management for AI agents (mem0.ai/paper) demonstrated that selective extraction with update operations substantially reduces these problems compared to full-context storage approaches.</p>
+<h2 id="phase-1-extraction-factextractor">Phase 1: extraction (FactExtractor)<a class="headerlink" href="#phase-1-extraction-factextractor" title="Permanent link">&para;</a></h2>
+<p><code>FactExtractor</code> takes raw content and distills it into concise, atomic facts. Each fact gets an importance score from 1 to 10. The LLM prompt instructs the extractor to:</p>
 <ul>
 <li>Extract only facts worth remembering long-term</li>
 <li>Skip greetings, filler, and meta-commentary</li>
 <li>Score each fact by importance to the intelligence domain</li>
 </ul>
 <p>Facts below <code>min_importance</code> (default: 3) are discarded before Phase 2. This is the first filter — low-value content never reaches the memory store.</p>
-<p><strong>Fallback behavior</strong>: If the LLM is unreachable, the extractor returns the raw content (truncated to 500 characters) as a single fact with importance 5. The system degrades to append-only rather than failing.</p>
-<h2 id="phase-2-update-memoryupdater">Phase 2: Update (MemoryUpdater)<a class="headerlink" href="#phase-2-update-memoryupdater" title="Permanent link">&para;</a></h2>
-<p>For each extracted fact, the updater determines what to do:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>graph TB
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    Fact[&quot;Extracted Fact:&lt;br/&gt;&#39;APT28 no longer uses DROPBEAR&#39;&quot;]
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    Search[&quot;Vector Search&lt;br/&gt;top-3 similar notes&quot;]
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    Fact --&gt; Search
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    Search --&gt; Decision{Similar notes found?}
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    Decision --&gt;|No| ADD[&quot;ADD&lt;br/&gt;Store as new note&quot;]
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    Decision --&gt;|Yes| LLM2[&quot;LLM compares&lt;br/&gt;fact vs existing&quot;]
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    LLM2 --&gt; UPDATE[&quot;UPDATE&lt;br/&gt;Store new, supersede old&quot;]
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    LLM2 --&gt; DELETE[&quot;CORRECTED&lt;br/&gt;Store correction, supersede old&quot;]
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    LLM2 --&gt; NOOP[&quot;NOOP&lt;br/&gt;Already captured&quot;]
+<p><strong>Configuration:</strong></p>
+<ul>
+<li><code>model</code> (default: <code>qwen2.5:3b</code>) — the LLM used for extraction</li>
+<li><code>max_facts</code> (default: 5 per <code>remember_with_extraction</code> call) — caps facts extracted per input</li>
+</ul>
+<p><strong>Fallback behavior</strong>: if the LLM is unreachable, the extractor returns the raw content (first 500 characters) as a single fact with importance 5. The system degrades to append-only rather than dropping the write.</p>
+<p><strong>Example input:</strong></p>
+<div class="highlight"><pre><span></span><code>APT28 has shifted tactics. They dropped DROPBEAR and now exploit edge devices
+using compromised credentials.
 </code></pre></div>
-<p>The four operations:</p>
+<p><strong>Example extracted facts (requires configured LLM):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span><span class="nt">&quot;fact&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 shifted to edge device exploitation&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;importance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="nt">&quot;fact&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 dropped DROPBEAR malware&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;importance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="nt">&quot;fact&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 uses compromised credentials for edge access&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;importance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<h2 id="phase-2-update-memoryupdater">Phase 2: update (MemoryUpdater)<a class="headerlink" href="#phase-2-update-memoryupdater" title="Permanent link">&para;</a></h2>
+<p>For each extracted fact that passes the importance threshold, the updater determines what to do with it relative to existing memory.</p>
+<p><strong>Step 1</strong>: Retrieve the top 3 most similar existing notes via vector search.</p>
+<p><strong>Step 2</strong>: If no similar notes exist, the operation is <code>added</code>. If similar notes exist, the LLM compares the new fact against them and decides one of four operations:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Operation</th>
+<th style="text-align: left;">Status returned</th>
 <th style="text-align: left;">When</th>
 <th style="text-align: left;">What happens</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>ADD</strong></td>
+<td style="text-align: left;"><code>added</code></td>
 <td style="text-align: left;">No similar notes exist</td>
-<td style="text-align: left;">New note created in LanceDB, entities added to TypeDB</td>
+<td style="text-align: left;">New note stored; entities indexed in SQLite and LanceDB</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>UPDATE</strong></td>
-<td style="text-align: left;">Fact refines existing note</td>
-<td style="text-align: left;">New note created, old note marked <code>superseded_by</code></td>
+<td style="text-align: left;"><code>updated</code></td>
+<td style="text-align: left;">Fact refines an existing note</td>
+<td style="text-align: left;">New note stored; old note marked <code>superseded_by</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>CORRECTED</strong></td>
-<td style="text-align: left;">Fact contradicts existing note</td>
-<td style="text-align: left;">Correction note created (source_type="correction"), old note superseded</td>
+<td style="text-align: left;"><code>corrected</code></td>
+<td style="text-align: left;">Fact contradicts an existing note</td>
+<td style="text-align: left;">Correction note stored; old note marked <code>superseded_by</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>NOOP</strong></td>
+<td style="text-align: left;"><code>noop</code></td>
 <td style="text-align: left;">Fact already captured</td>
 <td style="text-align: left;">Nothing stored</td>
 </tr>
 </tbody>
 </table>
-<p><strong>The key insight</strong>: the UPDATE and CORRECTED operations don't modify or delete old notes. They create new notes and mark old ones as superseded. This preserves the full history (Zettelkasten principle: evolution over deletion) while ensuring <code>recall()</code> returns current intelligence by default.</p>
-<h2 id="how-the-pipeline-affects-retrieval">How the Pipeline Affects Retrieval<a class="headerlink" href="#how-the-pipeline-affects-retrieval" title="Permanent link">&para;</a></h2>
+<p>The <code>updated</code> and <code>corrected</code> paths never modify or delete old notes. They create new notes and mark old ones as <code>superseded_by</code>. This preserves the full history — consistent with the Zettelkasten principle of evolution over deletion — while ensuring <code>recall()</code> returns current intelligence by default.</p>
+<p><code>remember_with_extraction()</code> returns a list of <code>(MemoryNote | None, status)</code> tuples, one per extracted fact. Status is one of <code>"added"</code>, <code>"updated"</code>, <code>"corrected"</code>, or <code>"noop"</code>.</p>
+<h2 id="how-the-pipeline-affects-retrieval">How the pipeline affects retrieval<a class="headerlink" href="#how-the-pipeline-affects-retrieval" title="Permanent link">&para;</a></h2>
 <p>The pipeline's filtering and deduplication directly improve retrieval quality:</p>
 <table>
 <thead>
 <tr>
+<th style="text-align: left;">Scenario</th>
 <th style="text-align: left;">Without pipeline</th>
 <th style="text-align: left;">With pipeline</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">47 notes about "APT28 uses Cobalt Strike"</td>
-<td style="text-align: left;">1 authoritative note (46 NOOP'd)</td>
+<td style="text-align: left;">Repeated reporting on APT28/Cobalt Strike</td>
+<td style="text-align: left;">47 separate notes</td>
+<td style="text-align: left;">1 authoritative note (46 noop'd)</td>
 </tr>
 <tr>
-<td style="text-align: left;">Contradicting notes about server status</td>
-<td style="text-align: left;">Old note superseded, only current returned</td>
+<td style="text-align: left;">Contradictory server status notes</td>
+<td style="text-align: left;">Both retrieved equally</td>
+<td style="text-align: left;">Old note superseded; only current returned</td>
 </tr>
 <tr>
-<td style="text-align: left;">Greeting messages mixed with intel</td>
-<td style="text-align: left;">Greetings filtered by min_importance</td>
-</tr>
-<tr>
-<td style="text-align: left;">~26K tokens per retrieval context</td>
-<td style="text-align: left;">~2K tokens per retrieval context</td>
+<td style="text-align: left;">Greeting mixed with intelligence</td>
+<td style="text-align: left;">Retrieved as a note</td>
+<td style="text-align: left;">Filtered at min_importance</td>
 </tr>
 </tbody>
 </table>
-<p>The token savings cascade: fewer, more relevant notes in the retrieval context means the synthesis LLM produces more focused answers.</p>
-<h2 id="write-latency-fast-path-and-background-enrichment">Write Latency: Fast Path and Background Enrichment<a class="headerlink" href="#write-latency-fast-path-and-background-enrichment" title="Permanent link">&para;</a></h2>
-<p><code>remember()</code> uses a dual-stream write path: the fast path persists the note and returns in ~45ms, while causal enrichment (triple extraction, graph edge updates) is deferred to a background worker. Pass <code>sync=True</code> if you need enrichment to be visible before your next <code>recall()</code>.</p>
-<h2 id="configuration-knobs">Configuration Knobs<a class="headerlink" href="#configuration-knobs" title="Permanent link">&para;</a></h2>
-<p>Two parameters control the pipeline's selectivity:</p>
+<p>Fewer, more relevant notes in the retrieval context means the synthesis LLM produces more focused answers and uses fewer tokens per response.</p>
+<h2 id="write-latency-fast-path-and-background-enrichment">Write latency: fast path and background enrichment<a class="headerlink" href="#write-latency-fast-path-and-background-enrichment" title="Permanent link">&para;</a></h2>
+<p><code>remember()</code> uses a dual-stream write path:</p>
 <ul>
-<li><strong><code>max_facts</code></strong> (default: 5): Maximum facts extracted per input. Higher values capture more from long reports but increase LLM calls in Phase 2.</li>
-<li><strong><code>min_importance</code></strong> (default: 3): Threshold below which facts are discarded. Raising this (e.g., to 7) keeps only high-confidence intel. Lowering it (e.g., to 1) stores more context at the cost of noise.</li>
+<li><strong>Fast path</strong>: embedding, SQLite storage, LanceDB vector write, entity index update, heuristic knowledge graph edges. Returns in approximately 45 ms.</li>
+<li><strong>Background (slow) path</strong>: LLM causal triple extraction, deferred to a background worker. Not required for the call to return.</li>
 </ul>
-<p>For report ingestion via <code>remember_report()</code>, these are applied per chunk — a 9,000-character report split into 3 chunks gets up to 15 facts (5 per chunk).</p>
-<h2 id="llm-quick-reference">LLM Quick Reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
-<p>ZettelForge's two-phase extraction pipeline (remember_with_extraction) replaces append-only storage with selective, deduplicated ingestion. Phase 1 (FactExtractor) uses an LLM (default qwen2.5:3b) to distill raw content into atomic facts with importance scores (1-10); facts below min_importance (default 3) are discarded. Phase 2 (MemoryUpdater) compares each surviving fact to the top-3 most similar existing notes via vector search. If no similar notes exist, the operation is ADD (new note created). If similar notes exist, the LLM compares the new fact to existing content and decides: UPDATE (new note supersedes old), CORRECTED (contradiction — correction note supersedes old), or NOOP (already captured). UPDATE and CORRECTED never delete old notes — they create new notes and mark old ones superseded_by, preserving history while ensuring recall() returns current intelligence. The pipeline is configured via max_facts (default 5, caps facts per extraction) and min_importance (default 3, filters low-value content). For remember_report(), these apply per chunk — long reports are split on sentence boundaries at chunk_size (default 3000 chars) and each chunk runs the full two-phase pipeline independently. The fallback on LLM failure is to store raw content as a single fact with importance 5, degrading to append-only rather than losing data.</p>
+<p>Pass <code>sync=True</code> if you need causal enrichment to be visible before your next <code>recall()</code>.</p>
+<p>When <code>evolve=True</code>, the full Phase 1 + Phase 2 cycle runs on the calling thread and returns before control is released.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>Two parameters control the pipeline's selectivity:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>max_facts</code></td>
+<td style="text-align: left;">5 (<code>remember_with_extraction</code>), 10 (<code>remember_report</code>)</td>
+<td style="text-align: left;">Maximum facts extracted per call. Higher values capture more from long reports but add LLM calls in Phase 2.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>min_importance</code></td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">Threshold below which facts are discarded. Raise to 7 for high-confidence-only ingestion; lower to 1 to store more context at the cost of noise.</td>
+</tr>
+</tbody>
+</table>
+<p>For report ingestion via <code>remember_report()</code>, <code>max_facts</code> defaults to 10 and <code>chunk_size</code> defaults to 3,000 characters. A 9,000-character report split into 3 chunks gets up to 30 facts (10 per chunk) processed through the full two-phase pipeline independently per chunk.</p>
+<h2 id="why-not-modify-or-delete-old-notes">Why not modify or delete old notes?<a class="headerlink" href="#why-not-modify-or-delete-old-notes" title="Permanent link">&para;</a></h2>
+<p>Each note in ZettelForge carries a temporal identity: it reflects what was believed true at the time of ingestion. Deleting it loses that provenance. Instead, the pipeline:</p>
+<ol>
+<li>Creates a new note capturing the current understanding.</li>
+<li>Marks the old note as <code>superseded_by</code> with the new note's ID.</li>
+</ol>
+<p><code>recall()</code> filters superseded notes by default. Analysts who need the full history can pass <code>include_superseded=True</code>. This design mirrors how intelligence assessments work in practice: previous assessments are not destroyed when new ones arrive, but they are no longer the authoritative answer.</p>
+<h2 id="when-to-enable-evolution">When to enable evolution<a class="headerlink" href="#when-to-enable-evolution" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Scenario</th>
+<th style="text-align: left;">Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Ingesting CTI reports over time</td>
+<td style="text-align: left;"><code>remember_report()</code> — chunked, evolved by default</td>
+</tr>
+<tr>
+<td style="text-align: left;">One-time factual storage</td>
+<td style="text-align: left;"><code>remember(evolve=False)</code> — skip extraction overhead</td>
+</tr>
+<tr>
+<td style="text-align: left;">Conversational agent with long context</td>
+<td style="text-align: left;"><code>remember(evolve=True)</code> — removes conversational noise</td>
+</tr>
+<tr>
+<td style="text-align: left;">Bulk historical import</td>
+<td style="text-align: left;"><code>remember(evolve=False)</code> — speed; run evolution later via <code>evolve_note()</code></td>
+</tr>
+</tbody>
+</table>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2766,12 +2753,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

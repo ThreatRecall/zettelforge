@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Run the RFC-016 OSINT executor, persist collector output into the knowledge graph, and keep active scanning gated behind explicit opt-in.">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -15,21 +15,21 @@
         <link rel="canonical" href="https://docs.threatrecall.ai/how-to/passive-osint-enrichment/">
       
       
-        <link rel="prev" href="../resolve-aliases/">
+        <link rel="prev" href="../integrate-with-langchain/">
       
       
-        <link rel="next" href="../run-temporal-query/">
+        <link rel="next" href="../upgrade/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Passive OSINT Enrichment - ZettelForge Documentation</title>
+        <title>Passive OSINT enrichment - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/how-to/passive-osint-enrichment/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="Passive OSINT Enrichment">
-  <meta property="og:description" content="Run the RFC-016 OSINT executor, persist collector output into the knowledge graph, and keep active scanning gated behind explicit opt-in.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/how-to/passive-osint-enrichment/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Passive OSINT Enrichment">
-  <meta name="twitter:description" content="Run the RFC-016 OSINT executor, persist collector output into the knowledge graph, and keep active scanning gated behind explicit opt-in.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Passive OSINT Enrichment
+              Passive OSINT enrichment
             
           </span>
         </div>
@@ -281,11 +240,31 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../build-extensions/" class="md-tabs__link">
+        <a href="../configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -306,26 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -577,8 +533,6 @@
         
         
       
-      
-        
       
     
     
@@ -625,62 +579,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../configure-opencti/" class="md-nav__link">
         
   
@@ -709,14 +607,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -765,42 +775,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-yara-ingestion/" class="md-nav__link">
+      <a href="../configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -828,7 +810,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -902,146 +1080,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -1061,7 +1099,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
+    Passive OSINT enrichment
   
 
     
@@ -1079,7 +1117,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
+    Passive OSINT enrichment
   
 
     
@@ -1105,10 +1143,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-seed-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported seed types
       
     </span>
   </a>
@@ -1124,13 +1173,41 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Run a passive enrichment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#result-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Result shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#dry-run-or-narrow-scope" class="md-nav__link">
+  <a href="#dry-run-without-kg-writes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dry-run or narrow scope
+        Dry-run without KG writes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-only-specific-collectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run only specific collectors
       
     </span>
   </a>
@@ -1175,70 +1252,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../run-temporal-query/" class="md-nav__link">
+      <a href="../upgrade/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
+    Upgrade
   
 
     
@@ -1287,14 +1308,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../upgrade/" class="md-nav__link">
+      <a href="../build-extensions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Upgrade
+    Extend ZettelForge
   
 
     
@@ -1315,14 +1336,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-detection-rules/" class="md-nav__link">
+      <a href="../use-web-interface/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
+    Use web interface
   
 
     
@@ -1355,17 +1376,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -1375,7 +1392,7 @@
   <span class="md-ellipsis">
     
   
-    Concepts
+    Reference
   
 
     
@@ -1391,235 +1408,6 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Two-Phase Pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reference
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
     Reference
   
 
@@ -1633,14 +1421,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+      <a href="../../reference/terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1689,174 +1477,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/memory-manager-api/" class="md-nav__link">
         
   
@@ -1885,90 +1505,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/stix-schema/" class="md-nav__link">
         
   
@@ -1976,7 +1512,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -2004,7 +1540,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2032,7 +1708,119 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
   
 
     
@@ -2065,7 +1853,230 @@
     
       
       
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2073,9 +2084,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2134,6 +2143,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2226,14 +2285,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2247,113 +2306,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2378,17 +2333,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2482,10 +2433,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-seed-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported seed types
       
     </span>
   </a>
@@ -2501,13 +2463,41 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Run a passive enrichment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#result-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Result shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#dry-run-or-narrow-scope" class="md-nav__link">
+  <a href="#dry-run-without-kg-writes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dry-run or narrow scope
+        Dry-run without KG writes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-only-specific-collectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run only specific collectors
       
     </span>
   </a>
@@ -2556,52 +2546,164 @@
   
 
 
-<h1 id="passive-osint-enrichment">Passive OSINT Enrichment<a class="headerlink" href="#passive-osint-enrichment" title="Permanent link">&para;</a></h1>
-<p>ZettelForge ships a passive OSINT executor that runs registered collectors, validates each tuple against the ontology, canonicalizes entity values, and persists nodes and edges into the knowledge graph.</p>
-<h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
-<p>Install the OSINT extra when you need DNS, WHOIS, or IP/ASN enrichment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;zettelforge[osint]&quot;</span>
-</code></pre></div>
-<p>The base package already includes <code>httpx</code>, so passive BGPView lookups work with the standard install. The OSINT extra adds <code>dnspython</code>, <code>python-whois</code>, and <code>ipwhois</code> for the DNS and WHOIS collectors.</p>
-<h2 id="run-a-passive-enrichment">Run a passive enrichment<a class="headerlink" href="#run-a-passive-enrichment" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.osint</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_osint_collection</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">result</span> <span class="o">=</span> <span class="n">run_osint_collection</span><span class="p">(</span><span class="s2">&quot;DomainName&quot;</span><span class="p">,</span> <span class="s2">&quot;Example.COM.&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">canonical_input_value</span><span class="p">)</span>  <span class="c1"># example.com</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">persisted_count</span><span class="p">)</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error_count</span><span class="p">)</span>
-</code></pre></div>
-<p>The executor accepts these seed types: <code>DomainName</code>, <code>IPv4Address</code>, <code>IPv6Address</code>, <code>ASNumber</code>, and <code>Netblock</code>.</p>
-<p>Common passive flows:</p>
+<h1 id="passive-osint-enrichment">Passive OSINT enrichment<a class="headerlink" href="#passive-osint-enrichment" title="Permanent link">&para;</a></h1>
+<p>Use ZettelForge's OSINT executor to enrich seed entities — domains, IP addresses, ASNs, and IP blocks — with infrastructure intelligence gathered from passive sources. The executor runs registered collectors, validates each result against the ontology, canonicalizes entity values, and writes nodes and edges into the knowledge graph.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>DomainName</code> seeds drive DNS, WHOIS, and certificate transparency collectors.</li>
-<li><code>IPv4Address</code> and <code>IPv6Address</code> seeds drive WHOIS enrichment.</li>
-<li><code>ASNumber</code> seeds drive passive BGP prefix lookups.</li>
+<li>ZettelForge installed and initialized.</li>
+<li>For DNS, WHOIS, and certificate transparency collectors, install the OSINT extra:</li>
 </ul>
-<h2 id="dry-run-or-narrow-scope">Dry-run or narrow scope<a class="headerlink" href="#dry-run-or-narrow-scope" title="Permanent link">&para;</a></h2>
-<p>Pass <code>persist=False</code> to validate collector output without writing to the knowledge graph:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.osint</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_osint_collection</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">result</span> <span class="o">=</span> <span class="n">run_osint_collection</span><span class="p">(</span><span class="s2">&quot;ASNumber&quot;</span><span class="p">,</span> <span class="s2">&quot;AS15169&quot;</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;zettelforge[osint]&quot;</span>
 </code></pre></div>
-<p>Use <code>collector_names=(...)</code> when you want to run only specific collectors from the registry.</p>
+<p>The <code>[osint]</code> extra adds <code>dnspython</code>, <code>python-whois</code>, and <code>ipwhois</code>. The base package already includes <code>httpx</code>, so the BGP collector works without it.</p>
+<h2 id="supported-seed-types">Supported seed types<a class="headerlink" href="#supported-seed-types" title="Permanent link">&para;</a></h2>
+<p>The executor accepts five seed types: <code>DomainName</code>, <code>IPv4Address</code>, <code>IPv6Address</code>, <code>ASNumber</code>, and <code>Netblock</code>. Seed type must match exactly — the executor raises <code>ValueError</code> for any other value.</p>
+<p>Collectors registered per seed type (Phase 1 / 1.5):</p>
+<table>
+<thead>
+<tr>
+<th>Seed type</th>
+<th>Collectors run</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DomainName</code></td>
+<td><code>dns_collector</code>, <code>whois_collector</code>, <code>cert_collector</code>, <code>builtwith_collector</code>, <code>wappalyzer_collector</code></td>
+</tr>
+<tr>
+<td><code>IPv4Address</code></td>
+<td><code>whois_collector</code>, <code>port_scanner</code> (active-gated; see <a href="#safety-controls">Safety controls</a>)</td>
+</tr>
+<tr>
+<td><code>IPv6Address</code></td>
+<td><code>whois_collector</code>, <code>port_scanner</code> (active-gated)</td>
+</tr>
+<tr>
+<td><code>ASNumber</code></td>
+<td><code>bgp_collector</code></td>
+</tr>
+<tr>
+<td><code>Netblock</code></td>
+<td>None registered yet — valid seed type but no collectors return results today</td>
+</tr>
+</tbody>
+</table>
+<h2 id="run-a-passive-enrichment">Run a passive enrichment<a class="headerlink" href="#run-a-passive-enrichment" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.osint</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_osint_collection</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">run_osint_collection</span><span class="p">(</span><span class="s2">&quot;DomainName&quot;</span><span class="p">,</span> <span class="s2">&quot;Example.COM.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">canonical_input_value</span><span class="p">)</span>  <span class="c1"># example.com</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">collectors_run</span><span class="p">)</span>         <span class="c1"># [&#39;dns_collector&#39;, &#39;cert_collector&#39;, ...]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">persisted_count</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error_count</span><span class="p">)</span>
+</code></pre></div>
+<p>Input values are canonicalized before any KG writes: <code>"Example.COM."</code> becomes <code>"example.com"</code>, <code>"AS15169"</code> becomes <code>"15169"</code>. Alternate spellings of the same entity collapse onto the same KG node.</p>
+<p>The function also accepts a <code>collect_osint()</code> alias, which is identical — some integrations prefer the verb-first naming.</p>
+<h3 id="result-shape">Result shape<a class="headerlink" href="#result-shape" title="Permanent link">&para;</a></h3>
+<p><code>run_osint_collection</code> returns an <code>OSINTCollectionResult</code> dataclass:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>input_entity_type</code></td>
+<td><code>str</code></td>
+<td>Seed type you passed</td>
+</tr>
+<tr>
+<td><code>input_value</code></td>
+<td><code>str</code></td>
+<td>Seed value you passed</td>
+</tr>
+<tr>
+<td><code>canonical_input_value</code></td>
+<td><code>str</code></td>
+<td>Canonicalized form</td>
+</tr>
+<tr>
+<td><code>seed_node_id</code></td>
+<td><code>str \| None</code></td>
+<td>KG node ID for the seed (<code>None</code> when <code>persist=False</code>)</td>
+</tr>
+<tr>
+<td><code>collectors_run</code></td>
+<td><code>list[str]</code></td>
+<td>Names of collectors that ran</td>
+</tr>
+<tr>
+<td><code>tuples_collected</code></td>
+<td><code>int</code></td>
+<td>Total tuples emitted across all collectors</td>
+</tr>
+<tr>
+<td><code>persisted_count</code></td>
+<td><code>int</code></td>
+<td>Tuples actually written to the KG</td>
+</tr>
+<tr>
+<td><code>error_count</code></td>
+<td><code>int</code></td>
+<td>Collector or tuple errors (non-fatal)</td>
+</tr>
+<tr>
+<td><code>errors</code></td>
+<td><code>list[OSINTExecutionError]</code></td>
+<td>Per-collector error detail</td>
+</tr>
+<tr>
+<td><code>started_at</code></td>
+<td><code>str</code></td>
+<td>ISO-8601 timestamp</td>
+</tr>
+<tr>
+<td><code>finished_at</code></td>
+<td><code>str \| None</code></td>
+<td>ISO-8601 timestamp</td>
+</tr>
+</tbody>
+</table>
+<p>A failing collector does not abort the run. Its error is captured in <code>result.errors</code> and execution continues with the remaining collectors.</p>
+<h2 id="dry-run-without-kg-writes">Dry-run without KG writes<a class="headerlink" href="#dry-run-without-kg-writes" title="Permanent link">&para;</a></h2>
+<p>Pass <code>persist=False</code> to run collectors and validate output without writing to the knowledge graph. Useful for testing new seeds or inspecting what a run will produce:</p>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">run_osint_collection</span><span class="p">(</span><span class="s2">&quot;ASNumber&quot;</span><span class="p">,</span> <span class="s2">&quot;AS15169&quot;</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># result.seed_node_id is None</span>
+<span class="c1"># result.persisted_count is 0</span>
+<span class="c1"># result.error_count shows any validation failures</span>
+</code></pre></div>
+<h2 id="run-only-specific-collectors">Run only specific collectors<a class="headerlink" href="#run-only-specific-collectors" title="Permanent link">&para;</a></h2>
+<p>Use <code>collector_names</code> to restrict which collectors run for a given seed:</p>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">run_osint_collection</span><span class="p">(</span>
+    <span class="s2">&quot;DomainName&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;example.com&quot;</span><span class="p">,</span>
+    <span class="n">collector_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dns_collector&quot;</span><span class="p">,</span> <span class="s2">&quot;cert_collector&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Any name not in the registry is silently skipped — no error is raised for an unknown collector name.</p>
 <h2 id="safety-controls">Safety controls<a class="headerlink" href="#safety-controls" title="Permanent link">&para;</a></h2>
-<p>Active port scanning stays disabled unless the operator explicitly enables it:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_OSINT_ACTIVE_SCAN</span><span class="o">=</span><span class="m">1</span>
+<p>Active port scanning is off by default. Without an explicit opt-in, the port scanner collector returns an empty result and sends no packets:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_OSINT_ACTIVE_SCAN</span><span class="o">=</span><span class="m">1</span>
 </code></pre></div>
-<p>Without that flag, the port scanner returns an empty result and no probe is sent. Keep that flag unset unless you own the target network or have explicit authorization to scan it.</p>
+<p>Set this variable only when you own the target network or have written authorization to scan it. Accepted values: <code>1</code>, <code>true</code>, <code>TRUE</code>, <code>yes</code>. Anything else (including an empty string) keeps scanning off.</p>
+<p>Even with the flag set, the port scanner requires <code>python-nmap</code> and the <code>nmap</code> binary. If either is missing, the collector returns an empty result and logs a warning — it never raises.</p>
 <h2 id="what-gets-persisted">What gets persisted<a class="headerlink" href="#what-gets-persisted" title="Permanent link">&para;</a></h2>
-<p>The executor writes canonical entity values to the graph, so duplicate spellings collapse onto the same nodes. For example, <code>AS15169</code> and <code>15169</code> resolve to the same canonical ASN node, and alternate domain spellings register as aliases for the same canonical domain node.</p>
-<p>Errors are collected per collector or tuple. A single failing collector does not abort the run.</p>
+<p>The executor writes canonical entity values to the knowledge graph. Duplicate spellings collapse onto the same node. For example, <code>AS15169</code> and <code>15169</code> resolve to the same canonical ASN node (<code>15169</code>), and <code>Example.COM.</code> and <code>example.com</code> write to the same domain node.</p>
+<p>Each persisted tuple also writes a KG edge with an <code>osint: true</code> property and a <code>source</code> property set to the collector name, so you can later query which collector produced a given edge.</p>
+<div class="admonition note">
+<p class="admonition-title">Phase 2-5 collectors (in progress)</p>
+<p>Breach, social, and people enrichment collectors (HIBP, HaveIBeenPwned, Holehe, Hunter.io, and others) are registered in the transform registry but use seed types such as <code>EmailAddress</code>, <code>Alias</code>, and <code>Hashtag</code> that are not yet in <code>SUPPORTED_SEED_TYPES</code>. Passing those types raises <code>ValueError</code> today. Support for those seed types is in progress.</p>
+</div>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2645,12 +2747,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

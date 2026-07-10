@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="All STIX 2.1 entity types, relation types, role assignments, TypeDB functions, and entity type mappings defined in stix_core.tql and stix_rules.tql.">
+        <meta name="description" content="Entity types, note metadata fields, and knowledge graph relationship types used by ZettelForge's extraction and graph pipeline.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://docs.threatrecall.ai/reference/stix-schema/">
       
       
-        <link rel="prev" href="../sigma-schema-reference/">
+        <link rel="prev" href="../memory-manager-api/">
       
       
         <link rel="next" href="../web-api/">
@@ -24,12 +24,12 @@
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>STIX Ontology Schema Reference - ZettelForge Documentation</title>
+        <title>STIX schema reference - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/reference/stix-schema/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="STIX Ontology Schema Reference">
-  <meta property="og:description" content="All STIX 2.1 entity types, relation types, role assignments, TypeDB functions, and entity type mappings defined in stix_core.tql and stix_rules.tql.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/reference/stix-schema/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="STIX Ontology Schema Reference">
-  <meta name="twitter:description" content="All STIX 2.1 entity types, relation types, role assignments, TypeDB functions, and entity type mappings defined in stix_core.tql and stix_rules.tql.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -116,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#stix-ontology-schema-reference" class="md-skip">
+        <a href="#stix-schema-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              STIX Ontology Schema Reference
+              STIX schema reference
             
           </span>
         </div>
@@ -279,11 +238,33 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+        <a href="../../how-to/configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -304,28 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-    
-  
-  
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -573,17 +529,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -622,62 +574,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/configure-opencti/" class="md-nav__link">
         
   
@@ -706,14 +602,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -762,42 +770,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -825,7 +805,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -902,146 +1078,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1049,119 +1085,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1210,103 +1134,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
+    Troubleshoot
   
 
     
@@ -1327,14 +1162,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Two-Phase Pipeline
+    Extend ZettelForge
   
 
     
@@ -1355,98 +1190,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+      <a href="../../how-to/use-web-interface/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
+    Use web interface
   
 
     
@@ -1483,8 +1234,6 @@
         
         
       
-      
-        
       
     
     
@@ -1492,10 +1241,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -1513,8 +1262,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1531,14 +1280,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture-deep-dive/" class="md-nav__link">
+      <a href="../terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1587,174 +1336,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../memory-manager-api/" class="md-nav__link">
         
   
@@ -1763,90 +1344,6 @@
     
   
     Memory Manager API
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
   
 
     
@@ -1883,7 +1380,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -1901,7 +1398,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -1927,61 +1424,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#shared-attributes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Shared Attributes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Shared Attributes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#temporal-attributes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Temporal Attributes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cti-specific-attributes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CTI-Specific Attributes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#entity-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entity Types
+        Entity types
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Entity Types">
+    <nav class="md-nav" aria-label="Entity types">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#stix-domain-objects" class="md-nav__link">
+  <a href="#cti-entity-types-regex" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STIX Domain Objects
+        CTI entity types (regex)
       
     </span>
   </a>
@@ -1989,10 +1447,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zettel-note-bridge-entity" class="md-nav__link">
+  <a href="#ioc-entity-types-stix-cyber-observables-regex" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zettel Note (Bridge Entity)
+        IOC entity types / STIX Cyber Observables (regex)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conversational-entity-types-llm-ner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conversational entity types (LLM NER)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-type-aliases-in-recall-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity type aliases in recall methods
       
     </span>
   </a>
@@ -2005,44 +1485,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#relation-types" class="md-nav__link">
+  <a href="#note-metadata-stix-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Relation Types
+        Note metadata: STIX fields
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#entity-type-mapping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entity Type Mapping
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#typedb-functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TypeDB Functions
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="TypeDB Functions">
+    <nav class="md-nav" aria-label="Note metadata: STIX fields">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#get_aliases" class="md-nav__link">
+  <a href="#stix_confidence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        get_aliases
+        stix_confidence
       
     </span>
   </a>
@@ -2050,10 +1508,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get_tools_used" class="md-nav__link">
+  <a href="#tier" class="md-nav__link">
     <span class="md-ellipsis">
       
-        get_tools_used
+        tier
       
     </span>
   </a>
@@ -2061,10 +1519,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get_entity_notes" class="md-nav__link">
+  <a href="#tlp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        get_entity_notes
+        tlp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        confidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vuln-vulnerabilitymeta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vuln (VulnerabilityMeta)
       
     </span>
   </a>
@@ -2077,24 +1557,41 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#knowledge-graph-edge-types-in-memory" class="md-nav__link">
+  <a href="#knowledge-graph-relationship-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Knowledge Graph Edge Types (In-Memory)
+        Knowledge graph relationship types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Knowledge graph relationship types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#edge-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge types
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#ingest_relationship" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        ingest_relationship()
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2121,7 +1618,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2149,7 +1786,119 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
   
 
     
@@ -2182,7 +1931,230 @@
     
       
       
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2190,9 +2162,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2251,6 +2221,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2343,14 +2363,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2364,113 +2384,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2495,17 +2411,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2599,61 +2511,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#shared-attributes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Shared Attributes
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Shared Attributes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#temporal-attributes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Temporal Attributes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cti-specific-attributes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CTI-Specific Attributes
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#entity-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entity Types
+        Entity types
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Entity Types">
+    <nav class="md-nav" aria-label="Entity types">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#stix-domain-objects" class="md-nav__link">
+  <a href="#cti-entity-types-regex" class="md-nav__link">
     <span class="md-ellipsis">
       
-        STIX Domain Objects
+        CTI entity types (regex)
       
     </span>
   </a>
@@ -2661,10 +2534,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zettel-note-bridge-entity" class="md-nav__link">
+  <a href="#ioc-entity-types-stix-cyber-observables-regex" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Zettel Note (Bridge Entity)
+        IOC entity types / STIX Cyber Observables (regex)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conversational-entity-types-llm-ner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conversational entity types (LLM NER)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-type-aliases-in-recall-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity type aliases in recall methods
       
     </span>
   </a>
@@ -2677,44 +2572,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#relation-types" class="md-nav__link">
+  <a href="#note-metadata-stix-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Relation Types
+        Note metadata: STIX fields
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#entity-type-mapping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entity Type Mapping
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#typedb-functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TypeDB Functions
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="TypeDB Functions">
+    <nav class="md-nav" aria-label="Note metadata: STIX fields">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#get_aliases" class="md-nav__link">
+  <a href="#stix_confidence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        get_aliases
+        stix_confidence
       
     </span>
   </a>
@@ -2722,10 +2595,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get_tools_used" class="md-nav__link">
+  <a href="#tier" class="md-nav__link">
     <span class="md-ellipsis">
       
-        get_tools_used
+        tier
       
     </span>
   </a>
@@ -2733,10 +2606,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get_entity_notes" class="md-nav__link">
+  <a href="#tlp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        get_entity_notes
+        tlp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        confidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vuln-vulnerabilitymeta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vuln (VulnerabilityMeta)
       
     </span>
   </a>
@@ -2749,24 +2644,41 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#knowledge-graph-edge-types-in-memory" class="md-nav__link">
+  <a href="#knowledge-graph-relationship-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Knowledge Graph Edge Types (In-Memory)
+        Knowledge graph relationship types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Knowledge graph relationship types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#edge-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge types
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#ingest_relationship" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        ingest_relationship()
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2790,494 +2702,325 @@
   
 
 
-<h1 id="stix-ontology-schema-reference">STIX Ontology Schema Reference<a class="headerlink" href="#stix-ontology-schema-reference" title="Permanent link">&para;</a></h1>
-<p>Schema files: <code>src/zettelforge/schema/stix_core.tql</code>, <code>src/zettelforge/schema/stix_rules.tql</code></p>
+<h1 id="stix-schema-reference">STIX schema reference<a class="headerlink" href="#stix-schema-reference" title="Permanent link">&para;</a></h1>
+<p>ZettelForge recognizes STIX-aligned entity types during extraction, stores STIX
+metadata fields on every note, and maintains a knowledge graph of relationships
+between entities. This page describes all three.</p>
+<div class="admonition note">
+<p class="admonition-title">TypeDB STIX 2.1 ontology</p>
+<p>The full STIX 2.1 TypeDB ontology — including TypeQL entity hierarchies,
+relation types, and inference functions — is available in
+<a href="https://threatrecall.ai">ThreatRecall.ai</a>, the hosted SaaS. The OSS package
+stores entity references in SQLite and an in-memory graph; the data structures
+on this page cover that path.</p>
+</div>
 <hr />
-<h2 id="shared-attributes">Shared Attributes<a class="headerlink" href="#shared-attributes" title="Permanent link">&para;</a></h2>
-<p>All STIX Domain Objects inherit from the abstract <code>stix-domain-object</code> entity.</p>
+<h2 id="entity-types">Entity types<a class="headerlink" href="#entity-types" title="Permanent link">&para;</a></h2>
+<p>ZettelForge extracts entities from text when you call <code>remember()</code>. Two extraction
+paths run in sequence:</p>
+<ul>
+<li><strong>Regex fast-path</strong> — deterministic, no LLM required. Covers CTI and IOC types.</li>
+<li><strong>LLM NER</strong> — conversational types. Requires a configured LLM provider.</li>
+</ul>
+<h3 id="cti-entity-types-regex">CTI entity types (regex)<a class="headerlink" href="#cti-entity-types-regex" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Attribute</th>
-<th style="text-align: left;">TypeDB Type</th>
-<th style="text-align: left;">Description</th>
+<th>Entity type</th>
+<th>Example match</th>
+<th>Pattern</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>stix-id</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;">STIX identifier. <code>@key</code> on <code>stix-domain-object</code>.</td>
+<td><code>cve</code></td>
+<td><code>CVE-2024-1234</code></td>
+<td><code>CVE-\d{4}-\d{4,}</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>name</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;">Display name.</td>
+<td><code>intrusion_set</code></td>
+<td><code>APT28</code>, <code>UNC4990</code>, <code>TA505</code>, <code>FIN7</code></td>
+<td><code>(apt\|unc\|ta\|fin\|temp)\s*-?\s*\d+</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>description</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;">Free-text description.</td>
+<td><code>actor</code></td>
+<td><code>Lazarus</code>, <code>Sandworm</code>, <code>Volt Typhoon</code></td>
+<td>hardcoded known names</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>created-at</code></td>
-<td style="text-align: left;"><code>datetime</code></td>
-<td style="text-align: left;">Creation timestamp.</td>
+<td><code>tool</code></td>
+<td><code>Cobalt Strike</code>, <code>Mimikatz</code>, <code>BloodHound</code></td>
+<td>hardcoded known names</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>modified-at</code></td>
-<td style="text-align: left;"><code>datetime</code></td>
-<td style="text-align: left;">Last modification timestamp.</td>
+<td><code>campaign</code></td>
+<td><code>Operation Aurora</code></td>
+<td><code>operation\s+\w+</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>confidence</code></td>
-<td style="text-align: left;"><code>double</code></td>
-<td style="text-align: left;">Confidence score (0.0--1.0).</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>revoked</code></td>
-<td style="text-align: left;"><code>boolean</code></td>
-<td style="text-align: left;">Whether the object has been revoked.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>tier</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;">Epistemic tier: <code>A</code>, <code>B</code>, or <code>C</code>.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>importance</code></td>
-<td style="text-align: left;"><code>integer</code></td>
-<td style="text-align: left;">Importance score (1--10). Used by <code>zettel-note</code>.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>aliases</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;">Known aliases. Used by <code>threat-actor</code>.</td>
+<td><code>attack_pattern</code></td>
+<td><code>T1059</code>, <code>T1059.001</code></td>
+<td><code>T\d{4}(?:\.\d{3})?</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="temporal-attributes">Temporal Attributes<a class="headerlink" href="#temporal-attributes" title="Permanent link">&para;</a></h3>
+<h3 id="ioc-entity-types-stix-cyber-observables-regex">IOC entity types / STIX Cyber Observables (regex)<a class="headerlink" href="#ioc-entity-types-stix-cyber-observables-regex" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Attribute</th>
-<th style="text-align: left;">TypeDB Type</th>
-<th style="text-align: left;">Used By</th>
+<th>Entity type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>valid-from</code></td>
-<td style="text-align: left;"><code>datetime</code></td>
-<td style="text-align: left;"><code>indicator</code>, <code>uses</code>, <code>targets</code></td>
+<td><code>ipv4</code></td>
+<td>IPv4 address</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>valid-until</code></td>
-<td style="text-align: left;"><code>datetime</code></td>
-<td style="text-align: left;"><code>indicator</code>, <code>uses</code>, <code>targets</code></td>
+<td><code>domain</code></td>
+<td>Registered domain name</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>first-observed</code></td>
-<td style="text-align: left;"><code>datetime</code></td>
-<td style="text-align: left;"><code>campaign</code></td>
+<td><code>url</code></td>
+<td>HTTP/HTTPS URL</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>last-observed</code></td>
-<td style="text-align: left;"><code>datetime</code></td>
-<td style="text-align: left;"><code>campaign</code></td>
+<td><code>md5</code></td>
+<td>32-character hex hash</td>
+</tr>
+<tr>
+<td><code>sha1</code></td>
+<td>40-character hex hash</td>
+</tr>
+<tr>
+<td><code>sha256</code></td>
+<td>64-character hex hash</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Email address</td>
 </tr>
 </tbody>
 </table>
-<h3 id="cti-specific-attributes">CTI-Specific Attributes<a class="headerlink" href="#cti-specific-attributes" title="Permanent link">&para;</a></h3>
+<h3 id="conversational-entity-types-llm-ner">Conversational entity types (LLM NER)<a class="headerlink" href="#conversational-entity-types-llm-ner" title="Permanent link">&para;</a></h3>
+<p>Requires a configured LLM provider. Falls back to empty lists when no provider
+is available.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Attribute</th>
-<th style="text-align: left;">TypeDB Type</th>
-<th style="text-align: left;">Used By</th>
+<th>Entity type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>external-id</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;"><code>attack-pattern</code>, <code>vulnerability</code></td>
+<td><code>person</code></td>
+<td>Named person (non-threat-actor context)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>malware-types</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;"><code>malware</code></td>
+<td><code>location</code></td>
+<td>Place name</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>tool-types</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;"><code>tool</code></td>
+<td><code>organization</code></td>
+<td>Named organization</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>pattern</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;"><code>indicator</code></td>
+<td><code>event</code></td>
+<td>Named event</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>pattern-type</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;"><code>indicator</code></td>
+<td><code>activity</code></td>
+<td>Described activity</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>sophistication</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;"><code>threat-actor</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>resource-level</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;"><code>threat-actor</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>goals</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;"><code>threat-actor</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>objective</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;"><code>campaign</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>infrastructure-types</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;"><code>infrastructure</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>note-id</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: left;"><code>zettel-note</code> (<code>@key</code>)</td>
+<td><code>temporal</code></td>
+<td>Time expression</td>
 </tr>
 </tbody>
 </table>
+<h3 id="entity-type-aliases-in-recall-methods">Entity type aliases in recall methods<a class="headerlink" href="#entity-type-aliases-in-recall-methods" title="Permanent link">&para;</a></h3>
+<p><code>recall_actor()</code> searches across three entity types in one call: <code>actor</code>,
+<code>threat_actor</code>, and <code>intrusion_set</code>. All three map to the same lookup
+path.</p>
+<p><code>recall_entity()</code> accepts any entity type string directly. Pass <code>"cve"</code>, <code>"tool"</code>,
+<code>"campaign"</code>, or any other recognized type.</p>
 <hr />
-<h2 id="entity-types">Entity Types<a class="headerlink" href="#entity-types" title="Permanent link">&para;</a></h2>
-<h3 id="stix-domain-objects">STIX Domain Objects<a class="headerlink" href="#stix-domain-objects" title="Permanent link">&para;</a></h3>
-<p>All SDOs inherit shared attributes from <code>stix-domain-object @abstract</code>.</p>
+<h2 id="note-metadata-stix-fields">Note metadata: STIX fields<a class="headerlink" href="#note-metadata-stix-fields" title="Permanent link">&para;</a></h2>
+<p>Every <code>MemoryNote</code> carries these STIX-adjacent fields on its <code>metadata</code> object.</p>
+<h3 id="stix_confidence"><code>stix_confidence</code><a class="headerlink" href="#stix_confidence" title="Permanent link">&para;</a></h3>
+<p><strong>Type:</strong> <code>int</code><br />
+<strong>Default:</strong> <code>-1</code> (unset)<br />
+<strong>Range:</strong> <code>0</code> to <code>100</code><br />
+<strong>Standard:</strong> STIX 2.1 confidence scale</p>
+<p>Set automatically during OpenCTI sync when the source platform provides a
+confidence value. <code>-1</code> means no STIX confidence has been assigned.</p>
+<h3 id="tier"><code>tier</code><a class="headerlink" href="#tier" title="Permanent link">&para;</a></h3>
+<p><strong>Type:</strong> <code>str</code><br />
+<strong>Default:</strong> <code>"B"</code><br />
+<strong>Values:</strong> <code>"A"</code> | <code>"B"</code> | <code>"C"</code></p>
+<p>Epistemic tier:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">TypeDB Entity</th>
-<th style="text-align: left;">STIX SDO</th>
-<th style="text-align: left;">ZettelForge Alias</th>
-<th style="text-align: left;">Key Attributes (beyond shared)</th>
-<th style="text-align: left;">Plays Roles</th>
+<th>Tier</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>threat-actor</code></td>
-<td style="text-align: left;"><code>threat-actor</code></td>
-<td style="text-align: left;"><code>actor</code></td>
-<td style="text-align: left;"><code>aliases</code>, <code>goals</code>, <code>sophistication</code>, <code>resource-level</code></td>
-<td style="text-align: left;"><code>uses:user</code>, <code>targets:source</code>, <code>attributed-to:attributing</code>, <code>alias-of:canonical</code>, <code>alias-of:aliased</code></td>
+<td><code>A</code></td>
+<td>Authoritative — from a primary, verified source</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>malware</code></td>
-<td style="text-align: left;"><code>malware</code></td>
-<td style="text-align: left;"><code>malware</code></td>
-<td style="text-align: left;"><code>malware-types</code></td>
-<td style="text-align: left;"><code>uses:used</code>, <code>indicates:indicated</code>, <code>mitigates:mitigated</code></td>
+<td><code>B</code></td>
+<td>Operational — derived, processed, or synthesized</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>tool</code></td>
-<td style="text-align: left;"><code>tool</code></td>
-<td style="text-align: left;"><code>tool</code></td>
-<td style="text-align: left;"><code>tool-types</code></td>
-<td style="text-align: left;"><code>uses:used</code>, <code>mitigates:mitigated</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>attack-pattern</code></td>
-<td style="text-align: left;"><code>attack-pattern</code></td>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;"><code>external-id</code></td>
-<td style="text-align: left;"><code>uses:used</code>, <code>mitigates:mitigated</code>, <code>indicates:indicated</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>vulnerability</code></td>
-<td style="text-align: left;"><code>vulnerability</code></td>
-<td style="text-align: left;"><code>cve</code></td>
-<td style="text-align: left;"><code>external-id</code></td>
-<td style="text-align: left;"><code>targets:target</code>, <code>mitigates:mitigated</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>campaign</code></td>
-<td style="text-align: left;"><code>campaign</code></td>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;"><code>objective</code>, <code>first-observed</code>, <code>last-observed</code></td>
-<td style="text-align: left;"><code>attributed-to:attributed</code>, <code>targets:source</code>, <code>uses:user</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>indicator</code></td>
-<td style="text-align: left;"><code>indicator</code></td>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;"><code>pattern</code>, <code>pattern-type</code>, <code>valid-from</code>, <code>valid-until</code></td>
-<td style="text-align: left;"><code>indicates:indicating</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>infrastructure</code></td>
-<td style="text-align: left;"><code>infrastructure</code></td>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;"><code>infrastructure-types</code></td>
-<td style="text-align: left;"><code>targets:target</code>, <code>uses:used</code></td>
+<td><code>C</code></td>
+<td>Support — background, context, or low-confidence</td>
 </tr>
 </tbody>
 </table>
-<h3 id="zettel-note-bridge-entity">Zettel Note (Bridge Entity)<a class="headerlink" href="#zettel-note-bridge-entity" title="Permanent link">&para;</a></h3>
+<h3 id="tlp"><code>tlp</code><a class="headerlink" href="#tlp" title="Permanent link">&para;</a></h3>
+<p><strong>Type:</strong> <code>str</code><br />
+<strong>Default:</strong> <code>""</code> (unclassified)<br />
+<strong>Values:</strong> <code>"WHITE"</code> | <code>"GREEN"</code> | <code>"AMBER"</code> | <code>"RED"</code> | <code>""</code></p>
+<p>Traffic Light Protocol marking. Notes with <code>AMBER</code> or <code>RED</code> markings are
+excluded from snapshot exports unless an audited TLP override is provided.</p>
+<h3 id="confidence"><code>confidence</code><a class="headerlink" href="#confidence" title="Permanent link">&para;</a></h3>
+<p><strong>Type:</strong> <code>float</code><br />
+<strong>Default:</strong> <code>1.0</code><br />
+<strong>Range:</strong> <code>0.0</code> to <code>1.0</code></p>
+<p>Internal confidence score. Decays when a note is evolved: each evolution
+caps confidence at <code>0.95</code>. Distinct from <code>stix_confidence</code>.</p>
+<h3 id="vuln-vulnerabilitymeta"><code>vuln</code> (VulnerabilityMeta)<a class="headerlink" href="#vuln-vulnerabilitymeta" title="Permanent link">&para;</a></h3>
+<p>Structured CVE scoring fields. Populated during OpenCTI sync, not during
+text extraction.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">TypeDB Entity</th>
-<th style="text-align: left;">STIX SDO</th>
-<th style="text-align: left;">ZettelForge Alias</th>
-<th style="text-align: left;">Key Attributes</th>
-<th style="text-align: left;">Plays Roles</th>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>zettel-note</code></td>
-<td style="text-align: left;"><em>(custom)</em></td>
-<td style="text-align: left;"><code>note</code></td>
-<td style="text-align: left;"><code>note-id</code> (<code>@key</code>), <code>created-at</code>, <code>importance</code>, <code>tier</code></td>
-<td style="text-align: left;"><code>mentioned-in:note</code>, <code>supersedes:newer</code>, <code>supersedes:older</code></td>
+<td><code>cvss_v3_score</code></td>
+<td><code>float \| None</code></td>
+<td>CVSS v3 base score (0.0–10.0)</td>
+</tr>
+<tr>
+<td><code>cvss_v3_vector</code></td>
+<td><code>str \| None</code></td>
+<td>CVSS v3 vector string, e.g. <code>CVSS:3.1/AV:N/AC:L/...</code></td>
+</tr>
+<tr>
+<td><code>epss_score</code></td>
+<td><code>float \| None</code></td>
+<td>EPSS exploitation probability (0.0–1.0, daily)</td>
+</tr>
+<tr>
+<td><code>epss_percentile</code></td>
+<td><code>float \| None</code></td>
+<td>EPSS percentile relative to all scored CVEs (0.0–1.0)</td>
+</tr>
+<tr>
+<td><code>cisa_kev</code></td>
+<td><code>bool</code></td>
+<td><code>True</code> if the CVE is in the CISA Known Exploited Vulnerabilities catalog</td>
 </tr>
 </tbody>
 </table>
-<p><code>zettel-note</code> does <strong>not</strong> inherit from <code>stix-domain-object</code>. It bridges the TypeDB knowledge graph to the LanceDB vector store via the <code>note-id</code> field.</p>
+<p><code>vuln</code> is <code>None</code> for non-CVE notes. For CVE notes before any OpenCTI sync, it
+is also <code>None</code>.</p>
 <hr />
-<h2 id="relation-types">Relation Types<a class="headerlink" href="#relation-types" title="Permanent link">&para;</a></h2>
+<h2 id="knowledge-graph-relationship-types">Knowledge graph relationship types<a class="headerlink" href="#knowledge-graph-relationship-types" title="Permanent link">&para;</a></h2>
+<p>When you call <code>remember()</code>, ZettelForge heuristically creates edges in the
+knowledge graph when STIX-relevant entities co-occur in the same note. You can
+also write edges directly with <code>ingest_relationship()</code>.</p>
+<h3 id="edge-types">Edge types<a class="headerlink" href="#edge-types" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Relation</th>
-<th style="text-align: left;">Role: From</th>
-<th style="text-align: left;">Role: To</th>
-<th style="text-align: left;">Owns Attributes</th>
-<th style="text-align: left;">Description</th>
+<th>Relationship</th>
+<th>From entity type</th>
+<th>To entity type</th>
+<th>Created by</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>uses</code></td>
-<td style="text-align: left;"><code>user</code></td>
-<td style="text-align: left;"><code>used</code></td>
-<td style="text-align: left;"><code>stix-id</code>, <code>confidence</code>, <code>created-at</code>, <code>valid-from</code>, <code>valid-until</code>, <code>description</code></td>
-<td style="text-align: left;">Actor/campaign uses tool/malware/attack-pattern/infrastructure.</td>
+<td><code>MENTIONED_IN</code></td>
+<td>any</td>
+<td><code>note</code></td>
+<td><code>remember()</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>targets</code></td>
-<td style="text-align: left;"><code>source</code></td>
-<td style="text-align: left;"><code>target</code></td>
-<td style="text-align: left;"><code>stix-id</code>, <code>confidence</code>, <code>created-at</code>, <code>valid-from</code>, <code>valid-until</code></td>
-<td style="text-align: left;">Actor/campaign targets vulnerability/infrastructure.</td>
+<td><code>USES_TOOL</code></td>
+<td><code>actor</code>, <code>campaign</code></td>
+<td><code>tool</code></td>
+<td><code>remember()</code> (heuristic)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>attributed-to</code></td>
-<td style="text-align: left;"><code>attributing</code></td>
-<td style="text-align: left;"><code>attributed</code></td>
-<td style="text-align: left;"><code>stix-id</code>, <code>confidence</code>, <code>created-at</code></td>
-<td style="text-align: left;">Actor attributed to campaign.</td>
+<td><code>EXPLOITS_CVE</code></td>
+<td><code>actor</code>, <code>tool</code></td>
+<td><code>cve</code></td>
+<td><code>remember()</code> (heuristic)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>indicates</code></td>
-<td style="text-align: left;"><code>indicating</code></td>
-<td style="text-align: left;"><code>indicated</code></td>
-<td style="text-align: left;"><code>stix-id</code>, <code>confidence</code>, <code>created-at</code></td>
-<td style="text-align: left;">Indicator indicates malware/attack-pattern.</td>
+<td><code>TARGETS_ASSET</code></td>
+<td><code>actor</code>, <code>tool</code></td>
+<td><code>asset</code></td>
+<td><code>remember()</code> (heuristic)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>mitigates</code></td>
-<td style="text-align: left;"><code>mitigating</code></td>
-<td style="text-align: left;"><code>mitigated</code></td>
-<td style="text-align: left;"><code>stix-id</code>, <code>confidence</code>, <code>created-at</code></td>
-<td style="text-align: left;">Course of action mitigates malware/tool/attack-pattern/vulnerability.</td>
+<td><code>CONDUCTS_CAMPAIGN</code></td>
+<td><code>actor</code></td>
+<td><code>campaign</code></td>
+<td><code>remember()</code> (heuristic)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>mentioned-in</code></td>
-<td style="text-align: left;"><code>mentioned-entity</code></td>
-<td style="text-align: left;"><code>note</code></td>
-<td style="text-align: left;"><code>created-at</code></td>
-<td style="text-align: left;">STIX entity is mentioned in a zettel-note.</td>
+<td><code>SUPERSEDES</code></td>
+<td><code>note</code></td>
+<td><code>note</code></td>
+<td><code>mark_note_superseded()</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>supersedes</code></td>
-<td style="text-align: left;"><code>newer</code></td>
-<td style="text-align: left;"><code>older</code></td>
-<td style="text-align: left;"><code>created-at</code></td>
-<td style="text-align: left;">Newer note supersedes an older note.</td>
+<td><code>TEMPORAL_BEFORE</code></td>
+<td><code>note</code></td>
+<td><code>note</code></td>
+<td>temporal ordering</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>alias-of</code></td>
-<td style="text-align: left;"><code>canonical</code></td>
-<td style="text-align: left;"><code>aliased</code></td>
-<td style="text-align: left;"><code>confidence</code></td>
-<td style="text-align: left;">Canonical name maps to an alias.</td>
+<td><code>TEMPORAL_AFTER</code></td>
+<td><code>note</code></td>
+<td><code>note</code></td>
+<td>temporal ordering</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="entity-type-mapping">Entity Type Mapping<a class="headerlink" href="#entity-type-mapping" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">ZettelForge Type</th>
-<th style="text-align: left;">TypeDB Entity</th>
-<th style="text-align: left;">STIX 2.1 Type</th>
-<th style="text-align: left;">Entity Index Key</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>actor</code></td>
-<td style="text-align: left;"><code>threat-actor</code></td>
-<td style="text-align: left;"><code>threat-actor</code></td>
-<td style="text-align: left;"><code>actor</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>cve</code></td>
-<td style="text-align: left;"><code>vulnerability</code></td>
-<td style="text-align: left;"><code>vulnerability</code></td>
-<td style="text-align: left;"><code>cve</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>tool</code></td>
-<td style="text-align: left;"><code>tool</code></td>
-<td style="text-align: left;"><code>tool</code></td>
-<td style="text-align: left;"><code>tool</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>malware</code></td>
-<td style="text-align: left;"><code>malware</code></td>
-<td style="text-align: left;"><code>malware</code></td>
-<td style="text-align: left;"><code>malware</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>note</code></td>
-<td style="text-align: left;"><code>zettel-note</code></td>
-<td style="text-align: left;"><em>(custom)</em></td>
-<td style="text-align: left;"><code>note</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;"><code>attack-pattern</code></td>
-<td style="text-align: left;"><code>attack-pattern</code></td>
-<td style="text-align: left;">--</td>
-</tr>
-<tr>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;"><code>campaign</code></td>
-<td style="text-align: left;"><code>campaign</code></td>
-<td style="text-align: left;"><code>campaign</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;"><code>indicator</code></td>
-<td style="text-align: left;"><code>indicator</code></td>
-<td style="text-align: left;">--</td>
-</tr>
-<tr>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;"><code>infrastructure</code></td>
-<td style="text-align: left;"><code>infrastructure</code></td>
-<td style="text-align: left;">--</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="typedb-functions">TypeDB Functions<a class="headerlink" href="#typedb-functions" title="Permanent link">&para;</a></h2>
-<p>Defined in <code>stix_rules.tql</code>. These replace TypeDB 2.x inference rules.</p>
-<h3 id="get_aliases"><code>get_aliases</code><a class="headerlink" href="#get_aliases" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">fun</span> <span class="n">get_aliases</span><span class="p">(</span><span class="err">$</span><span class="n">actor</span><span class="p">:</span> <span class="n">threat</span><span class="o">-</span><span class="n">actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">threat</span><span class="o">-</span><span class="n">actor</span> <span class="p">}</span>
+<p><strong>Heuristic edges</strong> are created when two entity types appear in the same note.
+They carry <code>edge_type: "heuristic"</code>. Causal edges written via
+<code>ingest_relationship()</code> or provenance chains carry <code>edge_type: "causal"</code>.</p>
+<h3 id="ingest_relationship"><code>ingest_relationship()</code><a class="headerlink" href="#ingest_relationship" title="Permanent link">&para;</a></h3>
+<p>Write a relationship edge directly into the knowledge graph without creating a
+memory note. Useful for sync clients that carry relationship data from external
+platforms.</p>
+<div class="highlight"><pre><span></span><code><span class="n">mm</span><span class="o">.</span><span class="n">ingest_relationship</span><span class="p">(</span>
+    <span class="n">from_type</span><span class="o">=</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span>
+    <span class="n">from_value</span><span class="o">=</span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span>
+    <span class="n">to_type</span><span class="o">=</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span>
+    <span class="n">to_value</span><span class="o">=</span><span class="s2">&quot;mimikatz&quot;</span><span class="p">,</span>
+    <span class="n">relationship</span><span class="o">=</span><span class="s2">&quot;USES_TOOL&quot;</span><span class="p">,</span>
+    <span class="n">properties</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">},</span>
+<span class="p">)</span>
 </code></pre></div>
-<p>Returns all aliased threat-actors linked to <code>$actor</code> via the <code>alias-of</code> relation (canonical to aliased direction).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>match
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    $a isa threat-actor, has name &quot;APT28&quot;;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    $aliases in get_aliases($a);
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>fetch $aliases: name;
-</code></pre></div>
-<h3 id="get_tools_used"><code>get_tools_used</code><a class="headerlink" href="#get_tools_used" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">fun</span> <span class="n">get_tools_used</span><span class="p">(</span><span class="err">$</span><span class="n">actor</span><span class="p">:</span> <span class="n">threat</span><span class="o">-</span><span class="n">actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">malware</span> <span class="p">}</span>
-</code></pre></div>
-<p>Returns all malware entities linked to <code>$actor</code> via the <code>uses</code> relation (user to used direction). Returns <code>malware</code> type only; does not return <code>tool</code> type entities.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>match
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    $a isa threat-actor, has name &quot;APT28&quot;;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    $m in get_tools_used($a);
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>fetch $m: name, malware-types;
-</code></pre></div>
-<h3 id="get_entity_notes"><code>get_entity_notes</code><a class="headerlink" href="#get_entity_notes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">fun</span> <span class="n">get_entity_notes</span><span class="p">(</span><span class="err">$</span><span class="n">sdo</span><span class="p">:</span> <span class="n">stix</span><span class="o">-</span><span class="n">domain</span><span class="o">-</span><span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">zettel</span><span class="o">-</span><span class="n">note</span> <span class="p">}</span>
-</code></pre></div>
-<p>Returns all <code>zettel-note</code> entities linked to any STIX domain object via the <code>mentioned-in</code> relation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>match
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    $v isa vulnerability, has external-id &quot;CVE-2024-1234&quot;;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    $n in get_entity_notes($v);
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>fetch $n: note-id, importance;
-</code></pre></div>
-<hr />
-<h2 id="knowledge-graph-edge-types-in-memory">Knowledge Graph Edge Types (In-Memory)<a class="headerlink" href="#knowledge-graph-edge-types-in-memory" title="Permanent link">&para;</a></h2>
-<p>The in-memory <code>KnowledgeGraph</code> (JSONL backend) uses these edge relationship strings, distinct from TypeDB relations:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Edge Type</th>
-<th style="text-align: left;">From Entity</th>
-<th style="text-align: left;">To Entity</th>
-<th style="text-align: left;">Created By</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>MENTIONED_IN</code></td>
-<td style="text-align: left;">any entity type</td>
-<td style="text-align: left;"><code>note</code></td>
-<td style="text-align: left;"><code>remember()</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>USES_TOOL</code></td>
-<td style="text-align: left;"><code>actor</code></td>
-<td style="text-align: left;"><code>tool</code></td>
-<td style="text-align: left;"><code>remember()</code> (heuristic)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>EXPLOITS_CVE</code></td>
-<td style="text-align: left;"><code>actor</code>, <code>tool</code></td>
-<td style="text-align: left;"><code>cve</code></td>
-<td style="text-align: left;"><code>remember()</code> (heuristic)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>TARGETS_ASSET</code></td>
-<td style="text-align: left;"><code>actor</code>, <code>tool</code></td>
-<td style="text-align: left;"><code>asset</code></td>
-<td style="text-align: left;"><code>remember()</code> (heuristic)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>CONDUCTS_CAMPAIGN</code></td>
-<td style="text-align: left;"><code>actor</code></td>
-<td style="text-align: left;"><code>campaign</code></td>
-<td style="text-align: left;"><code>remember()</code> (heuristic)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>SUPERSEDES</code></td>
-<td style="text-align: left;"><code>note</code></td>
-<td style="text-align: left;"><code>note</code></td>
-<td style="text-align: left;"><code>mark_note_superseded()</code> (temporal edge)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="llm-quick-reference">LLM Quick Reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
-<p>ZettelForge's STIX ontology is defined in two TypeQL schema files loaded into TypeDB. <code>stix_core.tql</code> defines 9 entity types, 8 relation types, and their role assignments. <code>stix_rules.tql</code> defines 3 reusable functions.</p>
-<p><strong>Entity hierarchy:</strong> All STIX entities inherit from the abstract <code>stix-domain-object</code>, which owns shared attributes (<code>stix-id</code> as <code>@key</code>, <code>name</code>, <code>description</code>, <code>confidence</code>, <code>tier</code>, etc.). The exception is <code>zettel-note</code>, which is a standalone entity keyed on <code>note-id</code> that bridges TypeDB to LanceDB.</p>
-<p><strong>Entity type mapping:</strong> ZettelForge uses shorthand aliases in the entity indexer: <code>actor</code> maps to <code>threat-actor</code>, <code>cve</code> maps to <code>vulnerability</code>, <code>tool</code> and <code>malware</code> map directly. The <code>note</code> alias maps to <code>zettel-note</code>.</p>
-<p><strong>Relations:</strong> <code>uses</code> connects actors/campaigns to tools/malware/attack-patterns/infrastructure. <code>targets</code> connects actors/campaigns to vulnerabilities/infrastructure. <code>attributed-to</code> links actors to campaigns. <code>indicates</code> links indicators to malware/attack-patterns. <code>mitigates</code> links countermeasures to threats. <code>mentioned-in</code> bridges STIX entities to zettel-notes. <code>supersedes</code> tracks note evolution. <code>alias-of</code> maps canonical names to aliases.</p>
-<p><strong>Functions:</strong> <code>get_aliases</code> traverses alias-of chains for threat-actors. <code>get_tools_used</code> returns malware used by an actor via the uses relation. <code>get_entity_notes</code> returns all zettel-notes mentioning a given STIX entity.</p>
-<p><strong>Dual backend:</strong> When the backend is <code>typedb</code>, entities and relations live in TypeDB with full TypeQL query support. When the backend is <code>jsonl</code>, an in-memory knowledge graph stores edges with relationship strings like <code>MENTIONED_IN</code>, <code>USES_TOOL</code>, <code>EXPLOITS_CVE</code>, <code>TARGETS_ASSET</code>, <code>CONDUCTS_CAMPAIGN</code>, and <code>SUPERSEDES</code>. The in-memory graph infers entity-to-entity edges heuristically when entities co-occur in a note (e.g., if an actor and tool appear in the same note, a <code>USES_TOOL</code> edge is created).</p>
+<p>The call is idempotent: repeated writes with the same
+<code>(from_type, from_value, to_type, to_value, relationship)</code> tuple update the
+edge properties rather than creating duplicates.</p>
 
 
 
@@ -3330,12 +3073,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

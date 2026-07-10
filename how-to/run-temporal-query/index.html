@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Query temporal relationships including entity timelines, change tracking, and valid-from/valid-until ranges using the temporal graph index.">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -15,21 +15,21 @@
         <link rel="canonical" href="https://docs.threatrecall.ai/how-to/run-temporal-query/">
       
       
-        <link rel="prev" href="../passive-osint-enrichment/">
+        <link rel="prev" href="../resolve-aliases/">
       
       
-        <link rel="next" href="../set-up-mcp-server/">
+        <link rel="next" href="../configure-typedb/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Run Temporal Queries - ZettelForge Documentation</title>
+        <title>Run temporal queries - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/how-to/run-temporal-query/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="Run Temporal Queries">
-  <meta property="og:description" content="Query temporal relationships including entity timelines, change tracking, and valid-from/valid-until ranges using the temporal graph index.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/how-to/run-temporal-query/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Run Temporal Queries">
-  <meta name="twitter:description" content="Query temporal relationships including entity timelines, change tracking, and valid-from/valid-until ranges using the temporal graph index.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Run Temporal Queries
+              Run temporal queries
             
           </span>
         </div>
@@ -281,11 +240,31 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../build-extensions/" class="md-tabs__link">
+        <a href="../configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -306,26 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -577,8 +533,6 @@
         
         
       
-      
-        
       
     
     
@@ -625,62 +579,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../configure-opencti/" class="md-nav__link">
         
   
@@ -709,14 +607,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
   
 
     
@@ -725,6 +623,281 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-store-notes-at-different-points-in-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Store notes at different points in time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-get-an-entitys-temporal-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Get an entity's temporal timeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-get-all-changes-since-a-timestamp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Get all changes since a timestamp
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-use-temporal-query-phrasing-with-recall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Use temporal query phrasing with recall()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-synthesize-an-answer-about-temporal-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Synthesize an answer about temporal changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-check-the-supersession-status-of-a-specific-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Check the supersession status of a specific note
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-anchor-report-ingestion-to-a-publication-date" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Anchor report ingestion to a publication date
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -765,42 +938,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-yara-ingestion/" class="md-nav__link">
+      <a href="../configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -828,7 +973,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -905,146 +1246,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1052,282 +1253,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prerequisites
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Steps
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-store-notes-at-different-times-to-create-temporal-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Store notes at different times to create temporal data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-get-an-entitys-timeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Get an entity's timeline
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-get-all-changes-since-a-timestamp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Get all changes since a timestamp
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-query-with-temporal-intent-via-recall" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Query with temporal intent via recall()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-synthesize-a-timeline-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Synthesize a timeline analysis
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-check-supersession-status-of-a-specific-note" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Check supersession status of a specific note
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-ingest-reports-with-published-dates-for-temporal-context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Ingest reports with published dates for temporal context
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LLM Quick Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1376,14 +1302,70 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-detection-rules/" class="md-nav__link">
+      <a href="../troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extend ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-web-interface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use web interface
   
 
     
@@ -1416,17 +1398,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -1436,7 +1414,7 @@
   <span class="md-ellipsis">
     
   
-    Concepts
+    Reference
   
 
     
@@ -1452,235 +1430,6 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Two-Phase Pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reference
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
     Reference
   
 
@@ -1694,14 +1443,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+      <a href="../../reference/terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1750,174 +1499,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/memory-manager-api/" class="md-nav__link">
         
   
@@ -1946,90 +1527,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/stix-schema/" class="md-nav__link">
         
   
@@ -2037,7 +1534,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -2065,7 +1562,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2093,7 +1730,119 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
   
 
     
@@ -2126,7 +1875,230 @@
     
       
       
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2134,9 +2106,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2195,6 +2165,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2287,14 +2307,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2308,113 +2328,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2439,17 +2355,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2566,10 +2478,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-store-notes-at-different-times-to-create-temporal-data" class="md-nav__link">
+  <a href="#1-store-notes-at-different-points-in-time" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Store notes at different times to create temporal data
+        1. Store notes at different points in time
       
     </span>
   </a>
@@ -2577,10 +2489,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-get-an-entitys-timeline" class="md-nav__link">
+  <a href="#2-get-an-entitys-temporal-timeline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Get an entity's timeline
+        2. Get an entity's temporal timeline
       
     </span>
   </a>
@@ -2599,10 +2511,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-query-with-temporal-intent-via-recall" class="md-nav__link">
+  <a href="#4-use-temporal-query-phrasing-with-recall" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Query with temporal intent via recall()
+        4. Use temporal query phrasing with recall()
       
     </span>
   </a>
@@ -2610,10 +2522,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-synthesize-a-timeline-analysis" class="md-nav__link">
+  <a href="#5-synthesize-an-answer-about-temporal-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Synthesize a timeline analysis
+        5. Synthesize an answer about temporal changes
       
     </span>
   </a>
@@ -2621,10 +2533,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-check-supersession-status-of-a-specific-note" class="md-nav__link">
+  <a href="#6-check-the-supersession-status-of-a-specific-note" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Check supersession status of a specific note
+        6. Check the supersession status of a specific note
       
     </span>
   </a>
@@ -2632,10 +2544,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#7-ingest-reports-with-published-dates-for-temporal-context" class="md-nav__link">
+  <a href="#7-anchor-report-ingestion-to-a-publication-date" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7. Ingest reports with published dates for temporal context
+        7. Anchor report ingestion to a publication date
       
     </span>
   </a>
@@ -2648,10 +2560,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        Reference
       
     </span>
   </a>
@@ -2678,131 +2590,238 @@
   
 
 
-<h1 id="run-temporal-queries">Run Temporal Queries<a class="headerlink" href="#run-temporal-queries" title="Permanent link">&para;</a></h1>
-<p>Query how entities change over time using ZettelForge's temporal graph index. Track entity timelines, detect superseded intelligence, and retrieve all changes since a given timestamp.</p>
+<h1 id="run-temporal-queries">Run temporal queries<a class="headerlink" href="#run-temporal-queries" title="Permanent link">&para;</a></h1>
+<p>Track how threat intelligence changes over time. ZettelForge stores a temporal graph index that records supersession events and date-stamped observations as SUPERSEDES and OCCURRED_ON edges. You can query this index directly, or phrase your <code>recall()</code> queries to trigger temporal retrieval.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge with stored CTI data</li>
-<li>Embedding and LLM models available (download automatically on first use)</li>
+<li>ZettelForge installed and initialized (<code>pip install zettelforge</code>)</li>
+<li>At least some notes in the store (run <code>mm.remember()</code> first if the store is empty)</li>
 </ul>
+<p>No LLM provider is required for the graph-based steps (Steps 2 and 3). Steps 4 and 5 need a configured LLM; see <a href="../../reference/configuration/">Configuration</a>.</p>
 <h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<h3 id="1-store-notes-at-different-times-to-create-temporal-data">1. Store notes at different times to create temporal data<a class="headerlink" href="#1-store-notes-at-different-times-to-create-temporal-data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Store initial intelligence</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">note1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;APT28 used Cobalt Strike for C2 in January 2026 campaigns targeting EU governments.&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;vendor-report-jan-2026&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Store updated intelligence (later observation)</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">note2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;APT28 shifted to Sliver C2 framework in March 2026, replacing Cobalt Strike in EU operations.&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;vendor-report-mar-2026&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">)</span>
+<h3 id="1-store-notes-at-different-points-in-time">1. Store notes at different points in time<a class="headerlink" href="#1-store-notes-at-different-points-in-time" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
+
+<span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
+
+<span class="c1"># Earlier intelligence</span>
+<span class="n">note1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
+    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;APT28 used Cobalt Strike for C2 in January 2026 campaigns targeting EU governments.&quot;</span><span class="p">,</span>
+    <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span>
+    <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;vendor-report-jan-2026&quot;</span><span class="p">,</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Later intelligence about the same group and campaign</span>
+<span class="n">note2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
+    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;APT28 shifted to Sliver C2 framework in March 2026, replacing Cobalt Strike in EU operations.&quot;</span><span class="p">,</span>
+    <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span>
+    <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;vendor-report-mar-2026&quot;</span><span class="p">,</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </code></pre></div>
-<blockquote>
-<p>[!NOTE]
-When <code>note2</code> shares overlapping entities with <code>note1</code>, ZettelForge automatically evaluates supersession. If the overlap score exceeds the threshold, the older note is marked <code>superseded_by</code> the newer one, and a <code>SUPERSEDES</code> temporal edge is added to the graph.</p>
-</blockquote>
-<h3 id="2-get-an-entitys-timeline">2. Get an entity's timeline<a class="headerlink" href="#2-get-an-entitys-timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.knowledge_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_knowledge_graph</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">kg</span> <span class="o">=</span> <span class="n">get_knowledge_graph</span><span class="p">()</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">timeline</span> <span class="o">=</span> <span class="n">kg</span><span class="o">.</span><span class="n">get_entity_timeline</span><span class="p">(</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">entity_type</span><span class="o">=</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="n">entity_value</span><span class="o">=</span><span class="s2">&quot;apt28&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">timeline</span><span class="p">:</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">] &quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;edge&#39;</span><span class="p">][</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; &quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;to_entity&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p>When <code>note2</code> shares entities with <code>note1</code> and the overlap score exceeds the supersession threshold, ZettelForge marks <code>note1.links.superseded_by = note2.id</code> and adds a <code>SUPERSEDES</code> edge to the knowledge graph. The supersession check is automatic; you do not configure it per call.</p>
+<h3 id="2-get-an-entitys-temporal-timeline">2. Get an entity's temporal timeline<a class="headerlink" href="#2-get-an-entitys-temporal-timeline" title="Permanent link">&para;</a></h3>
+<p><code>get_entity_timeline()</code> returns the sequence of temporal edges recorded for one entity node. The edges include <code>SUPERSEDES</code>, <code>TEMPORAL_BEFORE</code>, and <code>TEMPORAL_AFTER</code> relationships.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.knowledge_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_knowledge_graph</span>
+
+<span class="n">kg</span> <span class="o">=</span> <span class="n">get_knowledge_graph</span><span class="p">()</span>
+
+<span class="c1"># Use the correct entity type: APT-numbered groups are indexed as &#39;intrusion_set&#39;</span>
+<span class="n">timeline</span> <span class="o">=</span> <span class="n">kg</span><span class="o">.</span><span class="n">get_entity_timeline</span><span class="p">(</span>
+    <span class="n">entity_type</span><span class="o">=</span><span class="s2">&quot;intrusion_set&quot;</span><span class="p">,</span>
+    <span class="n">entity_value</span><span class="o">=</span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">timeline</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;edge&#39;</span><span class="p">][</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;to_entity&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Expected output:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>  [2026-04-09T10:00:00] SUPERSEDES -&gt; note:&lt;note1_id&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  [2026-04-09T10:01:00] MENTIONED_IN -&gt; note:&lt;note2_id&gt;
-</code></pre></div>
+<p>Return shape — each item in the list:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>timestamp</code></td>
+<td>str</td>
+<td>ISO-8601 timestamp from the edge properties</td>
+</tr>
+<tr>
+<td><code>edge</code></td>
+<td>dict</td>
+<td>Full edge dict (relationship, from/to node IDs, properties)</td>
+</tr>
+<tr>
+<td><code>to_entity</code></td>
+<td>str</td>
+<td><code>"type:value"</code> string for the target node</td>
+</tr>
+</tbody>
+</table>
+<p>Returns <code>[]</code> if no entity node of that type and value exists in the graph, or if no temporal edges have been recorded for it.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Entity types follow the extractor's normalized values. APT-numbered groups (APT28, APT41) are stored as <code>intrusion_set</code>. Named tools are stored as <code>tool</code>. Use the types from <a href="../../reference/kg-edge-schema/">KG Edge Schema</a>.</p>
+</div>
 <h3 id="3-get-all-changes-since-a-timestamp">3. Get all changes since a timestamp<a class="headerlink" href="#3-get-all-changes-since-a-timestamp" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">changes</span> <span class="o">=</span> <span class="n">kg</span><span class="o">.</span><span class="n">get_changes_since</span><span class="p">(</span><span class="s2">&quot;2026-03-01T00:00:00&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">changes</span><span class="p">:</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">] &quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> --</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">--&gt; &quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>          <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p><code>get_changes_since()</code> scans the temporal index and returns every SUPERSEDES, TEMPORAL_BEFORE, and TEMPORAL_AFTER edge recorded on or after the given timestamp.</p>
+<div class="highlight"><pre><span></span><code><span class="n">changes</span> <span class="o">=</span> <span class="n">kg</span><span class="o">.</span><span class="n">get_changes_since</span><span class="p">(</span><span class="s2">&quot;2026-03-01T00:00:00&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">changes</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">] &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> --</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">--&gt; &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
 </code></pre></div>
-<h3 id="4-query-with-temporal-intent-via-recall">4. Query with temporal intent via <code>recall()</code><a class="headerlink" href="#4-query-with-temporal-intent-via-recall" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;How has APT28 tooling changed since January 2026?&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">k</span><span class="o">=</span><span class="mi">10</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">notes</span><span class="p">:</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">superseded</span> <span class="o">=</span> <span class="s2">&quot;SUPERSEDED&quot;</span> <span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span> <span class="k">else</span> <span class="s2">&quot;CURRENT&quot;</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">superseded</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">created_at</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p>Return shape — each item:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>timestamp</code></td>
+<td>str</td>
+<td>ISO-8601 timestamp from the edge</td>
+</tr>
+<tr>
+<td><code>from</code></td>
+<td>str</td>
+<td><code>"type:value"</code> for the source node</td>
+</tr>
+<tr>
+<td><code>relationship</code></td>
+<td>str</td>
+<td><code>SUPERSEDES</code>, <code>TEMPORAL_BEFORE</code>, or <code>TEMPORAL_AFTER</code></td>
+</tr>
+<tr>
+<td><code>to</code></td>
+<td>str</td>
+<td><code>"type:value"</code> for the target node</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Pass full ISO-8601 timestamps (<code>2026-03-01T00:00:00</code>), not partial dates (<code>2026-03-01</code>). The comparison is a string lexicographic sort on the <code>created_at</code> column; partial dates sort correctly for midnight boundaries but can misorder intra-day edges on older SQLite deployments.</p>
+</div>
+<p>You can also access these methods through the store directly: <code>mm.store.get_changes_since("2026-03-01T00:00:00")</code> returns the same shape from the SQLite backend.</p>
+<h3 id="4-use-temporal-query-phrasing-with-recall">4. Use temporal query phrasing with <code>recall()</code><a class="headerlink" href="#4-use-temporal-query-phrasing-with-recall" title="Permanent link">&para;</a></h3>
+<p><code>recall()</code> detects temporal intent from your query wording and adjusts retrieval weights to favor notes containing matching date strings.</p>
+<div class="highlight"><pre><span></span><code><span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;How has APT28 tooling changed since January 2026?&quot;</span><span class="p">,</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
+    <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">notes</span><span class="p">:</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;SUPERSEDED&quot;</span> <span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span> <span class="k">else</span> <span class="s2">&quot;CURRENT&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">created_at</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<blockquote>
-<p>[!TIP]
-By default, <code>recall()</code> filters out superseded notes (<code>exclude_superseded=True</code>). Pass <code>exclude_superseded=False</code> to include historical versions for timeline reconstruction.</p>
-</blockquote>
-<h3 id="5-synthesize-a-timeline-analysis">5. Synthesize a timeline analysis<a class="headerlink" href="#5-synthesize-a-timeline-analysis" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;Timeline of APT28 tool changes in 2026&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;timeline_analysis&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">k</span><span class="o">=</span><span class="mi">10</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;synthesis&quot;</span><span class="p">][</span><span class="s2">&quot;summary&quot;</span><span class="p">])</span>
+<p>Queries containing words like <code>when</code>, <code>since</code>, <code>before</code>, <code>after</code>, <code>changed</code>, <code>history</code>, <code>timeline</code>, <code>recent</code>, <code>latest</code>, or <code>previously</code> trigger the temporal retrieval path (retriever weight 0.2, temporal weight 0.5, top_k 5 by default).</p>
+<p>By default, <code>recall()</code> hides superseded notes (<code>exclude_superseded=True</code>). Pass <code>exclude_superseded=False</code> to include historical versions alongside current ones — useful when reconstructing how an assessment evolved.</p>
+<p>If <code>dateparser</code> is installed, the retriever also extracts date strings from the query and boosts notes whose content contains those dates. Without <code>dateparser</code>, temporal intent still fires but no date-boost is applied.</p>
+<h3 id="5-synthesize-an-answer-about-temporal-changes">5. Synthesize an answer about temporal changes<a class="headerlink" href="#5-synthesize-an-answer-about-temporal-changes" title="Permanent link">&para;</a></h3>
+<p><code>synthesize()</code> retrieves notes and passes them to an LLM for a structured response.</p>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;Timeline of APT28 tool changes in 2026&quot;</span><span class="p">,</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;direct_answer&quot;</span><span class="p">,</span>
+    <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;synthesis&quot;</span><span class="p">][</span><span class="s2">&quot;answer&quot;</span><span class="p">])</span>
 </code></pre></div>
-<h3 id="6-check-supersession-status-of-a-specific-note">6. Check supersession status of a specific note<a class="headerlink" href="#6-check-supersession-status-of-a-specific-note" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">note</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_note_by_id</span><span class="p">(</span><span class="n">note1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span><span class="p">:</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> was superseded by </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">newer</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_note_by_id</span><span class="p">(</span><span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span><span class="p">)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Newer content: </span><span class="si">{</span><span class="n">newer</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> is current (not superseded)&quot;</span><span class="p">)</span>
+<div class="admonition note">
+<p class="admonition-title">ThreatRecall.ai SaaS</p>
+<p>The <code>format="timeline_analysis"</code> extended format is available on <a href="https://threatrecall.ai">ThreatRecall.ai</a>. In ZettelForge OSS, requesting <code>timeline_analysis</code> silently falls back to <code>direct_answer</code>. Use <code>format="direct_answer"</code> in OSS code so the behavior is explicit and the result key (<code>result["synthesis"]["answer"]</code>) is correct.</p>
+</div>
+<h3 id="6-check-the-supersession-status-of-a-specific-note">6. Check the supersession status of a specific note<a class="headerlink" href="#6-check-the-supersession-status-of-a-specific-note" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">note</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_note_by_id</span><span class="p">(</span><span class="n">note1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> was superseded by </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">newer</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_note_by_id</span><span class="p">(</span><span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Newer content: </span><span class="si">{</span><span class="n">newer</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> is current (not superseded)&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="7-ingest-reports-with-published-dates-for-temporal-context">7. Ingest reports with published dates for temporal context<a class="headerlink" href="#7-ingest-reports-with-published-dates-for-temporal-context" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">results</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember_report</span><span class="p">(</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Lazarus Group deployed new DTrack variant in February 2026...&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">source_url</span><span class="o">=</span><span class="s2">&quot;https://example.com/lazarus-feb-2026&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">published_date</span><span class="o">=</span><span class="s2">&quot;2026-02-15&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">)</span>
+<h3 id="7-anchor-report-ingestion-to-a-publication-date">7. Anchor report ingestion to a publication date<a class="headerlink" href="#7-anchor-report-ingestion-to-a-publication-date" title="Permanent link">&para;</a></h3>
+<p>Pass <code>published_date</code> when ingesting reports to give the LLM extraction phase a temporal anchor. The date is included in the extraction context so the LLM can correctly associate facts with the right time period.</p>
+<div class="highlight"><pre><span></span><code><span class="n">results</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember_report</span><span class="p">(</span>
+    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Lazarus Group deployed a new DTrack variant in February 2026 against South Korean targets...&quot;</span><span class="p">,</span>
+    <span class="n">source_url</span><span class="o">=</span><span class="s2">&quot;https://example.com/lazarus-feb-2026&quot;</span><span class="p">,</span>
+    <span class="n">published_date</span><span class="o">=</span><span class="s2">&quot;2026-02-15&quot;</span><span class="p">,</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </code></pre></div>
-<p>The <code>published_date</code> is passed as context to the extraction LLM, enabling it to anchor facts temporally.</p>
-<blockquote>
-<p>[!WARNING]
-The temporal index uses ISO 8601 string comparison for ordering. Always use full ISO timestamps (<code>2026-03-01T00:00:00</code>) rather than partial dates (<code>2026-03-01</code>) for consistent <code>get_changes_since()</code> results.</p>
-</blockquote>
-<h2 id="llm-quick-reference">LLM Quick Reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
-<p><strong>Task</strong>: Query how threat intelligence entities change over time using temporal graph features.</p>
-<p><strong>Entity timeline</strong>: <code>kg.get_entity_timeline(entity_type, entity_value)</code> returns <code>List[Dict]</code> sorted by timestamp. Each entry has <code>edge</code>, <code>timestamp</code>, <code>to_entity</code> fields.</p>
-<p><strong>Changes since</strong>: <code>kg.get_changes_since(timestamp_iso)</code> returns <code>List[Dict]</code> of all temporal edges (TEMPORAL_BEFORE, TEMPORAL_AFTER, SUPERSEDES) after the given timestamp. Fields: <code>timestamp</code>, <code>from</code>, <code>relationship</code>, <code>to</code>.</p>
-<p><strong>Supersession</strong>: When a new note overlaps entities with an existing note and scores above threshold, ZettelForge marks the old note's <code>links.superseded_by</code> and adds a <code>SUPERSEDES</code> edge to the graph.</p>
-<p><strong>Recall filtering</strong>: <code>mm.recall(query, exclude_superseded=True)</code> (default) hides outdated notes. Set <code>False</code> for historical analysis.</p>
-<p><strong>Temporal synthesis</strong>: <code>mm.synthesize(query, format="timeline_analysis")</code> produces chronological reconstruction from retrieved notes.</p>
-<p><strong>Published date</strong>: <code>mm.remember_report(content, published_date="2026-02-15")</code> anchors extracted facts to a publication date for temporal ordering.</p>
-<p><strong>Temporal edge types</strong>: <code>TEMPORAL_BEFORE</code>, <code>TEMPORAL_AFTER</code>, <code>SUPERSEDES</code>. All stored in the knowledge graph's temporal index and queryable via <code>get_changes_since()</code>.</p>
+<p><code>published_date</code> requires a configured LLM provider. Without one, <code>remember_report()</code> completes with 0 extracted operations (fact extraction is LLM-dependent).</p>
+<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Entity temporal history</td>
+<td><code>kg.get_entity_timeline(entity_type, entity_value)</code></td>
+</tr>
+<tr>
+<td>All changes since a time</td>
+<td><code>kg.get_changes_since(iso_timestamp)</code></td>
+</tr>
+<tr>
+<td>Same via store</td>
+<td><code>mm.store.get_changes_since(iso_timestamp)</code></td>
+</tr>
+<tr>
+<td>Temporal query retrieval</td>
+<td><code>mm.recall(query, ...)</code> with temporal keywords</td>
+</tr>
+<tr>
+<td>Exclude superseded notes</td>
+<td><code>mm.recall(..., exclude_superseded=True)</code> (default)</td>
+</tr>
+<tr>
+<td>Include historical notes</td>
+<td><code>mm.recall(..., exclude_superseded=False)</code></td>
+</tr>
+<tr>
+<td>OSS synthesis</td>
+<td><code>mm.synthesize(query, format="direct_answer")</code></td>
+</tr>
+<tr>
+<td>Extended synthesis</td>
+<td><code>mm.synthesize(query, format="timeline_analysis")</code> — ThreatRecall.ai SaaS</td>
+</tr>
+<tr>
+<td>Supersession check</td>
+<td><code>note.links.superseded_by</code> — non-empty if note is outdated</td>
+</tr>
+<tr>
+<td>Temporal edge types</td>
+<td><code>SUPERSEDES</code>, <code>TEMPORAL_BEFORE</code>, <code>TEMPORAL_AFTER</code>, <code>OCCURRED_ON</code></td>
+</tr>
+</tbody>
+</table>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2846,12 +2865,10 @@ The temporal index uses ISO 8601 string comparison for ordering. Always use full
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

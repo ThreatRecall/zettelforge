@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Vendored CCCS YARA metadata schemas, validation tiers, parser API, ValidationResult, and error types for YARA rule validation in ZettelForge.">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -15,21 +15,21 @@
         <link rel="canonical" href="https://docs.threatrecall.ai/reference/yara-schema-reference/">
       
       
-        <link rel="prev" href="../web-api/">
+        <link rel="prev" href="../sigma-schema-reference/">
       
       
-        <link rel="next" href="../../brand/brandIdentity/">
+        <link rel="next" href="../kg-edge-schema/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>YARA Schema Reference - ZettelForge Documentation</title>
+        <title>YARA schema - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/reference/yara-schema-reference/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="YARA Schema Reference">
-  <meta property="og:description" content="Vendored CCCS YARA metadata schemas, validation tiers, parser API, ValidationResult, and error types for YARA rule validation in ZettelForge.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/reference/yara-schema-reference/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="YARA Schema Reference">
-  <meta name="twitter:description" content="Vendored CCCS YARA metadata schemas, validation tiers, parser API, ValidationResult, and error types for YARA rule validation in ZettelForge.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              YARA Schema Reference
+              YARA schema
             
           </span>
         </div>
@@ -279,11 +238,33 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+        <a href="../../how-to/configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -304,28 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-    
-  
-  
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -573,17 +529,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -622,62 +574,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/configure-opencti/" class="md-nav__link">
         
   
@@ -706,14 +602,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -762,42 +770,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -825,7 +805,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -902,146 +1078,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1049,119 +1085,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1210,103 +1134,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
+    Troubleshoot
   
 
     
@@ -1327,14 +1162,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Two-Phase Pipeline
+    Extend ZettelForge
   
 
     
@@ -1355,98 +1190,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+      <a href="../../how-to/use-web-interface/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
+    Use web interface
   
 
     
@@ -1483,8 +1234,6 @@
         
         
       
-      
-        
       
     
     
@@ -1492,10 +1241,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -1513,8 +1262,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1531,14 +1280,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture-deep-dive/" class="md-nav__link">
+      <a href="../terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1587,174 +1336,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../memory-manager-api/" class="md-nav__link">
         
   
@@ -1783,90 +1364,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../stix-schema/" class="md-nav__link">
         
   
@@ -1874,7 +1371,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -1902,7 +1399,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -1939,7 +1576,7 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
   
 
     
@@ -1957,7 +1594,7 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
   
 
     
@@ -1983,10 +1620,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#what-this-reference-covers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        What this reference covers
       
     </span>
   </a>
@@ -1994,10 +1631,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vendored-schemas" class="md-nav__link">
+  <a href="#vendored-cccs-schemas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vendored Schemas
+        Vendored CCCS schemas
       
     </span>
   </a>
@@ -2005,22 +1642,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cccs-metadata-fields" class="md-nav__link">
+  <a href="#parser" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CCCS Metadata Fields
+        Parser
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="CCCS Metadata Fields">
+    <nav class="md-nav" aria-label="Parser">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#required_fields-dynamic" class="md-nav__link">
+  <a href="#parse_yaratext-str-listdictstr-any" class="md-nav__link">
     <span class="md-ellipsis">
       
-        REQUIRED_FIELDS (dynamic)
+        parse_yara(text: str) → list[dict[str, Any]]
       
     </span>
   </a>
@@ -2028,187 +1665,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#value-set-definitions" class="md-nav__link">
+  <a href="#parse_filepath-str-path-listdictstr-any" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Value Set Definitions
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Value Set Definitions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rule_statuses" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        rule_statuses
+        parse_file(path: str | Path) → list[dict[str, Any]]
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#sharing_classifications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        sharing_classifications
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#category_types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        category_types
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#malware_types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        malware_types
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#actor_types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        actor_types
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hash_types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        hash_types
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#per-field-validators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Per-Field Validators
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validation-tiers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validation Tiers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validationresult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ValidationResult
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parser-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parser API
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Parser API">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parse_yara" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        parse_yara()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parse_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        parse_file()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parse_text" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        parse_text()
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error Types
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Error Types">
-      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#yaraparseerror" class="md-nav__link">
@@ -2221,50 +1686,28 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#yaravalidationerror" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        YaraValidationError
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#rule-dict-shape-plyara-normalized" class="md-nav__link">
+  <a href="#cccs-metadata-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rule Dict Shape (plyara Normalized)
+        CCCS metadata validation
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ingestion-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ingestion Pipeline
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Ingestion Pipeline">
+    <nav class="md-nav" aria-label="CCCS metadata validation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#idempotency" class="md-nav__link">
+  <a href="#validation-tiers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Idempotency
+        Validation tiers
       
     </span>
   </a>
@@ -2272,10 +1715,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#edge-tagging" class="md-nav__link">
+  <a href="#required-cccs-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Edge Tagging
+        Required CCCS fields
       
     </span>
   </a>
@@ -2283,10 +1726,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relation-types-emitted" class="md-nav__link">
+  <a href="#auto-generated-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Relation Types Emitted
+        Auto-generated fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-cccs-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional CCCS fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate_metadatarule_meta-tier-validationresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        validate_metadata(rule_meta, tier) → ValidationResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#malware-type-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Malware type values
       
     </span>
   </a>
@@ -2299,43 +1775,149 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#file-size-limit" class="md-nav__link">
+  <a href="#yararule-dataclass" class="md-nav__link">
     <span class="md-ellipsis">
       
-        File Size Limit
+        YaraRule dataclass
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="YaraRule dataclass">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#detectionrule-base-fields-inherited" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DetectionRule base fields (inherited)
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#minimal-example" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#yararule-specific-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Minimal Example
+        YaraRule-specific fields
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#full-example" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#extra-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Full Example
+        Extra keys
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#standalone-validation" class="md-nav__link">
+  <a href="#rule_to_entitiesrule-tier-yararule-listdict" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Standalone Validation
+        rule_to_entities(rule, *, tier) → (YaraRule, list[dict])
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="rule_to_entities(rule, *, tier) → (YaraRule, list[dict])">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kg-edge-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KG edge shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relation-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relation types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tag-resolution-resolve_yara_tagtag-entity_type-entity_properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag resolution — resolve_yara_tag(tag) → (entity_type, entity_properties)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ingest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingest API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ingest API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ingest_rulerule_source-mm-domain-tier-sync-memorynote-none-listdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest_rule(rule_source, mm, *, domain, tier, sync) → (MemoryNote | None, list[dict])
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ingest_rules_dirpath-mm-glob-tier-domain-bulk-flush_timeout-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest_rules_dir(path, mm, *, glob, tier, domain, bulk, flush_timeout) → dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI
       
     </span>
   </a>
@@ -2346,6 +1928,118 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2370,7 +2064,230 @@
     
       
       
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2378,9 +2295,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2439,6 +2354,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2531,14 +2496,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2552,113 +2517,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2683,17 +2544,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2787,10 +2644,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#what-this-reference-covers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        What this reference covers
       
     </span>
   </a>
@@ -2798,10 +2655,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#vendored-schemas" class="md-nav__link">
+  <a href="#vendored-cccs-schemas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Vendored Schemas
+        Vendored CCCS schemas
       
     </span>
   </a>
@@ -2809,22 +2666,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cccs-metadata-fields" class="md-nav__link">
+  <a href="#parser" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CCCS Metadata Fields
+        Parser
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="CCCS Metadata Fields">
+    <nav class="md-nav" aria-label="Parser">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#required_fields-dynamic" class="md-nav__link">
+  <a href="#parse_yaratext-str-listdictstr-any" class="md-nav__link">
     <span class="md-ellipsis">
       
-        REQUIRED_FIELDS (dynamic)
+        parse_yara(text: str) → list[dict[str, Any]]
       
     </span>
   </a>
@@ -2832,187 +2689,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#value-set-definitions" class="md-nav__link">
+  <a href="#parse_filepath-str-path-listdictstr-any" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Value Set Definitions
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Value Set Definitions">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#rule_statuses" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        rule_statuses
+        parse_file(path: str | Path) → list[dict[str, Any]]
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#sharing_classifications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        sharing_classifications
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#category_types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        category_types
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#malware_types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        malware_types
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#actor_types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        actor_types
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#hash_types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        hash_types
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#per-field-validators" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Per-Field Validators
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validation-tiers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validation Tiers
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#validationresult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ValidationResult
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parser-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parser API
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Parser API">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parse_yara" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        parse_yara()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parse_file" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        parse_file()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parse_text" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        parse_text()
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error Types
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Error Types">
-      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#yaraparseerror" class="md-nav__link">
@@ -3025,50 +2710,28 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#yaravalidationerror" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        YaraValidationError
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#rule-dict-shape-plyara-normalized" class="md-nav__link">
+  <a href="#cccs-metadata-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Rule Dict Shape (plyara Normalized)
+        CCCS metadata validation
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ingestion-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ingestion Pipeline
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Ingestion Pipeline">
+    <nav class="md-nav" aria-label="CCCS metadata validation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#idempotency" class="md-nav__link">
+  <a href="#validation-tiers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Idempotency
+        Validation tiers
       
     </span>
   </a>
@@ -3076,10 +2739,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#edge-tagging" class="md-nav__link">
+  <a href="#required-cccs-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Edge Tagging
+        Required CCCS fields
       
     </span>
   </a>
@@ -3087,10 +2750,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relation-types-emitted" class="md-nav__link">
+  <a href="#auto-generated-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Relation Types Emitted
+        Auto-generated fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optional-cccs-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional CCCS fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#validate_metadatarule_meta-tier-validationresult" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        validate_metadata(rule_meta, tier) → ValidationResult
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#malware-type-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Malware type values
       
     </span>
   </a>
@@ -3103,43 +2799,149 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#file-size-limit" class="md-nav__link">
+  <a href="#yararule-dataclass" class="md-nav__link">
     <span class="md-ellipsis">
       
-        File Size Limit
+        YaraRule dataclass
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="YaraRule dataclass">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#detectionrule-base-fields-inherited" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DetectionRule base fields (inherited)
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#minimal-example" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#yararule-specific-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Minimal Example
+        YaraRule-specific fields
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#full-example" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#extra-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Full Example
+        Extra keys
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#standalone-validation" class="md-nav__link">
+  <a href="#rule_to_entitiesrule-tier-yararule-listdict" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Standalone Validation
+        rule_to_entities(rule, *, tier) → (YaraRule, list[dict])
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="rule_to_entities(rule, *, tier) → (YaraRule, list[dict])">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kg-edge-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KG edge shape
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relation-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relation types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tag-resolution-resolve_yara_tagtag-entity_type-entity_properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tag resolution — resolve_yara_tag(tag) → (entity_type, entity_properties)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ingest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingest API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ingest API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ingest_rulerule_source-mm-domain-tier-sync-memorynote-none-listdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest_rule(rule_source, mm, *, domain, tier, sync) → (MemoryNote | None, list[dict])
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ingest_rules_dirpath-mm-glob-tier-domain-bulk-flush_timeout-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ingest_rules_dir(path, mm, *, glob, tier, domain, bulk, flush_timeout) → dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI
       
     </span>
   </a>
@@ -3166,287 +2968,177 @@
   
 
 
-<h1 id="yara-schema-reference">YARA Schema Reference<a class="headerlink" href="#yara-schema-reference" title="Permanent link">&para;</a></h1>
-<p>Module: <code>zettelforge.yara.parser</code>, <code>zettelforge.yara.cccs_metadata</code>, <code>zettelforge.yara.schemas</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_yara</span><span class="p">,</span> <span class="n">parse_file</span><span class="p">,</span> <span class="n">YaraParseError</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.cccs_metadata</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">validate_metadata</span><span class="p">,</span> <span class="n">ValidationResult</span><span class="p">,</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">CCCS_YARA_SPEC</span><span class="p">,</span> <span class="n">CCCS_YARA_VALUES</span><span class="p">,</span> <span class="n">REQUIRED_FIELDS</span><span class="p">,</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">Tier</span><span class="p">,</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.ingest</span><span class="w"> </span><span class="kn">import</span> <span class="n">ingest_rule</span><span class="p">,</span> <span class="n">ingest_rules_dir</span>
+<h1 id="yara-schema-reference">YARA schema reference<a class="headerlink" href="#yara-schema-reference" title="Permanent link">&para;</a></h1>
+<p>Modules: <code>zettelforge.yara</code>, <code>zettelforge.yara.parser</code>, <code>zettelforge.yara.entities</code>, <code>zettelforge.yara.tags</code>, <code>zettelforge.yara.ingest</code></p>
+<p>ZettelForge 2.7.0 — MIT license</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">YaraRule</span><span class="p">,</span> <span class="n">YaraParseError</span><span class="p">,</span>
+    <span class="n">parse_yara</span><span class="p">,</span> <span class="n">parse_file</span><span class="p">,</span>
+    <span class="n">rule_to_entities</span><span class="p">,</span> <span class="n">resolve_yara_tag</span><span class="p">,</span>
+    <span class="n">ingest_rule</span><span class="p">,</span> <span class="n">ingest_rules_dir</span><span class="p">,</span>
+<span class="p">)</span>
 </code></pre></div>
 <hr />
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>ZettelForge provides a complete YARA rule handling pipeline: plyara-based
-parsing, clean-room CCCS (Canadian Centre for Cyber Security) metadata validation
-against vendored schema files, entity extraction, and knowledge graph population.</p>
-<p><strong>Parser</strong>: plyara 2.2.x wrapper<br />
-<strong>Metadata schema</strong>: Vendored <code>CCCS_YARA.yml</code> and <code>CCCS_YARA_values.yml</code><br />
-<strong>Validation</strong>: Clean-room reimplementation — no upstream code is vendored</p>
+<h2 id="what-this-reference-covers">What this reference covers<a class="headerlink" href="#what-this-reference-covers" title="Permanent link">&para;</a></h2>
+<p>The YARA subsystem has three layers:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Layer</th>
+<th style="text-align: left;">Module</th>
+<th style="text-align: left;">Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Parser</td>
+<td style="text-align: left;"><code>yara.parser</code></td>
+<td style="text-align: left;">Wrap plyara, normalize output to a stable dict shape</td>
+</tr>
+<tr>
+<td style="text-align: left;">Entity</td>
+<td style="text-align: left;"><code>yara.entities</code> / <code>yara.tags</code></td>
+<td style="text-align: left;">Map a parsed rule dict to <code>YaraRule</code> + KG edges</td>
+</tr>
+<tr>
+<td style="text-align: left;">Ingest</td>
+<td style="text-align: left;"><code>yara.ingest</code></td>
+<td style="text-align: left;">Orchestrate parse → entity → remember → persist</td>
+</tr>
+</tbody>
+</table>
+<p>This page covers all three layers. The CLI wraps the ingest layer; see <a href="#cli">CLI</a>.</p>
 <hr />
-<h2 id="vendored-schemas">Vendored Schemas<a class="headerlink" href="#vendored-schemas" title="Permanent link">&para;</a></h2>
-<p>Two schema files live in <code>src/zettelforge/yara/schemas/</code>:</p>
+<h2 id="vendored-cccs-schemas">Vendored CCCS schemas<a class="headerlink" href="#vendored-cccs-schemas" title="Permanent link">&para;</a></h2>
+<p>Two CCCS YARA metadata schema files are vendored in <code>src/zettelforge/yara/schemas/</code>:</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">File</th>
-<th style="text-align: left;">Description</th>
-<th style="text-align: left;">Loaded At</th>
+<th style="text-align: left;">Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>CCCS_YARA.yml</code></td>
-<td style="text-align: left;">CCCS YARA metadata field definitions (required fields, types, optionality)</td>
-<td style="text-align: left;">Import time via <code>_load_yaml()</code></td>
+<td style="text-align: left;">Field definitions, formats, and <code>optional</code> flags for all CCCS metadata keys</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>CCCS_YARA_values.yml</code></td>
-<td style="text-align: left;">CCCS enumerated value sets (statuses, categories, sharing classifications, etc.)</td>
-<td style="text-align: left;">Import time via <code>_load_yaml()</code></td>
+<td style="text-align: left;">Allowed value sets for <code>status</code>, <code>sharing</code>, <code>category</code>, <code>malware_type</code>, <code>actor_type</code>, and <code>hash</code></td>
 </tr>
 </tbody>
 </table>
-<p>See <code>src/zettelforge/yara/schemas/NOTICE.md</code> for licensing information about
-the vendored schema files.</p>
+<p>These files are a clean-room re-implementation; the upstream CCCS <code>validator_functions.py</code> is not vendored. See <code>schemas/NOTICE.md</code>.</p>
+<p>ZettelForge loads both files eagerly at import time. A missing or unreadable schema file raises at startup.</p>
 <hr />
-<h2 id="cccs-metadata-fields">CCCS Metadata Fields<a class="headerlink" href="#cccs-metadata-fields" title="Permanent link">&para;</a></h2>
-<p>Derived from <code>CCCS_YARA.yml</code>. Fields marked as <code>optional: No</code> or
-<code>optional: Optional</code> are treated as required under <code>strict</code> tier validation.</p>
+<h2 id="parser">Parser<a class="headerlink" href="#parser" title="Permanent link">&para;</a></h2>
+<h3 id="parse_yaratext-str-listdictstr-any"><code>parse_yara(text: str) → list[dict[str, Any]]</code><a class="headerlink" href="#parse_yaratext-str-listdictstr-any" title="Permanent link">&para;</a></h3>
+<p>Parse YARA source text into a list of normalized rule dicts. A single <code>.yar</code> file may contain multiple rules; one dict per rule.</p>
+<p>Uses a module-level <code>plyara.Plyara</code> instance protected by a threading lock (<code>_PARSER_LOCK</code>). The parser is reset before and after each call so state does not leak between invocations.</p>
+<p>Each returned dict contains:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Key</th>
 <th style="text-align: left;">Type</th>
-<th style="text-align: center;">Required (strict)</th>
-<th style="text-align: left;">Validation</th>
+<th style="text-align: left;">Source</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>id</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">yes</td>
-<td style="text-align: left;">Base62 UUID (16+ chars)</td>
+<td style="text-align: left;"><code>rule_name</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">plyara</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>fingerprint</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">yes</td>
-<td style="text-align: left;">Hex digest 40-64 chars (SHA-1/SHA-256)</td>
+<td style="text-align: left;"><code>tags</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">plyara (inline rule tags, e.g. <code>rule Foo : APT</code>)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>version</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">yes</td>
-<td style="text-align: left;">Semantic version <code>x.y</code></td>
+<td style="text-align: left;"><code>imports</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">plyara (YARA <code>import</code> statements)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>modified</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">yes</td>
-<td style="text-align: left;">ISO date <code>YYYY-MM-DD</code></td>
+<td style="text-align: left;"><code>metadata</code></td>
+<td style="text-align: left;"><code>list[dict]</code></td>
+<td style="text-align: left;">plyara raw (list of single-key dicts)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>status</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">yes</td>
-<td style="text-align: left;">Must match <code>rule_statuses</code> value set</td>
+<td style="text-align: left;"><code>meta</code></td>
+<td style="text-align: left;"><code>dict</code></td>
+<td style="text-align: left;">added by parser — flattened from <code>metadata</code>, last-write-wins for duplicate keys</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>sharing</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">yes</td>
-<td style="text-align: left;">Must match <code>sharing_classifications</code> value set</td>
+<td style="text-align: left;"><code>strings</code></td>
+<td style="text-align: left;"><code>list[dict]</code></td>
+<td style="text-align: left;">plyara</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>source</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">yes</td>
-<td style="text-align: left;">Non-empty string (uppercase convention)</td>
+<td style="text-align: left;"><code>condition_terms</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">plyara</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>author</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">yes</td>
-<td style="text-align: left;">Must match author regex (email-like format)</td>
+<td style="text-align: left;"><code>raw_condition</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">plyara</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>description</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">yes</td>
-<td style="text-align: left;">Non-empty string</td>
+<td style="text-align: left;"><code>raw_strings</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">plyara</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>category</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">yes</td>
-<td style="text-align: left;">Must match <code>category_types</code> value set</td>
+<td style="text-align: left;"><code>raw_meta</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">plyara</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>date</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">no</td>
-<td style="text-align: left;">ISO date <code>YYYY-MM-DD</code></td>
+<td style="text-align: left;"><code>raw_rule</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">added by parser — exact source text carved from <code>start_line</code>/<code>stop_line</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>malware_type</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">no</td>
-<td style="text-align: left;">Must match <code>malware_types</code> value set</td>
+<td style="text-align: left;"><code>start_line</code></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;">plyara (1-indexed, inclusive)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>actor_type</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">no</td>
-<td style="text-align: left;">Must match <code>actor_types</code> value set</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>actor</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">no</td>
-<td style="text-align: left;">Free-form string</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>technique</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">no</td>
-<td style="text-align: left;">Free-form string</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>mitre_att</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">no</td>
-<td style="text-align: left;">Pattern <code>T####</code>, <code>G####</code>, <code>S####</code>, or <code>TA####</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>hash</code></td>
-<td style="text-align: left;"><code>string</code></td>
-<td style="text-align: center;">no</td>
-<td style="text-align: left;">Must match <code>hash_types</code> value set</td>
+<td style="text-align: left;"><code>stop_line</code></td>
+<td style="text-align: left;"><code>int</code></td>
+<td style="text-align: left;">plyara</td>
 </tr>
 </tbody>
 </table>
-<h3 id="required_fields-dynamic">REQUIRED_FIELDS (dynamic)<a class="headerlink" href="#required_fields-dynamic" title="Permanent link">&para;</a></h3>
-<p>The <code>_required_fields()</code> function walks <code>CCCS_YARA_SPEC</code> and collects all
-keys where <code>optional</code> is <code>False</code> (YAML <code>No</code>) or the string <code>"Optional"</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">REQUIRED_FIELDS</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;fingerprint&quot;</span><span class="p">,</span> <span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="s2">&quot;modified&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;status&quot;</span><span class="p">,</span> <span class="s2">&quot;sharing&quot;</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;author&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;category&quot;</span><span class="p">,</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">]</span>
+<h3 id="parse_filepath-str-path-listdictstr-any"><code>parse_file(path: str | Path) → list[dict[str, Any]]</code><a class="headerlink" href="#parse_filepath-str-path-listdictstr-any" title="Permanent link">&para;</a></h3>
+<p>Parse a <code>.yar</code> or <code>.yara</code> file. Raises <code>YaraParseError</code> when:</p>
+<ul>
+<li>the file cannot be stat'd (I/O error),</li>
+<li>the file exceeds <code>MAX_RULE_FILE_BYTES</code> (1 048 576 bytes, 1 MiB), or</li>
+<li>plyara raises on a syntax error (re-raised as <code>ValueError</code>).</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="n">rules</span> <span class="o">=</span> <span class="n">parse_file</span><span class="p">(</span><span class="s2">&quot;rules/apt41.yar&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s2">&quot;rule_name&quot;</span><span class="p">],</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">))</span>
 </code></pre></div>
-<h3 id="value-set-definitions">Value Set Definitions<a class="headerlink" href="#value-set-definitions" title="Permanent link">&para;</a></h3>
-<p>From <code>CCCS_YARA_values.yml</code>. Each value set is compiled to a list of
-regex patterns at import time:</p>
-<h4 id="rule_statuses"><code>rule_statuses</code><a class="headerlink" href="#rule_statuses" title="Permanent link">&para;</a></h4>
-<p>Standard CCCS rule maturity statuses (e.g., <code>RELEASED</code>, <code>DRAFT</code>, <code>TEST</code>,
-<code>DEPRECATED</code>). Validated via regex alternation.</p>
-<h4 id="sharing_classifications"><code>sharing_classifications</code><a class="headerlink" href="#sharing_classifications" title="Permanent link">&para;</a></h4>
-<p>TLP marking labels and CCCS sharing classifications (e.g., <code>TLP:WHITE</code>,
-<code>TLP:GREEN</code>, <code>TLP:AMBER</code>, <code>TLP:RED</code>). Validated via regex alternation.</p>
-<h4 id="category_types"><code>category_types</code><a class="headerlink" href="#category_types" title="Permanent link">&para;</a></h4>
-<p>Rule categories (e.g., <code>INFO</code>, <code>EXPLOIT</code>, <code>TECHNIQUE</code>, <code>TOOL</code>, <code>MALWARE</code>).
-Validated via regex alternation.</p>
-<h4 id="malware_types"><code>malware_types</code><a class="headerlink" href="#malware_types" title="Permanent link">&para;</a></h4>
-<p>Malware type identifiers when <code>category=MALWARE</code>. Validated via regex
-alternation.</p>
-<h4 id="actor_types"><code>actor_types</code><a class="headerlink" href="#actor_types" title="Permanent link">&para;</a></h4>
-<p>Threat actor type identifiers when <code>actor</code> meta is present. Validated via
-regex alternation.</p>
-<h4 id="hash_types"><code>hash_types</code><a class="headerlink" href="#hash_types" title="Permanent link">&para;</a></h4>
-<p>Known hash length patterns (MD5, SHA-1, SHA-256, SHA-512). Validated via
-regex alternation.</p>
-<hr />
-<h2 id="per-field-validators">Per-Field Validators<a class="headerlink" href="#per-field-validators" title="Permanent link">&para;</a></h2>
-<p>Clean-room implementations of CCCS validator names. Each validator is a
-pure function returning either <code>None</code> (valid) or an error string.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Field</th>
-<th style="text-align: left;">Validator Function</th>
-<th style="text-align: left;">Pattern</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>id</code></td>
-<td style="text-align: left;"><code>_UUID_REGEX</code></td>
-<td style="text-align: left;"><code>^[0-9A-Za-z]{16,}$</code> (base62 UUID)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>fingerprint</code></td>
-<td style="text-align: left;"><code>_FINGERPRINT_REGEX</code></td>
-<td style="text-align: left;"><code>^[a-fA-F0-9]{40,64}$</code> (SHA-1/SHA-256 hex)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>version</code></td>
-<td style="text-align: left;"><code>_VERSION_REGEX</code></td>
-<td style="text-align: left;"><code>^\d+\.\d+$</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>date</code>, <code>modified</code></td>
-<td style="text-align: left;"><code>_DATE_REGEX</code></td>
-<td style="text-align: left;"><code>^\d{4}-\d{2}-\d{2}$</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>status</code></td>
-<td style="text-align: left;"><code>_STATUS_REGEXES</code></td>
-<td style="text-align: left;">Alternation of allowed values</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>sharing</code></td>
-<td style="text-align: left;"><code>_SHARING_REGEXES</code></td>
-<td style="text-align: left;">Alternation of allowed values</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>category</code></td>
-<td style="text-align: left;"><code>_CATEGORY_REGEXES</code></td>
-<td style="text-align: left;">Alternation of allowed values</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>malware_type</code></td>
-<td style="text-align: left;"><code>_MALWARE_TYPE_REGEXES</code></td>
-<td style="text-align: left;">Alternation of allowed values</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>actor_type</code></td>
-<td style="text-align: left;"><code>_ACTOR_TYPE_REGEXES</code></td>
-<td style="text-align: left;">Alternation of allowed values</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>hash</code></td>
-<td style="text-align: left;"><code>_HASH_REGEXES</code></td>
-<td style="text-align: left;">Alternation of known hash lengths</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>mitre_att</code></td>
-<td style="text-align: left;"><code>_MITRE_ATT_REGEX</code></td>
-<td style="text-align: left;"><code>^(TA\|T\|M\|G\|S)\d{4}(\.\d{3})?$</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>author</code></td>
-<td style="text-align: left;"><code>_AUTHOR_REGEX</code></td>
-<td style="text-align: left;">Email-like format</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>source</code></td>
-<td style="text-align: left;">Always valid</td>
-<td style="text-align: left;">Non-empty string accepted</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>description</code></td>
-<td style="text-align: left;">Always valid</td>
-<td style="text-align: left;">Non-empty string accepted</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="validation-tiers">Validation Tiers<a class="headerlink" href="#validation-tiers" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">Tier</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;strict&quot;</span><span class="p">,</span> <span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="s2">&quot;non_cccs&quot;</span><span class="p">]</span>
+<h3 id="yaraparseerror"><code>YaraParseError</code><a class="headerlink" href="#yaraparseerror" title="Permanent link">&para;</a></h3>
+<p><code>ValueError</code> subclass raised when a rule file is rejected before it reaches plyara (I/O error, oversize). Syntax errors from plyara are re-raised as plain <code>ValueError</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">YaraParseError</span><span class="p">,</span> <span class="n">parse_file</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">rules</span> <span class="o">=</span> <span class="n">parse_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">YaraParseError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rejected: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;syntax error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
+<hr />
+<h2 id="cccs-metadata-validation">CCCS metadata validation<a class="headerlink" href="#cccs-metadata-validation" title="Permanent link">&para;</a></h2>
+<h3 id="validation-tiers">Validation tiers<a class="headerlink" href="#validation-tiers" title="Permanent link">&para;</a></h3>
+<p>ZettelForge validates each rule's metadata block against the vendored CCCS schema at ingest time. Three tiers control strictness:</p>
 <table>
 <thead>
 <tr>
@@ -3456,78 +3148,357 @@ pure function returning either <code>None</code> (valid) or an error string.</p>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>strict</code></td>
-<td style="text-align: left;">Every required field must be present and valid. Any failure sets <code>accepted=False</code> and populates <code>errors</code>. Rules missing or invalid required fields are <strong>rejected</strong> (note returned as <code>None</code> from <code>ingest_rule()</code>).</td>
+<td style="text-align: left;"><code>"warn"</code> (default)</td>
+<td style="text-align: left;">Required-field failures and value violations are recorded as warnings. <code>accepted</code> is always <code>True</code>.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>warn</code></td>
-<td style="text-align: left;">Same checks as strict, but failures are recorded as <code>warnings</code> and <code>accepted</code> stays <code>True</code> (default). Rules are accepted with warning annotations.</td>
+<td style="text-align: left;"><code>"strict"</code></td>
+<td style="text-align: left;">Failures on required fields produce errors and set <code>accepted = False</code>; the ingest path drops the rule.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>non_cccs</code></td>
-<td style="text-align: left;">Accept unconditionally — no validation checks performed. Returns <code>(True, [], [])</code>.</td>
+<td style="text-align: left;"><code>"non_cccs"</code></td>
+<td style="text-align: left;">All checks skipped. Returns <code>(True, [], [])</code> unconditionally.</td>
 </tr>
 </tbody>
 </table>
+<h3 id="required-cccs-fields">Required CCCS fields<a class="headerlink" href="#required-cccs-fields" title="Permanent link">&para;</a></h3>
+<p>These fields are <code>optional: No</code> in <code>CCCS_YARA.yml</code> and must be present in <code>strict</code> tier. In <code>warn</code> tier, their absence is recorded as a warning but does not block ingest.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Format</th>
+<th style="text-align: left;">Validated values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>status</code></td>
+<td style="text-align: left;">uppercase string</td>
+<td style="text-align: left;"><code>TESTING</code>, <code>RELEASED</code>, <code>DEPRECATED</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sharing</code></td>
+<td style="text-align: left;">TLP label</td>
+<td style="text-align: left;"><code>TLP:CLEAR</code>, <code>TLP:GREEN</code>, <code>TLP:AMBER</code>, <code>TLP:AMBER+STRICT</code> (each also allows <code>//COMMERCIAL</code> suffix)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>source</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">Any non-empty string; uppercase is convention</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>author</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;"><code>[A-Za-z0-9_.@+-]+</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>description</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">Any non-empty string</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>category</code></td>
+<td style="text-align: left;">uppercase string</td>
+<td style="text-align: left;"><code>INFO</code>, <code>EXPLOIT</code>, <code>TECHNIQUE</code>, <code>TOOL</code>, <code>MALWARE</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="auto-generated-fields">Auto-generated fields<a class="headerlink" href="#auto-generated-fields" title="Permanent link">&para;</a></h3>
+<p>These fields are <code>optional: Optional</code> in <code>CCCS_YARA.yml</code>. The upstream CCCS validator auto-generates them when absent; ZettelForge does not auto-generate but treats them as required in <code>strict</code> tier to preserve provenance.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Format</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>id</code></td>
+<td style="text-align: left;">Base62 UUID (16+ chars)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fingerprint</code></td>
+<td style="text-align: left;">Hex digest (SHA-1 or SHA-256, 40–64 chars)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>version</code></td>
+<td style="text-align: left;"><code>x.y</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>modified</code></td>
+<td style="text-align: left;"><code>YYYY-MM-DD</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="optional-cccs-fields">Optional CCCS fields<a class="headerlink" href="#optional-cccs-fields" title="Permanent link">&para;</a></h3>
+<p>All other fields in <code>CCCS_YARA.yml</code> are <code>optional: Yes</code>. They are validated when present but their absence never produces a warning or error.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>date</code></td>
+<td style="text-align: left;">string (<code>YYYY-MM-DD</code>)</td>
+<td style="text-align: left;">Creation date</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>score</code></td>
+<td style="text-align: left;">integer (0–100)</td>
+<td style="text-align: left;">Confidence percentage</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>minimum_yara</code></td>
+<td style="text-align: left;">string (<code>x.y</code>)</td>
+<td style="text-align: left;">Minimum YARA version required</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>malware_type</code></td>
+<td style="text-align: left;">uppercase string</td>
+<td style="text-align: left;">Malware capability (see <a href="#malware-type-values">malware types</a>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mitre_att</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">MITRE ATT&amp;CK ID(s): <code>T####</code>, <code>T####.###</code>, <code>TA####</code>, <code>G####</code>, <code>S####</code>; comma- or semicolon-separated list accepted</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>actor</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">Threat actor name</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>actor_type</code></td>
+<td style="text-align: left;">uppercase string</td>
+<td style="text-align: left;"><code>APT</code>, <code>CRIMEWARE</code>, or <code>FIN</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>technique</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">CCCS technique tag (freeform; distinct from <code>mitre_att</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hash</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">Sample hash: 32-char (MD5), 40-char (SHA-1), or 64-char (SHA-256) hex</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>report</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">Linked report URL or reference</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>reference</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">External reference (URL, report, individual)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>vol_script</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">Reverse-engineering team metadata</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>al_*</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">Assembly Line internal metadata</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>credit</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">Author credit note</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>original_*</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">Preserved metadata from rule conversions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="validate_metadatarule_meta-tier-validationresult"><code>validate_metadata(rule_meta, tier)</code> → <code>ValidationResult</code><a class="headerlink" href="#validate_metadatarule_meta-tier-validationresult" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.cccs_metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_metadata</span><span class="p">,</span> <span class="n">ValidationResult</span>
+
+<span class="n">result</span><span class="p">:</span> <span class="n">ValidationResult</span> <span class="o">=</span> <span class="n">validate_metadata</span><span class="p">(</span><span class="n">meta_dict</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
+<span class="c1"># result.accepted  — True unless strict tier produced errors</span>
+<span class="c1"># result.warnings  — list[str]</span>
+<span class="c1"># result.errors    — list[str]</span>
+</code></pre></div>
+<h3 id="malware-type-values">Malware type values<a class="headerlink" href="#malware-type-values" title="Permanent link">&para;</a></h3>
+<p>Valid values for <code>malware_type</code> (validated when present):</p>
+<p><code>ADWARE</code>, <code>APT</code>, <code>BACKDOOR</code>, <code>BANKER</code>, <code>BOOTKIT</code>, <code>BOT</code>, <code>BROWSER-HIJACKER</code>, <code>BRUTEFORCER</code>, <code>CLICKFRAUD</code>, <code>CRYPTOMINER</code>, <code>DDOS</code>, <code>DOWNLOADER</code>, <code>DROPPER</code>, <code>EXPLOITKIT</code>, <code>FAKEAV</code>, <code>HACKTOOL</code>, <code>INFOSTEALER</code>, <code>KEYLOGGER</code>, <code>LOADER</code>, <code>OBFUSCATOR</code>, <code>POS</code>, <code>PROXY</code>, <code>RAT</code>, <code>RANSOMWARE</code>, <code>REVERSE-PROXY</code>, <code>ROOTKIT</code>, <code>SCANNER</code>, <code>SCAREWARE</code>, <code>SPAMMER</code>, <code>TROJAN</code>, <code>VIRUS</code>, <code>WIPER</code>, <code>WEBSHELL</code>, <code>WORM</code></p>
 <hr />
-<h2 id="validationresult">ValidationResult<a class="headerlink" href="#validationresult" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ValidationResult</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">accepted</span><span class="p">:</span> <span class="nb">bool</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">warnings</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
-</code></pre></div>
-<ul>
-<li><code>accepted</code>: <code>True</code> for <code>warn</code> and <code>non_cccs</code> tiers; <code>True</code> for <code>strict</code> only when no errors</li>
-<li><code>warnings</code>: Validation issues that did not cause rejection (metadata missing or invalid under <code>warn</code> tier)</li>
-<li><code>errors</code>: Validation failures that caused rejection (only populated under <code>strict</code> tier)</li>
-</ul>
-<hr />
-<h2 id="parser-api">Parser API<a class="headerlink" href="#parser-api" title="Permanent link">&para;</a></h2>
-<h3 id="parse_yara">parse_yara()<a class="headerlink" href="#parse_yara" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">parse_yara</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
-</code></pre></div>
-<p>Parses YARA source text into a list of normalized rule dicts. A single <code>.yar</code>
-file may contain multiple rules — one dict per rule.</p>
-<p><strong>Normalization applied to each rule dict:</strong></p>
-<ol>
-<li><strong><code>meta</code></strong>: Flattened dict from plyara's <code>metadata</code> (list-of-single-key-dicts)
-   using <code>_flatten_metadata()</code></li>
-<li><strong><code>imports</code></strong>: Copied from parser-level <code>Plyara.imports</code> when the rule dict
-   lacks its own import list</li>
-<li><strong><code>tags</code></strong>: Defaults to empty list when absent</li>
-<li><strong><code>raw_rule</code></strong>: Raw source text substring carved by <code>start_line</code>/<code>stop_line</code>
-   markers — useful for persisting rule text back into a note</li>
-</ol>
-<h3 id="parse_file">parse_file()<a class="headerlink" href="#parse_file" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">parse_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
-</code></pre></div>
-<p>Parses a <code>.yar</code> or <code>.yara</code> file into a list of normalized rule dicts.</p>
-<ul>
-<li>File size limit: <code>MAX_RULE_FILE_BYTES = 1_048_576</code> (1 MB)</li>
-<li>Raises <code>YaraParseError</code> if the file is oversized (<code>&gt; 1 MB</code>) or unreadable</li>
-</ul>
-<h3 id="parse_text">parse_text()<a class="headerlink" href="#parse_text" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">parse_text</span><span class="p">(</span><span class="n">yara_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
-</code></pre></div>
-<p>Legacy alias for <code>parse_yara()</code>. Retained for scaffold compatibility.</p>
-<hr />
-<h2 id="error-types">Error Types<a class="headerlink" href="#error-types" title="Permanent link">&para;</a></h2>
-<h3 id="yaraparseerror">YaraParseError<a class="headerlink" href="#yaraparseerror" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">YaraParseError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span>
-</code></pre></div>
-<p>Raised when a YARA rule file cannot be parsed or is otherwise rejected before
-it reaches plyara (I/O error, oversized file, etc.).</p>
-<h3 id="yaravalidationerror">YaraValidationError<a class="headerlink" href="#yaravalidationerror" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">YaraValidationError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span>
-</code></pre></div>
-<p>Mirrors <code>SigmaValidationError</code>. Raised when CCCS metadata validation fails
-hard enough that callers should treat the rule as unacceptable. The
-<code>validate_metadata()</code> function itself returns a <code>ValidationResult</code> so
-strict/warn/non_cccs callers can inspect the outcome without catching.</p>
-<hr />
-<h2 id="rule-dict-shape-plyara-normalized">Rule Dict Shape (plyara Normalized)<a class="headerlink" href="#rule-dict-shape-plyara-normalized" title="Permanent link">&para;</a></h2>
-<p>After parsing, each rule dict contains plyara's original keys plus these
-additions:</p>
+<h2 id="yararule-dataclass"><code>YaraRule</code> dataclass<a class="headerlink" href="#yararule-dataclass" title="Permanent link">&para;</a></h2>
+<p><code>YaraRule</code> extends <code>DetectionRule</code> with YARA-specific fields.</p>
+<h3 id="detectionrule-base-fields-inherited"><code>DetectionRule</code> base fields (inherited)<a class="headerlink" href="#detectionrule-base-fields-inherited" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>rule_id</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Primary identifier. CCCS <code>id</code> when present; otherwise <code>yara_&lt;content_hash[:16]&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>title</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Rule name (<code>rule_name</code> from parser)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>source_format</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Always <code>"yara"</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>content_sha256</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">SHA-256 of the raw rule text (when available) or of <code>rule_name + strings + condition</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>description</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">From CCCS <code>description</code> meta</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>author</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">From CCCS <code>author</code> meta</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>date</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">From CCCS <code>date</code> meta (<code>YYYY-MM-DD</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>modified</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">From CCCS <code>modified</code> meta (<code>YYYY-MM-DD</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>references</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">Populated from <code>meta["report"]</code> when present</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tags</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">Inline YARA tags (grammar-level, e.g. <code>rule Foo : APT MAL</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>level</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Not populated by YARA ingest (Sigma concept)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>status</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Lowercased CCCS <code>status</code> value</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tlp</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">From CCCS <code>sharing</code> meta</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>license</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Not populated by YARA ingest</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>source_repo</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Not populated by YARA ingest</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>source_path</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Not populated by YARA ingest</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>extra</code></td>
+<td style="text-align: left;"><code>dict[str, Any]</code></td>
+<td style="text-align: left;">See <a href="#extra-keys">extra keys</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="yararule-specific-fields"><code>YaraRule</code>-specific fields<a class="headerlink" href="#yararule-specific-fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>rule_name</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Raw YARA rule name (same as <code>title</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>cccs_id</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">CCCS <code>id</code> meta value</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fingerprint</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">CCCS <code>fingerprint</code> meta (SHA-256 over strings + condition)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>category</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">CCCS category: <code>INFO</code>, <code>EXPLOIT</code>, <code>TECHNIQUE</code>, <code>TOOL</code>, or <code>MALWARE</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>technique_tag</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">CCCS <code>technique</code> meta value (freeform; distinct from MITRE IDs)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>cccs_version</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">CCCS <code>version</code> meta value, coerced to string</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>hash_of_sample</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">CCCS <code>hash</code> values (one or more sample hashes)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>is_private</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>True</code> when the rule has the <code>private</code> modifier</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>is_global</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>True</code> when the rule has the <code>global</code> modifier</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>imports</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">YARA <code>import</code> module names (e.g. <code>"pe"</code>, <code>"hash"</code>, <code>"dotnet"</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>condition</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Raw condition expression, stripped of leading/trailing whitespace</td>
+</tr>
+</tbody>
+</table>
+<h3 id="extra-keys">Extra keys<a class="headerlink" href="#extra-keys" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -3538,212 +3509,312 @@ additions:</p>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>rule_name</code></td>
+<td style="text-align: left;"><code>cccs_compliant</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">Rule name from YARA source</td>
+<td style="text-align: left;">Tier the rule was tagged with: <code>"strict"</code>, <code>"warn"</code>, or <code>"non_cccs"</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>meta</code></td>
-<td style="text-align: left;"><code>dict</code></td>
-<td style="text-align: left;">Flattened metadata from <code>metadata</code> list</td>
+<td style="text-align: left;"><code>cccs_warnings</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">Warnings from metadata validation</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>strings</code></td>
-<td style="text-align: left;"><code>list</code></td>
-<td style="text-align: left;">Rule string definitions</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>condition</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">Rule condition expression</td>
+<td style="text-align: left;"><code>cccs_errors</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">Errors from metadata validation</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>condition_terms</code></td>
-<td style="text-align: left;"><code>list</code></td>
-<td style="text-align: left;">Parsed condition terms</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>tags</code></td>
 <td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">Inline rule tags</td>
+<td style="text-align: left;">Individual condition tokens from plyara</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>imports</code></td>
-<td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">Module imports (e.g., <code>pe</code>, <code>hash</code>)</td>
+<td style="text-align: left;"><code>source_line_range</code></td>
+<td style="text-align: left;"><code>[int, int]</code></td>
+<td style="text-align: left;"><code>[start_line, stop_line]</code> from plyara</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>raw_meta</code></td>
+<td style="text-align: left;"><code>source</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">Raw meta section text</td>
+<td style="text-align: left;">CCCS <code>source</code> org (when present)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>raw_strings</code></td>
+<td style="text-align: left;"><code>malware_type</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">Raw strings section text</td>
+<td style="text-align: left;">CCCS <code>malware_type</code> (when present)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>raw_condition</code></td>
+<td style="text-align: left;"><code>actor_type</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">Raw condition section text</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>start_line</code></td>
-<td style="text-align: left;"><code>int</code></td>
-<td style="text-align: left;">Line number where the rule starts (1-indexed)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>stop_line</code></td>
-<td style="text-align: left;"><code>int</code></td>
-<td style="text-align: left;">Line number where the rule ends (inclusive)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>raw_rule</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">Source text substring from start_line to stop_line</td>
+<td style="text-align: left;">CCCS <code>actor_type</code> (present when <code>actor_type</code> is given but no <code>actor</code> name)</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="ingestion-pipeline">Ingestion Pipeline<a class="headerlink" href="#ingestion-pipeline" title="Permanent link">&para;</a></h2>
-<p>The <code>ingest_rule()</code> function in <code>yara.ingest</code> orchestrates the per-rule pipeline:</p>
-<ol>
-<li><strong>Parse</strong> via plyara wrapper</li>
-<li><strong>Validate CCCS metadata</strong> against vendored schemas</li>
-<li><strong>Extract entities</strong> via <code>rule_to_entities()</code> which returns a <code>YaraRule</code> instance and relation list</li>
-<li><strong>Construct note content</strong> (raw rule text + summary with name, category, technique, author, CCCS tier)</li>
-<li><strong>Persist</strong> note via <code>MemoryManager.remember()</code> with <code>source_type="yara"</code></li>
-<li><strong>Write KG edges</strong> via <code>store.add_kg_edge()</code> for each relation</li>
-</ol>
-<h3 id="idempotency">Idempotency<a class="headerlink" href="#idempotency" title="Permanent link">&para;</a></h3>
-<p>Source ref pattern: <code>yara:&lt;rule_id&gt;:&lt;content_sha256[:12]&gt;</code>
-A store lookup via <code>get_note_by_source_ref()</code> precedes every write.</p>
-<h3 id="edge-tagging">Edge Tagging<a class="headerlink" href="#edge-tagging" title="Permanent link">&para;</a></h3>
-<p>All KG edges carry:
-- <code>edge_type: detection</code> — distinguishes from causal or heuristic edges
-- <code>source: yara_ingest</code> — provenance tag for downstream filtering</p>
-<h3 id="relation-types-emitted">Relation Types Emitted<a class="headerlink" href="#relation-types-emitted" title="Permanent link">&para;</a></h3>
+<h2 id="rule_to_entitiesrule-tier-yararule-listdict"><code>rule_to_entities(rule, *, tier)</code> → <code>(YaraRule, list[dict])</code><a class="headerlink" href="#rule_to_entitiesrule-tier-yararule-listdict" title="Permanent link">&para;</a></h2>
+<p>Convert a parsed YARA rule dict into a <code>YaraRule</code> entity and a list of KG edges.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.entities</span><span class="w"> </span><span class="kn">import</span> <span class="n">rule_to_entities</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_yara</span>
+
+<span class="n">rules</span> <span class="o">=</span> <span class="n">parse_yara</span><span class="p">(</span><span class="n">yara_text</span><span class="p">)</span>
+<span class="n">entity</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">rule_to_entities</span><span class="p">(</span><span class="n">rules</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="kg-edge-shape">KG edge shape<a class="headerlink" href="#kg-edge-shape" title="Permanent link">&para;</a></h3>
+<p>Every relation dict uses the canonical edge shape expected by <code>SQLiteMemoryStore.add_kg_edge</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="s2">&quot;from_type&quot;</span><span class="p">:</span> <span class="s2">&quot;YaraRule&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;from_value&quot;</span><span class="p">:</span> <span class="n">entity</span><span class="o">.</span><span class="n">rule_id</span><span class="p">,</span>   <span class="c1"># str</span>
+    <span class="s2">&quot;rel&quot;</span><span class="p">:</span>        <span class="nb">str</span><span class="p">,</span>              <span class="c1"># see relation types below</span>
+    <span class="s2">&quot;to_type&quot;</span><span class="p">:</span>    <span class="nb">str</span><span class="p">,</span>              <span class="c1"># entity type of the target</span>
+    <span class="s2">&quot;to_value&quot;</span><span class="p">:</span>   <span class="nb">str</span><span class="p">,</span>              <span class="c1"># primary identifier of the target</span>
+    <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>            <span class="c1"># additional relation properties</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="relation-types">Relation types<a class="headerlink" href="#relation-types" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Relation</th>
-<th style="text-align: left;">Target Type</th>
-<th style="text-align: left;">Source</th>
-<th style="text-align: left;">Description</th>
+<th style="text-align: left;"><code>to_type</code></th>
+<th style="text-align: left;">Trigger</th>
+<th style="text-align: left;"><code>to_value</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>detects</code></td>
 <td style="text-align: left;"><code>AttackPattern</code></td>
-<td style="text-align: left;"><code>mitre_att</code> meta</td>
-<td style="text-align: left;">MITRE technique detection</td>
+<td style="text-align: left;">CCCS <code>mitre_att</code> meta (one edge per technique ID)</td>
+<td style="text-align: left;">Normalized MITRE ID, e.g. <code>T1218</code>, <code>T1218.001</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>tagged_with</code></td>
-<td style="text-align: left;"><code>YaraTag</code></td>
-<td style="text-align: left;">inline tags + CCCS technique</td>
-<td style="text-align: left;">Lossless tag edge</td>
+<td style="text-align: left;"><code>detects</code></td>
+<td style="text-align: left;"><code>AttackPattern</code></td>
+<td style="text-align: left;">Inline tag matches <code>T####</code> or <code>attack.T####</code></td>
+<td style="text-align: left;">MITRE technique ID</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>attributed_to</code></td>
 <td style="text-align: left;"><code>ThreatActor</code></td>
-<td style="text-align: left;"><code>actor</code> / <code>actor_type</code> meta</td>
-<td style="text-align: left;">Threat actor attribution</td>
+<td style="text-align: left;">CCCS <code>actor</code> meta</td>
+<td style="text-align: left;">Actor name string</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tagged_with</code></td>
+<td style="text-align: left;"><code>YaraTag</code></td>
+<td style="text-align: left;">CCCS <code>technique</code> meta</td>
+<td style="text-align: left;">Technique name (namespace <code>"technique"</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tagged_with</code></td>
+<td style="text-align: left;"><code>YaraTag</code></td>
+<td style="text-align: left;">Inline tag (category token or freeform)</td>
+<td style="text-align: left;">Tag name</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>references_cve</code></td>
 <td style="text-align: left;"><code>Vulnerability</code></td>
-<td style="text-align: left;">inline tags resolving to CVE</td>
-<td style="text-align: left;">CVE reference</td>
+<td style="text-align: left;">Inline tag matches <code>CVE_YYYY_NNNN</code> or <code>CVE-YYYY-NNNN</code></td>
+<td style="text-align: left;">Normalized <code>CVE-YYYY-NNNN</code></td>
 </tr>
 </tbody>
 </table>
+<h3 id="tag-resolution-resolve_yara_tagtag-entity_type-entity_properties">Tag resolution — <code>resolve_yara_tag(tag)</code> → <code>(entity_type, entity_properties)</code><a class="headerlink" href="#tag-resolution-resolve_yara_tagtag-entity_type-entity_properties" title="Permanent link">&para;</a></h3>
+<p>Inline YARA grammar tags (the colon-separated tokens after the rule name) are resolved before they become KG edges:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag pattern</th>
+<th style="text-align: left;">Resolved type</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>T####</code> or <code>attack.T####</code> (case-insensitive)</td>
+<td style="text-align: left;"><code>AttackPattern</code></td>
+<td style="text-align: left;"><code>T1218</code> → <code>{"technique_id": "T1218"}</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CVE_YYYY_NNNN</code> or <code>CVE-YYYY-NNNN</code> (case-insensitive)</td>
+<td style="text-align: left;"><code>Vulnerability</code></td>
+<td style="text-align: left;"><code>CVE_2021_44228</code> → <code>{"cve_id": "CVE-2021-44228"}</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Known category token</td>
+<td style="text-align: left;"><code>YaraTag</code></td>
+<td style="text-align: left;"><code>APT</code> → <code>{"namespace": "category", "name": "APT"}</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Anything else</td>
+<td style="text-align: left;"><code>YaraTag</code></td>
+<td style="text-align: left;"><code>custom_tag</code> → <code>{"namespace": "freeform", "name": "custom_tag"}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Known category tokens (case-insensitive match): <code>APT</code>, <code>CRIME</code>, <code>CRIMEWARE</code>, <code>EXPL</code>, <code>HKTL</code>, <code>MAL</code>, <code>MALWARE</code>, <code>PUA</code>, <code>RAT</code>, <code>RANSOM</code>, <code>RANSOMWARE</code>, <code>SUSP</code>, <code>VULN</code>, <code>WEBSHELL</code>.</p>
 <hr />
-<h2 id="file-size-limit">File Size Limit<a class="headerlink" href="#file-size-limit" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">MAX_RULE_FILE_BYTES</span> <span class="o">=</span> <span class="mi">1_048_576</span>  <span class="c1"># 1 MB</span>
+<h2 id="ingest-api">Ingest API<a class="headerlink" href="#ingest-api" title="Permanent link">&para;</a></h2>
+<h3 id="ingest_rulerule_source-mm-domain-tier-sync-memorynote-none-listdict"><code>ingest_rule(rule_source, mm, *, domain, tier, sync)</code> → <code>(MemoryNote | None, list[dict])</code><a class="headerlink" href="#ingest_rulerule_source-mm-domain-tier-sync-memorynote-none-listdict" title="Permanent link">&para;</a></h3>
+<p>Ingest a single YARA rule into a <code>MemoryManager</code> instance.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>rule_source</code></td>
+<td style="text-align: left;"><code>str \| Path \| dict</code></td>
+<td style="text-align: left;">required</td>
+<td style="text-align: left;">Path to a <code>.yar</code> file, raw YARA text, or a pre-parsed plyara dict. When a file contains multiple rules, only the first is ingested.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mm</code></td>
+<td style="text-align: left;"><code>MemoryManager</code></td>
+<td style="text-align: left;">required</td>
+<td style="text-align: left;">Must not be <code>None</code>; raises <code>ValueError</code> otherwise.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>domain</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"detection"</code></td>
+<td style="text-align: left;">Memory domain for the note.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tier</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"warn"</code></td>
+<td style="text-align: left;">CCCS validation tier.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sync</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>True</code></td>
+<td style="text-align: left;">Run MemoryManager enrichment inline.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns <code>(None, relations)</code> when strict-tier validation rejects the rule. <code>relations</code> is always a list (empty when the rule has no extractable entities).</p>
+<p><strong>Idempotency.</strong> Before calling <code>mm.remember</code>, the ingest path checks for an existing note with <code>source_ref = "yara:{rule_id}:{content_sha256[:12]}"</code>. If found, the rule is skipped and the existing note is returned.</p>
+<h3 id="ingest_rules_dirpath-mm-glob-tier-domain-bulk-flush_timeout-dict"><code>ingest_rules_dir(path, mm, *, glob, tier, domain, bulk, flush_timeout)</code> → <code>dict</code><a class="headerlink" href="#ingest_rules_dirpath-mm-glob-tier-domain-bulk-flush_timeout-dict" title="Permanent link">&para;</a></h3>
+<p>Walk a directory tree and ingest every YARA rule file.</p>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">ingest_rules_dir</span><span class="p">(</span><span class="s2">&quot;rules/&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="o">=</span><span class="n">mm</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;detection&quot;</span><span class="p">)</span>
+<span class="c1"># result == {&quot;ingested&quot;: int, &quot;skipped&quot;: int, &quot;errors&quot;: list[str]}</span>
 </code></pre></div>
-<p>YARA rules are text, typically a few KB. The 1 MB ceiling catches runaway
-payloads without blocking normal multi-rule files.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>path</code></td>
+<td style="text-align: left;"><code>str \| Path</code></td>
+<td style="text-align: left;">required</td>
+<td style="text-align: left;">Root directory to walk.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mm</code></td>
+<td style="text-align: left;"><code>MemoryManager</code></td>
+<td style="text-align: left;">required</td>
+<td style="text-align: left;">Must not be <code>None</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>glob</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"**/*.yar"</code></td>
+<td style="text-align: left;">Glob pattern for rule files. The default also sweeps for <code>**/*.yara</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tier</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"warn"</code></td>
+<td style="text-align: left;">CCCS validation tier.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>domain</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>"detection"</code></td>
+<td style="text-align: left;">Memory domain for notes.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>bulk</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;">Defer enrichment and flush once after all rules. Pass <code>True</code> for large rule sets.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>flush_timeout</code></td>
+<td style="text-align: left;"><code>float \| None</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Timeout in seconds passed to <code>mm.flush()</code> when <code>bulk=True</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Security.</strong> Symlinks are never followed. Files whose resolved path escapes the root directory are skipped with a warning log.</p>
 <hr />
-<h2 id="minimal-example">Minimal Example<a class="headerlink" href="#minimal-example" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_yara</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">yara_text</span> <span class="o">=</span> \<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">rule</span> <span class="n">SILENT_BANKER_LOADER</span> <span class="p">{</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">meta</span><span class="p">:</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>        <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Detects silent banker loader techniques&quot;</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>        <span class="n">category</span> <span class="o">=</span> <span class="s2">&quot;TECHNIQUE&quot;</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>        <span class="n">technique</span> <span class="o">=</span> <span class="s2">&quot;loader:memorymodule&quot;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        <span class="n">mitre_att</span> <span class="o">=</span> <span class="s2">&quot;T1218&quot;</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="n">strings</span><span class="p">:</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="err">$</span><span class="n">s1</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">4</span><span class="n">D</span> <span class="mi">5</span><span class="n">A</span> <span class="mi">90</span> <span class="mi">00</span> <span class="mi">03</span> <span class="mi">00</span> <span class="mi">00</span> <span class="mi">00</span> <span class="p">}</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="n">condition</span><span class="p">:</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>        <span class="err">$</span><span class="n">s1</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="p">}</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>\<span class="s2">&quot;</span><span class="se">\&quot;\&quot;</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="n">rules</span> <span class="o">=</span> <span class="n">parse_yara</span><span class="p">(</span><span class="n">yara_text</span><span class="p">)</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parsed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rules</span><span class="p">)</span><span class="si">}</span><span class="s2"> rule(s)&quot;</span><span class="p">)</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name: </span><span class="si">{</span><span class="n">rules</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;rule_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Meta flattened: </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">rules</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;meta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<h2 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>python -m zettelforge.yara.ingest &lt;path&gt; [--tier TIER] [--dry-run] [--domain DOMAIN] [--json]
 </code></pre></div>
-<h2 id="full-example">Full Example<a class="headerlink" href="#full-example" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">parse_file</span><span class="p">,</span> <span class="n">validate_metadata</span><span class="p">,</span> <span class="n">rule_to_entities</span><span class="p">,</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">REQUIRED_FIELDS</span><span class="p">,</span> <span class="n">YaraValidationError</span><span class="p">,</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p">)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Parse a file</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="n">rules</span> <span class="o">=</span> <span class="n">parse_file</span><span class="p">(</span><span class="s2">&quot;technique_loader.yar&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="k">for</span> <span class="n">rule_dict</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="c1"># Validate CCCS metadata</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">validate_metadata</span><span class="p">(</span><span class="n">rule_dict</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">],</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accepted: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">accepted</span><span class="si">}</span><span class="s2">, Warnings: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">warnings</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    <span class="c1"># Map to entity and relations</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>    <span class="n">entity</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">rule_to_entities</span><span class="p">(</span><span class="n">rule_dict</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rule: </span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CCCS tier: </span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">extra</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;cccs_compliant&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Relations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">relations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    <span class="k">for</span> <span class="n">rel</span> <span class="ow">in</span> <span class="n">relations</span><span class="p">:</span>
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="s1">&#39;rel&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="s1">&#39;to_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="s1">&#39;to_value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Flag</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>path</code></td>
+<td style="text-align: left;">required</td>
+<td style="text-align: left;">Path to a <code>.yar</code> file or directory</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--tier</code></td>
+<td style="text-align: left;"><code>warn</code></td>
+<td style="text-align: left;"><code>strict</code>, <code>warn</code>, or <code>non_cccs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--dry-run</code></td>
+<td style="text-align: left;">off</td>
+<td style="text-align: left;">Parse, validate, and print a summary without writing to memory</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--domain</code></td>
+<td style="text-align: left;"><code>detection</code></td>
+<td style="text-align: left;">Memory domain for ingested notes</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>--json</code></td>
+<td style="text-align: left;">off</td>
+<td style="text-align: left;">Emit machine-readable JSON output</td>
+</tr>
+</tbody>
+</table>
+<p>Exit codes: <code>0</code> on success; <code>1</code> on parse errors, strict-tier rejections, or I/O failures.</p>
+<p>Dry-run a directory:</p>
+<div class="highlight"><pre><span></span><code>python -m zettelforge.yara.ingest tests/fixtures/yara/ --dry-run
 </code></pre></div>
-<h2 id="standalone-validation">Standalone Validation<a class="headerlink" href="#standalone-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_metadata</span><span class="p">,</span> <span class="n">REQUIRED_FIELDS</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Required CCCS fields:&quot;</span><span class="p">,</span> <span class="n">REQUIRED_FIELDS</span><span class="p">)</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">meta</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;abc123def456ghi789&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="s2">&quot;fingerprint&quot;</span><span class="p">:</span> <span class="s2">&quot;a&quot;</span> <span class="o">*</span> <span class="mi">64</span><span class="p">,</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="s2">&quot;modified&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-01-01&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;RELEASED&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="s2">&quot;sharing&quot;</span><span class="p">:</span> <span class="s2">&quot;TLP:WHITE&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;CCCS&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;analyst@cccs-cnc.gc.ca&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Detects XYZ technique&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;TECHNIQUE&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="p">}</span>
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="n">result</span> <span class="o">=</span> <span class="n">validate_metadata</span><span class="p">(</span><span class="n">meta</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;strict&quot;</span><span class="p">)</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accepted: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">accepted</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="k">for</span> <span class="n">warn</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">warnings</span><span class="p">:</span>
-<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Warning: </span><span class="si">{</span><span class="n">warn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
-<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Error: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p>Ingest with strict CCCS validation:</p>
+<div class="highlight"><pre><span></span><code>python -m zettelforge.yara.ingest rules/ --tier strict --domain detection
 </code></pre></div>
+<p>The LLM rule explainer is not invoked by this CLI command in v1. Explainer integration with the async enrichment worker is a v1.1 task.</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -3787,12 +3858,10 @@ payloads without blocking normal multi-rule files.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

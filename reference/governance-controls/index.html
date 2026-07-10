@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="GOV-003, GOV-007, GOV-011, GOV-012, and AGE-127 governance controls with enforcement points, validation rules, and error handling.">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -15,21 +15,21 @@
         <link rel="canonical" href="https://docs.threatrecall.ai/reference/governance-controls/">
       
       
-        <link rel="prev" href="../entity-indexer-concurrency/">
+        <link rel="prev" href="../retrieval-policies/">
       
       
-        <link rel="next" href="../kg-edge-schema/">
+        <link rel="next" href="../mcp-protocol/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Governance Controls Reference - ZettelForge Documentation</title>
+        <title>Governance controls - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/reference/governance-controls/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="Governance Controls Reference">
-  <meta property="og:description" content="GOV-003, GOV-007, GOV-011, GOV-012, and AGE-127 governance controls with enforcement points, validation rules, and error handling.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/reference/governance-controls/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Governance Controls Reference">
-  <meta name="twitter:description" content="GOV-003, GOV-007, GOV-011, GOV-012, and AGE-127 governance controls with enforcement points, validation rules, and error handling.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -116,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#governance-controls-reference" class="md-skip">
+        <a href="#governance-controls" class="md-skip">
           Skip to content
         </a>
       
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Governance Controls Reference
+              Governance controls
             
           </span>
         </div>
@@ -279,11 +238,33 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+        <a href="../../how-to/configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -304,28 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-    
-  
-  
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -573,17 +529,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -622,62 +574,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/configure-opencti/" class="md-nav__link">
         
   
@@ -706,14 +602,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -762,42 +770,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -825,7 +805,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -902,146 +1078,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1049,119 +1085,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1210,103 +1134,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
+    Troubleshoot
   
 
     
@@ -1327,14 +1162,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Two-Phase Pipeline
+    Extend ZettelForge
   
 
     
@@ -1355,98 +1190,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+      <a href="../../how-to/use-web-interface/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
+    Use web interface
   
 
     
@@ -1483,8 +1234,6 @@
         
         
       
-      
-        
       
     
     
@@ -1492,10 +1241,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -1513,8 +1262,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1531,14 +1280,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture-deep-dive/" class="md-nav__link">
+      <a href="../terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1587,14 +1336,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../detection-rules-schema/" class="md-nav__link">
+      <a href="../memory-manager-api/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Detection Rules Schema
+    Memory Manager API
   
 
     
@@ -1615,14 +1364,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../editions/" class="md-nav__link">
+      <a href="../stix-schema/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Editions
+    STIX schema
   
 
     
@@ -1643,14 +1392,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../entity-indexer-concurrency/" class="md-nav__link">
+      <a href="../web-api/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Entity Indexer Concurrency
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
   
 
     
@@ -1687,7 +1464,7 @@
   <span class="md-ellipsis">
     
   
-    Governance Controls
+    Governance controls
   
 
     
@@ -1705,7 +1482,7 @@
   <span class="md-ellipsis">
     
   
-    Governance Controls
+    Governance controls
   
 
     
@@ -1731,10 +1508,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#control-summary" class="md-nav__link">
+  <a href="#control-order-at-remember-time" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Control Summary
+        Control order at remember() time
       
     </span>
   </a>
@@ -1742,77 +1519,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gov-003-python-standards" class="md-nav__link">
+  <a href="#config-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GOV-003: Python Standards
+        Config reference
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gov-007-testing-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GOV-007: Testing Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gov-011-access-control-input-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GOV-011: Access Control &amp; Input Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#age-127-prompt-injection-guard" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AGE-127: Prompt-Injection Guard
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gov-012-audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GOV-012: Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#governancevalidator-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GovernanceValidator API
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="GovernanceValidator API">
+    <nav class="md-nav" aria-label="Config reference">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constructor" class="md-nav__link">
+  <a href="#top-level-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Constructor
+        Top-level keys
       
     </span>
   </a>
@@ -1820,10 +1542,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#validate_operation" class="md-nav__link">
+  <a href="#governancelimits-operation-limits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        validate_operation
+        governance.limits — operation limits
       
     </span>
   </a>
@@ -1831,10 +1553,44 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#enforce" class="md-nav__link">
+  <a href="#governancepii-pii-detection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        enforce
+        governance.pii — PII detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#governancememory_defense-write-time-anomaly-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        governance.memory_defense — write-time anomaly detection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="governance.memory_defense — write-time anomaly detection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#anomaly-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anomaly scoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#short-circuit-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Short-circuit conditions
       
     </span>
   </a>
@@ -1845,12 +1601,17 @@
     </nav>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
+  <a href="#prompt-injection-detection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration
+        Prompt injection detection
       
     </span>
   </a>
@@ -1858,10 +1619,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#spec-drift-detection" class="md-nav__link">
+  <a href="#exceptions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Spec-Drift Detection
+        Exceptions
       
     </span>
   </a>
@@ -1869,10 +1630,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#minimal-hardening-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        Minimal hardening config
       
     </span>
   </a>
@@ -1895,34 +1656,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../mcp-protocol/" class="md-nav__link">
         
   
@@ -1930,7 +1663,7 @@
   <span class="md-ellipsis">
     
   
-    MCP Protocol
+    MCP protocol
   
 
     
@@ -1951,70 +1684,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../memory-manager-api/" class="md-nav__link">
+      <a href="../detection-rules-schema/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Memory Manager API
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
+    Detection rules schema
   
 
     
@@ -2042,63 +1719,7 @@
   <span class="md-ellipsis">
     
   
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../stix-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    STIX Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../web-api/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Web API Reference
+    Sigma schema
   
 
     
@@ -2126,7 +1747,119 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
   
 
     
@@ -2159,7 +1892,230 @@
     
       
       
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2167,9 +2123,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2228,6 +2182,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2320,14 +2324,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2341,113 +2345,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2472,17 +2372,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2576,10 +2472,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#control-summary" class="md-nav__link">
+  <a href="#control-order-at-remember-time" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Control Summary
+        Control order at remember() time
       
     </span>
   </a>
@@ -2587,77 +2483,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#gov-003-python-standards" class="md-nav__link">
+  <a href="#config-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GOV-003: Python Standards
+        Config reference
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gov-007-testing-standards" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GOV-007: Testing Standards
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gov-011-access-control-input-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GOV-011: Access Control &amp; Input Validation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#age-127-prompt-injection-guard" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AGE-127: Prompt-Injection Guard
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gov-012-audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GOV-012: Audit Logging
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#governancevalidator-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GovernanceValidator API
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="GovernanceValidator API">
+    <nav class="md-nav" aria-label="Config reference">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#constructor" class="md-nav__link">
+  <a href="#top-level-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Constructor
+        Top-level keys
       
     </span>
   </a>
@@ -2665,10 +2506,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#validate_operation" class="md-nav__link">
+  <a href="#governancelimits-operation-limits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        validate_operation
+        governance.limits — operation limits
       
     </span>
   </a>
@@ -2676,10 +2517,44 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#enforce" class="md-nav__link">
+  <a href="#governancepii-pii-detection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        enforce
+        governance.pii — PII detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#governancememory_defense-write-time-anomaly-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        governance.memory_defense — write-time anomaly detection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="governance.memory_defense — write-time anomaly detection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#anomaly-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anomaly scoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#short-circuit-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Short-circuit conditions
       
     </span>
   </a>
@@ -2690,12 +2565,17 @@
     </nav>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
+  <a href="#prompt-injection-detection" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration
+        Prompt injection detection
       
     </span>
   </a>
@@ -2703,10 +2583,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#spec-drift-detection" class="md-nav__link">
+  <a href="#exceptions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Spec-Drift Detection
+        Exceptions
       
     </span>
   </a>
@@ -2714,10 +2594,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#minimal-hardening-config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        Minimal hardening config
       
     </span>
   </a>
@@ -2744,444 +2624,350 @@
   
 
 
-<h1 id="governance-controls-reference">Governance Controls Reference<a class="headerlink" href="#governance-controls-reference" title="Permanent link">&para;</a></h1>
-<p>Modules: <code>zettelforge.governance_validator</code>, <code>zettelforge.prompt_injection_guard</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.governance_validator</span><span class="w"> </span><span class="kn">import</span> <span class="n">GovernanceValidator</span><span class="p">,</span> <span class="n">GovernanceViolationError</span>
-</code></pre></div>
+<h1 id="governance-controls">Governance controls<a class="headerlink" href="#governance-controls" title="Permanent link">&para;</a></h1>
+<p>ZettelForge applies four layered controls every time content enters memory: a content size limit, a prompt injection check, optional PII detection, and a write-time anomaly gate. All four are configured under the <code>governance</code> block in <code>config.yaml</code>.</p>
+<h2 id="control-order-at-remember-time">Control order at <code>remember()</code> time<a class="headerlink" href="#control-order-at-remember-time" title="Permanent link">&para;</a></h2>
+<p>When you call <code>mm.remember(content)</code>, the controls run in this sequence:</p>
+<ol>
+<li><strong>Content size check</strong> — rejects content that exceeds <code>governance.limits.max_content_length</code>.</li>
+<li><strong>Prompt injection block</strong> — rejects content that contains high-confidence instruction-injection patterns.</li>
+<li><strong>PII detection</strong> (disabled by default) — logs, redacts, or blocks content containing personally identifiable information.</li>
+<li><strong>Memory anomaly gate</strong> (audit mode by default) — scores the candidate note against recent trusted notes; blocks or quarantines when the anomaly score exceeds the calibration threshold.</li>
+</ol>
+<p>An exception in any step halts storage. The content never reaches the backend store unless all enabled controls pass.</p>
 <hr />
-<h2 id="control-summary">Control Summary<a class="headerlink" href="#control-summary" title="Permanent link">&para;</a></h2>
+<h2 id="config-reference">Config reference<a class="headerlink" href="#config-reference" title="Permanent link">&para;</a></h2>
+<p>All keys live under the <code>governance</code> top-level block in <code>config.yaml</code>.</p>
+<h3 id="top-level-keys">Top-level keys<a class="headerlink" href="#top-level-keys" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Control ID</th>
-<th style="text-align: left;">Name</th>
-<th style="text-align: left;">Category</th>
-<th style="text-align: left;">Enforcement Point</th>
-<th style="text-align: left;">Validation Rule</th>
-<th style="text-align: left;">Error Type</th>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">GOV-003</td>
-<td style="text-align: left;">Python Standards</td>
-<td style="text-align: left;">Code Quality</td>
-<td style="text-align: left;">Build / CI</td>
-<td style="text-align: left;">Type hints required; PEP 8 naming conventions enforced</td>
-<td style="text-align: left;">Static analysis failure</td>
+<td><code>enabled</code></td>
+<td><code>true</code></td>
+<td>Master switch for governance controls. Setting to <code>false</code> disables structural validation; PII and defense have their own switches.</td>
 </tr>
 <tr>
-<td style="text-align: left;">GOV-007</td>
-<td style="text-align: left;">Testing Standards</td>
-<td style="text-align: left;">Quality Assurance</td>
-<td style="text-align: left;">Build / CI</td>
-<td style="text-align: left;">Coverage ratchet: CI enforces 67% today with target 80%</td>
-<td style="text-align: left;">CI gate failure</td>
-</tr>
-<tr>
-<td style="text-align: left;">GOV-011</td>
-<td style="text-align: left;">Access Control &amp; Input Validation</td>
-<td style="text-align: left;">Security</td>
-<td style="text-align: left;">Runtime (<code>remember</code>, <code>synthesize</code>)</td>
-<td style="text-align: left;">All inputs validated before storage; no hardcoded secrets</td>
-<td style="text-align: left;"><code>GovernanceViolationError</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">GOV-012</td>
-<td style="text-align: left;">Audit Logging</td>
-<td style="text-align: left;">Observability</td>
-<td style="text-align: left;">Runtime (<code>remember</code>, <code>recall</code>, <code>synthesize</code>)</td>
-<td style="text-align: left;">All memory operations logged with structured format</td>
-<td style="text-align: left;">Silent (log-only)</td>
-</tr>
-<tr>
-<td style="text-align: left;">AGE-127</td>
-<td style="text-align: left;">Prompt-Injection Guard</td>
-<td style="text-align: left;">Security</td>
-<td style="text-align: left;">Runtime (<code>remember</code>, <code>remember_with_extraction</code>, <code>recall</code>, <code>synthesize</code>, LLM prompt builders)</td>
-<td style="text-align: left;">Explicit prompt override, role rewrite, tool execution, hidden-prompt disclosure, and memory-poisoning instructions fail closed</td>
-<td style="text-align: left;"><code>PromptInjectionViolation</code> or <code>GovernanceViolationError</code> wrapper</td>
+<td><code>min_content_length</code></td>
+<td><code>1</code></td>
+<td>Minimum byte length for stored content. Content shorter than this raises <code>GovernanceViolationError</code>.</td>
 </tr>
 </tbody>
 </table>
+<p>Environment override: none (use config file).</p>
 <hr />
-<h2 id="gov-003-python-standards">GOV-003: Python Standards<a class="headerlink" href="#gov-003-python-standards" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Enforce consistent code quality across the ZettelForge codebase.</p>
+<h3 id="governancelimits-operation-limits"><code>governance.limits</code> — operation limits<a class="headerlink" href="#governancelimits-operation-limits" title="Permanent link">&para;</a></h3>
+<p>DoS mitigation. Values of <code>0</code> disable the corresponding limit.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Rule</th>
-<th style="text-align: left;">Requirement</th>
-<th style="text-align: left;">Enforcement</th>
+<th>Key</th>
+<th>Default</th>
+<th>Env var</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Type hints</td>
-<td style="text-align: left;">All public method signatures must include type annotations</td>
-<td style="text-align: left;">Static analysis (mypy / pyright)</td>
+<td><code>max_content_length</code></td>
+<td><code>52428800</code> (50 MB)</td>
+<td><code>ZETTELFORGE_LIMITS_MAX_CONTENT_LENGTH</code></td>
+<td>Maximum byte length of content passed to <code>remember()</code>. Content exceeding this raises <code>GovernanceViolationError</code>.</td>
 </tr>
 <tr>
-<td style="text-align: left;">Naming</td>
-<td style="text-align: left;">PEP 8 naming conventions: <code>snake_case</code> for functions and variables, <code>PascalCase</code> for classes</td>
-<td style="text-align: left;">Linter (ruff / flake8)</td>
-</tr>
-<tr>
-<td style="text-align: left;">Docstrings</td>
-<td style="text-align: left;">All public classes and methods must have docstrings</td>
-<td style="text-align: left;">Linter rule</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Loaded rule key:</strong> <code>python_standards</code>, <code>type_hints</code>, <code>naming</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">rules</span><span class="p">[</span><span class="s2">&quot;GOV-003&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;python_standards&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="s2">&quot;type_hints&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="s2">&quot;naming&quot;</span><span class="p">:</span> <span class="kc">True</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
-</code></pre></div>
-<hr />
-<h2 id="gov-007-testing-standards">GOV-007: Testing Standards<a class="headerlink" href="#gov-007-testing-standards" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Ensure adequate test coverage for memory operations.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Rule</th>
-<th style="text-align: left;">Requirement</th>
-<th style="text-align: left;">Enforcement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Coverage threshold</td>
-<td style="text-align: left;">Ratchet policy: current CI gate 67%, target 80%</td>
-<td style="text-align: left;">CI gate (pytest-cov, <code>--cov-fail-under=67</code>)</td>
-</tr>
-<tr>
-<td style="text-align: left;">Test existence</td>
-<td style="text-align: left;">Every public method must have at least one test</td>
-<td style="text-align: left;">CI gate</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Loaded rule key:</strong> <code>testing</code>, <code>coverage</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">rules</span><span class="p">[</span><span class="s2">&quot;GOV-007&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="s2">&quot;testing&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="c1"># governance target; CI currently enforces --cov-fail-under=67</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="s2">&quot;coverage&quot;</span><span class="p">:</span> <span class="mf">0.8</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
-</code></pre></div>
-<hr />
-<h2 id="gov-011-access-control-input-validation">GOV-011: Access Control &amp; Input Validation<a class="headerlink" href="#gov-011-access-control-input-validation" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Validate all inputs before memory storage. Prevent injection of malformed or dangerous content.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Rule</th>
-<th style="text-align: left;">Requirement</th>
-<th style="text-align: left;">Enforcement</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Input validation</td>
-<td style="text-align: left;">Content must be a <code>str</code> or an object with a <code>content</code> attribute</td>
-<td style="text-align: left;">Runtime check in <code>enforce()</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">Prompt-injection guard</td>
-<td style="text-align: left;">Explicit instruction override, role rewrite, tool/network command, hidden prompt/secret exfiltration, prompt boundary marker, and permanent-memory poisoning patterns are rejected</td>
-<td style="text-align: left;">Runtime check in <code>prompt_injection_guard.py</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">No hardcoded secrets</td>
-<td style="text-align: left;">Content must not contain API keys, tokens, or credentials</td>
-<td style="text-align: left;">Runtime check</td>
-</tr>
-<tr>
-<td style="text-align: left;">Minimum content length</td>
-<td style="text-align: left;">Content length &gt;= <code>governance.min_content_length</code> (default: 1)</td>
-<td style="text-align: left;">Config-driven</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Loaded rule key:</strong> <code>security</code>, <code>input_validation</code>, <code>no_hardcoded_secrets</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">rules</span><span class="p">[</span><span class="s2">&quot;GOV-011&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="s2">&quot;security&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="s2">&quot;input_validation&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="s2">&quot;no_hardcoded_secrets&quot;</span><span class="p">:</span> <span class="kc">True</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
-</code></pre></div>
-<p><strong>Enforcement behavior:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">enforce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raises GovernanceViolationError on validation failure.&quot;&quot;&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">is_valid</span><span class="p">,</span> <span class="n">violations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_operation</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid</span><span class="p">:</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="k">raise</span> <span class="n">GovernanceViolationError</span><span class="p">(</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>            <span class="sa">f</span><span class="s2">&quot;Governance violation in </span><span class="si">{</span><span class="n">operation</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">violations</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="p">)</span>
-</code></pre></div>
-<p><strong>Operations validated:</strong></p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Operation</th>
-<th style="text-align: left;">Checks Applied</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>remember</code></td>
-<td style="text-align: left;">Input type validation; content length; prompt-injection guard; optional PII validation</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>remember_with_extraction</code></td>
-<td style="text-align: left;">Prompt-injection guard before fact extraction</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>recall</code> / <code>get_context</code></td>
-<td style="text-align: left;">Prompt-injection guard before retrieval and embeddings</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>synthesize</code></td>
-<td style="text-align: left;">Prompt-injection guard on query and retrieved context before LLM generation; audit logging trigger (GOV-012)</td>
+<td><code>recall_timeout_seconds</code></td>
+<td><code>30.0</code></td>
+<td><code>ZETTELFORGE_LIMITS_RECALL_TIMEOUT</code></td>
+<td>Wall-clock timeout for <code>recall()</code> queries. <code>0</code> means no timeout.</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="age-127-prompt-injection-guard">AGE-127: Prompt-Injection Guard<a class="headerlink" href="#age-127-prompt-injection-guard" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Prevent untrusted CTI notes, recall queries, and synthesis context
-from becoming instructions to the model, tool layer, or future retrieval flow.</p>
-<p>The guard lives in <code>zettelforge.prompt_injection_guard</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.prompt_injection_guard</span><span class="w"> </span><span class="kn">import</span> <span class="n">assert_no_prompt_injection</span>
-</code></pre></div>
-<p>Blocked classes:</p>
+<h3 id="governancepii-pii-detection"><code>governance.pii</code> — PII detection<a class="headerlink" href="#governancepii-pii-detection" title="Permanent link">&para;</a></h3>
+<p>Disabled by default. Requires <code>pip install zettelforge[pii]</code> (Microsoft Presidio + spaCy). When the package is not installed, ZettelForge logs a warning at startup and continues without PII enforcement — no core functionality breaks.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Class</th>
-<th style="text-align: left;">Examples</th>
+<th>Key</th>
+<th>Default</th>
+<th>Env var</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Instruction override</td>
-<td style="text-align: left;">"ignore previous instructions", "override system rules"</td>
+<td><code>enabled</code></td>
+<td><code>false</code></td>
+<td><code>ZETTELFORGE_PII_ENABLED</code></td>
+<td>Enable PII detection before <code>remember()</code>.</td>
 </tr>
 <tr>
-<td style="text-align: left;">Role rewrite</td>
-<td style="text-align: left;">"you are now", "developer mode", jailbreak framing</td>
+<td><code>action</code></td>
+<td><code>"log"</code></td>
+<td><code>ZETTELFORGE_PII_ACTION</code></td>
+<td>What to do when PII is detected: <code>log</code> (warn, pass through), <code>redact</code> (replace with placeholder), <code>block</code> (raise before storage).</td>
 </tr>
 <tr>
-<td style="text-align: left;">Secret exfiltration</td>
-<td style="text-align: left;">"reveal hidden instructions", "dump API keys"</td>
+<td><code>redact_placeholder</code></td>
+<td><code>"[REDACTED]"</code></td>
+<td>—</td>
+<td>Replacement text for redacted PII spans. Used only when <code>action=redact</code>.</td>
 </tr>
 <tr>
-<td style="text-align: left;">Tool/network command</td>
-<td style="text-align: left;">"call the shell tool", "curl this webhook"</td>
+<td><code>entities</code></td>
+<td><code>[]</code> (all)</td>
+<td>—</td>
+<td>Presidio entity types to detect. Empty list detects all supported types minus the CTI allowlist.</td>
 </tr>
 <tr>
-<td style="text-align: left;">Prompt boundary marker</td>
-<td style="text-align: left;">fake "BEGIN SYSTEM PROMPT" / "END DEVELOPER MESSAGE" blocks</td>
+<td><code>language</code></td>
+<td><code>"en"</code></td>
+<td>—</td>
+<td>Language code passed to Presidio.</td>
 </tr>
 <tr>
-<td style="text-align: left;">Memory poisoning</td>
-<td style="text-align: left;">requests to store future system/developer instructions as permanent memory</td>
+<td><code>nlp_model</code></td>
+<td><code>"en_core_web_sm"</code></td>
+<td>—</td>
+<td>spaCy model used by Presidio. Downloaded automatically on first use.</td>
 </tr>
 </tbody>
 </table>
-<p>Allowed CTI examples:</p>
+<p><strong>CTI allowlist.</strong> IP addresses (<code>IP_ADDRESS</code>), URLs (<code>URL</code>), and domain names (<code>DOMAIN_NAME</code>) are excluded from PII detection by default. These are legitimate threat indicators, not personally identifiable information. The allowlist applies when <code>entities</code> is empty (detect-all mode). When you specify an explicit <code>entities</code> list, only the listed types are detected and the allowlist is not applied.</p>
+<p><strong>Actions:</strong></p>
 <ul>
-<li>Reports that describe attackers telling victims to ignore MFA warnings.</li>
-<li>Notes that mention <code>curl</code>, secrets, or tokens as observed attacker tradecraft.</li>
-<li>CVEs, indicators, malware names, ATT&amp;CK techniques, and actor aliases.</li>
+<li><code>log</code> — Presidio detects PII, logs entity types and confidence scores (never the actual text), and passes content through to storage unchanged.</li>
+<li><code>redact</code> — Detected PII spans are replaced with the <code>redact_placeholder</code> before storage.</li>
+<li><code>block</code> — Any PII detection raises <code>GovernanceViolationError</code> and content is not stored.</li>
 </ul>
-<p>Audit expectation:</p>
-<ul>
-<li>Blocked <code>remember()</code> input is wrapped as <code>GovernanceViolationError</code>, producing
-  the existing authorization failure path.</li>
-<li>Rejected payload content must not be logged. Pattern code and field are enough
-  for triage.</li>
-<li>Synthesis context is revalidated because historical notes may predate the
-  guard.</li>
-</ul>
-<p><strong>Exception class:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">GovernanceViolationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a governance rule is violated.&quot;&quot;&quot;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="k">pass</span>
-</code></pre></div>
 <hr />
-<h2 id="gov-012-audit-logging">GOV-012: Audit Logging<a class="headerlink" href="#gov-012-audit-logging" title="Permanent link">&para;</a></h2>
-<p><strong>Purpose:</strong> Maintain an audit trail of all memory operations for compliance and debugging.</p>
+<h3 id="governancememory_defense-write-time-anomaly-detection"><code>governance.memory_defense</code> — write-time anomaly detection<a class="headerlink" href="#governancememory_defense-write-time-anomaly-detection" title="Permanent link">&para;</a></h3>
+<p>A MemSAD-style anomaly gate that scores each candidate note against recent trusted notes before writing. Default mode is <code>audit</code>: anomalies are logged but writes proceed. Switch to <code>block</code> or <code>quarantine</code> once you have a clean calibration corpus.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Rule</th>
-<th style="text-align: left;">Requirement</th>
-<th style="text-align: left;">Enforcement</th>
+<th>Key</th>
+<th>Default</th>
+<th>Env var</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Structured logging</td>
-<td style="text-align: left;">All operations emit structured log entries</td>
-<td style="text-align: left;">Runtime (observability module)</td>
+<td><code>enabled</code></td>
+<td><code>true</code></td>
+<td><code>ZETTELFORGE_MEMORY_DEFENSE_ENABLED</code></td>
+<td>Enable the anomaly gate.</td>
 </tr>
 <tr>
-<td style="text-align: left;">Operation coverage</td>
-<td style="text-align: left;"><code>remember</code>, <code>recall</code>, <code>synthesize</code> operations are logged</td>
-<td style="text-align: left;">Silent enforcement</td>
+<td><code>mode</code></td>
+<td><code>"audit"</code></td>
+<td><code>ZETTELFORGE_MEMORY_DEFENSE_MODE</code></td>
+<td><code>audit</code> logs anomalies; <code>block</code> raises <code>MemoryAnomalyError</code>; <code>quarantine</code> writes the note to a JSONL file and then raises.</td>
+</tr>
+<tr>
+<td><code>min_calibration_notes</code></td>
+<td><code>50</code></td>
+<td><code>ZETTELFORGE_MEMORY_DEFENSE_MIN_CALIBRATION</code></td>
+<td>Minimum number of reference notes required to compute the calibration baseline. Below this count the gate passes all writes through with reason <code>calibration_insufficient</code>.</td>
+</tr>
+<tr>
+<td><code>max_reference_notes</code></td>
+<td><code>50</code></td>
+<td>—</td>
+<td>Maximum reference notes used per evaluation. Ordered by most recently created.</td>
+</tr>
+<tr>
+<td><code>kappa</code></td>
+<td><code>2.0</code></td>
+<td><code>ZETTELFORGE_MEMORY_DEFENSE_KAPPA</code></td>
+<td>Sensitivity multiplier. Threshold = calibration mean + (kappa × calibration std dev). Lower kappa = more sensitive.</td>
+</tr>
+<tr>
+<td><code>lexical_weight</code></td>
+<td><code>0.25</code></td>
+<td>—</td>
+<td>Weight of the lexical divergence term in the composite score.</td>
+</tr>
+<tr>
+<td><code>ngram_size</code></td>
+<td><code>3</code></td>
+<td>—</td>
+<td>Character n-gram size for the lexical Jensen-Shannon divergence term.</td>
+</tr>
+<tr>
+<td><code>monitored_domains</code></td>
+<td><code>[]</code> (all)</td>
+<td>—</td>
+<td>CTI domains to monitor. Empty list monitors all domains. Notes with a domain not in this list pass through without evaluation.</td>
+</tr>
+<tr>
+<td><code>quarantine_path</code></td>
+<td><code>""</code></td>
+<td>—</td>
+<td>Path to the quarantine JSONL file. Default: <code>&lt;data_dir&gt;/quarantine/memory_anomalies.jsonl</code>.</td>
+</tr>
+<tr>
+<td><code>quarantine_raw_content</code></td>
+<td><code>true</code></td>
+<td>—</td>
+<td>Include raw note content in quarantine records. Set to <code>false</code> to omit content from quarantine logs.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Loaded rule key:</strong> <code>observability</code>, <code>structured_logging</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">rules</span><span class="p">[</span><span class="s2">&quot;GOV-012&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="s2">&quot;observability&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="s2">&quot;structured_logging&quot;</span><span class="p">:</span> <span class="kc">True</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
+<h4 id="anomaly-scoring">Anomaly scoring<a class="headerlink" href="#anomaly-scoring" title="Permanent link">&para;</a></h4>
+<p>The gate computes a composite score for each candidate note:</p>
+<div class="highlight"><pre><span></span><code>memsad_score = 0.5 × max_cosine_similarity(candidate, refs)
+             + 0.5 × mean_cosine_similarity(candidate, refs)
+
+lexical_jsd  = Jensen-Shannon divergence over character n-grams
+             (candidate vs. pooled reference corpus)
+
+score = memsad_score + (lexical_weight × lexical_jsd)
 </code></pre></div>
-<p><strong>Logging configuration:</strong></p>
+<p>The threshold is calibrated leave-one-out from the reference set:</p>
+<div class="highlight"><pre><span></span><code>calibration_scores = [score(note_i, all_others) for note_i in reference_notes]
+threshold = mean(calibration_scores) + kappa × std_dev(calibration_scores)
+</code></pre></div>
+<p>A note is flagged when <code>score &gt; threshold</code>. In <code>audit</code> mode the gate logs the decision and allows the write. In <code>block</code> or <code>quarantine</code> mode it raises <code>MemoryAnomalyError</code>.</p>
+<p>Cosine similarity uses the 768-dimension fastembed embeddings stored in the note's embedding vector. Notes without a valid embedding vector bypass scoring with reason <code>candidate_embedding_unavailable</code>.</p>
+<h4 id="short-circuit-conditions">Short-circuit conditions<a class="headerlink" href="#short-circuit-conditions" title="Permanent link">&para;</a></h4>
+<p>The gate returns <code>action=audit, flagged=False</code> without scoring when:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Config Key</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Description</th>
+<th>Condition</th>
+<th>Reason field</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>logging.level</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;"><code>"INFO"</code></td>
-<td style="text-align: left;">Minimum log level: <code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, <code>ERROR</code>.</td>
+<td><code>enabled=false</code></td>
+<td><code>disabled</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>logging.log_intents</code></td>
-<td style="text-align: left;"><code>bool</code></td>
-<td style="text-align: left;"><code>True</code></td>
-<td style="text-align: left;">Log intent classification results.</td>
+<td>Domain not in <code>monitored_domains</code> (list non-empty)</td>
+<td><code>domain_not_monitored</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>logging.log_causal</code></td>
-<td style="text-align: left;"><code>bool</code></td>
-<td style="text-align: left;"><code>True</code></td>
-<td style="text-align: left;">Log causal triple extraction results.</td>
+<td>Candidate embedding vector missing or all-zero</td>
+<td><code>candidate_embedding_unavailable</code></td>
+</tr>
+<tr>
+<td>Fewer than <code>min_calibration_notes</code> valid reference notes</td>
+<td><code>calibration_insufficient</code></td>
+</tr>
+<tr>
+<td>Leave-one-out calibration produces no scores</td>
+<td><code>calibration_unscorable</code></td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="governancevalidator-api">GovernanceValidator API<a class="headerlink" href="#governancevalidator-api" title="Permanent link">&para;</a></h2>
-<h3 id="constructor">Constructor<a class="headerlink" href="#constructor" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">GovernanceValidator</span><span class="p">:</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">governance_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</code></pre></div>
+<h2 id="prompt-injection-detection">Prompt injection detection<a class="headerlink" href="#prompt-injection-detection" title="Permanent link">&para;</a></h2>
+<p>Every call to <code>remember()</code> runs <code>require_no_prompt_injection(content)</code> before content reaches the backend. Detection is deterministic regex-based matching — no LLM call. The check is always active when <code>governance.enabled=true</code> and has no separate config switch.</p>
+<p>Seven pattern categories are detected, all at <code>high</code> severity:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Parameter</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Description</th>
+<th>Category</th>
+<th>What it matches</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>governance_dir</code></td>
-<td style="text-align: left;"><code>Path</code></td>
-<td style="text-align: left;"><code>~/.openclaw/workspace/governance-documentation-package/governance</code></td>
-<td style="text-align: left;">Directory containing governance documentation files.</td>
+<td><code>direct_instruction_override</code></td>
+<td>"ignore/disregard/override/bypass … previous/system instructions"</td>
+</tr>
+<tr>
+<td><code>role_takeover</code></td>
+<td>"you are now / act as / pretend to be … system/admin/root"</td>
+</tr>
+<tr>
+<td><code>system_prompt_exfiltration</code></td>
+<td>"reveal/print/leak/dump … system/hidden prompt"</td>
+</tr>
+<tr>
+<td><code>secret_exfiltration</code></td>
+<td>"send/exfiltrate … api_key/token/secret/password" (within 80 chars)</td>
+</tr>
+<tr>
+<td><code>tool_instruction_smuggling</code></td>
+<td>"call/invoke/use/execute the tool/function/api/mcp/shell"</td>
+</tr>
+<tr>
+<td><code>retrieval_poisoning</code></td>
+<td>"when this note is retrieved …" or "always/only answer/respond/say"</td>
+</tr>
+<tr>
+<td><code>role_delimiter_smuggling</code></td>
+<td>Lines starting with <code>system:</code> / <code>developer:</code>, XML role tags, <code>BEGIN_SYSTEM_PROMPT</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="validate_operation"><code>validate_operation</code><a class="headerlink" href="#validate_operation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">validate_operation</span><span class="p">(</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="bp">self</span><span class="p">,</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">operation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">data</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
-</code></pre></div>
+<p>Any high-severity match raises <code>PromptInjectionError</code>, which <code>GovernanceValidator</code> converts to <code>GovernanceViolationError</code>. Content is not stored.</p>
+<hr />
+<h2 id="exceptions">Exceptions<a class="headerlink" href="#exceptions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Parameter</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Description</th>
+<th>Exception</th>
+<th>Module</th>
+<th>When raised</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>operation</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;"><em>(required)</em></td>
-<td style="text-align: left;">Operation name: <code>remember</code>, <code>recall</code>, <code>synthesize</code>.</td>
+<td><code>GovernanceViolationError</code></td>
+<td><code>zettelforge.governance_validator</code></td>
+<td>Content size exceeded; structural validation failed; prompt injection detected; PII blocked (<code>action=block</code>).</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>data</code></td>
-<td style="text-align: left;"><code>Any</code></td>
-<td style="text-align: left;"><code>None</code></td>
-<td style="text-align: left;">Operation payload to validate.</td>
+<td><code>PromptInjectionError</code></td>
+<td><code>zettelforge.prompt_security</code></td>
+<td>High-confidence injection pattern detected. Converted to <code>GovernanceViolationError</code> by the validator.</td>
+</tr>
+<tr>
+<td><code>MemoryAnomalyError</code></td>
+<td><code>zettelforge.memory_defense</code></td>
+<td>Anomaly gate fires with <code>mode=block</code> or <code>mode=quarantine</code>. Contains a <code>decision</code> attribute with full <code>MemoryAnomalyDecision</code> fields.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Returns:</strong> <code>Tuple[bool, List[str]]</code> -- <code>(is_valid, list_of_violation_strings)</code>.</p>
-<h3 id="enforce"><code>enforce</code><a class="headerlink" href="#enforce" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">enforce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<hr />
+<h2 id="minimal-hardening-config">Minimal hardening config<a class="headerlink" href="#minimal-hardening-config" title="Permanent link">&para;</a></h2>
+<p>Enable PII redaction and switch the anomaly gate to block mode once your store has 50+ calibration notes:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">governance</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">max_content_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1048576</span><span class="w">  </span><span class="c1"># 1 MB per note</span>
+<span class="w">    </span><span class="nt">recall_timeout_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15.0</span>
+<span class="w">  </span><span class="nt">pii</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">action</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">redact</span>
+<span class="w">  </span><span class="nt">memory_defense</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">block</span>
+<span class="w">    </span><span class="nt">kappa</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
 </code></pre></div>
-<p>Calls <code>validate_operation</code> and raises <code>GovernanceViolationError</code> if any violations are found.</p>
-<hr />
-<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Config Key</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Env Override</th>
-<th style="text-align: left;">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>governance.enabled</code></td>
-<td style="text-align: left;"><code>bool</code></td>
-<td style="text-align: left;"><code>True</code></td>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;">Enable or disable governance validation. Set <code>False</code> for benchmarks.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>governance.min_content_length</code></td>
-<td style="text-align: left;"><code>int</code></td>
-<td style="text-align: left;"><code>1</code></td>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;">Minimum character length for content passed to <code>remember()</code>.</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="spec-drift-detection">Spec-Drift Detection<a class="headerlink" href="#spec-drift-detection" title="Permanent link">&para;</a></h2>
-<p>Every <code>GOV-XXX</code> label in CI must map to a control declared in <code>governance/controls.yaml</code>. The spec-drift test (<code>tests/test_governance_spec_drift.py</code>) validates this automatically:
-- No phantom controls (in CI but not in manifest)
-- No orphan controls (in manifest but not enforced)
-- CI step references must exist in the workflow
-- Test file references must exist on disk</p>
-<hr />
-<h2 id="llm-quick-reference">LLM Quick Reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
-<p>ZettelForge enforces four governance controls at build time and runtime. GOV-003 and GOV-007 are build-time controls enforced through CI: GOV-003 requires type hints and PEP 8 naming; GOV-007 is ratcheted (current CI gate 67%, target 80%).</p>
-<p>GOV-011 is the primary runtime control. The <code>GovernanceValidator.enforce()</code> method is called at the start of every <code>remember()</code> operation. It validates that the input is a string or has a <code>.content</code> attribute. If validation fails, it raises <code>GovernanceViolationError</code>, which halts the operation before any data is written. The validator loads its rules from governance documentation files but also has hardcoded rule definitions as fallback.</p>
-<p>GOV-012 is a silent runtime control that ensures audit logging. All memory operations (<code>remember</code>, <code>recall</code>, <code>synthesize</code>) trigger structured log entries. Logging granularity is controlled by the <code>logging.level</code>, <code>logging.log_intents</code>, and <code>logging.log_causal</code> configuration keys.</p>
-<p>Governance can be disabled entirely by setting <code>governance.enabled: false</code> in config.yaml, which is recommended only for benchmarking and testing. The <code>min_content_length</code> config key (default 1) sets the minimum character count for stored content. The governance directory defaults to <code>~/.openclaw/workspace/governance-documentation-package/governance</code> and is configurable via the constructor parameter.</p>
+<p>Or with environment variables:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_PII_ENABLED</span><span class="o">=</span><span class="nb">true</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_PII_ACTION</span><span class="o">=</span>redact
+<span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_MEMORY_DEFENSE_MODE</span><span class="o">=</span>block
+<span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_LIMITS_MAX_CONTENT_LENGTH</span><span class="o">=</span><span class="m">1048576</span>
+</code></pre></div>
+<p>Do not switch <code>memory_defense.mode</code> to <code>block</code> before you have at least <code>min_calibration_notes</code> notes in the store. Before that threshold the gate always passes writes through and produces no calibration baseline.</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -3225,12 +3011,10 @@ from becoming instructions to the model, tool layer, or future retrieval flow.</
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

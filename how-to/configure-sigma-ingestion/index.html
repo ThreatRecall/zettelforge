@@ -15,21 +15,21 @@
         <link rel="canonical" href="https://docs.threatrecall.ai/how-to/configure-sigma-ingestion/">
       
       
-        <link rel="prev" href="../configure-opencti/">
+        <link rel="prev" href="../use-detection-rules/">
       
       
-        <link rel="next" href="../configure-typedb/">
+        <link rel="next" href="../configure-yara-ingestion/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Configure Sigma Rule Ingestion - ZettelForge Documentation</title>
+        <title>Configure Sigma ingestion - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/how-to/configure-sigma-ingestion/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="Configure Sigma Rule Ingestion">
-  <meta property="og:description" content="Ingest Sigma detection rules into ZettelForge memory with automatic entity extraction, tag resolution, and knowledge graph population.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/how-to/configure-sigma-ingestion/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Configure Sigma Rule Ingestion">
-  <meta name="twitter:description" content="Ingest Sigma detection rules into ZettelForge memory with automatic entity extraction, tag resolution, and knowledge graph population.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Configure Sigma Rule Ingestion
+              Configure Sigma ingestion
             
           </span>
         </div>
@@ -281,11 +240,31 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../build-extensions/" class="md-tabs__link">
+        <a href="../configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -306,26 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -577,8 +533,6 @@
         
         
       
-      
-        
       
     
     
@@ -625,14 +579,182 @@
   
   
     <li class="md-nav__item">
-      <a href="../build-extensions/" class="md-nav__link">
+      <a href="../configure-opencti/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Build Extensions
+    Configure OpenCTI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../store-threat-actor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configure-typedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure TypeDB
   
 
     
@@ -660,7 +782,7 @@
   <span class="md-ellipsis">
     
   
-    Configure LanceDB
+    Tune LanceDB vector search
   
 
     
@@ -681,14 +803,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-opencti/" class="md-nav__link">
+      <a href="../integrate-llm-agent/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure OpenCTI
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
   
 
     
@@ -725,7 +959,7 @@
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Configure Sigma ingestion
   
 
     
@@ -743,7 +977,7 @@
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Configure Sigma ingestion
   
 
     
@@ -877,7 +1111,7 @@
   <a href="#llm-quick-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        LLM quick reference
       
     </span>
   </a>
@@ -900,34 +1134,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-typedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure TypeDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../configure-yara-ingestion/" class="md-nav__link">
         
   
@@ -935,7 +1141,7 @@
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
+    Configure YARA ingestion
   
 
     
@@ -956,42 +1162,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../ingest-news-report/" class="md-nav__link">
+      <a href="../reproduce-benchmarks/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Ingest News Report
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../integrate-llm-agent/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Integrate LLM Agent
+    Reproduce benchmarks
   
 
     
@@ -1068,146 +1246,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1215,119 +1253,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1376,14 +1302,70 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-detection-rules/" class="md-nav__link">
+      <a href="../troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extend ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-web-interface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use web interface
   
 
     
@@ -1416,17 +1398,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -1436,7 +1414,7 @@
   <span class="md-ellipsis">
     
   
-    Concepts
+    Reference
   
 
     
@@ -1452,235 +1430,6 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Two-Phase Pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reference
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
     Reference
   
 
@@ -1694,14 +1443,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+      <a href="../../reference/terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1750,174 +1499,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/memory-manager-api/" class="md-nav__link">
         
   
@@ -1946,90 +1527,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/stix-schema/" class="md-nav__link">
         
   
@@ -2037,7 +1534,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -2065,7 +1562,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2093,7 +1730,119 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
   
 
     
@@ -2126,7 +1875,230 @@
     
       
       
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2134,9 +2106,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2195,6 +2165,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2287,14 +2307,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2308,113 +2328,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2439,17 +2355,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2651,7 +2563,7 @@
   <a href="#llm-quick-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        LLM quick reference
       
     </span>
   </a>
@@ -2678,130 +2590,141 @@
   
 
 
-<h1 id="configure-sigma-rule-ingestion">Configure Sigma Rule Ingestion<a class="headerlink" href="#configure-sigma-rule-ingestion" title="Permanent link">&para;</a></h1>
+<h1 id="configure-sigma-rule-ingestion">Configure Sigma rule ingestion<a class="headerlink" href="#configure-sigma-rule-ingestion" title="Permanent link">&para;</a></h1>
 <p>Ingest Sigma detection rules (SigmaHQ format) into ZettelForge memory. Each rule is parsed, validated against the vendored SigmaHQ JSON schema, mapped to a <code>SigmaRule</code> entity with typed knowledge graph relations, and persisted as a memory note.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
 <li>ZettelForge installed (<code>pip install zettelforge</code>)</li>
 <li>Sigma rule files in <code>.yml</code> or <code>.yaml</code> format (SigmaHQ specification V2.0.0)</li>
-<li>Embedding and LLM models available (download automatically on first use)</li>
+<li>Embedding model available (downloaded automatically on first use; the LLM explainer is not part of the ingestion pipeline in v1)</li>
 </ul>
 <h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
 <h3 id="1-use-the-cli-quick-start">1. Use the CLI (quick start)<a class="headerlink" href="#1-use-the-cli-quick-start" title="Permanent link">&para;</a></h3>
 <p>Dry-run a directory to validate rules before ingesting:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>-m<span class="w"> </span>zettelforge.sigma.ingest<span class="w"> </span>/path/to/sigma/rules/<span class="w"> </span>--dry-run
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>zettelforge.sigma.ingest<span class="w"> </span>/path/to/sigma/rules/<span class="w"> </span>--dry-run
 </code></pre></div>
 <p>Output shows each parsed rule with its id, rule type, tag count, and relation count:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>OK  /path/to/sigma/rules/proc_creation_win_whoami.yml  id=sigma_a1b2c3d4e5f67890  type=detection  tags=3  edges=6
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>OK  /path/to/sigma/rules/susp_ps_execution.yml  id=55043c5f-3c72-4fb6-aa22-70b6f7e98d4a  type=detection  tags=5  edges=9
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Dry-run summary: 2/2 parsed, 0 failed.
+<div class="highlight"><pre><span></span><code>OK  /path/to/sigma/rules/proc_creation_win_whoami.yml  id=sigma_a1b2c3d4e5f67890  type=detection  tags=3  edges=6
+OK  /path/to/sigma/rules/susp_ps_execution.yml  id=55043c5f-3c72-4fb6-aa22-70b6f7e98d4a  type=detection  tags=5  edges=9
+
+Dry-run summary: 2/2 parsed, 0 failed.
 </code></pre></div>
 <p>Live ingestion into a MemoryManager:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>python<span class="w"> </span>-m<span class="w"> </span>zettelforge.sigma.ingest<span class="w"> </span>/path/to/sigma/rules/<span class="w"> </span>--domain<span class="w"> </span>detection
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>zettelforge.sigma.ingest<span class="w"> </span>/path/to/sigma/rules/<span class="w"> </span>--domain<span class="w"> </span>detection
 </code></pre></div>
 <h3 id="2-use-the-python-api">2. Use the Python API<a class="headerlink" href="#2-use-the-python-api" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">ingest_rule</span><span class="p">,</span> <span class="n">ingest_rules_dir</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Ingest a single file</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">note</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="s2">&quot;/path/to/rule.yml&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">mm</span><span class="p">,</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;detection&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">)</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ingested: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, relations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">relations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Ingest a directory (walks recursively)</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="n">ingested</span><span class="p">,</span> <span class="n">skipped</span> <span class="o">=</span> <span class="n">ingest_rules_dir</span><span class="p">(</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="s2">&quot;/path/to/sigma/rules/&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="n">mm</span><span class="p">,</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="n">glob</span><span class="o">=</span><span class="s2">&quot;**/*.yml&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;detection&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="p">)</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ingested: </span><span class="si">{</span><span class="n">ingested</span><span class="si">}</span><span class="s2">, skipped: </span><span class="si">{</span><span class="n">skipped</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">ingest_rule</span><span class="p">,</span> <span class="n">ingest_rules_dir</span>
+
+<span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
+
+<span class="c1"># Ingest a single file</span>
+<span class="n">note</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span>
+    <span class="s2">&quot;/path/to/rule.yml&quot;</span><span class="p">,</span>
+    <span class="n">mm</span><span class="p">,</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;detection&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ingested: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, relations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">relations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Ingest a directory (walks recursively)</span>
+<span class="n">ingested</span><span class="p">,</span> <span class="n">skipped</span> <span class="o">=</span> <span class="n">ingest_rules_dir</span><span class="p">(</span>
+    <span class="s2">&quot;/path/to/sigma/rules/&quot;</span><span class="p">,</span>
+    <span class="n">mm</span><span class="p">,</span>
+    <span class="n">glob</span><span class="o">=</span><span class="s2">&quot;**/*.yml&quot;</span><span class="p">,</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;detection&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ingested: </span><span class="si">{</span><span class="n">ingested</span><span class="si">}</span><span class="s2">, skipped: </span><span class="si">{</span><span class="n">skipped</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>For high-volume batch ingestion, use <code>bulk=True</code> to disable per-rule sync and call <code>mm.flush()</code> once at the end:</p>
+<div class="highlight"><pre><span></span><code><span class="n">ingested</span><span class="p">,</span> <span class="n">skipped</span> <span class="o">=</span> <span class="n">ingest_rules_dir</span><span class="p">(</span>
+    <span class="s2">&quot;/path/to/sigma/rules/&quot;</span><span class="p">,</span>
+    <span class="n">mm</span><span class="p">,</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;detection&quot;</span><span class="p">,</span>
+    <span class="n">bulk</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">flush_timeout</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span>
+<span class="p">)</span>
 </code></pre></div>
 <h3 id="3-parse-without-persisting">3. Parse without persisting<a class="headerlink" href="#3-parse-without-persisting" title="Permanent link">&para;</a></h3>
 <p>For validation pipelines or custom workflows, parse rules without memory storage:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_file</span><span class="p">,</span> <span class="n">parse_yaml</span><span class="p">,</span> <span class="n">from_rule_dict</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Parse from file</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">rule_dict</span> <span class="o">=</span> <span class="n">parse_file</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Parse from YAML string</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">yaml_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">title: Suspicious Whoami Execution</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">logsource:</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">  category: process_creation</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">  product: windows</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">detection:</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">  selection:</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">    Image|endswith: &#39;</span><span class="se">\\</span><span class="s2">whoami.exe&#39;</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">  condition: selection</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s2">&quot;&quot;&quot;</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="n">rule_dict</span> <span class="o">=</span> <span class="n">parse_yaml</span><span class="p">(</span><span class="n">yaml_text</span><span class="p">)</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Map to entity and KG relations</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="n">entity</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">from_rule_dict</span><span class="p">(</span><span class="n">rule_dict</span><span class="p">)</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rule: </span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logsource: product=</span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">logsource_product</span><span class="si">}</span><span class="s2">, category=</span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">logsource_category</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Relation types: </span><span class="si">{</span><span class="nb">set</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;rel&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">relations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_file</span><span class="p">,</span> <span class="n">parse_yaml</span><span class="p">,</span> <span class="n">from_rule_dict</span>
+
+<span class="c1"># Parse from file</span>
+<span class="n">rule_dict</span> <span class="o">=</span> <span class="n">parse_file</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">)</span>
+
+<span class="c1"># Parse from YAML string</span>
+<span class="n">yaml_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">title: Suspicious Whoami Execution</span>
+<span class="s2">logsource:</span>
+<span class="s2">  category: process_creation</span>
+<span class="s2">  product: windows</span>
+<span class="s2">detection:</span>
+<span class="s2">  selection:</span>
+<span class="s2">    Image|endswith: &#39;</span><span class="se">\\</span><span class="s2">whoami.exe&#39;</span>
+<span class="s2">  condition: selection</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">rule_dict</span> <span class="o">=</span> <span class="n">parse_yaml</span><span class="p">(</span><span class="n">yaml_text</span><span class="p">)</span>
+
+<span class="c1"># Map to entity and KG relations</span>
+<span class="n">entity</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">from_rule_dict</span><span class="p">(</span><span class="n">rule_dict</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rule: </span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logsource: product=</span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">logsource_product</span><span class="si">}</span><span class="s2">, category=</span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">logsource_category</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Relation types: </span><span class="si">{</span><span class="nb">set</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;rel&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">relations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="4-accept-multiple-input-types">4. Accept multiple input types<a class="headerlink" href="#4-accept-multiple-input-types" title="Permanent link">&para;</a></h3>
 <p><code>ingest_rule()</code> accepts a parsed dict, raw YAML string, or <code>Path</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Dict (pre-parsed)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="n">rule_dict</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># YAML string</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="n">yaml_text</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Path object</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">),</span> <span class="n">mm</span><span class="p">)</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># File path as string (auto-detected if it looks like a path)</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Dict (pre-parsed)</span>
+<span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="n">rule_dict</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
+
+<span class="c1"># YAML string</span>
+<span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="n">yaml_text</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
+
+<span class="c1"># Path object</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">),</span> <span class="n">mm</span><span class="p">)</span>
+
+<span class="c1"># File path as string (auto-detected if it looks like a path)</span>
+<span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="5-validate-against-the-sigma-schema">5. Validate against the Sigma schema<a class="headerlink" href="#5-validate-against-the-sigma-schema" title="Permanent link">&para;</a></h3>
 <p>Run standalone validation without entity mapping:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate</span><span class="p">,</span> <span class="n">parse_yaml</span><span class="p">,</span> <span class="n">SigmaValidationError</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">rule</span> <span class="o">=</span> <span class="n">parse_yaml</span><span class="p">(</span><span class="n">yaml_text</span><span class="p">)</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">result</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Validation error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate</span><span class="p">,</span> <span class="n">parse_yaml</span><span class="p">,</span> <span class="n">SigmaValidationError</span>
+
+<span class="n">rule</span> <span class="o">=</span> <span class="n">parse_yaml</span><span class="p">(</span><span class="n">yaml_text</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Validation error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="6-understand-idempotency">6. Understand idempotency<a class="headerlink" href="#6-understand-idempotency" title="Permanent link">&para;</a></h3>
 <p>Re-ingesting an unchanged rule returns the original note. The <code>source_ref</code> follows the pattern <code>sigma:&lt;rule_id&gt;:&lt;content_sha256_prefix&gt;</code> and is checked before any write:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">first</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">second</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">assert</span> <span class="n">first</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">second</span><span class="o">.</span><span class="n">id</span>  <span class="c1"># same note, no duplicate</span>
+<div class="highlight"><pre><span></span><code><span class="n">first</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
+<span class="n">second</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">first</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">second</span><span class="o">.</span><span class="n">id</span>  <span class="c1"># same note, no duplicate</span>
 </code></pre></div>
 <h3 id="7-cli-flags-reference">7. CLI flags reference<a class="headerlink" href="#7-cli-flags-reference" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>usage: python -m zettelforge.sigma.ingest [-h] [--domain DOMAIN] [--dry-run] [--glob GLOB] path
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>positional arguments:
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  path              Sigma rule file or directory
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>options:
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  --domain DOMAIN   Memory domain for ingested notes (default: detection)
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>  --dry-run         Parse + validate + map without persisting to memory
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>  --glob GLOB       Glob used when path is a directory (default: **/*.yml)
+<div class="highlight"><pre><span></span><code>usage: python -m zettelforge.sigma.ingest [-h] [--domain DOMAIN] [--dry-run] [--glob GLOB] path
+
+positional arguments:
+  path              Sigma rule file or directory
+
+options:
+  --domain DOMAIN   Memory domain for ingested notes (default: detection)
+  --dry-run         Parse + validate + map without persisting to memory
+  --glob GLOB       Glob used when path is a directory (default: **/*.yml)
 </code></pre></div>
-<h2 id="llm-quick-reference">LLM Quick Reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
+<h2 id="llm-quick-reference">LLM quick reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
 <p><strong>Task</strong>: Ingest Sigma rules into ZettelForge memory with automatic knowledge graph population.</p>
 <p><strong>Primary CLI</strong>: <code>python -m zettelforge.sigma.ingest &lt;path&gt;</code> with optional <code>--dry-run</code>, <code>--domain</code>, <code>--glob</code>.</p>
 <p><strong>Primary Python API</strong>: <code>ingest_rule(source, mm, domain="detection")</code> returns <code>(MemoryNote, relations_list)</code>. Accepts dict, string, or Path. <code>ingest_rules_dir(path, mm)</code> walks a directory tree and returns <code>(ingested_count, skipped_count)</code>.</p>
 <p><strong>Pipeline</strong>: Input -&gt; <code>parse_file()</code> or <code>parse_yaml()</code> (YAML load + JSON-schema validation against vendored SigmaHQ schemas) -&gt; <code>from_rule_dict()</code> (map to <code>SigmaRule</code> entity + relations) -&gt; <code>mm.remember()</code> (persist as memory note) -&gt; KG edge persistence.</p>
 <p><strong>Validation</strong>: <code>validate(rule_dict)</code> returns <code>ValidationResult(valid, errors)</code>. Two error types: <code>SigmaParseError</code> (bad YAML or I/O) and <code>SigmaValidationError</code> (schema violation). Both bubble through <code>ingest_rule()</code>.</p>
-<p><strong>Schema dispatch</strong>: Detection rules validate against <code>sigma-detection-rule-schema.json</code>. Rules with a <code>correlation:</code> key use the correlation schema. Rules with a <code>filter:</code> key use the filters schema.</p>
+<p><strong>Schema dispatch</strong>: Detection rules validate against <code>sigma-detection-rule-schema.json</code> (SigmaHQ V2.0.0, 2024-08-08). Rules with a <code>correlation:</code> key use the correlation schema. Rules with a <code>filter:</code> key use the filters schema. Required fields for detection rules: <code>title</code>, <code>logsource</code>, <code>detection</code>.</p>
 <p><strong>Tag resolution</strong>: Sigma tags (<code>attack.t1059</code>, <code>cve.2021-44228</code>) upgrade to typed KG edges (<code>detects</code> -&gt; <code>AttackPattern</code>, <code>references_cve</code> -&gt; <code>Vulnerability</code>, <code>attributed_to</code> -&gt; <code>IntrusionSet</code>/<code>Malware</code>). Raw <code>tagged_with</code> -&gt; <code>SigmaTag</code> edges are always preserved alongside upgrade edges. <code>tlp.*</code> and <code>detection.*</code> tags are metadata-only (no upgrade).</p>
 <p><strong>Logsource edges</strong>: Every populated logsource facet (product, service, category) generates an <code>applies_to</code> -&gt; <code>LogSource</code> edge with the facet type and value in properties.</p>
 <p><strong>Related rule edges</strong>: The <code>related:</code> block maps to <code>superseded_by</code> (type: <code>obsolete</code>) or <code>related_to</code> (all other types).</p>
 <p><strong>Idempotency</strong>: Source ref pattern <code>sigma:&lt;rule_id&gt;:&lt;content_sha256[:12]&gt;</code>. A store lookup precedes every write. Unchanged rules return the original note.</p>
+<p><strong>LLM explainer</strong>: Not wired into the ingestion pipeline in v1. Calling <code>explain()</code> directly is rate-limited by <code>ZETTELFORGE_EXPLAIN_RPM</code> (default 60 calls/minute). Auto-enrichment via the async worker queue is planned for v1.1.</p>
+<p><strong>Bulk ingestion</strong>: Use <code>ingest_rules_dir(..., bulk=True, flush_timeout=60.0)</code> for large rule sets. Per-rule enrichment sync is disabled; <code>mm.flush()</code> runs once at the end.</p>
 <p><strong>Security</strong>: File size capped at 1 MB. Symlinks are never followed during directory walk. Paths that resolve outside the rules root are skipped.</p>
 <p><strong>Edge tagging</strong>: All KG edges emitted during ingest carry <code>edge_type: detection</code> and <code>source: sigma_ingest</code> properties for downstream filtering.</p>
 
@@ -2856,12 +2779,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

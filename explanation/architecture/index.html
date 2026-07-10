@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge architecture: SQLite + LanceDB hybrid storage, dual-stream write pipeline, blended retrieval with intent classification, and the data model for CTI memory.">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -15,7 +15,7 @@
         <link rel="canonical" href="https://docs.threatrecall.ai/explanation/architecture/">
       
       
-        <link rel="prev" href="../../how-to/use-detection-rules/">
+        <link rel="prev" href="../../reference/entity-indexer-concurrency/">
       
       
         <link rel="next" href="../two-phase-pipeline/">
@@ -24,12 +24,12 @@
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Why SQLite + LanceDB - ZettelForge Documentation</title>
+        <title>Architecture (why SQLite + LanceDB) - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/explanation/architecture/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="Why SQLite + LanceDB">
-  <meta property="og:description" content="ZettelForge architecture: SQLite + LanceDB hybrid storage, dual-stream write pipeline, blended retrieval with intent classification, and the data model for CTI memory.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/explanation/architecture/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Why SQLite + LanceDB">
-  <meta name="twitter:description" content="ZettelForge architecture: SQLite + LanceDB hybrid storage, dual-stream write pipeline, blended retrieval with intent classification, and the data model for CTI memory.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Why SQLite + LanceDB
+              Architecture (why SQLite + LanceDB)
             
           </span>
         </div>
@@ -279,11 +238,31 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+        <a href="../../how-to/configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -306,26 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -573,17 +529,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -622,62 +574,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/configure-opencti/" class="md-nav__link">
         
   
@@ -706,14 +602,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -762,42 +770,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -825,7 +805,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -902,146 +1078,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1049,119 +1085,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1210,308 +1134,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-problem-with-one-database" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Problem with One Database
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-hybrid-decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Hybrid Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-typedb-specifically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why TypeDB Specifically
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-lancedb-specifically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why LanceDB Specifically
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-process-ai-fastembed-llama-cpp-python" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In-Process AI: fastembed + llama-cpp-python
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-cost-of-two-databases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Cost of Two Databases
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#intent-guided-graph-traversal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Intent-Guided Graph Traversal
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Intent-Guided Graph Traversal">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-five-query-intents-and-their-traversal-policies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Five Query Intents and Their Traversal Policies
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-factual-queries-carry-a-non-zero-graph-weight" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why FACTUAL Queries Carry a Non-Zero Graph Weight
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#classification-accuracy-as-a-retrieval-quality-gate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Classification Accuracy as a Retrieval Quality Gate
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LLM Quick Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../two-phase-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Two-Phase Pipeline
+    Troubleshoot
   
 
     
@@ -1532,14 +1162,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../stix-in-zettelforge/" class="md-nav__link">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    STIX in ZettelForge
+    Extend ZettelForge
   
 
     
@@ -1560,70 +1190,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../epistemic-tiers/" class="md-nav__link">
+      <a href="../../how-to/use-web-interface/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
+    Use web interface
   
 
     
@@ -1655,8 +1229,6 @@
     
     
       
-      
-        
       
     
     
@@ -1664,12 +1236,10 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -1687,8 +1257,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1705,14 +1275,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+      <a href="../../reference/terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1761,174 +1331,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/memory-manager-api/" class="md-nav__link">
         
   
@@ -1957,90 +1359,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/stix-schema/" class="md-nav__link">
         
   
@@ -2048,7 +1366,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -2076,7 +1394,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2104,7 +1562,546 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem-with-one-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The problem with one database
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sqlite-the-graph-and-note-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQLite: the graph and note layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SQLite: the graph and note layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-sqlite-specifically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why SQLite specifically
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lancedb-the-vector-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LanceDB: the vector layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LanceDB: the vector layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-lancedb-specifically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why LanceDB specifically
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-embeddings-and-configurable-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local embeddings and configurable LLM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedb-the-optional-graph-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeDB: the optional graph layer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intent-guided-blended-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intent-guided blended retrieval
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intent-guided blended retrieval">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-five-intents-and-their-traversal-policy-weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The five intents and their traversal policy weights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-factual-queries-carry-a-non-zero-graph-weight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why FACTUAL queries carry a non-zero graph weight
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-misclassification-degrades-rather-than-breaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why misclassification degrades rather than breaks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-cost-of-two-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The cost of two databases
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
   
 
     
@@ -2137,17 +2134,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2206,6 +2199,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2298,14 +2341,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2319,113 +2362,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2450,17 +2389,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2557,7 +2492,7 @@
   <a href="#the-problem-with-one-database" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Problem with One Database
+        The problem with one database
       
     </span>
   </a>
@@ -2565,99 +2500,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-hybrid-decision" class="md-nav__link">
+  <a href="#sqlite-the-graph-and-note-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Hybrid Decision
+        SQLite: the graph and note layer
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-typedb-specifically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why TypeDB Specifically
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-lancedb-specifically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why LanceDB Specifically
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#in-process-ai-fastembed-llama-cpp-python" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        In-Process AI: fastembed + llama-cpp-python
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-cost-of-two-databases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The Cost of Two Databases
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#intent-guided-graph-traversal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Intent-Guided Graph Traversal
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Intent-Guided Graph Traversal">
+    <nav class="md-nav" aria-label="SQLite: the graph and note layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#the-five-query-intents-and-their-traversal-policies" class="md-nav__link">
+  <a href="#why-sqlite-specifically" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Five Query Intents and Their Traversal Policies
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-factual-queries-carry-a-non-zero-graph-weight" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why FACTUAL Queries Carry a Non-Zero Graph Weight
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#classification-accuracy-as-a-retrieval-quality-gate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Classification Accuracy as a Retrieval Quality Gate
+        Why SQLite specifically
       
     </span>
   </a>
@@ -2670,10 +2528,110 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#lancedb-the-vector-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        LanceDB: the vector layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="LanceDB: the vector layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-lancedb-specifically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why LanceDB specifically
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-embeddings-and-configurable-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local embeddings and configurable LLM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedb-the-optional-graph-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeDB: the optional graph layer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#intent-guided-blended-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intent-guided blended retrieval
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Intent-guided blended retrieval">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-five-intents-and-their-traversal-policy-weights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The five intents and their traversal policy weights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-factual-queries-carry-a-non-zero-graph-weight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why FACTUAL queries carry a non-zero graph weight
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-misclassification-degrades-rather-than-breaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why misclassification degrades rather than breaks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-cost-of-two-databases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The cost of two databases
       
     </span>
   </a>
@@ -2700,21 +2658,15 @@
   
 
 
-<h1 id="why-sqlite-lancedb-not-one-or-the-other">Why SQLite + LanceDB (Not One or the Other)<a class="headerlink" href="#why-sqlite-lancedb-not-one-or-the-other" title="Permanent link">&para;</a></h1>
+<h1 id="why-sqlite-lancedb-not-one-or-the-other">Why SQLite + LanceDB (not one or the other)<a class="headerlink" href="#why-sqlite-lancedb-not-one-or-the-other" title="Permanent link">&para;</a></h1>
 <p>ZettelForge uses two storage engines where most systems use one. SQLite handles structured data (notes, knowledge graph, entity index) with ACID guarantees. LanceDB handles vector search. This is a deliberate architectural choice, not accidental complexity.</p>
-<blockquote>
-<p><strong>Note:</strong> The optional <code>zettelforge-enterprise</code> extension replaces SQLite with TypeDB for teams needing STIX 2.1 schema enforcement and inference rules. The architecture rationale below applies to both backends — only the ontology layer implementation differs.</p>
-</blockquote>
-<h2 id="the-problem-with-one-database">The Problem with One Database<a class="headerlink" href="#the-problem-with-one-database" title="Permanent link">&para;</a></h2>
+<p>You don't need to understand this page to use ZettelForge. Read it if you want to know why queries behave the way they do, or if you're evaluating whether this architecture fits your environment.</p>
+<p>Prerequisites: <a href="../../tutorials/01-quickstart/">Quickstart</a>, <a href="../../reference/configuration/">Configuration reference</a>.</p>
+<hr />
+<h2 id="the-problem-with-one-database">The problem with one database<a class="headerlink" href="#the-problem-with-one-database" title="Permanent link">&para;</a></h2>
 <p>CTI analysis operates on two fundamentally different data types:</p>
-<ol>
-<li>
-<p><strong>Structured intelligence</strong> — entities with typed relationships, confidence scores, temporal validity, and ontological constraints. "APT28 uses Cobalt Strike" is a typed relationship between a <code>threat-actor</code> and a <code>malware</code> entity, with confidence 0.85, valid from January 2024.</p>
-</li>
-<li>
-<p><strong>Unstructured context</strong> — raw text, analyst notes, news articles, conversation logs. "The ransomware encrypted all files on the domain controller using AES-256" is a passage that should be retrievable by semantic similarity but doesn't decompose cleanly into typed entities.</p>
-</li>
-</ol>
+<p><strong>Structured intelligence</strong> — entities with typed relationships, confidence scores, temporal validity, and traceable provenance. "APT28 uses Cobalt Strike" is a typed relationship between an <code>actor</code> and a <code>tool</code>, with a confidence score and a source note ID.</p>
+<p><strong>Unstructured context</strong> — raw text, analyst notes, news articles, conversation logs. "The ransomware encrypted all files on the domain controller using AES-256" is a passage that needs to be retrievable by semantic similarity. It doesn't decompose cleanly into typed entities.</p>
 <p>No single database handles both well:</p>
 <table>
 <thead>
@@ -2733,11 +2685,6 @@
 <tr>
 <td style="text-align: left;">Multi-hop traversal</td>
 <td style="text-align: left;">Strong</td>
-<td style="text-align: left;">None</td>
-</tr>
-<tr>
-<td style="text-align: left;">Inference rules</td>
-<td style="text-align: left;">Strong (TypeDB)</td>
 <td style="text-align: left;">None</td>
 </tr>
 <tr>
@@ -2761,130 +2708,166 @@
 <td style="text-align: left;">Via metadata only</td>
 </tr>
 <tr>
-<td style="text-align: left;">Alias resolution</td>
-<td style="text-align: left;">Via inference</td>
-<td style="text-align: left;">Manual lookup</td>
+<td style="text-align: left;">ACID writes</td>
+<td style="text-align: left;">Strong (SQLite)</td>
+<td style="text-align: left;">Append-only</td>
 </tr>
 </tbody>
 </table>
-<h2 id="the-hybrid-decision">The Hybrid Decision<a class="headerlink" href="#the-hybrid-decision" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>graph LR
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    subgraph &quot;TypeDB — Ontology Layer&quot;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        A[threat-actor: APT28]
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        B[malware: Cobalt Strike]
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        C[vulnerability: CVE-2024-1111]
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        A --&gt;|uses| B
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        A --&gt;|targets| C
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    end
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    subgraph &quot;LanceDB — Conversational Layer&quot;
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>        N1[&quot;note_001: &#39;APT28 uses Cobalt Strike&lt;br/&gt;for lateral movement...&#39;&lt;br/&gt;vector: [0.12, 0.34, ...]&quot;]
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        N2[&quot;note_002: &#39;Cobalt Strike beacon&lt;br/&gt;detected on 10.0.0.15...&#39;&lt;br/&gt;vector: [0.56, 0.78, ...]&quot;]
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    end
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    A -.-&gt;|mentioned-in| N1
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    B -.-&gt;|mentioned-in| N2
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    style A fill:#1a472a,color:#fff
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    style B fill:#1a472a,color:#fff
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    style C fill:#1a472a,color:#fff
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    style N1 fill:#1a2a47,color:#fff
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    style N2 fill:#1a2a47,color:#fff
+<p>ZettelForge assigns each capability to the engine that handles it well, then bridges the two through the entity index.</p>
+<hr />
+<h2 id="sqlite-the-graph-and-note-layer">SQLite: the graph and note layer<a class="headerlink" href="#sqlite-the-graph-and-note-layer" title="Permanent link">&para;</a></h2>
+<p>SQLite is the default primary store (configured via <code>storage.backend: sqlite</code> or <code>ZETTELFORGE_BACKEND=sqlite</code>). It holds three tables:</p>
+<p><strong><code>notes</code></strong> — every ingested document or analyst note. Full text, metadata, TLP marking, confidence, timestamps.</p>
+<p><strong><code>kg_nodes</code> and <code>kg_edges</code></strong> — the knowledge graph. Nodes store <code>(entity_type, entity_value)</code> pairs with a JSON properties blob. Edges store directed relationships between nodes, with <code>relationship</code>, <code>edge_type</code>, and a <code>note_id</code> back-reference to the note that produced the edge.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- kg_edges schema (src/zettelforge/sqlite_backend.py:95-110)</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">kg_edges</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">edge_id</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">    </span><span class="n">from_node_id</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">to_node_id</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">relationship</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="n">edge_type</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;heuristic&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">note_id</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="k">UNIQUE</span><span class="p">(</span><span class="n">from_node_id</span><span class="p">,</span><span class="w"> </span><span class="n">to_node_id</span><span class="p">,</span><span class="w"> </span><span class="n">relationship</span><span class="p">,</span><span class="w"> </span><span class="n">note_id</span><span class="p">)</span>
+<span class="p">);</span>
 </code></pre></div>
-<p><strong>TypeDB owns the truth.</strong> When an analyst asks "what tools does APT28 use?", TypeDB answers definitively from its STIX 2.1 typed relationships. The answer includes confidence scores, temporal validity windows, and can traverse multi-hop paths (APT28 → campaign → malware) using inference.</p>
-<p><strong>LanceDB owns the context.</strong> When an analyst asks "what happened with the ransomware incident?", LanceDB finds semantically similar notes via vector search. The answer is grounded in the actual text the analyst stored, not just entity relationships.</p>
-<p><strong>The bridge is <code>mentioned-in</code>.</strong> Every time a note is stored, entity extraction identifies STIX entities in the text and creates <code>mentioned-in</code> relations in TypeDB. This means a graph query for "all notes about APT28" traverses TypeDB to find note IDs, then LanceDB retrieves the actual content. The <code>BlendedRetriever</code> merges both retrieval paths using intent-based weights.</p>
-<h2 id="why-typedb-specifically">Why TypeDB Specifically<a class="headerlink" href="#why-typedb-specifically" title="Permanent link">&para;</a></h2>
-<p>The choice of TypeDB over Neo4j, FalkorDB, or ArangoDB was driven by three capabilities:</p>
-<p><strong>1. STIX 2.1 as a native schema.</strong> TypeDB's type system — with abstract entity inheritance, typed relation roles, and attribute constraints — maps naturally to STIX. <code>threat-actor sub stix-domain-object</code> inherits 8 shared attributes while adding actor-specific fields. This is schema enforcement, not convention.</p>
-<p><strong>2. Inference functions.</strong> TypeDB can compute relationships that aren't explicitly stored. The <code>get_aliases</code> function resolves alias chains transitively — if "Fancy Bear" is aliased to "APT28" and "Strontium" is aliased to "APT28", a query for aliases of "Strontium" returns "Fancy Bear" without a direct edge between them.</p>
-<p><strong>3. Apache-2.0 licensing.</strong> For a CTI platform that may be deployed in government or defense environments, unambiguous open-source licensing matters.</p>
-<h2 id="why-lancedb-specifically">Why LanceDB Specifically<a class="headerlink" href="#why-lancedb-specifically" title="Permanent link">&para;</a></h2>
-<p>LanceDB was chosen for the vector layer because:</p>
+<p>The <code>note_id</code> column on <code>kg_edges</code> is the bridge. Every relationship in the KG traces back to the note that asserted it.</p>
+<p><strong><code>entity_index</code></strong> — a fast lookup from <code>(entity_type, entity_value)</code> to a set of <code>note_id</code> values. When a note is ingested, entity extraction runs and writes one row per entity detected. A query for "all notes mentioning APT28" hits this table in O(1), then retrieves note content from the <code>notes</code> table or LanceDB.</p>
+<h3 id="why-sqlite-specifically">Why SQLite specifically<a class="headerlink" href="#why-sqlite-specifically" title="Permanent link">&para;</a></h3>
+<p>SQLite was chosen for the graph layer for four reasons:</p>
+<ol>
+<li>
+<p><strong>Zero operational overhead.</strong> No server, no port, no daemon, no connection pool. The database is a single file on disk. This fits the offline-first design intent: a CTI analyst in a disconnected environment can run ZettelForge with no infrastructure beyond a Python environment.</p>
+</li>
+<li>
+<p><strong>ACID guarantees without configuration.</strong> SQLite's journal mode provides crash-safe writes. A note ingestion either completes fully (notes row + kg_edges rows + entity_index rows) or rolls back entirely. Partial writes that corrupt the KG are not possible.</p>
+</li>
+<li>
+<p><strong>Adequate scale for the target workload.</strong> ZettelForge's CTI memory model is bounded: an analyst typically accumulates thousands to tens of thousands of notes over a career, not billions of rows. SQLite is a practical fit for that range and avoids a graph database server in the default OSS install. TypeDB's advantages (inference rules, schema-level constraints) matter when you need stricter STIX ontology enforcement or larger multi-tenant graph operations.</p>
+</li>
+<li>
+<p><strong>WAL mode compatibility with LanceDB's columnar I/O.</strong> Both backends write to the same data directory (<code>~/.amem</code> by default). SQLite WAL mode and LanceDB's columnar append pattern do not conflict under concurrent ingest load.</p>
+</li>
+</ol>
+<hr />
+<h2 id="lancedb-the-vector-layer">LanceDB: the vector layer<a class="headerlink" href="#lancedb-the-vector-layer" title="Permanent link">&para;</a></h2>
+<p>LanceDB holds vector embeddings of every note — 768-dimensional dense vectors produced by the fastembed <code>nomic-ai/nomic-embed-text-v1.5-Q</code> model (ONNX, runs in-process, no server).</p>
+<p>When a query arrives, the <code>VectorRetriever</code> computes cosine similarity between the query embedding and the stored note vectors, returning the top-k closest matches. These are notes whose text is semantically close to the query, regardless of whether any structured entity in the KG explicitly links them to the query topic.</p>
+<h3 id="why-lancedb-specifically">Why LanceDB specifically<a class="headerlink" href="#why-lancedb-specifically" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Embedded deployment</strong> — no separate server process, runs in-process via Python</li>
-<li><strong>IVF_PQ indexing</strong> — balanced performance/accuracy for the 768-dimensional embedding space</li>
-<li><strong>Columnar storage</strong> — efficient for the append-heavy write pattern of note ingestion</li>
-<li><strong>Zero external dependencies</strong> — just <code>pip install lancedb</code></li>
+<li><strong>Embedded deployment</strong> — no separate server process; runs in-process via the Python <code>lancedb</code> package.</li>
+<li><strong>Columnar storage</strong> — efficient for the append-heavy write pattern of note ingestion.</li>
+<li><strong>IVF_PQ indexing</strong> — accurate approximate nearest-neighbor search in the 768-dimensional embedding space.</li>
+<li><strong>Zero external infrastructure</strong> — <code>pip install lancedb</code> is the entire installation.</li>
 </ul>
-<h2 id="in-process-ai-fastembed-llama-cpp-python">In-Process AI: fastembed + llama-cpp-python<a class="headerlink" href="#in-process-ai-fastembed-llama-cpp-python" title="Permanent link">&para;</a></h2>
-<p>ZettelForge v2.0.0 runs all AI inference in-process by default, with no external service dependencies:</p>
+<hr />
+<h2 id="local-embeddings-and-configurable-llm">Local embeddings and configurable LLM<a class="headerlink" href="#local-embeddings-and-configurable-llm" title="Permanent link">&para;</a></h2>
+<p>ZettelForge v2.7.0 keeps embeddings local by default and routes language-model work through the configured LLM provider:</p>
+<p><strong>Embeddings</strong> — fastembed runs <code>nomic-ai/nomic-embed-text-v1.5-Q</code> as an in-process ONNX model (768-dim, downloads on first use). No embedding server is required in the default configuration.</p>
+<p><strong>LLM</strong> — the source configuration defaults to Ollama (<code>llm.provider: ollama</code>, <code>http://localhost:11434</code>) with a 180-second timeout. The shipped source default still contains an unresolved Ollama model tag, so set <code>llm.model</code> explicitly to a model installed on your host, such as <code>qwen2.5:3b</code>. If the configured provider is unavailable, fact extraction and synthesis degrade instead of crashing: entity extraction keeps regex-matched CTI entities, and <code>synthesize()</code> returns a direct-answer result with <code>confidence: 0.0</code>.</p>
+<p>You can substitute any supported provider (litellm, OpenAI, Anthropic, local llama-cpp-python) via <code>llm.provider</code> in <code>config.yaml</code>. See <a href="../../reference/configuration/#llm">Configuration</a>.</p>
+<hr />
+<h2 id="typedb-the-optional-graph-layer">TypeDB: the optional graph layer<a class="headerlink" href="#typedb-the-optional-graph-layer" title="Permanent link">&para;</a></h2>
+<p>TypeDB 3.x is supported as an alternative to SQLite for the graph layer. You activate it by setting <code>storage.backend: typedb</code> and running a TypeDB server on <code>localhost:1729</code> (configurable via <code>typedb.host</code> / <code>typedb.port</code>).</p>
+<p>TypeDB's advantages over SQLite for graph storage:</p>
 <ul>
-<li><strong>Embeddings</strong>: fastembed runs nomic-embed-text-v1.5-Q as an in-process ONNX model (768-dim, ~130 MB, ~7ms/embed). This eliminates the latency and operational overhead of an embedding server.</li>
-<li><strong>LLM</strong>: llama-cpp-python loads Qwen2.5-3B-Instruct (Q4_K_M GGUF, ~2.0 GB) directly into the Python process (~15.6 tok/s on CPU). This handles fact extraction, intent classification, causal triple extraction, and synthesis.</li>
+<li><strong>STIX 2.1 schema enforcement</strong> — TypeDB's type system enforces that every node and edge conforms to the STIX ontology at write time. SQLite's schema is permissive by comparison.</li>
+<li><strong>Transitive inference</strong> — TypeDB computes alias chains transitively without storing explicit edges. If "Fancy Bear" → aliases → "APT28" and "Strontium" → aliases → "APT28", a TypeDB query for Strontium's aliases returns Fancy Bear automatically.</li>
+<li><strong>Multi-hop queries via TypeQL</strong> — complex traversals that would require multiple SQLite queries can often be expressed as a single TypeQL query with inference enabled.</li>
 </ul>
-<p>Both models download automatically on first use. Ollama remains available as an optional fallback provider for users who prefer server-based inference or want to use different models -- configure via <code>embedding.provider: ollama</code> and <code>llm.provider: ollama</code> in <code>config.yaml</code>.</p>
-<h2 id="the-cost-of-two-databases">The Cost of Two Databases<a class="headerlink" href="#the-cost-of-two-databases" title="Permanent link">&para;</a></h2>
-<p>The hybrid architecture adds operational complexity:</p>
-<ul>
-<li>Two data stores to back up</li>
-<li>TypeDB requires Docker (not purely embedded)</li>
-<li>The <code>mentioned-in</code> bridge can become inconsistent if one database is modified without the other</li>
-<li>Cache invalidation spans both systems</li>
-</ul>
-<p>ZettelForge mitigates this with automatic fallback — if TypeDB is unreachable, <code>get_knowledge_graph()</code> returns the JSONL backend transparently. The system degrades to vector-only retrieval rather than failing.</p>
-<h2 id="intent-guided-graph-traversal">Intent-Guided Graph Traversal<a class="headerlink" href="#intent-guided-graph-traversal" title="Permanent link">&para;</a></h2>
-<p>The <code>BlendedRetriever</code> does not run the graph retriever at a fixed weight. It consults the <code>IntentClassifier</code> first, then applies an intent-specific traversal policy that controls how much each retrieval source contributes to the final blended score.</p>
-<h3 id="the-five-query-intents-and-their-traversal-policies">The Five Query Intents and Their Traversal Policies<a class="headerlink" href="#the-five-query-intents-and-their-traversal-policies" title="Permanent link">&para;</a></h3>
+<p>TypeDB has operational costs that SQLite does not: it requires a running server (Docker or native install), does not support embedded deployment, and introduces a network hop on every KG write.</p>
+<div class="admonition note">
+<p class="admonition-title">ThreatRecall.ai SaaS</p>
+<p><a href="https://threatrecall.ai">ThreatRecall.ai</a> uses TypeDB for its tenant-scoped knowledge graphs, providing STIX 2.1 schema enforcement and transitive alias resolution at scale without the operational overhead of self-hosting a TypeDB cluster.</p>
+</div>
+<hr />
+<h2 id="intent-guided-blended-retrieval">Intent-guided blended retrieval<a class="headerlink" href="#intent-guided-blended-retrieval" title="Permanent link">&para;</a></h2>
+<p>The <code>BlendedRetriever</code> does not run all retrievers at fixed weights. It consults the <code>IntentClassifier</code> first, which classifies the query into one of five intents, then applies an intent-specific traversal policy.</p>
+<h3 id="the-five-intents-and-their-traversal-policy-weights">The five intents and their traversal policy weights<a class="headerlink" href="#the-five-intents-and-their-traversal-policy-weights" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Intent</th>
-<th style="text-align: left;">Graph weight</th>
-<th style="text-align: left;">Primary source</th>
-<th style="text-align: left;">Typical CTI query</th>
+<th style="text-align: center;">vector</th>
+<th style="text-align: center;">entity_index</th>
+<th style="text-align: center;">graph</th>
+<th style="text-align: center;">temporal</th>
+<th style="text-align: center;">top_k</th>
+<th style="text-align: left;">Typical query</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>FACTUAL</code></td>
-<td style="text-align: left;">0.2</td>
-<td style="text-align: left;">entity index (0.7)</td>
-<td style="text-align: left;">"What CVE was used in the SolarWinds attack?"</td>
+<td style="text-align: center;">0.3</td>
+<td style="text-align: center;">0.7</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.0</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">"What CVE does APT28 exploit?"</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>TEMPORAL</code></td>
-<td style="text-align: left;">0.2</td>
-<td style="text-align: left;">temporal (0.5)</td>
-<td style="text-align: left;">"What changed since the last incident?"</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">"What changed since last week?"</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>RELATIONAL</code></td>
-<td style="text-align: left;">0.5</td>
-<td style="text-align: left;">graph (0.5)</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">10</td>
 <td style="text-align: left;">"What infrastructure does APT28 use?"</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>CAUSAL</code></td>
-<td style="text-align: left;">0.6</td>
-<td style="text-align: left;">graph (0.6)</td>
-<td style="text-align: left;">"Why did the attacker pivot to the domain controller?"</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.6</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: left;">"Why did the attacker pivot to the DC?"</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>EXPLORATORY</code></td>
-<td style="text-align: left;">0.2</td>
-<td style="text-align: left;">vector (0.5)</td>
+<td style="text-align: center;">0.5</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.2</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">10</td>
 <td style="text-align: left;">"Tell me about APT28"</td>
 </tr>
 </tbody>
 </table>
-<p>A <code>graph</code> weight of <code>0.0</code> means the graph retriever runs but its results are multiplied by zero before accumulating into the blended score — effectively silencing it. This is why intent classification accuracy directly determines whether graph traversal contributes to retrieval at all.</p>
-<h3 id="why-factual-queries-carry-a-non-zero-graph-weight">Why FACTUAL Queries Carry a Non-Zero Graph Weight<a class="headerlink" href="#why-factual-queries-carry-a-non-zero-graph-weight" title="Permanent link">&para;</a></h3>
-<p>FACTUAL queries are entity lookups, and a zero graph weight seems intuitive: if you want to know a specific fact, why traverse the graph? In practice, CTI factual queries frequently span a graph hop. "What CVE does APT28 exploit?" is factual in intent but requires an <code>(APT28) -[targets]-&gt; (CVE)</code> traversal to answer correctly. Setting <code>graph=0.2</code> for FACTUAL allows graph results to contribute without dominating — the entity index (0.7) still provides the primary answer, and the graph supplements it.</p>
-<h3 id="classification-accuracy-as-a-retrieval-quality-gate">Classification Accuracy as a Retrieval Quality Gate<a class="headerlink" href="#classification-accuracy-as-a-retrieval-quality-gate" title="Permanent link">&para;</a></h3>
-<p>The classifier uses two-tier classification: keyword matching (primary) and LLM fallback (when keyword score &lt; 2). A misclassification does not produce a wrong answer — it produces a degraded answer, because the wrong retrieval policy routes the query to the wrong combination of retrievers. A CTI relational query misclassified as FACTUAL will return entity index results rather than graph traversal results. The answer may be plausible but incomplete.</p>
-<p>For details on keyword lists, policy weights, and the merge algorithm, see the <a href="../../reference/retrieval-policies/">Retrieval Policies Reference</a>.</p>
-<h2 id="llm-quick-reference">LLM Quick Reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
-<p>ZettelForge v2.0.0 uses a hybrid two-database architecture. TypeDB (Apache-2.0, STIX 2.1 schema) serves as the ontology layer owning structured threat intelligence: 9 entity types (threat-actor, malware, tool, attack-pattern, vulnerability, campaign, indicator, infrastructure, zettel-note), 8 relation types (uses, targets, attributed-to, indicates, mitigates, mentioned-in, supersedes, alias-of), inference functions for transitive alias resolution and campaign tool attribution, confidence scoring on every relation, and temporal validity via valid-from/valid-until attributes. LanceDB serves as the conversational layer owning unstructured context: Zettelkasten-style atomic notes with 768-dimensional vector embeddings (fastembed nomic-embed-text-v1.5-Q by default, IVF_PQ index with 256 partitions and 16 sub-vectors), raw text, metadata, and links. Embeddings and LLM inference run in-process by default via fastembed (ONNX) and llama-cpp-python (Qwen2.5-3B-Instruct Q4_K_M GGUF). Ollama is available as an optional fallback provider. The bridge between the two layers is the mentioned-in relation in TypeDB which stores (entity → note-id) mappings. During recall(), the BlendedRetriever queries both layers — VectorRetriever computes cosine similarity with entity boost, GraphRetriever runs BFS from query entities with hop-distance scoring — and merges results using intent-based policy weights (factual queries weight entity index 0.7, relational queries weight graph 0.5, exploratory queries weight vector 0.5). The fallback mechanism returns JSONL KnowledgeGraph if TypeDB is unreachable, degrading to vector-only retrieval. This architecture was chosen because CTI analysis requires both typed structured relationships (which TypeDB handles with schema enforcement and inference) and semantic unstructured text retrieval (which LanceDB handles with vector similarity). Neither database alone covers both needs.</p>
+<p>Source: <code>src/zettelforge/intent_classifier.py:191-236</code>.</p>
+<p>These weights are applied during score normalization: each retriever produces a set of <code>(note, raw_score)</code> pairs, the scores are min-max normalized within each retriever's result set, and then multiplied by the intent weight before accumulation into the final blended score.</p>
+<h3 id="why-factual-queries-carry-a-non-zero-graph-weight">Why FACTUAL queries carry a non-zero graph weight<a class="headerlink" href="#why-factual-queries-carry-a-non-zero-graph-weight" title="Permanent link">&para;</a></h3>
+<p>A zero graph weight for FACTUAL seems intuitive: if you want a specific fact, why traverse the graph? In practice, CTI factual queries frequently span a graph hop. "What CVE does APT28 exploit?" is factual in intent but requires an <code>(APT28) -[targets]-&gt; (CVE)</code> traversal. Setting <code>graph=0.2</code> allows graph results to supplement the entity index answer without dominating it.</p>
+<h3 id="why-misclassification-degrades-rather-than-breaks">Why misclassification degrades rather than breaks<a class="headerlink" href="#why-misclassification-degrades-rather-than-breaks" title="Permanent link">&para;</a></h3>
+<p>A misclassified query does not produce a wrong answer; it produces a degraded answer because the wrong traversal policy routes to the wrong combination of retrievers. A relational query misclassified as FACTUAL returns entity index results instead of graph traversal. The answer may be plausible but incomplete. Classification accuracy is therefore a retrieval quality gate, not a correctness gate.</p>
+<p>The classifier uses keyword matching first, with LLM fallback when keyword confidence is below threshold. See <a href="../../reference/retrieval-policies/">Retrieval policies</a> for keyword lists and the merge algorithm.</p>
+<hr />
+<h2 id="the-cost-of-two-databases">The cost of two databases<a class="headerlink" href="#the-cost-of-two-databases" title="Permanent link">&para;</a></h2>
+<p>The hybrid architecture adds operational complexity:</p>
+<ul>
+<li>Two data stores to back up.</li>
+<li>The entity index must stay consistent with both the notes table and the LanceDB vectors. ZettelForge manages this within the <code>remember()</code> call; manual direct writes to either store bypass the consistency guarantees.</li>
+<li>Cache invalidation spans both systems.</li>
+</ul>
+<p>ZettelForge mitigates the backup concern by collocating both stores in <code>~/.amem</code> by default. A single directory backup captures the complete state of both SQLite and LanceDB.</p>
+<p>The consistency concern is the real risk. All writes should go through <code>MemoryManager.remember()</code> or the web API (<code>POST /api/remember</code>), not direct database manipulation.</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2928,12 +2911,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

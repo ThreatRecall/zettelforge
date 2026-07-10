@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Run the CTI Retrieval, LOCOMO, MemPalace, RAGAS, and CTIBench benchmarks locally and compare your numbers against the published report.">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -15,21 +15,21 @@
         <link rel="canonical" href="https://docs.threatrecall.ai/how-to/reproduce-benchmarks/">
       
       
-        <link rel="prev" href="../query-apt-tools/">
+        <link rel="prev" href="../configure-yara-ingestion/">
       
       
-        <link rel="next" href="../resolve-aliases/">
+        <link rel="next" href="../integrate-with-crewai/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Reproduce the Published Benchmarks - ZettelForge Documentation</title>
+        <title>Reproduce benchmarks - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/how-to/reproduce-benchmarks/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="Reproduce the Published Benchmarks">
-  <meta property="og:description" content="Run the CTI Retrieval, LOCOMO, MemPalace, RAGAS, and CTIBench benchmarks locally and compare your numbers against the published report.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/how-to/reproduce-benchmarks/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Reproduce the Published Benchmarks">
-  <meta name="twitter:description" content="Run the CTI Retrieval, LOCOMO, MemPalace, RAGAS, and CTIBench benchmarks locally and compare your numbers against the published report.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -116,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#reproduce-the-published-benchmarks" class="md-skip">
+        <a href="#reproduce-benchmarks" class="md-skip">
           Skip to content
         </a>
       
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Reproduce the Published Benchmarks
+              Reproduce benchmarks
             
           </span>
         </div>
@@ -281,11 +240,31 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../build-extensions/" class="md-tabs__link">
+        <a href="../configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -306,26 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -577,8 +533,6 @@
         
         
       
-      
-        
       
     
     
@@ -625,62 +579,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../configure-opencti/" class="md-nav__link">
         
   
@@ -709,14 +607,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -765,42 +775,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../configure-yara-ingestion/" class="md-nav__link">
+      <a href="../configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -828,7 +810,7 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
   
 
     
@@ -837,6 +819,348 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-cti-retrieval-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. CTI retrieval benchmark
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-locomo-benchmark" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. LOCOMO benchmark
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-mempalace-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. MemPalace comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-ragas-retrieval-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. RAGAS retrieval quality
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ctibench-ate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. CTIBench ATE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-memoryagentbench-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. MemoryAgentBench (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-numbers-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference numbers at a glance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-affects-your-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What affects your results
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -905,303 +1229,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prerequisites
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#shared-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Shared setup
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#1-cti-retrieval-domain-benchmark" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. CTI Retrieval (domain benchmark)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-locomo-acl-2024" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. LOCOMO (ACL 2024)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-mempalace-comparison" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. MemPalace comparison
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-ragas-retrieval-quality" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. RAGAS retrieval quality
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-ctibench-ate-neurips-2024" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. CTIBench ATE (NeurIPS 2024)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-memoryagentbench-iclr-2026-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. MemoryAgentBench (ICLR 2026, optional)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#interpreting-differences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Interpreting differences
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1209,119 +1236,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1370,14 +1285,70 @@
   
   
     <li class="md-nav__item">
-      <a href="../use-detection-rules/" class="md-nav__link">
+      <a href="../troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
+    Troubleshoot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../build-extensions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extend ZettelForge
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../use-web-interface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use web interface
   
 
     
@@ -1410,17 +1381,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
@@ -1430,7 +1397,7 @@
   <span class="md-ellipsis">
     
   
-    Concepts
+    Reference
   
 
     
@@ -1446,235 +1413,6 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Two-Phase Pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reference
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
     Reference
   
 
@@ -1688,14 +1426,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+      <a href="../../reference/terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1744,174 +1482,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/memory-manager-api/" class="md-nav__link">
         
   
@@ -1940,90 +1510,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/stix-schema/" class="md-nav__link">
         
   
@@ -2031,7 +1517,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -2059,7 +1545,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2087,7 +1713,119 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
   
 
     
@@ -2120,7 +1858,230 @@
     
       
       
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2128,9 +2089,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2189,6 +2148,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2281,14 +2290,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2302,113 +2311,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2433,17 +2338,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2548,10 +2449,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#shared-setup" class="md-nav__link">
+  <a href="#1-cti-retrieval-benchmark" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Shared setup
+        1. CTI retrieval benchmark
       
     </span>
   </a>
@@ -2559,21 +2460,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1-cti-retrieval-domain-benchmark" class="md-nav__link">
+  <a href="#2-locomo-benchmark" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. CTI Retrieval (domain benchmark)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-locomo-acl-2024" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. LOCOMO (ACL 2024)
+        2. LOCOMO benchmark
       
     </span>
   </a>
@@ -2603,10 +2493,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#5-ctibench-ate-neurips-2024" class="md-nav__link">
+  <a href="#5-ctibench-ate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. CTIBench ATE (NeurIPS 2024)
+        5. CTIBench ATE
       
     </span>
   </a>
@@ -2614,10 +2504,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#6-memoryagentbench-iclr-2026-optional" class="md-nav__link">
+  <a href="#6-memoryagentbench-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. MemoryAgentBench (ICLR 2026, optional)
+        6. MemoryAgentBench (optional)
       
     </span>
   </a>
@@ -2625,10 +2515,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#interpreting-differences" class="md-nav__link">
+  <a href="#reference-numbers-at-a-glance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Interpreting differences
+        Reference numbers at a glance
       
     </span>
   </a>
@@ -2636,10 +2526,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
+  <a href="#what-affects-your-results" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related
+        What affects your results
       
     </span>
   </a>
@@ -2666,95 +2556,353 @@
   
 
 
-<h1 id="reproduce-the-published-benchmarks">Reproduce the Published Benchmarks<a class="headerlink" href="#reproduce-the-published-benchmarks" title="Permanent link">&para;</a></h1>
-<p>Every benchmark referenced in <a href="https://github.com/rolandpg/zettelforge/blob/master/benchmarks/BENCHMARK_REPORT.md">BENCHMARK_REPORT.md</a>
-ships as an adapter script in <code>benchmarks/</code>. This guide shows how to
-run each one against a fresh install and compare your results.</p>
+<h1 id="reproduce-benchmarks">Reproduce benchmarks<a class="headerlink" href="#reproduce-benchmarks" title="Permanent link">&para;</a></h1>
+<p>ZettelForge ships benchmark scripts you can run against a fresh install and compare to the reference numbers below. All benchmarks use the same binary you installed via <code>pip install zettelforge</code>; no special build is required.</p>
+<p>These reference numbers are a snapshot from prior ZettelForge versions (v2.0.0–v2.2.0 for most suites; a v2.7.0 performance session in June 2026). Your numbers will vary with hardware, LLM provider, and embedding model.</p>
+<hr />
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<ul>
-<li>A clone of the repo (the benchmarks live under <code>benchmarks/</code>, not in
-  the installed package).</li>
-<li><code>pip install -e .[dev]</code> from the repo root.</li>
-<li>Optional: Ollama running locally if you want to reproduce the v2.1.1
-  LOCOMO 22 % result with a cloud judge.</li>
-</ul>
-<h2 id="shared-setup">Shared setup<a class="headerlink" href="#shared-setup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/rolandpg/zettelforge
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>zettelforge
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="o">[</span>dev<span class="o">]</span>
+<p>Install ZettelForge and clone the source repository (the benchmark scripts live in <code>benchmarks/</code>):</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>zettelforge
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/rolandpg/zettelforge.git
+<span class="nb">cd</span><span class="w"> </span>zettelforge
 </code></pre></div>
-<p>Each benchmark writes a JSON results file alongside its script so your
-output can be diffed against the reference files already in the repo.</p>
-<h2 id="1-cti-retrieval-domain-benchmark">1. CTI Retrieval (domain benchmark)<a class="headerlink" href="#1-cti-retrieval-domain-benchmark" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>benchmarks/cti_retrieval_benchmark.py
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># writes benchmarks/cti_retrieval_results.json</span>
+<p>Set the deterministic-ingestion flag before running any benchmark. The flag suppresses background LLM enrichment so results are reproducible across runs:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_ENRICHMENT_ENABLED</span><span class="o">=</span><span class="nb">false</span>
 </code></pre></div>
-<p>Published reference: <strong>75.0 %</strong> accuracy, p50 620 ms over 8 reports / 20 queries.</p>
-<h2 id="2-locomo-acl-2024">2. LOCOMO (ACL 2024)<a class="headerlink" href="#2-locomo-acl-2024" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Baseline with the local llama-cpp judge</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python<span class="w"> </span>benchmarks/locomo_benchmark.py
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># v2.1.1 cloud-judge run (requires Ollama + a suitable model pulled)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">LLM_JUDGE</span><span class="o">=</span>ollama<span class="w"> </span>python<span class="w"> </span>benchmarks/locomo_benchmark.py
+<p>The benchmark scripts also set this flag programmatically, but setting it in the shell avoids subtle timing differences when the environment is not inherited.</p>
+<hr />
+<h2 id="1-cti-retrieval-benchmark">1. CTI retrieval benchmark<a class="headerlink" href="#1-cti-retrieval-benchmark" title="Permanent link">&para;</a></h2>
+<p>This is the primary domain benchmark. It tests the queries an analyst would actually ask: threat actor attribution, CVE linkage, tool mapping, campaign tracking, and temporal reasoning across 8 real-world-style CTI reports and 20 queries.</p>
+<p><strong>No external data is required.</strong> The CTI corpus is embedded in the script.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>benchmarks/cti_retrieval_benchmark.py
 </code></pre></div>
-<p>Published references: <strong>18.0 %</strong> with the local judge, <strong>22.0 %</strong> with
-the Ollama cloud judge. Both runs emit <code>benchmarks/locomo_results.json</code>.</p>
+<p><strong>Reference result (v2.0.0, 2026-04-10):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Queries</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attribution</td>
+<td>5</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>Multi-hop</td>
+<td>3</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>CVE linkage</td>
+<td>4</td>
+<td>75%</td>
+</tr>
+<tr>
+<td>Temporal</td>
+<td>3</td>
+<td>66.7%</td>
+</tr>
+<tr>
+<td>Tool attribution</td>
+<td>5</td>
+<td>40%</td>
+</tr>
+<tr>
+<td><strong>Overall</strong></td>
+<td><strong>20</strong></td>
+<td><strong>75.0%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>p50 latency: 620 ms — 8 notes stored</p>
+<p>Tool attribution scores 40% because queries that expect multiple tools ("What tools does APT28 use?") require all tool names to appear in the retrieved context. When a report mentions tools across multiple sentences, the keyword judge scores partial matches as 0.5 rather than 1.0.</p>
+<div class="admonition note">
+<p class="admonition-title">CTI p50 with v2.7.0 optimizations</p>
+<p>A June 2026 performance session on DGX Spark GB10 (keyword judge, no LLM) measured v2.7.0 at <strong>79 ms p50</strong> on the CTI corpus; an optimized build reached <strong>39 ms p50</strong>. Accuracy held at 75.0% in both cases.</p>
+</div>
+<hr />
+<h2 id="2-locomo-benchmark">2. LOCOMO benchmark<a class="headerlink" href="#2-locomo-benchmark" title="Permanent link">&para;</a></h2>
+<p>LOCOMO (ACL 2024) is a conversational memory benchmark — not ZettelForge's design domain. It tests recall over personal dialogue: person names, hobbies, life events. ZettelForge's entity extractor is tuned for CTI entities (CVEs, APT groups, tools), so graph traversal rarely fires on conversational queries.</p>
+<p><strong>Requires the LOCOMO dataset</strong> at:
+<div class="highlight"><pre><span></span><code>~/.openclaw/workspace-nexus/Locomo-Plus/data/locomo10.json
+</code></pre></div></p>
+<p>Download the <code>locomo10.json</code> file from the <a href="https://snap-research.github.io/locomo/">LoCoMo project</a> and place it at that path before running.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Quick run (20 samples per category, keyword judge)</span>
+python<span class="w"> </span>benchmarks/locomo_benchmark.py
+
+<span class="c1"># Full dataset (100 QA pairs)</span>
+python<span class="w"> </span>benchmarks/locomo_benchmark.py<span class="w"> </span>--full
+
+<span class="c1"># Use Ollama as judge for more accurate scoring</span>
+python<span class="w"> </span>benchmarks/locomo_benchmark.py<span class="w"> </span>--judge<span class="w"> </span>ollama
+</code></pre></div>
+<p><strong>Reference results:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Judge</th>
+<th>Accuracy</th>
+<th>p50 latency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.3.0</td>
+<td>keyword</td>
+<td>14.0%</td>
+<td>238 ms</td>
+</tr>
+<tr>
+<td>v1.5.0</td>
+<td>keyword</td>
+<td>15.0%</td>
+<td>344 ms</td>
+</tr>
+<tr>
+<td>v2.0.0</td>
+<td>keyword</td>
+<td>18.0%</td>
+<td>1,240 ms</td>
+</tr>
+<tr>
+<td>v2.1.1</td>
+<td>Ollama</td>
+<td>22.0%</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Why LOCOMO scores are low</p>
+<p>Conversational entities (person names, hobbies) are not in ZettelForge's extraction vocabulary. Additionally, the supersession logic marks 264 of 272 LOCOMO sessions as superseded because sessions share speaker names. The benchmark runs with <code>exclude_superseded=False</code> to work around this. ZettelForge is built for CTI, not chatbot memory — the 75% CTI accuracy reflects the intended use case.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">v2.7.0 baseline (keyword judge)</p>
+<p>A June 2026 performance session on DGX Spark measured v2.7.0 at <strong>7.0% accuracy</strong> with the keyword judge (no LLM) at 336 ms p50, and <strong>11.0%</strong> after optimization at 170 ms p50. The 22% figure (v2.1.1) used an Ollama cloud judge — a different scoring path, not a direct comparison.</p>
+</div>
+<hr />
 <h2 id="3-mempalace-comparison">3. MemPalace comparison<a class="headerlink" href="#3-mempalace-comparison" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>benchmarks/mempalace_benchmark.py
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># writes benchmarks/mempalace_results.json</span>
+<p>Runs LOCOMO against MemPalace for a head-to-head comparison on the same dataset and scoring.</p>
+<p><strong>Requires</strong> the LOCOMO dataset (same path as above) and:
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>chromadb<span class="w"> </span>mempalace
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>benchmarks/mempalace_benchmark.py<span class="w"> </span>--samples<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
-<p>Published reference: MemPalace 26.0 % vs ZettelForge 18.0 % on LOCOMO.</p>
+<p><strong>Reference result (v2.0.0 snapshot, 2026-04-10):</strong></p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Accuracy</th>
+<th>p50 latency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>MemPalace</strong></td>
+<td><strong>26%</strong></td>
+<td><strong>130 ms</strong></td>
+</tr>
+<tr>
+<td>ZettelForge</td>
+<td>18%</td>
+<td>1,240 ms</td>
+</tr>
+</tbody>
+</table>
+<p>MemPalace wins on LOCOMO because it chunks at 800 characters (MemPalace granularity) and uses pure ChromaDB vector search with no intent classification, graph traversal, or blending overhead. On conversational data without CTI entities, these extra stages add latency without accuracy.</p>
+<p>ZettelForge wins on CTI queries where graph traversal, entity indexing, and typed relationships are load-bearing. MemPalace has no knowledge graph and cannot answer multi-hop attribution queries.</p>
+<hr />
 <h2 id="4-ragas-retrieval-quality">4. RAGAS retrieval quality<a class="headerlink" href="#4-ragas-retrieval-quality" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>benchmarks/ragas_benchmark.py
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># writes benchmarks/ragas_results.json</span>
+<p>RAGAS measures retrieval quality, not answer quality. It computes keyword presence and string similarity between retrieved context and expected answers. No LLM judge is required.</p>
+<p><strong>Requires</strong> the LOCOMO dataset.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>benchmarks/ragas_benchmark.py
 </code></pre></div>
-<p>Published reference: <strong>78.1 %</strong> keyword presence.</p>
-<h2 id="5-ctibench-ate-neurips-2024">5. CTIBench ATE (NeurIPS 2024)<a class="headerlink" href="#5-ctibench-ate-neurips-2024" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>python<span class="w"> </span>benchmarks/ctibench_benchmark.py
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># writes benchmarks/ctibench_results.json</span>
+<p><strong>Reference result (v2.0.0, 2026-04-10):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>v1.5.0</th>
+<th>v2.0.0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keyword presence</td>
+<td>75.9%</td>
+<td><strong>78.1%</strong></td>
+</tr>
+<tr>
+<td>String similarity</td>
+<td>17.7%</td>
+<td><strong>18.2%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The high keyword presence (78%) confirms that retrieved context contains relevant information. The LOCOMO accuracy gap is in answer extraction (the keyword judge scoring), not retrieval. ZettelForge retrieves the right passages; the local 3B model struggles to extract precise answers from them.</p>
+<hr />
+<h2 id="5-ctibench-ate">5. CTIBench ATE<a class="headerlink" href="#5-ctibench-ate" title="Permanent link">&para;</a></h2>
+<p>CTIBench (NeurIPS 2024) tests ATT&amp;CK Technique Extraction: given a natural-language description of an adversarial technique, retrieve the correct MITRE ATT&amp;CK T-code.</p>
+<p><strong>Requires</strong> the <code>datasets</code> Python package:
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datasets
+</code></pre></div></p>
+<p>The script downloads the <code>AI4Sec/cti-bench</code> dataset from HuggingFace automatically on first run. The ATT&amp;CK matrix JSON files (<code>enterprise-attack.json</code>, <code>mobile-attack.json</code>) are included in the <code>benchmarks/</code> directory.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>benchmarks/ctibench_benchmark.py<span class="w"> </span>--task<span class="w"> </span>ate
 </code></pre></div>
-<p>Published reference: <strong>F1 = 0.146</strong> (v2.2.0, after fixing the ingestion
-pipeline and dropping ICS matrix noise). The v2.0.0 result was
-<strong>F1 = 0.000</strong> — see <a href="../../benchmarks/BENCHMARK_REPORT.md">BENCHMARK_REPORT §5</a>
-for the methodology change.</p>
-<h2 id="6-memoryagentbench-iclr-2026-optional">6. MemoryAgentBench (ICLR 2026, optional)<a class="headerlink" href="#6-memoryagentbench-iclr-2026-optional" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>benchmarks/memoryagentbench.py
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># writes benchmarks/memoryagentbench_results.json</span>
+<p><strong>Reference result (v2.2.0, 2026-04-16):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>F1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v2.0.0</td>
+<td>0.000 (adapter bug: T-code regex only)</td>
+</tr>
+<tr>
+<td><strong>v2.2.0</strong></td>
+<td><strong>0.146</strong> (fixed ingestion + ICS noise removed)</td>
+</tr>
+</tbody>
+</table>
+<p>F1 = 0.146 is a lower bound driven by low recall: many ATT&amp;CK techniques map to multiple paraphrases and the scoring function rewards exact T-code matches. A semantic matcher over technique descriptions would lift this further.</p>
+<hr />
+<h2 id="6-memoryagentbench-optional">6. MemoryAgentBench (optional)<a class="headerlink" href="#6-memoryagentbench-optional" title="Permanent link">&para;</a></h2>
+<p>MemoryAgentBench (ICLR 2026) tests memory systems on four splits: Accurate Retrieval (AR), Conflict Resolution (CR), Test-Time Learning (TTL), and Long-Range Understanding (LRU).</p>
+<p><strong>Requires</strong> the <code>datasets</code> package and a capable LLM provider:
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datasets
+</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># AR + CR splits (fast)</span>
+python<span class="w"> </span>benchmarks/memoryagentbench.py
+
+<span class="c1"># All splits (significantly longer)</span>
+python<span class="w"> </span>benchmarks/memoryagentbench.py<span class="w"> </span>--split<span class="w"> </span>all
 </code></pre></div>
-<p>Requires a cloud-grade judge (we used <code>nemotron-3-super:cloud</code> via
-Ollama). Expect a day-scale run on larger splits.</p>
-<h2 id="interpreting-differences">Interpreting differences<a class="headerlink" href="#interpreting-differences" title="Permanent link">&para;</a></h2>
-<p>If your numbers differ from the published ones, check:</p>
-<ul>
-<li><strong>LLM backend</strong> — local llama-cpp runs will underperform cloud
-  judges on LOCOMO by a wide margin (see
-  <a href="../../benchmarks/BENCHMARK_REPORT.md">BENCHMARK_REPORT §6</a>).</li>
-<li><strong>Embedding dimensions</strong> — all published runs use 768-dim
-  <code>nomic-embed-text-v1.5-Q</code>. Switching to another embedding changes
-  the vector store and invalidates results until you
-  <code>python scripts/rebuild_index.py</code>.</li>
-<li><strong>Backend</strong> — SQLite vs a lingering JSONL data directory changes
-  entity-index behaviour. Ensure <code>ZETTELFORGE_BACKEND=sqlite</code> (the
-  v2.2.0 default).</li>
-<li><strong>Governance</strong> — set <code>governance.enabled: false</code> in <code>config.yaml</code>
-  for benchmark runs; otherwise some permissive inputs will raise
-  <code>GovernanceViolationError</code>.</li>
-</ul>
-<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://github.com/rolandpg/zettelforge/blob/master/benchmarks/BENCHMARK_REPORT.md">BENCHMARK_REPORT.md</a> — full methodology and published numbers</li>
-<li><a href="https://github.com/rolandpg/zettelforge/blob/master/benchmarks/LOCOMO_BENCHMARK_COMPARISON.md">LOCOMO_BENCHMARK_COMPARISON.md</a> — head-to-head vs MemPalace / Mem0 / LangMem</li>
-</ul>
+<p><strong>Reference result (2026-04-10):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Split</th>
+<th>Qwen2.5-3B (local)</th>
+<th>nemotron-3-super (Ollama)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accurate Retrieval F1</td>
+<td>0.012</td>
+<td><strong>0.328</strong></td>
+</tr>
+<tr>
+<td>Conflict Resolution F1</td>
+<td>0.012</td>
+<td><strong>0.032</strong></td>
+</tr>
+<tr>
+<td><strong>Overall F1</strong></td>
+<td><strong>0.007</strong></td>
+<td><strong>0.180</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Retrieval latency was 128–333 ms for both models — the improvement is entirely in answer generation quality, not retrieval. This confirms the retrieval pipeline works; the local 3B model is the bottleneck on this benchmark.</p>
+<p>CR scores remain low because Conflict Resolution requires multi-hop chain reasoning (e.g., "country of citizenship of the spouse of the author of...") that needs explicit graph traversal over entity relationships.</p>
+<hr />
+<h2 id="reference-numbers-at-a-glance">Reference numbers at a glance<a class="headerlink" href="#reference-numbers-at-a-glance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Benchmark</th>
+<th>Version</th>
+<th>Key result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CTI Retrieval</td>
+<td>v2.0.0</td>
+<td><strong>75.0% accuracy</strong>, 620 ms p50</td>
+</tr>
+<tr>
+<td>LOCOMO</td>
+<td>v2.0.0, keyword</td>
+<td>18.0% accuracy</td>
+</tr>
+<tr>
+<td>LOCOMO</td>
+<td>v2.1.1, Ollama</td>
+<td>22.0% accuracy</td>
+</tr>
+<tr>
+<td>MemPalace vs ZettelForge</td>
+<td>v2.0.0</td>
+<td>MemPalace 26%, ZettelForge 18%</td>
+</tr>
+<tr>
+<td>RAGAS keyword presence</td>
+<td>v2.0.0</td>
+<td><strong>78.1%</strong></td>
+</tr>
+<tr>
+<td>CTIBench ATE</td>
+<td>v2.2.0</td>
+<td><strong>F1 = 0.146</strong></td>
+</tr>
+<tr>
+<td>MemoryAgentBench</td>
+<td>v2.7.0</td>
+<td><strong>F1 = 0.180</strong> (cloud model)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="what-affects-your-results">What affects your results<a class="headerlink" href="#what-affects-your-results" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LLM provider (local vs cloud judge)</td>
+<td>LOCOMO accuracy varies widely; keyword judge is the reproducible baseline</td>
+</tr>
+<tr>
+<td><code>ZETTELFORGE_ENRICHMENT_ENABLED</code></td>
+<td>Must be <code>false</code> for deterministic ingestion</td>
+</tr>
+<tr>
+<td>Embedding model</td>
+<td>Results assume <code>nomic-ai/nomic-embed-text-v1.5-Q</code> (768-dim, ONNX)</td>
+</tr>
+<tr>
+<td>Storage backend</td>
+<td>SQLite is the default; all published results use SQLite</td>
+</tr>
+<tr>
+<td>Hardware (thread count)</td>
+<td>ONNX thread pinning affects latency; see BENCHMARK_REPORT.md section 0 for thread-tuning details</td>
+</tr>
+</tbody>
+</table>
+<p>For ThreatRecall.ai SaaS deployments, benchmark numbers will differ because the SaaS uses managed infrastructure and optional TypeDB graph backend. Contact support for SaaS-specific benchmarking guidance.</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2798,12 +2946,10 @@ Ollama). Expect a day-scale run on larger splits.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

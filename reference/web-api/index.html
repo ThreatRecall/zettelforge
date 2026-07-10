@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Complete reference for all ZettelForge web API endpoints, including request/response schemas, status codes, authentication, and examples for every endpoint.">
+        <meta name="description" content="Complete reference for ZettelForge's FastAPI HTTP endpoints — authentication, request models, response shapes, and limits.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -18,18 +18,18 @@
         <link rel="prev" href="../stix-schema/">
       
       
-        <link rel="next" href="../yara-schema-reference/">
+        <link rel="next" href="../retrieval-policies/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Web API Reference - ZettelForge Documentation</title>
+        <title>Web API reference - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/reference/web-api/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="Web API Reference">
-  <meta property="og:description" content="Complete reference for all ZettelForge web API endpoints, including request/response schemas, status codes, authentication, and examples for every endpoint.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/reference/web-api/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Web API Reference">
-  <meta name="twitter:description" content="Complete reference for all ZettelForge web API endpoints, including request/response schemas, status codes, authentication, and examples for every endpoint.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Web API Reference
+              Web API reference
             
           </span>
         </div>
@@ -279,11 +238,33 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+        <a href="../../how-to/configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -304,28 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-    
-  
-  
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -573,17 +529,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -622,62 +574,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/configure-opencti/" class="md-nav__link">
         
   
@@ -706,14 +602,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -762,42 +770,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -825,7 +805,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -902,146 +1078,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1049,119 +1085,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1210,103 +1134,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
+    Troubleshoot
   
 
     
@@ -1327,14 +1162,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Two-Phase Pipeline
+    Extend ZettelForge
   
 
     
@@ -1355,98 +1190,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+      <a href="../../how-to/use-web-interface/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
+    Use web interface
   
 
     
@@ -1483,8 +1234,6 @@
         
         
       
-      
-        
       
     
     
@@ -1492,10 +1241,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -1513,8 +1262,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1531,14 +1280,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture-deep-dive/" class="md-nav__link">
+      <a href="../terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1587,174 +1336,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../memory-manager-api/" class="md-nav__link">
         
   
@@ -1783,90 +1364,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../stix-schema/" class="md-nav__link">
         
   
@@ -1874,7 +1371,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -1911,7 +1408,7 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
   
 
     
@@ -1929,7 +1426,7 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
   
 
     
@@ -1963,18 +1460,35 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#existing-endpoints-preserved" class="md-nav__link">
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rate-and-write-limits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Existing Endpoints (preserved)
+        Rate and write limits
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Existing Endpoints (preserved)">
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory endpoints">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2000,43 +1514,21 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#post-apiingest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /api/ingest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#post-apisynthesize" class="md-nav__link">
     <span class="md-ellipsis">
       
         POST /api/synthesize
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apistats" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/stats
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apiedition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/edition
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-apisync" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        POST /api/sync
       
     </span>
   </a>
@@ -2049,49 +1541,16 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#new-endpoints-rfc-015" class="md-nav__link">
+  <a href="#knowledge-graph-endpoints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        New Endpoints (RFC-015)
+        Knowledge graph endpoints
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="New Endpoints (RFC-015)">
+    <nav class="md-nav" aria-label="Knowledge graph endpoints">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#get-apihealth" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/health
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apiconfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/config
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#put-apiconfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PUT /api/config
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#get-apigraphnodes" class="md-nav__link">
@@ -2126,11 +1585,28 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#get-apihistory" class="md-nav__link">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-endpoints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GET /api/history
+        System endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-apihealth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/health
       
     </span>
   </a>
@@ -2138,21 +1614,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-apiingest" class="md-nav__link">
+  <a href="#get-apistats" class="md-nav__link">
     <span class="md-ellipsis">
       
-        POST /api/ingest
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apitelemetry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/telemetry
+        GET /api/stats
       
     </span>
   </a>
@@ -2171,6 +1636,39 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#get-apiversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-apitelemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/telemetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-apihistory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/history
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#get-apilogs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2182,32 +1680,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get-apilogsstream" class="md-nav__link">
+  <a href="#server-sent-event-streams" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GET /api/logs/stream
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apitelemetrystream" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/telemetry/stream
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /
+        Server-sent event streams
       
     </span>
   </a>
@@ -2220,10 +1696,88 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-codes" class="md-nav__link">
+  <a href="#configuration-endpoints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status Codes
+        Configuration endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-apiconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-apiconfigmeta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/config/meta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#put-apiconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PUT /api/config
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saas-only-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SaaS-only endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SaaS-only endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-apisync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /api/sync
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#html-routes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTML routes
       
     </span>
   </a>
@@ -2246,6 +1800,146 @@
   
   
     <li class="md-nav__item">
+      <a href="../retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../yara-schema-reference/" class="md-nav__link">
         
   
@@ -2253,7 +1947,119 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
   
 
     
@@ -2286,7 +2092,230 @@
     
       
       
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2294,9 +2323,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2355,6 +2382,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2447,14 +2524,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2468,113 +2545,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2599,17 +2572,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2711,18 +2680,35 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#existing-endpoints-preserved" class="md-nav__link">
+    <nav class="md-nav" aria-label="Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rate-and-write-limits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Existing Endpoints (preserved)
+        Rate and write limits
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Existing Endpoints (preserved)">
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory endpoints">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2748,43 +2734,21 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#post-apiingest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /api/ingest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#post-apisynthesize" class="md-nav__link">
     <span class="md-ellipsis">
       
         POST /api/synthesize
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apistats" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/stats
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apiedition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/edition
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-apisync" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        POST /api/sync
       
     </span>
   </a>
@@ -2797,49 +2761,16 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#new-endpoints-rfc-015" class="md-nav__link">
+  <a href="#knowledge-graph-endpoints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        New Endpoints (RFC-015)
+        Knowledge graph endpoints
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="New Endpoints (RFC-015)">
+    <nav class="md-nav" aria-label="Knowledge graph endpoints">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#get-apihealth" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/health
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apiconfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/config
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#put-apiconfig" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        PUT /api/config
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#get-apigraphnodes" class="md-nav__link">
@@ -2874,11 +2805,28 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#get-apihistory" class="md-nav__link">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-endpoints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GET /api/history
+        System endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-apihealth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/health
       
     </span>
   </a>
@@ -2886,21 +2834,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-apiingest" class="md-nav__link">
+  <a href="#get-apistats" class="md-nav__link">
     <span class="md-ellipsis">
       
-        POST /api/ingest
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apitelemetry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/telemetry
+        GET /api/stats
       
     </span>
   </a>
@@ -2919,6 +2856,39 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#get-apiversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-apitelemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/telemetry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-apihistory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/history
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#get-apilogs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2930,32 +2900,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get-apilogsstream" class="md-nav__link">
+  <a href="#server-sent-event-streams" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GET /api/logs/stream
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apitelemetrystream" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/telemetry/stream
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /
+        Server-sent event streams
       
     </span>
   </a>
@@ -2968,10 +2916,88 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#status-codes" class="md-nav__link">
+  <a href="#configuration-endpoints" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Status Codes
+        Configuration endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-apiconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-apiconfigmeta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /api/config/meta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#put-apiconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PUT /api/config
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saas-only-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SaaS-only endpoints
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SaaS-only endpoints">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-apisync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST /api/sync
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#html-routes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTML routes
       
     </span>
   </a>
@@ -2998,403 +3024,343 @@
   
 
 
-<h1 id="web-api-reference">Web API Reference<a class="headerlink" href="#web-api-reference" title="Permanent link">&para;</a></h1>
-<p>Server: FastAPI at <code>http://localhost:8088</code>.</p>
-<p>All endpoints (except <code>GET /</code>) require authentication. See <a href="#authentication">Authentication</a> below.</p>
-<hr />
+<h1 id="web-api-reference">Web API reference<a class="headerlink" href="#web-api-reference" title="Permanent link">&para;</a></h1>
+<p>ZettelForge ships a FastAPI backend (<code>web/app.py</code>) that exposes the memory system over HTTP and serves the management SPA. Start it with:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>web.app<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">8088</span>
+</code></pre></div>
+<p>The server reports itself as <code>ZettelForge v2.7.0</code>. All paths under <code>/api/</code> are guarded; the SPA at <code>/</code> is not.</p>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<p>Two modes controlled by the <code>ZETTELFORGE_WEB_API_KEY</code> environment variable:</p>
-<ul>
-<li><strong>Loopback mode</strong> (no env var set, server on <code>127.0.0.1</code>): no authentication required. <code>localhost</code>, <code>::1</code>, and <code>testclient</code> are in the allowlist.</li>
-<li><strong>API key mode</strong> (env var set): pass the key via <code>X-API-Key</code> header or <code>Authorization: Bearer &lt;key&gt;</code>:</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;X-API-Key: my-key&quot;</span><span class="w"> </span>http://localhost:8088/api/health
+<p>Every <code>/api/*</code> route depends on a single guard. Supply your key in either header:</p>
+<div class="highlight"><pre><span></span><code>X-API-Key: &lt;key&gt;
+Authorization: Bearer &lt;key&gt;
 </code></pre></div>
-<p>All endpoints also enforce rate limiting (60 requests per minute per key/IP by default). Exceeding the limit returns <code>429 Too Many Requests</code>.</p>
-<hr />
-<h2 id="existing-endpoints-preserved">Existing Endpoints (preserved)<a class="headerlink" href="#existing-endpoints-preserved" title="Permanent link">&para;</a></h2>
-<h3 id="post-apirecall"><code>POST /api/recall</code><a class="headerlink" href="#post-apirecall" title="Permanent link">&para;</a></h3>
-<p>Blended vector + graph retrieval.</p>
-<p><strong>Request:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What tools does APT28 use?&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;k&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;domain&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cti&quot;</span><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What tools does APT28 use?&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;zf-03f1a2b4&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 has shifted tactics...&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="nt">&quot;domain&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="nt">&quot;tier&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;B&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.84</span><span class="p">,</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">      </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-04-12T...&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="nt">&quot;entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Cobalt Strike&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;T1190&quot;</span><span class="p">]</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="p">],</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="nt">&quot;latency_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">47</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="p">}</span>
-</code></pre></div></p>
-<h3 id="post-apiremember"><code>POST /api/remember</code><a class="headerlink" href="#post-apiremember" title="Permanent link">&para;</a></h3>
-<p>Store a single note.</p>
-<p><strong>Request:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 uses Cobalt Strike.&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;domain&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cti&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;source_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;manual&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;evolve&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span><span class="nt">&quot;note_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;zf-abc123&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;created&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Cobalt Strike&quot;</span><span class="p">],</span><span class="w"> </span><span class="nt">&quot;latency_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">}</span>
-</code></pre></div></p>
-<h3 id="post-apisynthesize"><code>POST /api/synthesize</code><a class="headerlink" href="#post-apisynthesize" title="Permanent link">&para;</a></h3>
-<p>RAG synthesis from memory.</p>
-<p><strong>Request:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What we know about APT28?&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;synthesized_brief&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;k&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Formats:</strong> <code>direct_answer</code>, <code>synthesized_brief</code>, <code>timeline_analysis</code>, <code>relationship_map</code>.</p>
-<h3 id="get-apistats"><code>GET /api/stats</code><a class="headerlink" href="#get-apistats" title="Permanent link">&para;</a></h3>
-<p>Memory system statistics.</p>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.5.0&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;edition&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;community&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">&quot;edition_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ZettelForge Community&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">&quot;total_notes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4060</span><span class="p">,</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">&quot;notes_created&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4060</span><span class="p">,</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="nt">&quot;retrievals&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1247</span><span class="p">,</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="nt">&quot;entity_index&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;apt28&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;actor&quot;</span><span class="p">],</span><span class="w"> </span><span class="nt">&quot;cve-2024-3094&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;cve&quot;</span><span class="p">]}</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">}</span>
-</code></pre></div></p>
-<h3 id="get-apiedition"><code>GET /api/edition</code><a class="headerlink" href="#get-apiedition" title="Permanent link">&para;</a></h3>
-<p>Current edition and available feature flags. Enterprise features are <code>false</code> in Community edition.</p>
-<h3 id="post-apisync"><code>POST /api/sync</code><a class="headerlink" href="#post-apisync" title="Permanent link">&para;</a></h3>
-<p>OpenCTI sync (Enterprise only). Returns <code>501</code> in Community edition.</p>
-<hr />
-<h2 id="new-endpoints-rfc-015">New Endpoints (RFC-015)<a class="headerlink" href="#new-endpoints-rfc-015" title="Permanent link">&para;</a></h2>
-<h3 id="get-apihealth"><code>GET /api/health</code><a class="headerlink" href="#get-apihealth" title="Permanent link">&para;</a></h3>
-<p>System health information.</p>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.5.0&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;edition&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;community&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&quot;storage_backend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sqlite&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">&quot;embedding_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fastembed&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="nt">&quot;embedding_model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nomic-ai/nomic-embed-text-v1.5-Q&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="nt">&quot;embedding_dimensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">768</span><span class="p">,</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="nt">&quot;llm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ollama&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="nt">&quot;llm_model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;qwen3.5:9b&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="nt">&quot;llm_local_backend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;llama-cpp-python&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="nt">&quot;enrichment_queue_depth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="nt">&quot;governance_enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span><span class="nt">&quot;pii_enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span><span class="nt">&quot;uptime_seconds&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">3600.5</span><span class="p">,</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span><span class="nt">&quot;data_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;~/.amem&quot;</span><span class="p">,</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">  </span><span class="nt">&quot;memory_usage_mb&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">245.3</span><span class="p">,</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span><span class="nt">&quot;data_size_mb&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">25.0</span><span class="p">,</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span><span class="nt">&quot;total_notes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4060</span><span class="p">,</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span><span class="nt">&quot;retrievals&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1247</span>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Notes:</strong>
-- <code>memory_usage_mb</code> is <code>null</code> if <code>psutil</code> is not installed (<code>pip install zettelforge[web]</code>)
-- <code>data_size_mb</code> is <code>null</code> if the data directory doesn't exist yet</p>
-<h3 id="get-apiconfig"><code>GET /api/config</code><a class="headerlink" href="#get-apiconfig" title="Permanent link">&para;</a></h3>
-<p>Full configuration as JSON with secrets redacted.</p>
-<p><strong>Response:</strong> All <code>ZettelForgeConfig</code> fields. Sensitive keys (<code>api_key</code>, <code>password</code>, <code>token</code>, <code>secret</code>, <code>license_key</code>) are replaced with <code>"***"</code>.</p>
-<p><strong>Example excerpt:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;storage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;data_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;~/.amem&quot;</span><span class="p">},</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;backend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sqlite&quot;</span><span class="p">,</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">&quot;embedding&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fastembed&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nomic-ai/nomic-embed-text-v1.5-Q&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;dimensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">768</span><span class="p">},</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">&quot;llm&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ollama&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;api_key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;***&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;local_backend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;llama-cpp-python&quot;</span><span class="p">},</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nt">&quot;governance&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;pii&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">}}</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">}</span>
-</code></pre></div></p>
-<h3 id="put-apiconfig"><code>PUT /api/config</code><a class="headerlink" href="#put-apiconfig" title="Permanent link">&para;</a></h3>
-<p>Apply configuration changes in-memory.</p>
-<p><strong>Request:</strong> Arbitrary nested config dict. Only fields that exist in the config dataclasses are applied.</p>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;applied&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;retrieval.default_k&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;synthesis.tier_filter&quot;</span><span class="p">],</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">&quot;pending_restart&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Configuration updated.&quot;</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">}</span>
-</code></pre></div></p>
-<p>When the change requires a restart (e.g., <code>backend</code>, <code>storage.data_dir</code>, <code>embedding.provider</code>, <code>llm.provider</code>):
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;applied&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;backend&quot;</span><span class="p">],</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;pending_restart&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;backend&quot;</span><span class="p">],</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Configuration updated. Some changes require a restart.&quot;</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="p">}</span>
-</code></pre></div></p>
-<h3 id="get-apigraphnodes"><code>GET /api/graph/nodes</code><a class="headerlink" href="#get-apigraphnodes" title="Permanent link">&para;</a></h3>
-<p>All knowledge graph entity nodes.</p>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">&quot;nodes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">      </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;actor&quot;</span><span class="p">,</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">      </span><span class="nt">&quot;tier&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;B&quot;</span><span class="p">,</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">      </span><span class="nt">&quot;aliases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Fancy Bear&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Sofacy&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;STRONTIUM&quot;</span><span class="p">],</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">      </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.85</span><span class="p">,</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">      </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-04-10&quot;</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span><span class="p">],</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">47</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="p">}</span>
-</code></pre></div></p>
-<h3 id="get-apigraphedges"><code>GET /api/graph/edges</code><a class="headerlink" href="#get-apigraphedges" title="Permanent link">&para;</a></h3>
-<p>All knowledge graph relationship edges.</p>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">&quot;edges&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;edge-001&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">      </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cobalt_strike&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">      </span><span class="nt">&quot;relationship&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uses&quot;</span><span class="p">,</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">      </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-04-10&quot;</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span><span class="p">],</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">89</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="p">}</span>
-</code></pre></div></p>
-<h3 id="get-apientities"><code>GET /api/entities</code><a class="headerlink" href="#get-apientities" title="Permanent link">&para;</a></h3>
-<p>Paginated entity index with filters.</p>
-<p><strong>Query parameters:</strong></p>
+<p>Behavior depends on <code>ZETTELFORGE_WEB_API_KEY</code>:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Parameter</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Description</th>
+<th>Condition</th>
+<th>Result</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>offset</code></td>
-<td style="text-align: left;">int</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">Pagination offset</td>
+<td>Key set, request matches</td>
+<td>Allowed (constant-time compare)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>limit</code></td>
-<td style="text-align: left;">int</td>
-<td style="text-align: left;">50</td>
-<td style="text-align: left;">Page size (max 200)</td>
+<td>Key set, missing or wrong</td>
+<td><code>401 Valid API key required</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>type</code></td>
-<td style="text-align: left;">str</td>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;">Entity type filter (actor, cve, tool, campaign)</td>
+<td>Key unset, caller is loopback (<code>127.0.0.1</code>, <code>::1</code>, <code>localhost</code>)</td>
+<td>Allowed — single-tenant local mode</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>tier</code></td>
-<td style="text-align: left;">str</td>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;">Tier filter (A, B, C)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>q</code></td>
-<td style="text-align: left;">str</td>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;">Text search across name and aliases</td>
+<td>Key unset, caller is non-loopback</td>
+<td><code>503 Set ZETTELFORGE_WEB_API_KEY before exposing the web API</code></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&quot;entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">      </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;actor&quot;</span><span class="p">,</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">      </span><span class="nt">&quot;tier&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;B&quot;</span><span class="p">,</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">      </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.85</span><span class="p">,</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">      </span><span class="nt">&quot;aliases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Fancy Bear&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;Sofacy&quot;</span><span class="p">],</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">      </span><span class="nt">&quot;first_seen&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-04-10&quot;</span><span class="p">,</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">      </span><span class="nt">&quot;last_seen&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">      </span><span class="nt">&quot;connected_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">  </span><span class="p">],</span>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">  </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">47</span><span class="p">,</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">  </span><span class="nt">&quot;offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">  </span><span class="nt">&quot;limit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="p">}</span>
-</code></pre></div></p>
-<h3 id="get-apihistory"><code>GET /api/history</code><a class="headerlink" href="#get-apihistory" title="Permanent link">&para;</a></h3>
-<p>Recent activity from telemetry JSONL files.</p>
-<p><strong>Query parameters:</strong></p>
+<p>Binding to <code>0.0.0.0</code> or <code>::</code> without a key set is refused at startup. Set the key before exposing the API beyond localhost.</p>
+<h3 id="rate-and-write-limits">Rate and write limits<a class="headerlink" href="#rate-and-write-limits" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Parameter</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Description</th>
+<th>Control</th>
+<th>Env var</th>
+<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>limit</code></td>
-<td style="text-align: left;">int</td>
-<td style="text-align: left;">100</td>
-<td style="text-align: left;">Max entries (max 500)</td>
+<td>Requests per minute, per key/IP</td>
+<td><code>ZETTELFORGE_WEB_RATE_LIMIT_PER_MINUTE</code></td>
+<td>60</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>days</code></td>
-<td style="text-align: left;">int</td>
-<td style="text-align: left;">5</td>
-<td style="text-align: left;">Lookback window in days (max 30)</td>
+<td>Concurrent writes</td>
+<td><code>ZETTELFORGE_WEB_WRITE_CONCURRENCY</code></td>
+<td>2</td>
+</tr>
+<tr>
+<td>Max query length</td>
+<td><code>ZETTELFORGE_WEB_MAX_QUERY_CHARS</code></td>
+<td>1000</td>
+</tr>
+<tr>
+<td>Max content length</td>
+<td><code>ZETTELFORGE_WEB_MAX_CONTENT_CHARS</code></td>
+<td>50000</td>
+</tr>
+<tr>
+<td>Max <code>k</code></td>
+<td><code>ZETTELFORGE_WEB_MAX_K</code></td>
+<td>50</td>
+</tr>
+<tr>
+<td>Max sync limit</td>
+<td><code>ZETTELFORGE_WEB_MAX_SYNC_LIMIT</code></td>
+<td>200</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Response:</strong> Array of telemetry entries, each containing:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">{</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">&quot;query_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a1b2c3d4&quot;</span><span class="p">,</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nt">&quot;actor&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;What tools does APT28 use?&quot;</span><span class="p">,</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">  </span><span class="nt">&quot;event_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;recall&quot;</span><span class="p">,</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1745612345.67</span><span class="p">,</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="nt">&quot;result_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span><span class="nt">&quot;duration_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">47</span><span class="p">,</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span><span class="nt">&quot;intent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;factual&quot;</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="p">}</span>
-</code></pre></div></p>
-<h3 id="post-apiingest"><code>POST /api/ingest</code><a class="headerlink" href="#post-apiingest" title="Permanent link">&para;</a></h3>
-<p>Bulk ingestion for multiple notes.</p>
-<p><strong>Request:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 used X-Agent.&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;source_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;report&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;domain&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cti&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;evolve&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">},</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Lazarus targeted defense contractors.&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;source_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;report&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;domain&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cti&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;evolve&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">}</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="p">]</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nt">&quot;succeeded&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="nt">&quot;failed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;note_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;zf-abc123&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;created&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;X-Agent&quot;</span><span class="p">],</span><span class="w"> </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;note_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;zf-def456&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;created&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;Lazarus&quot;</span><span class="p">],</span><span class="w"> </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span><span class="p">]</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="p">}</span>
-</code></pre></div></p>
-<p><strong>Limits:</strong> Up to 100 items per request. Each item uses a write slot (max 2 concurrent writes).</p>
-<h3 id="get-apitelemetry"><code>GET /api/telemetry</code><a class="headerlink" href="#get-apitelemetry" title="Permanent link">&para;</a></h3>
-<p>Aggregated telemetry summary from today's data.</p>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="p">{</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="nt">&quot;total_queries&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">142</span><span class="p">,</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="nt">&quot;recall_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">114</span><span class="p">,</span>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">  </span><span class="nt">&quot;synthesis_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span><span class="nt">&quot;avg_latency_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">47.3</span><span class="p">,</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="nt">&quot;p50_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">35</span><span class="p">,</span>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span><span class="nt">&quot;p95_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">210</span><span class="p">,</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">  </span><span class="nt">&quot;top_intents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;factual&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;temporal&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">31</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;causal&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;relational&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;exploratory&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">}</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="p">}</span>
-</code></pre></div></p>
-<p>When no telemetry data exists yet for today:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">{</span><span class="nt">&quot;total_queries&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;recall_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;synthesis_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;avg_latency_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;p50_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;p95_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;top_intents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span>
-</code></pre></div></p>
-<h3 id="get-apistorage"><code>GET /api/storage</code><a class="headerlink" href="#get-apistorage" title="Permanent link">&para;</a></h3>
-<p>Storage statistics.</p>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="p">{</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span><span class="nt">&quot;total_notes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4060</span><span class="p">,</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="nt">&quot;entity_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">47</span><span class="p">,</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span><span class="nt">&quot;graph_node_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">47</span><span class="p">,</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">  </span><span class="nt">&quot;graph_edge_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">89</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="p">}</span>
-</code></pre></div></p>
-<h3 id="get-apilogs"><code>GET /api/logs</code><a class="headerlink" href="#get-apilogs" title="Permanent link">&para;</a></h3>
-<p>Tail the structlog file with optional level filter.</p>
-<p><strong>Query parameters:</strong></p>
+<p>Exceeding the rate limit returns <code>429 Rate limit exceeded</code>. Write endpoints return <code>429</code> when the write semaphore is exhausted.</p>
+<h2 id="memory-endpoints">Memory endpoints<a class="headerlink" href="#memory-endpoints" title="Permanent link">&para;</a></h2>
+<h3 id="post-apirecall">POST /api/recall<a class="headerlink" href="#post-apirecall" title="Permanent link">&para;</a></h3>
+<p>Retrieve notes for a query.</p>
+<p>Request:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Parameter</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Description</th>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Constraints</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>lines</code></td>
-<td style="text-align: left;">int</td>
-<td style="text-align: left;">100</td>
-<td style="text-align: left;">Number of lines to return (max 1000)</td>
+<td><code>query</code></td>
+<td>string</td>
+<td>required</td>
+<td>1–1000 chars</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>level</code></td>
-<td style="text-align: left;">str</td>
-<td style="text-align: left;">--</td>
-<td style="text-align: left;">Filter by level (DEBUG, INFO, WARNING, ERROR)</td>
+<td><code>k</code></td>
+<td>int</td>
+<td>10</td>
+<td>1–50</td>
+</tr>
+<tr>
+<td><code>domain</code></td>
+<td>string</td>
+<td>null</td>
+<td>≤100 chars</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Response:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="p">{</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="nt">&quot;logs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span><span class="p">{</span><span class="nt">&quot;event&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;note_stored&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;logger&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;zettelforge.memory_manager&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;note_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;zf-abc&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">}</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="p">],</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span><span class="nt">&quot;truncated&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="p">}</span>
-</code></pre></div></p>
-<h3 id="get-apilogsstream"><code>GET /api/logs/stream</code><a class="headerlink" href="#get-apilogsstream" title="Permanent link">&para;</a></h3>
-<p>Server-Sent Events stream for live log tailing. Polls the log file every 100ms for new lines.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>data: {&quot;event&quot;: &quot;note_stored&quot;, &quot;level&quot;: &quot;INFO&quot;, ...}
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>data: {&quot;event&quot;: &quot;recall_completed&quot;, &quot;level&quot;: &quot;INFO&quot;, ...}
+<p>Response:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 infrastructure&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;domain&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;tier&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;confidence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;context&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;latency_ms&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span>
+<span class="p">}</span>
 </code></pre></div>
-<h3 id="get-apitelemetrystream"><code>GET /api/telemetry/stream</code><a class="headerlink" href="#get-apitelemetrystream" title="Permanent link">&para;</a></h3>
-<p>Server-Sent Events stream for live telemetry. Polls today's telemetry JSONL file every 100ms.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>data: {&quot;event_type&quot;: &quot;recall&quot;, &quot;query_id&quot;: &quot;abc&quot;, &quot;duration_ms&quot;: 47, ...}
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>data: {&quot;event_type&quot;: &quot;synthesis&quot;, &quot;query_id&quot;: &quot;def&quot;, ...}
-</code></pre></div>
-<h3 id="get"><code>GET /</code><a class="headerlink" href="#get" title="Permanent link">&para;</a></h3>
-<p>Serves the ZettelForge SPA from <code>web/ui/index.html</code>. If the UI directory is not found, returns a fallback HTML message.</p>
-<hr />
-<h2 id="status-codes">Status Codes<a class="headerlink" href="#status-codes" title="Permanent link">&para;</a></h2>
+<p><code>content</code> is truncated to 500 chars and <code>entities</code> to 10 per result.</p>
+<h3 id="post-apiremember">POST /api/remember<a class="headerlink" href="#post-apiremember" title="Permanent link">&para;</a></h3>
+<p>Store one note.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Code</th>
-<th style="text-align: left;">Meaning</th>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Constraints</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>200</code></td>
-<td style="text-align: left;">Success</td>
+<td><code>content</code></td>
+<td>string</td>
+<td>required</td>
+<td>1–50000 chars</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>400</code></td>
-<td style="text-align: left;">Bad request (invalid parameters, unsupported synthesis format)</td>
+<td><code>domain</code></td>
+<td>string</td>
+<td><code>cti</code></td>
+<td>1–100 chars</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>401</code></td>
-<td style="text-align: left;">Unauthorized (missing or invalid API key)</td>
+<td><code>source_type</code></td>
+<td>string</td>
+<td><code>manual</code></td>
+<td>1–100 chars</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>429</code></td>
-<td style="text-align: left;">Rate limit exceeded (60 req/min) or write capacity exhausted</td>
+<td><code>source_ref</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>≤500 chars</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>500</code></td>
-<td style="text-align: left;">Internal server error (exception details in response)</td>
+<td><code>evolve</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Response: <code>{ "note_id", "status", "entities", "latency_ms" }</code>. Returns <code>429 Write capacity exhausted; retry shortly</code> when the write semaphore is full.</p>
+<h3 id="post-apiingest">POST /api/ingest<a class="headerlink" href="#post-apiingest" title="Permanent link">&para;</a></h3>
+<p>Bulk version of <code>remember</code>.</p>
+<p>Request: <code>{ "items": [ { "content", "source_type"="manual", "domain"="cti", "evolve"=true } ] }</code> — 1 to 100 items.</p>
+<p>Response:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;succeeded&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;failed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;results&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;note_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;entities&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;...&quot;</span><span class="p">],</span><span class="w"> </span><span class="nt">&quot;success&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Per-item failures (including <code>skipped</code> when write capacity is exhausted) are reported in <code>results</code>; the call itself returns <code>200</code>.</p>
+<h3 id="post-apisynthesize">POST /api/synthesize<a class="headerlink" href="#post-apisynthesize" title="Permanent link">&para;</a></h3>
+<p>Generate an answer from retrieved notes.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
+<th>Constraints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>query</code></td>
+<td>string</td>
+<td>required</td>
+<td>1–1000 chars</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>501</code></td>
-<td style="text-align: left;">Feature requires zettelforge-enterprise (OpenCTI sync)</td>
+<td><code>format</code></td>
+<td>string</td>
+<td><code>direct_answer</code></td>
+<td>one of <code>direct_answer</code>, <code>synthesized_brief</code>, <code>timeline_analysis</code>, <code>relationship_map</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>503</code></td>
-<td style="text-align: left;">API key required (server bound to non-loopback address without key)</td>
+<td><code>k</code></td>
+<td>int</td>
+<td>10</td>
+<td>1–50</td>
+</tr>
+</tbody>
+</table>
+<p>An unsupported <code>format</code> returns <code>400 Unsupported synthesis format</code>. Response: <code>{ "query", "format", "synthesis", "sources_count", "latency_ms" }</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Synthesis format availability</p>
+<p>In ZettelForge OSS, the extended formats (<code>synthesized_brief</code>, <code>timeline_analysis</code>, <code>relationship_map</code>) fall back to <code>direct_answer</code> output. Full multi-format synthesis is provided by the hosted ThreatRecall.ai SaaS. <code>synthesize</code> also depends on a configured LLM provider; without one it returns a well-formed result with no answer.</p>
+</div>
+<h2 id="knowledge-graph-endpoints">Knowledge graph endpoints<a class="headerlink" href="#knowledge-graph-endpoints" title="Permanent link">&para;</a></h2>
+<h3 id="get-apigraphnodes">GET /api/graph/nodes<a class="headerlink" href="#get-apigraphnodes" title="Permanent link">&para;</a></h3>
+<p><code>{ "nodes": [ { "id", "label", "type", "tier", "aliases", "confidence", "created_at" } ], "count" }</code></p>
+<h3 id="get-apigraphedges">GET /api/graph/edges<a class="headerlink" href="#get-apigraphedges" title="Permanent link">&para;</a></h3>
+<p><code>{ "edges": [ { "id", "source", "target", "relationship", "created_at" } ], "count" }</code></p>
+<h3 id="get-apientities">GET /api/entities<a class="headerlink" href="#get-apientities" title="Permanent link">&para;</a></h3>
+<p>Paginated entity index.</p>
+<p>Query parameters: <code>offset</code> (≥0, default 0), <code>limit</code> (1–500, default 50), <code>type</code>, <code>tier</code>, <code>q</code> (substring filter on entity value).</p>
+<p>Response: <code>{ "entities": [...], "total", "offset", "limit" }</code>.</p>
+<h2 id="system-endpoints">System endpoints<a class="headerlink" href="#system-endpoints" title="Permanent link">&para;</a></h2>
+<h3 id="get-apihealth">GET /api/health<a class="headerlink" href="#get-apihealth" title="Permanent link">&para;</a></h3>
+<p>Full system snapshot:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.7.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;edition&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;community&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;edition_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ZettelForge&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;storage_backend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sqlite&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;embedding_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;embedding_model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;llm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;llm_model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;llm_local_backend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;enrichment_queue_depth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;queue_status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;idle&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;governance_enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;pii_enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;uptime_seconds&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;data_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;graph_node_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;graph_edge_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="get-apistats">GET /api/stats<a class="headerlink" href="#get-apistats" title="Permanent link">&para;</a></h3>
+<p><code>{ "version", "edition", "edition_name", "total_notes", "notes_created", "retrievals", "entity_index" }</code></p>
+<h3 id="get-apistorage">GET /api/storage<a class="headerlink" href="#get-apistorage" title="Permanent link">&para;</a></h3>
+<p><code>{ "total_notes", "entity_count", "graph_node_count", "graph_edge_count" }</code></p>
+<h3 id="get-apiversion">GET /api/version<a class="headerlink" href="#get-apiversion" title="Permanent link">&para;</a></h3>
+<p><code>{ "version", "notes", "edition" }</code> — used by the SPA header.</p>
+<h3 id="get-apitelemetry">GET /api/telemetry<a class="headerlink" href="#get-apitelemetry" title="Permanent link">&para;</a></h3>
+<p>Aggregated counters from today's telemetry JSONL: <code>total_queries</code>, <code>queries_today</code>, <code>recall_count</code>, <code>synthesis_count</code>, <code>syntheses_today</code>, <code>avg_latency_ms</code>, <code>p50_ms</code>, <code>p95_ms</code>, <code>top_intents</code>. Returns zeroed fields when no telemetry file exists yet.</p>
+<h3 id="get-apihistory">GET /api/history<a class="headerlink" href="#get-apihistory" title="Permanent link">&para;</a></h3>
+<p>Recent telemetry entries. Query parameters: <code>limit</code> (1–500, default 100), <code>days</code> (1–30, default 5). Returns a JSON array.</p>
+<h3 id="get-apilogs">GET /api/logs<a class="headerlink" href="#get-apilogs" title="Permanent link">&para;</a></h3>
+<p>Tail of the structlog file. Query parameters: <code>lines</code> (1–10000, default 100), <code>level</code> (optional filter). Response: <code>{ "logs": [...], "truncated" }</code>. Returns an empty list with an <code>error</code> field when no log file is configured.</p>
+<h3 id="server-sent-event-streams">Server-sent event streams<a class="headerlink" href="#server-sent-event-streams" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Stream</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/logs/stream</code></td>
+<td>Tails the structlog file (<code>text/event-stream</code>)</td>
+</tr>
+<tr>
+<td><code>GET /api/telemetry/stream</code></td>
+<td>Tails today's telemetry JSONL (<code>text/event-stream</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Both emit <code>data: &lt;line&gt;\n\n</code> frames and handle log rotation.</p>
+<h2 id="configuration-endpoints">Configuration endpoints<a class="headerlink" href="#configuration-endpoints" title="Permanent link">&para;</a></h2>
+<h3 id="get-apiconfig">GET /api/config<a class="headerlink" href="#get-apiconfig" title="Permanent link">&para;</a></h3>
+<p>Returns the full resolved config as JSON. Sensitive keys (such as <code>api_key</code>, <code>password</code>, and <code>token</code>) are recursively redacted to <code>***</code>.</p>
+<h3 id="get-apiconfigmeta">GET /api/config/meta<a class="headerlink" href="#get-apiconfigmeta" title="Permanent link">&para;</a></h3>
+<p><code>{ "restart_required_fields": [...] }</code> — the dotted config paths that require a process restart, including <code>backend</code>, <code>embedding.provider</code>, <code>llm.provider</code>, <code>llm.model</code>, <code>storage.data_dir</code>, and the logging fields.</p>
+<h3 id="put-apiconfig">PUT /api/config<a class="headerlink" href="#put-apiconfig" title="Permanent link">&para;</a></h3>
+<p>Apply config changes in memory. Accepts nested or dotted keys (<code>{"retrieval.default_k": 5}</code>). Response:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;applied&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;retrieval.default_k&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;pending_restart&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;llm.model&quot;</span><span class="p">],</span>
+<span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Config updated in-memory. Some changes require a restart.&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Fields in <code>restart_required_fields</code> are reported under <code>pending_restart</code> and take effect only after a restart.</p>
+<h2 id="saas-only-endpoints">SaaS-only endpoints<a class="headerlink" href="#saas-only-endpoints" title="Permanent link">&para;</a></h2>
+<h3 id="post-apisync">POST /api/sync<a class="headerlink" href="#post-apisync" title="Permanent link">&para;</a></h3>
+<p>OpenCTI synchronization is not available in ZettelForge OSS. In an OSS install this endpoint returns:</p>
+<div class="highlight"><pre><span></span><code>HTTP 501
+{ &quot;error&quot;: &quot;OpenCTI sync requires an integration not present in this build.&quot; }
+</code></pre></div>
+<p>OpenCTI ingestion is provided by the hosted <strong>ThreatRecall.ai</strong> SaaS. See <a href="../../#two-products-one-core">Two products, one core</a> for the OSS-versus-SaaS split.</p>
+<p><code>GET /api/edition</code> reports the running build's capability set in its <code>features</code> map. On an OSS install <code>edition</code> is <code>community</code> and the integration-dependent features (OpenCTI sync, TypeDB STIX ontology, alias resolution over TypeDB, Sigma generation, context injection, multi-tenant auth) resolve to <code>false</code>; those capabilities belong to ThreatRecall.ai SaaS.</p>
+<h2 id="html-routes">HTML routes<a class="headerlink" href="#html-routes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Auth</th>
+<th>Serves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /</code></td>
+<td>none</td>
+<td>Management SPA</td>
+</tr>
+<tr>
+<td><code>GET /config</code></td>
+<td>guarded</td>
+<td>Config editor page</td>
 </tr>
 </tbody>
 </table>
@@ -3450,12 +3416,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

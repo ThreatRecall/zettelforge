@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Complete inventory of all ZettelForge modules with purpose, key functions, and relationships.">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -15,21 +15,21 @@
         <link rel="canonical" href="https://docs.threatrecall.ai/reference/module-inventory/">
       
       
-        <link rel="prev" href="../memory-manager-api/">
+        <link rel="prev" href="../architecture-deep-dive/">
       
       
-        <link rel="next" href="../retrieval-policies/">
+        <link rel="next" href="../entity-indexer-concurrency/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Module Inventory - ZettelForge Documentation</title>
+        <title>Module inventory - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/reference/module-inventory/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="Module Inventory">
-  <meta property="og:description" content="Complete inventory of all ZettelForge modules with purpose, key functions, and relationships.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/reference/module-inventory/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Module Inventory">
-  <meta name="twitter:description" content="Complete inventory of all ZettelForge modules with purpose, key functions, and relationships.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Module Inventory
+              Module inventory
             
           </span>
         </div>
@@ -279,11 +238,33 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+        <a href="../../how-to/configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -304,28 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-    
-  
-  
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -573,17 +529,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -622,62 +574,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/configure-opencti/" class="md-nav__link">
         
   
@@ -706,14 +602,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -762,42 +770,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -825,7 +805,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -902,146 +1078,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1049,119 +1085,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1210,103 +1134,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
+    Troubleshoot
   
 
     
@@ -1327,14 +1162,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Two-Phase Pipeline
+    Extend ZettelForge
   
 
     
@@ -1355,98 +1190,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+      <a href="../../how-to/use-web-interface/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
+    Use web interface
   
 
     
@@ -1483,8 +1234,6 @@
         
         
       
-      
-        
       
     
     
@@ -1492,10 +1241,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
@@ -1513,8 +1262,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1531,14 +1280,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture-deep-dive/" class="md-nav__link">
+      <a href="../terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1587,14 +1336,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../detection-rules-schema/" class="md-nav__link">
+      <a href="../memory-manager-api/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Detection Rules Schema
+    Memory Manager API
   
 
     
@@ -1615,14 +1364,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../editions/" class="md-nav__link">
+      <a href="../stix-schema/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Editions
+    STIX schema
   
 
     
@@ -1643,14 +1392,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../entity-indexer-concurrency/" class="md-nav__link">
+      <a href="../web-api/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Entity Indexer Concurrency
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
   
 
     
@@ -1678,35 +1455,7 @@
   <span class="md-ellipsis">
     
   
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
+    Governance controls
   
 
     
@@ -1734,7 +1483,7 @@
   <span class="md-ellipsis">
     
   
-    MCP Protocol
+    MCP protocol
   
 
     
@@ -1755,14 +1504,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../memory-manager-api/" class="md-nav__link">
+      <a href="../detection-rules-schema/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Memory Manager API
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../yara-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
   
 
     
@@ -1799,7 +1660,7 @@
   <span class="md-ellipsis">
     
   
-    Module Inventory
+    Module inventory
   
 
     
@@ -1817,7 +1678,7 @@
   <span class="md-ellipsis">
     
   
-    Module Inventory
+    Module inventory
   
 
     
@@ -1843,22 +1704,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-api-layer" class="md-nav__link">
+  <a href="#at-a-glance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core API Layer
+        At a glance
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Core API Layer">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-memory-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core memory layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core memory layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#memory_managerpy" class="md-nav__link">
+  <a href="#srczettelforgememory_managerpy-1972-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        memory_manager.py
+        src/zettelforge/memory_manager.py — 1,972 lines
       
     </span>
   </a>
@@ -1866,10 +1738,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#__init__py" class="md-nav__link">
+  <a href="#srczettelforge__init__py" class="md-nav__link">
     <span class="md-ellipsis">
       
-        __init__.py
+        src/zettelforge/__init__.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforge__main__py" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/__main__.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgedemopy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/demo.py
       
     </span>
   </a>
@@ -1885,19 +1779,19 @@
   <a href="#storage-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Storage Layer
+        Storage layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Storage Layer">
+    <nav class="md-nav" aria-label="Storage layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#storage_backendpy" class="md-nav__link">
+  <a href="#srczettelforgestorage_backendpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        storage_backend.py
+        src/zettelforge/storage_backend.py
       
     </span>
   </a>
@@ -1905,10 +1799,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sqlite_backendpy-33k-lines" class="md-nav__link">
+  <a href="#srczettelforgesqlite_backendpy-969-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        sqlite_backend.py (33K lines)
+        src/zettelforge/sqlite_backend.py — 969 lines
       
     </span>
   </a>
@@ -1916,10 +1810,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#memory_storepy-14k-lines" class="md-nav__link">
+  <a href="#srczettelforgememory_storepy-445-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        memory_store.py (14K lines)
+        src/zettelforge/memory_store.py — 445 lines
       
     </span>
   </a>
@@ -1927,10 +1821,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#vector_memorypy" class="md-nav__link">
+  <a href="#srczettelforgebackend_factorypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        vector_memory.py
+        src/zettelforge/backend_factory.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgevector_memorypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/vector_memory.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgelance_maintenancepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/lance_maintenance.py
       
     </span>
   </a>
@@ -1946,19 +1862,19 @@
   <a href="#retrieval-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Retrieval Layer
+        Retrieval layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Retrieval Layer">
+    <nav class="md-nav" aria-label="Retrieval layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#vector_retrieverpy-14k-lines" class="md-nav__link">
+  <a href="#srczettelforgevector_retrieverpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        vector_retriever.py (14K lines)
+        src/zettelforge/vector_retriever.py
       
     </span>
   </a>
@@ -1966,10 +1882,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#graph_retrieverpy" class="md-nav__link">
+  <a href="#srczettelforgegraph_retrieverpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        graph_retriever.py
+        src/zettelforge/graph_retriever.py
       
     </span>
   </a>
@@ -1977,10 +1893,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#blended_retrieverpy" class="md-nav__link">
+  <a href="#srczettelforgeblended_retrieverpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        blended_retriever.py
+        src/zettelforge/blended_retriever.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeintent_classifierpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/intent_classifier.py
       
     </span>
   </a>
@@ -1996,19 +1923,19 @@
   <a href="#knowledge-graph-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Knowledge Graph Layer
+        Knowledge graph layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Knowledge Graph Layer">
+    <nav class="md-nav" aria-label="Knowledge graph layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#knowledge_graphpy-18k-lines" class="md-nav__link">
+  <a href="#srczettelforgeknowledge_graphpy-534-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        knowledge_graph.py (18K lines)
+        src/zettelforge/knowledge_graph.py — 534 lines
       
     </span>
   </a>
@@ -2016,10 +1943,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ontologypy-20k-lines" class="md-nav__link">
+  <a href="#srczettelforgeontologypy-659-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ontology.py (20K lines)
+        src/zettelforge/ontology.py — 659 lines
       
     </span>
   </a>
@@ -2027,10 +1954,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#entity_indexerpy-18k-lines" class="md-nav__link">
+  <a href="#srczettelforgeentity_indexerpy-651-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        entity_indexer.py (18K lines)
+        src/zettelforge/entity_indexer.py — 651 lines
       
     </span>
   </a>
@@ -2038,10 +1965,93 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#alias_resolverpy" class="md-nav__link">
+  <a href="#srczettelforgealias_resolverpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        alias_resolver.py
+        src/zettelforge/alias_resolver.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note-construction-and-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note construction and schema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Note construction and schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgenote_schemapy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/note_schema.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgenote_constructorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/note_constructor.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgefact_extractorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/fact_extractor.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgememory_updaterpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/memory_updater.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgememory_evolverpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/memory_evolver.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeconsolidationpy-490-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/consolidation.py — 490 lines
       
     </span>
   </a>
@@ -2057,19 +2067,19 @@
   <a href="#synthesis-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Synthesis Layer
+        Synthesis layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Synthesis Layer">
+    <nav class="md-nav" aria-label="Synthesis layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#synthesis_generatorpy" class="md-nav__link">
+  <a href="#srczettelforgesynthesis_generatorpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        synthesis_generator.py
+        src/zettelforge/synthesis_generator.py
       
     </span>
   </a>
@@ -2077,10 +2087,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#synthesis_validatorpy" class="md-nav__link">
+  <a href="#srczettelforgesynthesis_validatorpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        synthesis_validator.py
+        src/zettelforge/synthesis_validator.py
       
     </span>
   </a>
@@ -2096,19 +2106,19 @@
   <a href="#llm-integration-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Integration Layer
+        LLM integration layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="LLM Integration Layer">
+    <nav class="md-nav" aria-label="LLM integration layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#llm_clientpy-10k-lines" class="md-nav__link">
+  <a href="#srczettelforgellm_clientpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        llm_client.py (10K lines)
+        src/zettelforge/llm_client.py
       
     </span>
   </a>
@@ -2116,21 +2126,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#llm_providers-directory" class="md-nav__link">
+  <a href="#srczettelforgellm_providers-7-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        llm_providers/ (directory)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#intent_classifierpy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        intent_classifier.py
+        src/zettelforge/llm_providers/ — 7 files
       
     </span>
   </a>
@@ -2143,22 +2142,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#processing-layer" class="md-nav__link">
+  <a href="#governance-and-security-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Processing Layer
+        Governance and security layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Processing Layer">
+    <nav class="md-nav" aria-label="Governance and security layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#note_constructorpy" class="md-nav__link">
+  <a href="#srczettelforgegovernance_validatorpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        note_constructor.py
+        src/zettelforge/governance_validator.py
       
     </span>
   </a>
@@ -2166,10 +2165,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#note_schemapy" class="md-nav__link">
+  <a href="#srczettelforgeprompt_securitypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        note_schema.py
+        src/zettelforge/prompt_security.py
       
     </span>
   </a>
@@ -2177,10 +2176,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fact_extractorpy" class="md-nav__link">
+  <a href="#srczettelforgepii_validatorpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        fact_extractor.py
+        src/zettelforge/pii_validator.py
       
     </span>
   </a>
@@ -2188,10 +2187,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#memory_updaterpy" class="md-nav__link">
+  <a href="#srczettelforgememory_defensepy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        memory_updater.py
+        src/zettelforge/memory_defense.py
       
     </span>
   </a>
@@ -2199,10 +2198,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#memory_evolverpy-9k-lines" class="md-nav__link">
+  <a href="#srczettelforgetlp_policypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        memory_evolver.py (9K lines)
+        src/zettelforge/tlp_policy.py
       
     </span>
   </a>
@@ -2215,22 +2214,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#detection-rules-layer" class="md-nav__link">
+  <a href="#observability-and-telemetry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Detection Rules Layer
+        Observability and telemetry
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Detection Rules Layer">
+    <nav class="md-nav" aria-label="Observability and telemetry">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sigma-directory" class="md-nav__link">
+  <a href="#srczettelforgelogpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        sigma/ (directory)
+        src/zettelforge/log.py
       
     </span>
   </a>
@@ -2238,10 +2237,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#yara-directory" class="md-nav__link">
+  <a href="#srczettelforgeocsfpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        yara/ (directory)
+        src/zettelforge/ocsf.py
       
     </span>
   </a>
@@ -2249,10 +2248,71 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#detection-directory" class="md-nav__link">
+  <a href="#srczettelforgetelemetrypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        detection/ (directory)
+        src/zettelforge/telemetry.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeobservabilitypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/observability.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-and-edition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration and edition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration and edition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeconfigpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/config.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeeditionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/edition.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeextensionspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/extensions.py
       
     </span>
   </a>
@@ -2268,19 +2328,19 @@
   <a href="#utility-modules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Utility Modules
+        Utility modules
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Utility Modules">
+    <nav class="md-nav" aria-label="Utility modules">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#configpy-15k-lines" class="md-nav__link">
+  <a href="#srczettelforgecachepy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        config.py (15K lines)
+        src/zettelforge/cache.py
       
     </span>
   </a>
@@ -2288,10 +2348,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#logpy" class="md-nav__link">
+  <a href="#srczettelforgeretrypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        log.py
+        src/zettelforge/retry.py
       
     </span>
   </a>
@@ -2299,10 +2359,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ocsfpy-10k-lines" class="md-nav__link">
+  <a href="#srczettelforgejson_parsepy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ocsf.py (10K lines)
+        src/zettelforge/json_parse.py
       
     </span>
   </a>
@@ -2310,43 +2370,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cachepy" class="md-nav__link">
+  <a href="#srczettelforgebackuppy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        cache.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#retrypy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        retry.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#json_parsepy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        json_parse.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#observabilitypy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        observability.py
+        src/zettelforge/backup.py
       
     </span>
   </a>
@@ -2359,22 +2386,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#mcp-server-layer" class="md-nav__link">
+  <a href="#detection-rules-packages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        MCP Server Layer
+        Detection rules packages
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="MCP Server Layer">
+    <nav class="md-nav" aria-label="Detection rules packages">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#mcp-directory" class="md-nav__link">
+  <a href="#srczettelforgesigma-6-files-1-schema-file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        mcp/ (directory)
+        src/zettelforge/sigma/ — 6 files + 1 schema file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeyara-7-files-1-schema-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/yara/ — 7 files + 1 schema file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgedetection-4-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/detection/ — 4 files
       
     </span>
   </a>
@@ -2387,22 +2436,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#integration-layer" class="md-nav__link">
+  <a href="#osint-package" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Integration Layer
+        OSINT package
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Integration Layer">
+    <nav class="md-nav" aria-label="OSINT package">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#integrations-directory" class="md-nav__link">
+  <a href="#srczettelforgeosint-6-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        integrations/ (directory)
+        src/zettelforge/osint/ — 6 files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeosintcollectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/osint/collectors/
       
     </span>
   </a>
@@ -2415,22 +2475,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#web-frontend-layer" class="md-nav__link">
+  <a href="#integration-packages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Web Frontend Layer
+        Integration packages
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Web Frontend Layer">
+    <nav class="md-nav" aria-label="Integration packages">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#webapppy" class="md-nav__link">
+  <a href="#srczettelforgeintegrations-3-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        web/app.py
+        src/zettelforge/integrations/ — 3 files
       
     </span>
   </a>
@@ -2438,10 +2498,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#webui-23-files" class="md-nav__link">
+  <a href="#srczettelforgemcp-3-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        web/ui/ (23 files)
+        src/zettelforge/mcp/ — 3 files
       
     </span>
   </a>
@@ -2454,77 +2514,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#other-modules" class="md-nav__link">
+  <a href="#operator-scripts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Other Modules
+        Operator scripts
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Other Modules">
+    <nav class="md-nav" aria-label="Operator scripts">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#consolidationpy-18k-lines" class="md-nav__link">
+  <a href="#srczettelforgescripts-6-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        consolidation.py (18K lines)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#governance_validatorpy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        governance_validator.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#editionpy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        edition.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#demopy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        demo.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#extensionspy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        extensions.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#backend_factorypy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        backend_factory.py
+        src/zettelforge/scripts/ — 6 files
       
     </span>
   </a>
@@ -2537,21 +2542,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-dependency-graph" class="md-nav__link">
+  <a href="#web-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module Dependency Graph
+        Web layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Web layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#web-python-files-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        web/ — Python files (3)
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#statistics" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#webui-javascript-files-17" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Statistics
+        web/ui/ — JavaScript files (17)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-dependency-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core dependency graph
       
     </span>
   </a>
@@ -2574,126 +2607,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../retrieval-policies/" class="md-nav__link">
+      <a href="../entity-indexer-concurrency/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../stix-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    STIX Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../web-api/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Web API Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../yara-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    YARA Schema Reference
+    Entity indexer concurrency
   
 
     
@@ -2726,7 +2647,230 @@
     
       
       
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/llm-budgets-and-timeouts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../explanation/zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
       
     
     
@@ -2734,9 +2878,7 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2795,6 +2937,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2887,14 +3079,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2908,113 +3100,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -3039,17 +3127,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -3143,22 +3227,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#core-api-layer" class="md-nav__link">
+  <a href="#at-a-glance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Core API Layer
+        At a glance
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Core API Layer">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-memory-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core memory layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core memory layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#memory_managerpy" class="md-nav__link">
+  <a href="#srczettelforgememory_managerpy-1972-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        memory_manager.py
+        src/zettelforge/memory_manager.py — 1,972 lines
       
     </span>
   </a>
@@ -3166,10 +3261,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#__init__py" class="md-nav__link">
+  <a href="#srczettelforge__init__py" class="md-nav__link">
     <span class="md-ellipsis">
       
-        __init__.py
+        src/zettelforge/__init__.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforge__main__py" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/__main__.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgedemopy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/demo.py
       
     </span>
   </a>
@@ -3185,19 +3302,19 @@
   <a href="#storage-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Storage Layer
+        Storage layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Storage Layer">
+    <nav class="md-nav" aria-label="Storage layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#storage_backendpy" class="md-nav__link">
+  <a href="#srczettelforgestorage_backendpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        storage_backend.py
+        src/zettelforge/storage_backend.py
       
     </span>
   </a>
@@ -3205,10 +3322,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sqlite_backendpy-33k-lines" class="md-nav__link">
+  <a href="#srczettelforgesqlite_backendpy-969-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        sqlite_backend.py (33K lines)
+        src/zettelforge/sqlite_backend.py — 969 lines
       
     </span>
   </a>
@@ -3216,10 +3333,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#memory_storepy-14k-lines" class="md-nav__link">
+  <a href="#srczettelforgememory_storepy-445-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        memory_store.py (14K lines)
+        src/zettelforge/memory_store.py — 445 lines
       
     </span>
   </a>
@@ -3227,10 +3344,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#vector_memorypy" class="md-nav__link">
+  <a href="#srczettelforgebackend_factorypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        vector_memory.py
+        src/zettelforge/backend_factory.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgevector_memorypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/vector_memory.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgelance_maintenancepy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/lance_maintenance.py
       
     </span>
   </a>
@@ -3246,19 +3385,19 @@
   <a href="#retrieval-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Retrieval Layer
+        Retrieval layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Retrieval Layer">
+    <nav class="md-nav" aria-label="Retrieval layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#vector_retrieverpy-14k-lines" class="md-nav__link">
+  <a href="#srczettelforgevector_retrieverpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        vector_retriever.py (14K lines)
+        src/zettelforge/vector_retriever.py
       
     </span>
   </a>
@@ -3266,10 +3405,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#graph_retrieverpy" class="md-nav__link">
+  <a href="#srczettelforgegraph_retrieverpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        graph_retriever.py
+        src/zettelforge/graph_retriever.py
       
     </span>
   </a>
@@ -3277,10 +3416,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#blended_retrieverpy" class="md-nav__link">
+  <a href="#srczettelforgeblended_retrieverpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        blended_retriever.py
+        src/zettelforge/blended_retriever.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeintent_classifierpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/intent_classifier.py
       
     </span>
   </a>
@@ -3296,19 +3446,19 @@
   <a href="#knowledge-graph-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Knowledge Graph Layer
+        Knowledge graph layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Knowledge Graph Layer">
+    <nav class="md-nav" aria-label="Knowledge graph layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#knowledge_graphpy-18k-lines" class="md-nav__link">
+  <a href="#srczettelforgeknowledge_graphpy-534-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        knowledge_graph.py (18K lines)
+        src/zettelforge/knowledge_graph.py — 534 lines
       
     </span>
   </a>
@@ -3316,10 +3466,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ontologypy-20k-lines" class="md-nav__link">
+  <a href="#srczettelforgeontologypy-659-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ontology.py (20K lines)
+        src/zettelforge/ontology.py — 659 lines
       
     </span>
   </a>
@@ -3327,10 +3477,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#entity_indexerpy-18k-lines" class="md-nav__link">
+  <a href="#srczettelforgeentity_indexerpy-651-lines" class="md-nav__link">
     <span class="md-ellipsis">
       
-        entity_indexer.py (18K lines)
+        src/zettelforge/entity_indexer.py — 651 lines
       
     </span>
   </a>
@@ -3338,10 +3488,93 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#alias_resolverpy" class="md-nav__link">
+  <a href="#srczettelforgealias_resolverpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        alias_resolver.py
+        src/zettelforge/alias_resolver.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note-construction-and-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note construction and schema
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Note construction and schema">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgenote_schemapy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/note_schema.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgenote_constructorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/note_constructor.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgefact_extractorpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/fact_extractor.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgememory_updaterpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/memory_updater.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgememory_evolverpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/memory_evolver.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeconsolidationpy-490-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/consolidation.py — 490 lines
       
     </span>
   </a>
@@ -3357,19 +3590,19 @@
   <a href="#synthesis-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Synthesis Layer
+        Synthesis layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Synthesis Layer">
+    <nav class="md-nav" aria-label="Synthesis layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#synthesis_generatorpy" class="md-nav__link">
+  <a href="#srczettelforgesynthesis_generatorpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        synthesis_generator.py
+        src/zettelforge/synthesis_generator.py
       
     </span>
   </a>
@@ -3377,10 +3610,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#synthesis_validatorpy" class="md-nav__link">
+  <a href="#srczettelforgesynthesis_validatorpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        synthesis_validator.py
+        src/zettelforge/synthesis_validator.py
       
     </span>
   </a>
@@ -3396,19 +3629,19 @@
   <a href="#llm-integration-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Integration Layer
+        LLM integration layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="LLM Integration Layer">
+    <nav class="md-nav" aria-label="LLM integration layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#llm_clientpy-10k-lines" class="md-nav__link">
+  <a href="#srczettelforgellm_clientpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        llm_client.py (10K lines)
+        src/zettelforge/llm_client.py
       
     </span>
   </a>
@@ -3416,21 +3649,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#llm_providers-directory" class="md-nav__link">
+  <a href="#srczettelforgellm_providers-7-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        llm_providers/ (directory)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#intent_classifierpy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        intent_classifier.py
+        src/zettelforge/llm_providers/ — 7 files
       
     </span>
   </a>
@@ -3443,22 +3665,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#processing-layer" class="md-nav__link">
+  <a href="#governance-and-security-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Processing Layer
+        Governance and security layer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Processing Layer">
+    <nav class="md-nav" aria-label="Governance and security layer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#note_constructorpy" class="md-nav__link">
+  <a href="#srczettelforgegovernance_validatorpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        note_constructor.py
+        src/zettelforge/governance_validator.py
       
     </span>
   </a>
@@ -3466,10 +3688,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#note_schemapy" class="md-nav__link">
+  <a href="#srczettelforgeprompt_securitypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        note_schema.py
+        src/zettelforge/prompt_security.py
       
     </span>
   </a>
@@ -3477,10 +3699,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fact_extractorpy" class="md-nav__link">
+  <a href="#srczettelforgepii_validatorpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        fact_extractor.py
+        src/zettelforge/pii_validator.py
       
     </span>
   </a>
@@ -3488,10 +3710,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#memory_updaterpy" class="md-nav__link">
+  <a href="#srczettelforgememory_defensepy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        memory_updater.py
+        src/zettelforge/memory_defense.py
       
     </span>
   </a>
@@ -3499,10 +3721,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#memory_evolverpy-9k-lines" class="md-nav__link">
+  <a href="#srczettelforgetlp_policypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        memory_evolver.py (9K lines)
+        src/zettelforge/tlp_policy.py
       
     </span>
   </a>
@@ -3515,22 +3737,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#detection-rules-layer" class="md-nav__link">
+  <a href="#observability-and-telemetry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Detection Rules Layer
+        Observability and telemetry
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Detection Rules Layer">
+    <nav class="md-nav" aria-label="Observability and telemetry">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sigma-directory" class="md-nav__link">
+  <a href="#srczettelforgelogpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        sigma/ (directory)
+        src/zettelforge/log.py
       
     </span>
   </a>
@@ -3538,10 +3760,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#yara-directory" class="md-nav__link">
+  <a href="#srczettelforgeocsfpy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        yara/ (directory)
+        src/zettelforge/ocsf.py
       
     </span>
   </a>
@@ -3549,10 +3771,71 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#detection-directory" class="md-nav__link">
+  <a href="#srczettelforgetelemetrypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        detection/ (directory)
+        src/zettelforge/telemetry.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeobservabilitypy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/observability.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-and-edition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration and edition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration and edition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeconfigpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/config.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeeditionpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/edition.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeextensionspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/extensions.py
       
     </span>
   </a>
@@ -3568,19 +3851,19 @@
   <a href="#utility-modules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Utility Modules
+        Utility modules
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Utility Modules">
+    <nav class="md-nav" aria-label="Utility modules">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#configpy-15k-lines" class="md-nav__link">
+  <a href="#srczettelforgecachepy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        config.py (15K lines)
+        src/zettelforge/cache.py
       
     </span>
   </a>
@@ -3588,10 +3871,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#logpy" class="md-nav__link">
+  <a href="#srczettelforgeretrypy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        log.py
+        src/zettelforge/retry.py
       
     </span>
   </a>
@@ -3599,10 +3882,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ocsfpy-10k-lines" class="md-nav__link">
+  <a href="#srczettelforgejson_parsepy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ocsf.py (10K lines)
+        src/zettelforge/json_parse.py
       
     </span>
   </a>
@@ -3610,43 +3893,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cachepy" class="md-nav__link">
+  <a href="#srczettelforgebackuppy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        cache.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#retrypy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        retry.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#json_parsepy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        json_parse.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#observabilitypy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        observability.py
+        src/zettelforge/backup.py
       
     </span>
   </a>
@@ -3659,22 +3909,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#mcp-server-layer" class="md-nav__link">
+  <a href="#detection-rules-packages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        MCP Server Layer
+        Detection rules packages
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="MCP Server Layer">
+    <nav class="md-nav" aria-label="Detection rules packages">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#mcp-directory" class="md-nav__link">
+  <a href="#srczettelforgesigma-6-files-1-schema-file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        mcp/ (directory)
+        src/zettelforge/sigma/ — 6 files + 1 schema file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeyara-7-files-1-schema-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/yara/ — 7 files + 1 schema file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgedetection-4-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/detection/ — 4 files
       
     </span>
   </a>
@@ -3687,22 +3959,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#integration-layer" class="md-nav__link">
+  <a href="#osint-package" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Integration Layer
+        OSINT package
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Integration Layer">
+    <nav class="md-nav" aria-label="OSINT package">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#integrations-directory" class="md-nav__link">
+  <a href="#srczettelforgeosint-6-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        integrations/ (directory)
+        src/zettelforge/osint/ — 6 files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#srczettelforgeosintcollectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        src/zettelforge/osint/collectors/
       
     </span>
   </a>
@@ -3715,22 +3998,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#web-frontend-layer" class="md-nav__link">
+  <a href="#integration-packages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Web Frontend Layer
+        Integration packages
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Web Frontend Layer">
+    <nav class="md-nav" aria-label="Integration packages">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#webapppy" class="md-nav__link">
+  <a href="#srczettelforgeintegrations-3-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        web/app.py
+        src/zettelforge/integrations/ — 3 files
       
     </span>
   </a>
@@ -3738,10 +4021,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#webui-23-files" class="md-nav__link">
+  <a href="#srczettelforgemcp-3-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        web/ui/ (23 files)
+        src/zettelforge/mcp/ — 3 files
       
     </span>
   </a>
@@ -3754,77 +4037,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#other-modules" class="md-nav__link">
+  <a href="#operator-scripts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Other Modules
+        Operator scripts
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Other Modules">
+    <nav class="md-nav" aria-label="Operator scripts">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#consolidationpy-18k-lines" class="md-nav__link">
+  <a href="#srczettelforgescripts-6-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        consolidation.py (18K lines)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#governance_validatorpy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        governance_validator.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#editionpy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        edition.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#demopy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        demo.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#extensionspy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        extensions.py
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#backend_factorypy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        backend_factory.py
+        src/zettelforge/scripts/ — 6 files
       
     </span>
   </a>
@@ -3837,21 +4065,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#module-dependency-graph" class="md-nav__link">
+  <a href="#web-layer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module Dependency Graph
+        Web layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Web layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#web-python-files-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        web/ — Python files (3)
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#statistics" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#webui-javascript-files-17" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Statistics
+        web/ui/ — JavaScript files (17)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-dependency-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core dependency graph
       
     </span>
   </a>
@@ -3878,407 +4134,762 @@
   
 
 
-<h1 id="module-inventory">Module Inventory<a class="headerlink" href="#module-inventory" title="Permanent link">&para;</a></h1>
-<p>Complete reference of all 57 core modules in ZettelForge v2.4.0.</p>
-<h2 id="core-api-layer">Core API Layer<a class="headerlink" href="#core-api-layer" title="Permanent link">&para;</a></h2>
-<h3 id="memory_managerpy"><code>memory_manager.py</code><a class="headerlink" href="#memory_managerpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Primary interface for all memory operations.</p>
-<p><strong>Key Classes:</strong>
-- <code>MemoryManager</code> — Main entry point
-- <code>_EnrichmentJob</code> — Background work items</p>
-<p><strong>Key Methods:</strong>
-- <code>remember()</code> — Store content with entity extraction
-- <code>recall()</code> — Retrieve via hybrid search
-- <code>recall_actor()</code> — Entity-based retrieval
-- <code>synthesize()</code> — RAG answer generation
-- <code>stats()</code> — System statistics</p>
-<p><strong>Dependencies:</strong> All other modules</p>
-<h3 id="__init__py"><code>__init__.py</code><a class="headerlink" href="#__init__py" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Public API exports.</p>
-<p><strong>Exports:</strong> 24 items in <code>__all__</code> including:
-- Core: <code>MemoryManager</code>, <code>MemoryNote</code>
-- Retrieval: <code>VectorRetriever</code>, <code>BlendedRetriever</code>
-- Knowledge Graph: <code>KnowledgeGraph</code>, <code>ENTITY_TYPES</code>
-- Synthesis: <code>SynthesisGenerator</code>, <code>SynthesisValidator</code></p>
-<h2 id="storage-layer">Storage Layer<a class="headerlink" href="#storage-layer" title="Permanent link">&para;</a></h2>
-<h3 id="storage_backendpy"><code>storage_backend.py</code><a class="headerlink" href="#storage_backendpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Abstract base class for all storage backends.</p>
-<p><strong>Key Class:</strong> <code>StorageBackend</code> (ABC)</p>
-<p><strong>Methods:</strong> 25 abstract methods including:
-- Note operations: <code>write_note()</code>, <code>get_note_by_id()</code>, <code>iterate_notes()</code>
-- KG operations: <code>add_kg_node()</code>, <code>add_kg_edge()</code>, <code>traverse_kg()</code>
-- Entity operations: <code>add_entity_mapping()</code>, <code>search_entities()</code></p>
-<h3 id="sqlite_backendpy-33k-lines"><code>sqlite_backend.py</code> (33K lines)<a class="headerlink" href="#sqlite_backendpy-33k-lines" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> SQLite implementation with WAL mode.</p>
-<p><strong>Key Features:</strong>
-- WAL mode for concurrent reads
-- 35-column notes table
-- Full-text search indexes
-- ACID transactions</p>
-<p><strong>Tables:</strong>
-- <code>notes</code> — Primary storage
-- <code>kg_nodes</code> — Knowledge graph entities
-- <code>kg_edges</code> — Knowledge graph relationships</p>
-<h3 id="memory_storepy-14k-lines"><code>memory_store.py</code> (14K lines)<a class="headerlink" href="#memory_storepy-14k-lines" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> JSONL + LanceDB hybrid storage.</p>
-<p><strong>Key Class:</strong> <code>MemoryStore</code></p>
-<p><strong>Features:</strong>
-- JSONL persistence for notes
-- LanceDB vector indexing
-- Lazy connection handling
-- Access count tracking</p>
-<h3 id="vector_memorypy"><code>vector_memory.py</code><a class="headerlink" href="#vector_memorypy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Cross-session semantic memory.</p>
-<p><strong>Key Functions:</strong>
-- <code>get_embedding()</code> — Generate embeddings (fastembed/Ollama)
-- <code>get_embedding_batch()</code> — Batch processing</p>
-<p><strong>Key Class:</strong> <code>VectorMemory</code>
-- Chunking: 512 tokens, 128 overlap
-- Deduplication: SHA256 content hash</p>
-<h2 id="retrieval-layer">Retrieval Layer<a class="headerlink" href="#retrieval-layer" title="Permanent link">&para;</a></h2>
-<h3 id="vector_retrieverpy-14k-lines"><code>vector_retriever.py</code> (14K lines)<a class="headerlink" href="#vector_retrieverpy-14k-lines" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Vector similarity search.</p>
-<p><strong>Key Class:</strong> <code>VectorRetriever</code></p>
-<p><strong>Features:</strong>
-- LanceDB vector search (IVF_FLAT)
-- In-memory cosine similarity fallback
-- Entity boost (2.5x)
-- Similarity threshold: 0.15
-- Embedding validation &amp; regeneration</p>
-<h3 id="graph_retrieverpy"><code>graph_retriever.py</code><a class="headerlink" href="#graph_retrieverpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Knowledge graph traversal.</p>
-<p><strong>Key Classes:</strong>
-- <code>GraphRetriever</code> — BFS traversal
-- <code>ScoredResult</code> — Result with score, hops, path</p>
-<p><strong>Algorithm:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">score</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">hop_distance</span><span class="p">)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">max_depth</span> <span class="o">=</span> <span class="mi">2</span>
-</code></pre></div></p>
-<h3 id="blended_retrieverpy"><code>blended_retriever.py</code><a class="headerlink" href="#blended_retrieverpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Fuse vector and graph results.</p>
-<p><strong>Key Class:</strong> <code>BlendedRetriever</code></p>
-<p><strong>Fusion Methods:</strong>
-- <code>blend()</code> — Normalized score fusion (default)
-- <code>blend_rrf()</code> — Reciprocal Rank Fusion</p>
-<p><strong>Formula:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">combined</span> <span class="o">=</span> <span class="p">(</span><span class="n">vector_norm</span> <span class="o">*</span> <span class="n">w_v</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">graph_norm</span> <span class="o">*</span> <span class="n">w_g</span><span class="p">)</span>
-</code></pre></div></p>
-<h2 id="knowledge-graph-layer">Knowledge Graph Layer<a class="headerlink" href="#knowledge-graph-layer" title="Permanent link">&para;</a></h2>
-<h3 id="knowledge_graphpy-18k-lines"><code>knowledge_graph.py</code> (18K lines)<a class="headerlink" href="#knowledge_graphpy-18k-lines" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> JSONL-based knowledge graph.</p>
-<p><strong>Key Class:</strong> <code>KnowledgeGraph</code></p>
-<p><strong>Features:</strong>
-- Node/edge storage in JSONL
-- Temporal indexing
-- BFS traversal
-- In-memory caching</p>
-<p><strong>Files:</strong>
-- <code>kg_nodes.jsonl</code> — Entity nodes
-- <code>kg_edges.jsonl</code> — Relationships</p>
-<h3 id="ontologypy-20k-lines"><code>ontology.py</code> (20K lines)<a class="headerlink" href="#ontologypy-20k-lines" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> STIX 2.1 ontology definitions.</p>
-<p><strong>Key Constants:</strong>
-- <code>ENTITY_TYPES</code> — 15+ entity type schemas
-- <code>RELATION_TYPES</code> — 8 relationship types</p>
-<p><strong>Key Classes:</strong>
-- <code>OntologyValidator</code> — Schema validation
-- <code>TypedEntityStore</code> — Type-aware storage</p>
-<h3 id="entity_indexerpy-18k-lines"><code>entity_indexer.py</code> (18K lines)<a class="headerlink" href="#entity_indexerpy-18k-lines" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Entity extraction and indexing.</p>
-<p><strong>Key Class:</strong> <code>EntityExtractor</code></p>
-<p><strong>Features:</strong>
-- 12 regex patterns for CTI entities
-- LLM NER for conversational entities
-- 19 total entity types
-- Code context filtering for hash extraction</p>
-<p><strong>Entity Types:</strong>
-- CTI: CVE, intrusion_set, actor, tool, campaign, attack_pattern
-- IOCs: IPv4, domain, URL, MD5, SHA1, SHA256, email
-- Conversational: person, location, organization, event, activity, temporal</p>
-<h3 id="alias_resolverpy"><code>alias_resolver.py</code><a class="headerlink" href="#alias_resolverpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Resolve entity aliases.</p>
-<p><strong>Key Class:</strong> <code>AliasResolver</code></p>
-<p><strong>Examples:</strong>
-- APT28 = Fancy Bear = STRONTIUM = Sofacy</p>
-<h2 id="synthesis-layer">Synthesis Layer<a class="headerlink" href="#synthesis-layer" title="Permanent link">&para;</a></h2>
-<h3 id="synthesis_generatorpy"><code>synthesis_generator.py</code><a class="headerlink" href="#synthesis_generatorpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> RAG answer generation.</p>
-<p><strong>Key Class:</strong> <code>SynthesisGenerator</code></p>
-<p><strong>Formats:</strong>
-- <code>direct_answer</code> — Quick facts
-- <code>synthesized_brief</code> — Executive summary
-- <code>timeline_analysis</code> — Chronological events
-- <code>relationship_map</code> — Entity connections</p>
-<p><strong>Context:</strong>
-- Max 10 notes
-- 500 chars per note
-- 3000 tokens total</p>
-<h3 id="synthesis_validatorpy"><code>synthesis_validator.py</code><a class="headerlink" href="#synthesis_validatorpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Validate synthesis outputs.</p>
-<p><strong>Key Functions:</strong>
-- Schema validation
-- Confidence threshold checking
-- Source attribution verification</p>
-<h2 id="llm-integration-layer">LLM Integration Layer<a class="headerlink" href="#llm-integration-layer" title="Permanent link">&para;</a></h2>
-<h3 id="llm_clientpy-10k-lines"><code>llm_client.py</code> (10K lines)<a class="headerlink" href="#llm_clientpy-10k-lines" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Unified LLM interface.</p>
-<p><strong>Key Functions:</strong>
-- <code>generate()</code> — Text generation
-- <code>generate_structured()</code> — JSON output</p>
-<p><strong>Providers:</strong> local, ollama, mock</p>
-<h3 id="llm_providers-directory"><code>llm_providers/</code> (directory)<a class="headerlink" href="#llm_providers-directory" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- <code>base.py</code> — Provider ABC
-- <code>local_provider.py</code> — llama-cpp-python
-- <code>ollama_provider.py</code> — Ollama HTTP
-- <code>mock_provider.py</code> — Test responses
-- <code>registry.py</code> — Provider registration</p>
-<h3 id="intent_classifierpy"><code>intent_classifier.py</code><a class="headerlink" href="#intent_classifierpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Classify query intent.</p>
-<p><strong>Key Class:</strong> <code>IntentClassifier</code></p>
-<p><strong>Intents:</strong>
-- <code>FACTUAL</code> — Entity lookup
-- <code>TEMPORAL</code> — Time-based
-- <code>RELATIONAL</code> — Graph traversal
-- <code>CAUSAL</code> — Cause-effect
-- <code>EXPLORATORY</code> — General research</p>
-<p><strong>Method:</strong> Keyword matching + LLM fallback</p>
-<h2 id="processing-layer">Processing Layer<a class="headerlink" href="#processing-layer" title="Permanent link">&para;</a></h2>
-<h3 id="note_constructorpy"><code>note_constructor.py</code><a class="headerlink" href="#note_constructorpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Build MemoryNote objects.</p>
-<p><strong>Key Class:</strong> <code>NoteConstructor</code></p>
-<p><strong>Features:</strong>
-- ID generation
-- Timestamp management
-- Content hashing
-- Entity extraction delegation</p>
-<h3 id="note_schemapy"><code>note_schema.py</code><a class="headerlink" href="#note_schemapy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Pydantic schemas for notes.</p>
-<p><strong>Key Classes:</strong>
-- <code>MemoryNote</code> — Complete note schema
-- <code>Content</code> — Raw content + source
-- <code>Semantic</code> — LLM enrichment
-- <code>Embedding</code> — Vector metadata
-- <code>Metadata</code> — Lifecycle + access
-- <code>Links</code> — Relationships
-- <code>VulnerabilityMeta</code> — CVE scoring</p>
-<h3 id="fact_extractorpy"><code>fact_extractor.py</code><a class="headerlink" href="#fact_extractorpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Extract facts for two-phase pipeline.</p>
-<p><strong>Key Classes:</strong>
-- <code>FactExtractor</code>
-- <code>ExtractedFact</code></p>
-<h3 id="memory_updaterpy"><code>memory_updater.py</code><a class="headerlink" href="#memory_updaterpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Update existing notes.</p>
-<p><strong>Key Classes:</strong>
-- <code>MemoryUpdater</code>
-- <code>UpdateOperation</code> (ADD, UPDATE, DELETE, NOOP)</p>
-<h3 id="memory_evolverpy-9k-lines"><code>memory_evolver.py</code> (9K lines)<a class="headerlink" href="#memory_evolverpy-9k-lines" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Evolve memory over time.</p>
-<p><strong>Key Class:</strong> <code>MemoryEvolver</code></p>
-<p><strong>Features:</strong>
-- Compare new intel to existing
-- Decide ADD/UPDATE/DELETE/NOOP
-- Handle contradictions
-- Supersession tracking</p>
-<h2 id="detection-rules-layer">Detection Rules Layer<a class="headerlink" href="#detection-rules-layer" title="Permanent link">&para;</a></h2>
-<h3 id="sigma-directory"><code>sigma/</code> (directory)<a class="headerlink" href="#sigma-directory" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- <code>__init__.py</code> — Package exports
-- <code>parser.py</code> — Rule parsing
-- <code>ingest.py</code> — Rule ingestion
-- <code>entities.py</code> — Entity extraction
-- <code>tags.py</code> — Tag handling
-- <code>cli.py</code> — Command-line interface
-- <code>schemas/</code> — Sigma JSON schemas</p>
-<h3 id="yara-directory"><code>yara/</code> (directory)<a class="headerlink" href="#yara-directory" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- <code>__init__.py</code> — Package exports
-- <code>parser.py</code> — plyara integration
-- <code>ingest.py</code> — Rule ingestion
-- <code>entities.py</code> — Entity extraction
-- <code>tags.py</code> — Tag handling
-- <code>cli.py</code> — Command-line interface
-- <code>cccs_metadata.py</code> — CCCS metadata handling</p>
-<h3 id="detection-directory"><code>detection/</code> (directory)<a class="headerlink" href="#detection-directory" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- <code>base.py</code> — DetectionRule superclass
-- <code>explainer.py</code> — LLM rule explanation
-- <code>consumers.py</code> — Rule consumers</p>
-<h2 id="utility-modules">Utility Modules<a class="headerlink" href="#utility-modules" title="Permanent link">&para;</a></h2>
-<h3 id="configpy-15k-lines"><code>config.py</code> (15K lines)<a class="headerlink" href="#configpy-15k-lines" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Configuration management.</p>
-<p><strong>Key Classes:</strong>
-- <code>StorageConfig</code>, <code>TypeDBConfig</code>
-- <code>EmbeddingConfig</code>, <code>LLMConfig</code></p>
-<p><strong>Resolution Order:</strong>
-1. Environment variables
-2. config.yaml (working dir)
-3. config.yaml (project root)
-4. config.default.yaml
-5. Hardcoded defaults</p>
-<h3 id="logpy"><code>log.py</code><a class="headerlink" href="#logpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Structured logging.</p>
-<p><strong>Key Function:</strong> <code>get_logger()</code></p>
-<p><strong>Most imported module</strong> (19 imports)</p>
-<h3 id="ocsfpy-10k-lines"><code>ocsf.py</code> (10K lines)<a class="headerlink" href="#ocsfpy-10k-lines" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> OCSF-compliant audit logging.</p>
-<p><strong>Key Functions:</strong>
-- <code>log_api_activity()</code>
-- <code>log_authorization()</code>
-- <code>log_file_activity()</code></p>
-<h3 id="cachepy"><code>cache.py</code><a class="headerlink" href="#cachepy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> In-memory caching.</p>
-<p><strong>Features:</strong>
-- TTL support
-- Max entry limits
-- TypeDB result caching</p>
-<h3 id="retrypy"><code>retry.py</code><a class="headerlink" href="#retrypy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Retry logic with backoff.</p>
-<h3 id="json_parsepy"><code>json_parse.py</code><a class="headerlink" href="#json_parsepy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Safe JSON extraction.</p>
-<p><strong>Key Function:</strong> <code>extract_json()</code></p>
-<h3 id="observabilitypy"><code>observability.py</code><a class="headerlink" href="#observabilitypy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Metrics and monitoring.</p>
-<h2 id="mcp-server-layer">MCP Server Layer<a class="headerlink" href="#mcp-server-layer" title="Permanent link">&para;</a></h2>
-<h3 id="mcp-directory"><code>mcp/</code> (directory)<a class="headerlink" href="#mcp-directory" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- <code>server.py</code> — MCP server implementation
-- <code>__init__.py</code></p>
-<p><strong>Tools:</strong>
-- <code>zettelforge_remember</code>
-- <code>zettelforge_recall</code>
-- <code>zettelforge_synthesize</code>
-- <code>zettelforge_entity</code>
-- <code>zettelforge_graph</code>
-- <code>zettelforge_stats</code></p>
-<h2 id="integration-layer">Integration Layer<a class="headerlink" href="#integration-layer" title="Permanent link">&para;</a></h2>
-<h3 id="integrations-directory"><code>integrations/</code> (directory)<a class="headerlink" href="#integrations-directory" title="Permanent link">&para;</a></h3>
-<p><strong>Files:</strong>
-- <code>langchain_retriever.py</code> — LangChain integration
-- <code>__init__.py</code></p>
-<h2 id="web-frontend-layer">Web Frontend Layer<a class="headerlink" href="#web-frontend-layer" title="Permanent link">&para;</a></h2>
-<h3 id="webapppy"><code>web/app.py</code><a class="headerlink" href="#webapppy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> FastAPI server serving the SPA and all REST API endpoints.</p>
-<p><strong>Endpoints (existing):</strong> recall, remember, synthesize, stats, edition, sync
-<strong>Endpoints (RFC-015):</strong> health, config (GET+PUT), graph/nodes, graph/edges, entities, history, ingest, telemetry, storage, logs, logs/stream (SSE), telemetry/stream (SSE)</p>
-<p><strong>Authentication:</strong> API key via <code>X-API-Key</code> header or <code>Authorization: Bearer</code>, with loopback allowlist for local-only deployments.</p>
-<h3 id="webui-23-files"><code>web/ui/</code> (23 files)<a class="headerlink" href="#webui-23-files" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Vanilla JS single-page application (no React, no npm, no build step).</p>
-<p><strong>Library layer:</strong>
-- <code>js/lib/state.js</code> — Reactive pub/sub state store
-- <code>js/lib/api.js</code> — Fetch wrapper with auth headers</p>
-<p><strong>Components (6):</strong>
-- <code>header.js</code> — Top bar with shield-neuron SVG mark, Neuropol wordmark, stats
-- <code>sidebar.js</code> — 220px nav with Lucide icons, active accent
-- <code>result-card.js</code> — Memory note row styled per design system
-- <code>tabs.js</code>, <code>toast.js</code>, <code>spinner.js</code> — Reusable UI primitives</p>
-<p><strong>Views (8):</strong>
-- <code>dashboard.js</code> — System health tiles, telemetry stats, intent bar chart
-- <code>search.js</code> — Recall/synthesize/remember with format selector
-- <code>knowledge-graph.js</code> — 2D SVG force-directed graph, color-coded by type
-- <code>logs.js</code> — Filterable log table with auto-refresh and expandable detail
-- <code>ingest.js</code> — Manual/bulk ingestion with file upload
-- <code>entities.js</code> — Paginated entity browser with filters and sort
-- <code>history.js</code> — Session activity timeline with re-run and export
-- <code>configuration.js</code> — Feature flag toggles + YAML editor</p>
-<p><strong>Design System:</strong> <code>colors_and_type.css</code> (286 lines of CSS custom properties), <code>fonts/Neuropol.otf</code>, SVG logo marks from the ZettelForge Design System archive.</p>
-<h2 id="other-modules">Other Modules<a class="headerlink" href="#other-modules" title="Permanent link">&para;</a></h2>
-<h3 id="consolidationpy-18k-lines"><code>consolidation.py</code> (18K lines)<a class="headerlink" href="#consolidationpy-18k-lines" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Memory consolidation.</p>
-<p><strong>Key Class:</strong> <code>ConsolidationMiddleware</code></p>
-<h3 id="governance_validatorpy"><code>governance_validator.py</code><a class="headerlink" href="#governance_validatorpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Data governance validation.</p>
-<p><strong>Key Class:</strong> <code>GovernanceValidator</code></p>
-<p><strong>Checks:</strong>
-- Content length
-- TLP markings
-- Retention policies</p>
-<h3 id="editionpy"><code>edition.py</code><a class="headerlink" href="#editionpy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Edition detection (community vs enterprise).</p>
-<p><strong>Key Functions:</strong>
-- <code>is_community()</code>
-- <code>is_enterprise()</code>
-- <code>edition_name()</code></p>
-<h3 id="demopy"><code>demo.py</code><a class="headerlink" href="#demopy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Interactive demonstration.</p>
-<h3 id="extensionspy"><code>extensions.py</code><a class="headerlink" href="#extensionspy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Extension loading.</p>
-<h3 id="backend_factorypy"><code>backend_factory.py</code><a class="headerlink" href="#backend_factorypy" title="Permanent link">&para;</a></h3>
-<p><strong>Purpose:</strong> Storage backend factory.</p>
-<p><strong>Key Function:</strong> <code>get_storage_backend()</code></p>
-<h2 id="module-dependency-graph">Module Dependency Graph<a class="headerlink" href="#module-dependency-graph" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>memory_manager
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── storage_backend
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│   └── sqlite_backend
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>├── vector_retriever
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   ├── vector_memory
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   └── entity_indexer
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>├── graph_retriever
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   └── knowledge_graph
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>├── blended_retriever
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   ├── vector_retriever
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   └── graph_retriever
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>├── synthesis_generator
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│   ├── vector_retriever
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│   └── llm_client
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>├── entity_indexer
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│   └── note_schema
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>├── note_constructor
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   └── entity_indexer
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>└── intent_classifier
-</code></pre></div>
-<h2 id="statistics">Statistics<a class="headerlink" href="#statistics" title="Permanent link">&para;</a></h2>
+<h1 id="module-inventory">Module inventory<a class="headerlink" href="#module-inventory" title="Permanent link">&para;</a></h1>
+<p>Complete reference of all Python modules in ZettelForge v2.7.0. Use this page to understand what each module does before reading or contributing code.</p>
+<h2 id="at-a-glance">At a glance<a class="headerlink" href="#at-a-glance" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Category</th>
-<th>Count</th>
+<th>Metric</th>
+<th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Core modules</td>
-<td>57</td>
+<td>Python files in <code>src/zettelforge/</code></td>
+<td>107</td>
 </tr>
 <tr>
-<td>Test files</td>
-<td>44</td>
+<td>Top-level packages</td>
+<td>17</td>
 </tr>
 <tr>
-<td>Detection rule modules</td>
-<td>12</td>
+<td>Public API exports (<code>__all__</code>)</td>
+<td>29</td>
 </tr>
 <tr>
-<td>LLM provider modules</td>
-<td>5</td>
+<td>Python files in <code>web/</code></td>
+<td>3</td>
 </tr>
 <tr>
-<td>Web UI views</td>
-<td>8</td>
+<td>JavaScript files in <code>web/ui/</code></td>
+<td>17</td>
 </tr>
 <tr>
-<td>Web UI components</td>
-<td>6</td>
-</tr>
-<tr>
-<td>Most lines</td>
-<td>memory_manager.py (52K)</td>
-</tr>
-<tr>
-<td>Most imported</td>
-<td>log.py (19 imports)</td>
+<td>Most-imported module</td>
+<td><code>log.py</code> (47 dependents)</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Prerequisites:</strong> ZettelForge 2.7.0 source tree. All paths below are relative to the repo root.</p>
+<hr />
+<h2 id="core-memory-layer">Core memory layer<a class="headerlink" href="#core-memory-layer" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgememory_managerpy-1972-lines"><code>src/zettelforge/memory_manager.py</code> — 1,972 lines<a class="headerlink" href="#srczettelforgememory_managerpy-1972-lines" title="Permanent link">&para;</a></h3>
+<p>Primary interface for all memory operations. Every recall, ingest, synthesize, and graph query goes through <code>MemoryManager</code>. Orchestrates the two-phase pipeline (fact extraction → note construction), retrieval (vector + graph + blend), and synthesis.</p>
+<p><strong>Key class:</strong> <code>MemoryManager</code></p>
+<p>Key methods: <code>remember()</code>, <code>recall()</code>, <code>recall_actor()</code>, <code>synthesize()</code>, <code>ingest_relationship()</code>, <code>get_entity_relationships()</code>, <code>traverse_graph()</code>, <code>stats()</code>.</p>
+<h3 id="srczettelforge__init__py"><code>src/zettelforge/__init__.py</code><a class="headerlink" href="#srczettelforge__init__py" title="Permanent link">&para;</a></h3>
+<p>Public API surface. Exposes 29 names in <code>__all__</code>:</p>
+<div class="highlight"><pre><span></span><code>ENTITY_TYPES, RELATION_TYPES,
+BlendedRetriever, Edition, EditionError, ExtractedFact, FactExtractor,
+GraphRetriever, IntentClassifier, KnowledgeGraph, MemoryManager, MemoryNote,
+MemoryUpdater, NoteConstructor, QueryIntent, ScoredResult,
+SynthesisGenerator, SynthesisValidator, UpdateOperation, VectorRetriever,
+edition_name, get_edition, get_intent_classifier, get_knowledge_graph,
+get_memory_manager, get_synthesis_generator, get_synthesis_validator,
+is_community, is_enterprise
+</code></pre></div>
+<h3 id="srczettelforge__main__py"><code>src/zettelforge/__main__.py</code><a class="headerlink" href="#srczettelforge__main__py" title="Permanent link">&para;</a></h3>
+<p>CLI entry point. Invoked by <code>python -m zettelforge</code>.</p>
+<h3 id="srczettelforgedemopy"><code>src/zettelforge/demo.py</code><a class="headerlink" href="#srczettelforgedemopy" title="Permanent link">&para;</a></h3>
+<p>Interactive demo showing CTI memory in action. Run with <code>python -m zettelforge.demo</code>.</p>
+<hr />
+<h2 id="storage-layer">Storage layer<a class="headerlink" href="#storage-layer" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgestorage_backendpy"><code>src/zettelforge/storage_backend.py</code><a class="headerlink" href="#srczettelforgestorage_backendpy" title="Permanent link">&para;</a></h3>
+<p>Abstract base class (<code>StorageBackend</code>) that all storage backends implement. Defines the full contract for note operations, KG operations, entity mapping, and full-text search.</p>
+<p><strong>Key classes:</strong> <code>StorageBackend</code> (ABC), <code>BackendClosedError</code></p>
+<h3 id="srczettelforgesqlite_backendpy-969-lines"><code>src/zettelforge/sqlite_backend.py</code> — 969 lines<a class="headerlink" href="#srczettelforgesqlite_backendpy-969-lines" title="Permanent link">&para;</a></h3>
+<p>SQLite implementation with WAL mode. Default backend for ZettelForge OSS.</p>
+<p><strong>Key class:</strong> <code>SQLiteBackend</code></p>
+<p>Tables: <code>notes</code> (primary storage), <code>kg_nodes</code>, <code>kg_edges</code>. Features: WAL mode for concurrent reads, full-text search indexes, ACID transactions.</p>
+<h3 id="srczettelforgememory_storepy-445-lines"><code>src/zettelforge/memory_store.py</code> — 445 lines<a class="headerlink" href="#srczettelforgememory_storepy-445-lines" title="Permanent link">&para;</a></h3>
+<p>JSONL + LanceDB hybrid storage. Alternative to SQLite; used for direct graph-class access paths.</p>
+<p><strong>Key class:</strong> <code>MemoryStore</code></p>
+<h3 id="srczettelforgebackend_factorypy"><code>src/zettelforge/backend_factory.py</code><a class="headerlink" href="#srczettelforgebackend_factorypy" title="Permanent link">&para;</a></h3>
+<p>Creates the appropriate <code>StorageBackend</code> based on config. Call <code>get_storage_backend(config)</code> to get a live backend instance.</p>
+<h3 id="srczettelforgevector_memorypy"><code>src/zettelforge/vector_memory.py</code><a class="headerlink" href="#srczettelforgevector_memorypy" title="Permanent link">&para;</a></h3>
+<p>Cross-session semantic memory using LanceDB and Nomic embeddings. Handles chunking (512 tokens, 128 overlap), embedding generation, and content-hash deduplication.</p>
+<p><strong>Key class:</strong> <code>VectorMemory</code></p>
+<h3 id="srczettelforgelance_maintenancepy"><code>src/zettelforge/lance_maintenance.py</code><a class="headerlink" href="#srczettelforgelance_maintenancepy" title="Permanent link">&para;</a></h3>
+<p>Periodic LanceDB version-cleanup daemon (RFC-009 Phase 1.5). Compacts old LanceDB versions to reclaim disk space.</p>
+<p><strong>Key class:</strong> <code>LanceVersionMaintenance</code></p>
+<hr />
+<h2 id="retrieval-layer">Retrieval layer<a class="headerlink" href="#retrieval-layer" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgevector_retrieverpy"><code>src/zettelforge/vector_retriever.py</code><a class="headerlink" href="#srczettelforgevector_retrieverpy" title="Permanent link">&para;</a></h3>
+<p>Vector similarity search over the LanceDB index. Falls back to in-memory cosine similarity when the index is unavailable.</p>
+<p><strong>Key class:</strong> <code>VectorRetriever</code></p>
+<p>Defaults: similarity threshold 0.15, IVF_FLAT index, entity boost for exact entity matches.</p>
+<h3 id="srczettelforgegraph_retrieverpy"><code>src/zettelforge/graph_retriever.py</code><a class="headerlink" href="#srczettelforgegraph_retrieverpy" title="Permanent link">&para;</a></h3>
+<p>Knowledge graph traversal for note retrieval. BFS up to <code>max_depth=2</code> hops; score decays with distance: <code>score = 1.0 / (1.0 + hop_distance)</code>.</p>
+<p><strong>Key classes:</strong> <code>GraphRetriever</code>, <code>GraphSource</code>, <code>StoreGraphSource</code>, <code>ScoredResult</code></p>
+<h3 id="srczettelforgeblended_retrieverpy"><code>src/zettelforge/blended_retriever.py</code><a class="headerlink" href="#srczettelforgeblended_retrieverpy" title="Permanent link">&para;</a></h3>
+<p>Fuses vector and graph retrieval results. Two fusion methods:</p>
+<ul>
+<li><code>blend()</code> — min-max normalized score fusion (default since v2.3.1)</li>
+<li><code>blend_rrf()</code> — Reciprocal Rank Fusion with <code>rrf_k=60</code></li>
+</ul>
+<p><strong>Key class:</strong> <code>BlendedRetriever</code></p>
+<h3 id="srczettelforgeintent_classifierpy"><code>src/zettelforge/intent_classifier.py</code><a class="headerlink" href="#srczettelforgeintent_classifierpy" title="Permanent link">&para;</a></h3>
+<p>Adaptive query routing (MAGMA-style). Classifies each query into one of five intents using keyword matching first, then LLM fallback.</p>
+<p><strong>Key class:</strong> <code>IntentClassifier</code><br />
+<strong>Key class:</strong> <code>QueryIntent</code> — enum values: <code>FACTUAL</code>, <code>TEMPORAL</code>, <code>RELATIONAL</code>, <code>CAUSAL</code>, <code>EXPLORATORY</code></p>
+<hr />
+<h2 id="knowledge-graph-layer">Knowledge graph layer<a class="headerlink" href="#knowledge-graph-layer" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgeknowledge_graphpy-534-lines"><code>src/zettelforge/knowledge_graph.py</code> — 534 lines<a class="headerlink" href="#srczettelforgeknowledge_graphpy-534-lines" title="Permanent link">&para;</a></h3>
+<p>JSONL-based knowledge graph for direct graph access (outside the SQLite backend path). Stores nodes and edges in <code>kg_nodes.jsonl</code> and <code>kg_edges.jsonl</code>. Supports BFS traversal, temporal indexing, and in-memory caching.</p>
+<p><strong>Key class:</strong> <code>KnowledgeGraph</code></p>
+<h3 id="srczettelforgeontologypy-659-lines"><code>src/zettelforge/ontology.py</code> — 659 lines<a class="headerlink" href="#srczettelforgeontologypy-659-lines" title="Permanent link">&para;</a></h3>
+<p>Typed entity system with ontology constraints. Validates entity types and relationships against the ZettelForge ontology.</p>
+<p><strong>Key classes:</strong> <code>OntologyValidator</code>, <code>TypedEntityStore</code></p>
+<h3 id="srczettelforgeentity_indexerpy-651-lines"><code>src/zettelforge/entity_indexer.py</code> — 651 lines<a class="headerlink" href="#srczettelforgeentity_indexerpy-651-lines" title="Permanent link">&para;</a></h3>
+<p>Entity extraction and indexing. Extracts CTI entities using 13 regex patterns and up to 6 LLM NER types.</p>
+<p><strong>Key classes:</strong> <code>EntityExtractor</code>, <code>EntityIndexer</code></p>
+<p>Entity categories:
+- CTI: <code>cve</code>, <code>intrusion_set</code>, <code>actor</code>, <code>tool</code>, <code>campaign</code>, <code>attack_pattern</code>
+- IOCs: <code>ipv4</code>, <code>domain</code>, <code>url</code>, <code>md5</code>, <code>sha1</code>, <code>sha256</code>, <code>email</code>
+- Conversational (LLM): <code>person</code>, <code>location</code>, <code>organization</code>, <code>event</code>, <code>activity</code>, <code>temporal</code></p>
+<h3 id="srczettelforgealias_resolverpy"><code>src/zettelforge/alias_resolver.py</code><a class="headerlink" href="#srczettelforgealias_resolverpy" title="Permanent link">&para;</a></h3>
+<p>Resolves entity aliases so queries for <code>APT28</code> also surface notes tagged <code>Fancy Bear</code> or <code>STRONTIUM</code>. Requires an LLM provider for the enrichment path; offline, only exact canonical matches succeed.</p>
+<p><strong>Key class:</strong> <code>AliasResolver</code></p>
+<hr />
+<h2 id="note-construction-and-schema">Note construction and schema<a class="headerlink" href="#note-construction-and-schema" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgenote_schemapy"><code>src/zettelforge/note_schema.py</code><a class="headerlink" href="#srczettelforgenote_schemapy" title="Permanent link">&para;</a></h3>
+<p>Pydantic schemas for <code>MemoryNote</code> and its nested models.</p>
+<p><strong>Key classes:</strong> <code>MemoryNote</code>, <code>Content</code>, <code>Semantic</code>, <code>Embedding</code>, <code>Links</code>, <code>VulnerabilityMeta</code></p>
+<h3 id="srczettelforgenote_constructorpy"><code>src/zettelforge/note_constructor.py</code><a class="headerlink" href="#srczettelforgenote_constructorpy" title="Permanent link">&para;</a></h3>
+<p>LLM-powered note enrichment. Assembles <code>MemoryNote</code> objects from raw content, runs entity extraction, generates IDs, manages timestamps, and computes content hashes.</p>
+<p><strong>Key class:</strong> <code>NoteConstructor</code></p>
+<h3 id="srczettelforgefact_extractorpy"><code>src/zettelforge/fact_extractor.py</code><a class="headerlink" href="#srczettelforgefact_extractorpy" title="Permanent link">&para;</a></h3>
+<p>Phase 1 of the two-phase pipeline. Extracts discrete facts from raw content using the LLM.</p>
+<p><strong>Key classes:</strong> <code>FactExtractor</code>, <code>ExtractedFact</code></p>
+<h3 id="srczettelforgememory_updaterpy"><code>src/zettelforge/memory_updater.py</code><a class="headerlink" href="#srczettelforgememory_updaterpy" title="Permanent link">&para;</a></h3>
+<p>Phase 2 of the two-phase pipeline. Determines whether to add, update, delete, or no-op on existing notes based on new incoming content.</p>
+<p><strong>Key classes:</strong> <code>MemoryUpdater</code>, <code>UpdateOperation</code> (ADD | UPDATE | DELETE | NOOP)</p>
+<h3 id="srczettelforgememory_evolverpy"><code>src/zettelforge/memory_evolver.py</code><a class="headerlink" href="#srczettelforgememory_evolverpy" title="Permanent link">&para;</a></h3>
+<p>A-Mem-inspired neighbor refinement. Compares new intelligence against existing notes and applies evolution decisions; handles contradictions and supersession tracking.</p>
+<p><strong>Key class:</strong> <code>MemoryEvolver</code></p>
+<h3 id="srczettelforgeconsolidationpy-490-lines"><code>src/zettelforge/consolidation.py</code> — 490 lines<a class="headerlink" href="#srczettelforgeconsolidationpy-490-lines" title="Permanent link">&para;</a></h3>
+<p>GAM-style consolidation layer. Detects semantic shift in a note cluster and merges or archives stale notes.</p>
+<p><strong>Key classes:</strong> <code>SemanticShiftDetector</code>, <code>ConsolidationEngine</code>, <code>ConsolidationMiddleware</code></p>
+<hr />
+<h2 id="synthesis-layer">Synthesis layer<a class="headerlink" href="#synthesis-layer" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgesynthesis_generatorpy"><code>src/zettelforge/synthesis_generator.py</code><a class="headerlink" href="#srczettelforgesynthesis_generatorpy" title="Permanent link">&para;</a></h3>
+<p>RAG answer synthesis (Phase 7). Takes retrieved notes and generates a structured answer using the configured LLM.</p>
+<p><strong>Key class:</strong> <code>SynthesisGenerator</code></p>
+<p>Formats: <code>direct_answer</code> (OSS default), <code>synthesized_brief</code>, <code>timeline_analysis</code>, <code>relationship_map</code> (the latter three require ThreatRecall.ai SaaS).</p>
+<p>Context window: up to 10 notes, 500 characters per note, 3,000 tokens total.</p>
+<h3 id="srczettelforgesynthesis_validatorpy"><code>src/zettelforge/synthesis_validator.py</code><a class="headerlink" href="#srczettelforgesynthesis_validatorpy" title="Permanent link">&para;</a></h3>
+<p>Validates synthesis output against schema, checks confidence thresholds, and verifies source attribution.</p>
+<p><strong>Key class:</strong> <code>SynthesisValidator</code></p>
+<hr />
+<h2 id="llm-integration-layer">LLM integration layer<a class="headerlink" href="#llm-integration-layer" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgellm_clientpy"><code>src/zettelforge/llm_client.py</code><a class="headerlink" href="#srczettelforgellm_clientpy" title="Permanent link">&para;</a></h3>
+<p>Unified LLM interface. Dispatches to the configured provider via <code>generate()</code> and <code>generate_structured()</code>.</p>
+<h3 id="srczettelforgellm_providers-7-files"><code>src/zettelforge/llm_providers/</code> — 7 files<a class="headerlink" href="#srczettelforgellm_providers-7-files" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>base.py</code></td>
+<td><code>LLMProvider</code> protocol — contract all backends implement</td>
+</tr>
+<tr>
+<td><code>local_provider.py</code></td>
+<td>In-process llama-cpp-python GGUF provider (<code>local</code>)</td>
+</tr>
+<tr>
+<td><code>ollama_provider.py</code></td>
+<td>Ollama HTTP provider</td>
+</tr>
+<tr>
+<td><code>litellm_provider.py</code></td>
+<td>LiteLLM routing provider — supports OpenAI, Anthropic, Azure, and others</td>
+</tr>
+<tr>
+<td><code>mock_provider.py</code></td>
+<td>Deterministic mock responses for tests</td>
+</tr>
+<tr>
+<td><code>registry.py</code></td>
+<td>Thread-safe provider registry keyed by name</td>
+</tr>
+<tr>
+<td><code>__init__.py</code></td>
+<td>Package exports</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="governance-and-security-layer">Governance and security layer<a class="headerlink" href="#governance-and-security-layer" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgegovernance_validatorpy"><code>src/zettelforge/governance_validator.py</code><a class="headerlink" href="#srczettelforgegovernance_validatorpy" title="Permanent link">&para;</a></h3>
+<p>Write-time governance validation. Enforces content size limits, TLP markings, and retention policies before any note is written.</p>
+<p><strong>Key classes:</strong> <code>GovernanceValidator</code>, <code>GovernanceViolationError</code></p>
+<h3 id="srczettelforgeprompt_securitypy"><code>src/zettelforge/prompt_security.py</code><a class="headerlink" href="#srczettelforgeprompt_securitypy" title="Permanent link">&para;</a></h3>
+<p>Prompt-injection and retrieval-poisoning controls. Detects 7 injection pattern categories using deterministic regex; always active regardless of config.</p>
+<p><strong>Key classes:</strong> <code>PromptSecurityFinding</code>, <code>PromptInjectionError</code></p>
+<p>Pattern categories: <code>direct_instruction_override</code>, <code>role_takeover</code>, <code>system_prompt_exfiltration</code>, <code>secret_exfiltration</code>, <code>tool_instruction_smuggling</code>, <code>retrieval_poisoning</code>, <code>role_delimiter_smuggling</code>.</p>
+<h3 id="srczettelforgepii_validatorpy"><code>src/zettelforge/pii_validator.py</code><a class="headerlink" href="#srczettelforgepii_validatorpy" title="Permanent link">&para;</a></h3>
+<p>PII detection and redaction (RFC-013). Uses Microsoft Presidio when the <code>zettelforge[pii]</code> extra is installed; disabled by default.</p>
+<p><strong>Key classes:</strong> <code>PIIDetection</code>, <code>PIIValidator</code>, <code>PIIBlockedError</code></p>
+<h3 id="srczettelforgememory_defensepy"><code>src/zettelforge/memory_defense.py</code><a class="headerlink" href="#srczettelforgememory_defensepy" title="Permanent link">&para;</a></h3>
+<p>Write-time memory poisoning defenses. <code>MemoryAnomalyGate</code> scores candidate notes for distributional anomaly using MemSAD (Memory Semantic Anomaly Detection). Default mode: <code>audit</code> (log only).</p>
+<p><strong>Key classes:</strong> <code>MemoryAnomalyGate</code>, <code>MemoryAnomalyDecision</code>, <code>MemoryAnomalyError</code></p>
+<h3 id="srczettelforgetlp_policypy"><code>src/zettelforge/tlp_policy.py</code><a class="headerlink" href="#srczettelforgetlp_policypy" title="Permanent link">&para;</a></h3>
+<p>TLP normalization, propagation, and sharing decisions. Determines the maximum shareable TLP for each actor context. Default share-max: <code>TLP:GREEN</code>; full-access actors: <code>TLP:RED</code>.</p>
+<p><strong>Key class:</strong> <code>TlpSharingError</code></p>
+<hr />
+<h2 id="observability-and-telemetry">Observability and telemetry<a class="headerlink" href="#observability-and-telemetry" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgelogpy"><code>src/zettelforge/log.py</code><a class="headerlink" href="#srczettelforgelogpy" title="Permanent link">&para;</a></h3>
+<p>Structured logging. <code>get_logger(name)</code> returns a structlog logger bound to the module. Most-imported module in the codebase (47 dependents).</p>
+<h3 id="srczettelforgeocsfpy"><code>src/zettelforge/ocsf.py</code><a class="headerlink" href="#srczettelforgeocsfpy" title="Permanent link">&para;</a></h3>
+<p>OCSF v1.3 event emitters (GOV-012 compliant). Emits structured audit events for all recall, ingest, auth, and file operations.</p>
+<p>Emitter functions: <code>log_api_activity()</code>, <code>log_authorization()</code>, <code>log_file_activity()</code>, and 4 others.</p>
+<h3 id="srczettelforgetelemetrypy"><code>src/zettelforge/telemetry.py</code><a class="headerlink" href="#srczettelforgetelemetrypy" title="Permanent link">&para;</a></h3>
+<p>Operational telemetry for recall and synthesis quality monitoring. Collects per-query metrics written to a daily JSONL file.</p>
+<p><strong>Key class:</strong> <code>TelemetryCollector</code></p>
+<h3 id="srczettelforgeobservabilitypy"><code>src/zettelforge/observability.py</code><a class="headerlink" href="#srczettelforgeobservabilitypy" title="Permanent link">&para;</a></h3>
+<p>Observability helpers. Provides <code>Observability</code> class for metrics collection and export.</p>
+<p><strong>Key class:</strong> <code>Observability</code></p>
+<hr />
+<h2 id="configuration-and-edition">Configuration and edition<a class="headerlink" href="#configuration-and-edition" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgeconfigpy"><code>src/zettelforge/config.py</code><a class="headerlink" href="#srczettelforgeconfigpy" title="Permanent link">&para;</a></h3>
+<p>Configuration loader. Merges environment variables, <code>config.yaml</code> (working directory), <code>config.yaml</code> (project root), <code>config.default.yaml</code>, and hardcoded defaults — in that priority order.</p>
+<p><strong>Key classes:</strong> <code>StorageConfig</code>, <code>TypeDBConfig</code>, <code>EmbeddingConfig</code>, <code>LLMConfig</code>, <code>LLMNerConfig</code>, plus 9 others covering extraction, retrieval, synthesis, governance, lance, cache, logging, web, and OpenCTI.</p>
+<h3 id="srczettelforgeeditionpy"><code>src/zettelforge/edition.py</code><a class="headerlink" href="#srczettelforgeeditionpy" title="Permanent link">&para;</a></h3>
+<p>Edition detection. Inspects loaded extensions to determine whether the runtime is OSS or a ThreatRecall.ai SaaS deployment. Does not gate features itself; the result is consumed by <code>is_enterprise()</code> and <code>is_community()</code> callers.</p>
+<p><strong>Key classes:</strong> <code>Edition</code>, <code>EditionError</code><br />
+<strong>Key functions:</strong> <code>is_enterprise()</code>, <code>is_community()</code>, <code>edition_name()</code>, <code>get_edition()</code></p>
+<h3 id="srczettelforgeextensionspy"><code>src/zettelforge/extensions.py</code><a class="headerlink" href="#srczettelforgeextensionspy" title="Permanent link">&para;</a></h3>
+<p>Extension loader. Attempts to import optional packages and registers them for use by edition detection and the backend factory. If the package is absent, loading fails silently.</p>
+<hr />
+<h2 id="utility-modules">Utility modules<a class="headerlink" href="#utility-modules" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgecachepy"><code>src/zettelforge/cache.py</code><a class="headerlink" href="#srczettelforgecachepy" title="Permanent link">&para;</a></h3>
+<p>In-memory caching with TTL and entry-count limits.</p>
+<p><strong>Key class:</strong> <code>SmartCache</code></p>
+<h3 id="srczettelforgeretrypy"><code>src/zettelforge/retry.py</code><a class="headerlink" href="#srczettelforgeretrypy" title="Permanent link">&para;</a></h3>
+<p>Retry logic with exponential backoff.</p>
+<p><strong>Key class:</strong> <code>RetryConfig</code></p>
+<h3 id="srczettelforgejson_parsepy"><code>src/zettelforge/json_parse.py</code><a class="headerlink" href="#srczettelforgejson_parsepy" title="Permanent link">&para;</a></h3>
+<p>Safe JSON extraction from LLM output. Handles partial output, code fences, and trailing text.</p>
+<p><strong>Key function:</strong> <code>extract_json()</code></p>
+<h3 id="srczettelforgebackuppy"><code>src/zettelforge/backup.py</code><a class="headerlink" href="#srczettelforgebackuppy" title="Permanent link">&para;</a></h3>
+<p>Backup, restore, and validation helpers for local ZettelForge data.</p>
+<p><strong>Key classes:</strong> <code>BackupError</code>, <code>BackupResult</code>, <code>RestoreResult</code></p>
+<hr />
+<h2 id="detection-rules-packages">Detection rules packages<a class="headerlink" href="#detection-rules-packages" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgesigma-6-files-1-schema-file"><code>src/zettelforge/sigma/</code> — 6 files + 1 schema file<a class="headerlink" href="#srczettelforgesigma-6-files-1-schema-file" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__init__.py</code></td>
+<td>Package exports</td>
+</tr>
+<tr>
+<td><code>parser.py</code></td>
+<td>YAML load + JSON-schema validation</td>
+</tr>
+<tr>
+<td><code>entities.py</code></td>
+<td>Sigma rule → entity/relation mapping</td>
+</tr>
+<tr>
+<td><code>ingest.py</code></td>
+<td>High-level Python ingest API</td>
+</tr>
+<tr>
+<td><code>cli.py</code></td>
+<td>CLI: <code>python -m zettelforge.sigma.ingest &lt;path&gt;</code></td>
+</tr>
+<tr>
+<td><code>tags.py</code></td>
+<td>Namespaced tag → typed entity resolver</td>
+</tr>
+<tr>
+<td><code>schemas/__init__.py</code></td>
+<td>Vendored SigmaHQ JSON schemas (see NOTICE.md)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="srczettelforgeyara-7-files-1-schema-file"><code>src/zettelforge/yara/</code> — 7 files + 1 schema file<a class="headerlink" href="#srczettelforgeyara-7-files-1-schema-file" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__init__.py</code></td>
+<td>Package exports</td>
+</tr>
+<tr>
+<td><code>parser.py</code></td>
+<td>plyara wrapper for YARA rule parsing</td>
+</tr>
+<tr>
+<td><code>entities.py</code></td>
+<td>YARA rule → entity/relation mapping</td>
+</tr>
+<tr>
+<td><code>ingest.py</code></td>
+<td>High-level Python ingest API</td>
+</tr>
+<tr>
+<td><code>cli.py</code></td>
+<td>CLI: <code>python -m zettelforge.yara.ingest &lt;path&gt;</code></td>
+</tr>
+<tr>
+<td><code>tags.py</code></td>
+<td>Inline tag → typed entity resolver</td>
+</tr>
+<tr>
+<td><code>cccs_metadata.py</code></td>
+<td>CCCS YARA metadata validator (clean-room re-implementation)</td>
+</tr>
+<tr>
+<td><code>schemas/__init__.py</code></td>
+<td>Vendored CCCS YARA schemas (see NOTICE.md)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="srczettelforgedetection-4-files"><code>src/zettelforge/detection/</code> — 4 files<a class="headerlink" href="#srczettelforgedetection-4-files" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__init__.py</code></td>
+<td>Package exports</td>
+</tr>
+<tr>
+<td><code>base.py</code></td>
+<td><code>DetectionRule</code> supertype dataclass shared by Sigma and YARA</td>
+</tr>
+<tr>
+<td><code>explainer.py</code></td>
+<td>LLM-generated rule explanation</td>
+</tr>
+<tr>
+<td><code>consumers.py</code></td>
+<td><code>DetectionMatchConsumer</code> protocol for deferred match-event hooks</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="osint-package">OSINT package<a class="headerlink" href="#osint-package" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgeosint-6-files"><code>src/zettelforge/osint/</code> — 6 files<a class="headerlink" href="#srczettelforgeosint-6-files" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__init__.py</code></td>
+<td>Package exports (RFC-016 / RFC-0001)</td>
+</tr>
+<tr>
+<td><code>ontology.py</code></td>
+<td>OSINT entity types and relationship taxonomy</td>
+</tr>
+<tr>
+<td><code>entity_resolver.py</code></td>
+<td>Canonical key normalization and alias index</td>
+</tr>
+<tr>
+<td><code>executor.py</code></td>
+<td>Collector executor and KG ingestion path</td>
+</tr>
+<tr>
+<td><code>investigation.py</code></td>
+<td>Named case scoping for OSINT enrichment data</td>
+</tr>
+<tr>
+<td><code>transform_registry.py</code></td>
+<td>Collector registry and <code>CollectorTuple</code> type</td>
+</tr>
+</tbody>
+</table>
+<h3 id="srczettelforgeosintcollectors"><code>src/zettelforge/osint/collectors/</code><a class="headerlink" href="#srczettelforgeosintcollectors" title="Permanent link">&para;</a></h3>
+<p>Collector implementations grouped by target category. Live collectors are Phase 1; stubs return empty lists until their respective phase ships.</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Phase</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>infrastructure/dns_collector.py</code></td>
+<td>1</td>
+<td>Live — A, AAAA, NS, MX records via <code>dnspython</code></td>
+</tr>
+<tr>
+<td><code>infrastructure/cert_collector.py</code></td>
+<td>1</td>
+<td>Live</td>
+</tr>
+<tr>
+<td><code>infrastructure/whois_collector.py</code></td>
+<td>1</td>
+<td>Live</td>
+</tr>
+<tr>
+<td><code>infrastructure/bgp_collector.py</code></td>
+<td>1.5</td>
+<td>Live</td>
+</tr>
+<tr>
+<td><code>infrastructure/port_scanner.py</code></td>
+<td>1.5</td>
+<td>Stub</td>
+</tr>
+<tr>
+<td><code>people/holehe_collector.py</code></td>
+<td>2</td>
+<td>Stub — returns <code>[]</code> when <code>holehe</code> not installed</td>
+</tr>
+<tr>
+<td><code>people/hunter_collector.py</code></td>
+<td>2</td>
+<td>Stub</td>
+</tr>
+<tr>
+<td><code>people/namechk_collector.py</code></td>
+<td>2</td>
+<td>Stub</td>
+</tr>
+<tr>
+<td><code>tech/builtwith_collector.py</code></td>
+<td>3</td>
+<td>Stub</td>
+</tr>
+<tr>
+<td><code>tech/wappalyzer_collector.py</code></td>
+<td>3</td>
+<td>Stub</td>
+</tr>
+<tr>
+<td><code>social/hashtag_tracker.py</code></td>
+<td>4</td>
+<td>Stub</td>
+</tr>
+<tr>
+<td><code>social/twitter_collector.py</code></td>
+<td>4</td>
+<td>Stub</td>
+</tr>
+<tr>
+<td><code>breach/breach_directory.py</code></td>
+<td>4</td>
+<td>Stub</td>
+</tr>
+<tr>
+<td><code>breach/hibp_collector.py</code></td>
+<td>4</td>
+<td>Stub</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="integration-packages">Integration packages<a class="headerlink" href="#integration-packages" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgeintegrations-3-files"><code>src/zettelforge/integrations/</code> — 3 files<a class="headerlink" href="#srczettelforgeintegrations-3-files" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__init__.py</code></td>
+<td>Package exports</td>
+</tr>
+<tr>
+<td><code>langchain_retriever.py</code></td>
+<td>LangChain retriever wrapper</td>
+</tr>
+<tr>
+<td><code>crewai.py</code></td>
+<td>CrewAI tool wrapper</td>
+</tr>
+</tbody>
+</table>
+<h3 id="srczettelforgemcp-3-files"><code>src/zettelforge/mcp/</code> — 3 files<a class="headerlink" href="#srczettelforgemcp-3-files" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__init__.py</code></td>
+<td>Package exports</td>
+</tr>
+<tr>
+<td><code>server.py</code></td>
+<td>MCP server implementation — JSON-RPC 2.0 over stdio</td>
+</tr>
+<tr>
+<td><code>__main__.py</code></td>
+<td>Entry point: <code>python -m zettelforge.mcp</code></td>
+</tr>
+</tbody>
+</table>
+<p>MCP tools exposed (7 total):</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>zettelforge_remember</code></td>
+<td>Store content</td>
+</tr>
+<tr>
+<td><code>zettelforge_recall</code></td>
+<td>Retrieve notes</td>
+</tr>
+<tr>
+<td><code>zettelforge_synthesize</code></td>
+<td>Generate RAG answer</td>
+</tr>
+<tr>
+<td><code>zettelforge_entity</code></td>
+<td>Entity lookup</td>
+</tr>
+<tr>
+<td><code>zettelforge_graph</code></td>
+<td>Graph traversal</td>
+</tr>
+<tr>
+<td><code>zettelforge_stats</code></td>
+<td>System statistics</td>
+</tr>
+<tr>
+<td><code>zettelforge_sync</code></td>
+<td>OpenCTI sync — returns 501 in OSS; ThreatRecall.ai SaaS only</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="operator-scripts">Operator scripts<a class="headerlink" href="#operator-scripts" title="Permanent link">&para;</a></h2>
+<h3 id="srczettelforgescripts-6-files"><code>src/zettelforge/scripts/</code> — 6 files<a class="headerlink" href="#srczettelforgescripts-6-files" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>__init__.py</code></td>
+<td>Package exports</td>
+</tr>
+<tr>
+<td><code>backup_restore.py</code></td>
+<td>CLI for backup, restore, and archive validation</td>
+</tr>
+<tr>
+<td><code>compact_lance.py</code></td>
+<td>One-shot LanceDB shard compaction</td>
+</tr>
+<tr>
+<td><code>human_eval_sampler.py</code></td>
+<td>Human evaluation sampler (US-004)</td>
+</tr>
+<tr>
+<td><code>telemetry_aggregator.py</code></td>
+<td>Summarize daily telemetry JSONL into operational metrics</td>
+</tr>
+<tr>
+<td><code>telemetry_dashboard.py</code></td>
+<td>Streamlit telemetry dashboard (RFC-007 / US-005)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="web-layer">Web layer<a class="headerlink" href="#web-layer" title="Permanent link">&para;</a></h2>
+<p>The web server and UI live in <code>web/</code> at the repo root, separate from the <code>src/zettelforge/</code> package.</p>
+<h3 id="web-python-files-3"><code>web/</code> — Python files (3)<a class="headerlink" href="#web-python-files-3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Lines</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>app.py</code></td>
+<td>4,401</td>
+<td>FastAPI server — all 25 REST endpoints + SPA serving</td>
+</tr>
+<tr>
+<td><code>auth.py</code></td>
+<td>—</td>
+<td>API key validation and loopback allowlist</td>
+</tr>
+<tr>
+<td><code>mcp_server.py</code></td>
+<td>—</td>
+<td>MCP server adapter for web deployment</td>
+</tr>
+</tbody>
+</table>
+<h3 id="webui-javascript-files-17"><code>web/ui/</code> — JavaScript files (17)<a class="headerlink" href="#webui-javascript-files-17" title="Permanent link">&para;</a></h3>
+<p>Vanilla JS single-page application. No build step, no npm.</p>
+<p><strong>Library layer:</strong></p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>js/lib/state.js</code></td>
+<td>Reactive pub/sub state store</td>
+</tr>
+<tr>
+<td><code>js/lib/api.js</code></td>
+<td>Fetch wrapper with API key headers</td>
+</tr>
+<tr>
+<td><code>js/app.js</code></td>
+<td>SPA router and bootstrap</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Components (6):</strong></p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>js/components/header.js</code></td>
+<td>Top bar with ZettelForge logo and stats</td>
+</tr>
+<tr>
+<td><code>js/components/sidebar.js</code></td>
+<td>Navigation sidebar</td>
+</tr>
+<tr>
+<td><code>js/components/result-card.js</code></td>
+<td>Memory note display row</td>
+</tr>
+<tr>
+<td><code>js/components/spinner.js</code></td>
+<td>Loading indicator</td>
+</tr>
+<tr>
+<td><code>js/components/tabs.js</code></td>
+<td>Tab switcher</td>
+</tr>
+<tr>
+<td><code>js/components/toast.js</code></td>
+<td>Toast notification</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Views (8):</strong></p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>js/views/dashboard.js</code></td>
+<td>System health tiles and telemetry charts</td>
+</tr>
+<tr>
+<td><code>js/views/search.js</code></td>
+<td>Recall, synthesize, and remember interface</td>
+</tr>
+<tr>
+<td><code>js/views/knowledge-graph.js</code></td>
+<td>2D SVG force-directed graph</td>
+</tr>
+<tr>
+<td><code>js/views/logs.js</code></td>
+<td>Filterable log table with auto-refresh</td>
+</tr>
+<tr>
+<td><code>js/views/ingest.js</code></td>
+<td>Manual and bulk ingestion</td>
+</tr>
+<tr>
+<td><code>js/views/entities.js</code></td>
+<td>Paginated entity browser</td>
+</tr>
+<tr>
+<td><code>js/views/history.js</code></td>
+<td>Session activity timeline</td>
+</tr>
+<tr>
+<td><code>js/views/configuration.js</code></td>
+<td>Feature toggles and YAML config editor</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Styles:</strong> <code>web/static/css/design_tokens.css</code></p>
+<hr />
+<h2 id="core-dependency-graph">Core dependency graph<a class="headerlink" href="#core-dependency-graph" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>memory_manager
+├── storage_backend → sqlite_backend (default)
+├── vector_retriever → vector_memory, entity_indexer
+├── graph_retriever → knowledge_graph
+├── blended_retriever → vector_retriever, graph_retriever
+├── synthesis_generator → vector_retriever, llm_client
+├── note_constructor → entity_indexer, note_schema
+├── fact_extractor → llm_client, json_parse
+├── memory_updater → note_schema
+├── intent_classifier → llm_client
+├── governance_validator → pii_validator, prompt_security, memory_defense, tlp_policy
+└── log (imported by 47 modules)
+</code></pre></div>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -4322,12 +4933,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>

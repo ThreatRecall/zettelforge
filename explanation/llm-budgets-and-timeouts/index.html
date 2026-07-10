@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="How ZettelForge's LLM token budgets and HTTP timeouts trade latency for end-to-end correctness — what each knob controls, what it costs, and when to override.">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -24,12 +24,12 @@
         
       
       
-      <link rel="icon" href="../../assets/favicon.svg">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>LLM budgets, timeouts, and what they cost you - ZettelForge Documentation</title>
+        <title>LLM budgets and timeouts - ZettelForge Documentation</title>
       
     
     
@@ -50,14 +50,10 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
       
     
-    
-      <link rel="stylesheet" href="../../stylesheets/brand-tokens.css">
-    
-      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
     <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
@@ -65,40 +61,6 @@
 
     
     
-  
-
-  
-  
-  <link rel="canonical" href="https://docs.threatrecall.ai/explanation/llm-budgets-and-timeouts/">
-  
-
-  
-  
-  
-  
-  
-
-  
-  <meta property="og:type" content="article">
-  <meta property="og:site_name" content="ZettelForge Documentation">
-  <meta property="og:title" content="LLM budgets, timeouts, and what they cost you">
-  <meta property="og:description" content="How ZettelForge's LLM token budgets and HTTP timeouts trade latency for end-to-end correctness — what each knob controls, what it costs, and when to override.">
-  <meta property="og:url" content="https://docs.threatrecall.ai/explanation/llm-budgets-and-timeouts/">
-  <meta property="og:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta property="og:image:width" content="1280">
-  <meta property="og:image:height" content="640">
-
-  
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="LLM budgets, timeouts, and what they cost you">
-  <meta name="twitter:description" content="How ZettelForge's LLM token budgets and HTTP timeouts trade latency for end-to-end correctness — what each knob controls, what it costs, and when to override.">
-  <meta name="twitter:image" content="https://docs.threatrecall.ai/assets/social-preview.png">
-  <meta name="twitter:site" content="@Deuslogica">
-  <meta name="twitter:creator" content="@Deuslogica">
-
-  
-  
-
   </head>
   
   
@@ -107,7 +69,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -125,10 +87,6 @@
       
     </div>
     
-      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -136,7 +94,8 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="ZettelForge Documentation" class="md-header__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -153,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              LLM budgets, timeouts, and what they cost you
+              LLM budgets and timeouts
             
           </span>
         </div>
@@ -279,11 +238,31 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../how-to/build-extensions/" class="md-tabs__link">
+        <a href="../../how-to/configure-opencti/" class="md-tabs__link">
           
   
   
   How-To Guides
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/terminology/" class="md-tabs__link">
+          
+  
+  
+  Reference
 
         </a>
       </li>
@@ -306,26 +285,6 @@
   
   
   Concepts
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../reference/architecture-deep-dive/" class="md-tabs__link">
-          
-  
-  
-  Reference
 
         </a>
       </li>
@@ -397,7 +356,8 @@
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="ZettelForge Documentation" class="md-nav__button md-logo" aria-label="ZettelForge Documentation" data-md-component="logo">
       
-  <img src="../../assets/logo.svg" alt="logo">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
 
     </a>
     ZettelForge Documentation
@@ -456,17 +416,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -540,7 +496,7 @@
   <span class="md-ellipsis">
     
   
-    First CTI Report
+    First CTI report
   
 
     
@@ -573,17 +529,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -622,62 +574,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/build-extensions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build Extensions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Configure LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/configure-opencti/" class="md-nav__link">
         
   
@@ -706,14 +602,126 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure Sigma Ingestion
+    Store threat actor intelligence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Query APT tool usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest a threat report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Resolve threat actor aliases
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run temporal queries
   
 
     
@@ -762,42 +770,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+      <a href="../../how-to/configure-lancedb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Configure YARA Ingestion
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/ingest-news-report/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Ingest News Report
+    Tune LanceDB vector search
   
 
     
@@ -825,7 +805,203 @@
   <span class="md-ellipsis">
     
   
-    Integrate LLM Agent
+    Integrate with your LLM agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Set up MCP server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maintain LanceDB indexes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migrate JSONL to SQLite
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Use detection rules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-sigma-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure Sigma ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/configure-yara-ingestion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configure YARA ingestion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reproduce benchmarks
   
 
     
@@ -902,146 +1078,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/maintain-lancedb/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Maintain LanceDB
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/migrate-jsonl-to-sqlite/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migrate JSONL to SQLite
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/query-apt-tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Query APT Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/reproduce-benchmarks/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reproduce Benchmarks
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/resolve-aliases/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Resolve Aliases
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../how-to/passive-osint-enrichment/" class="md-nav__link">
         
   
@@ -1049,119 +1085,7 @@
   <span class="md-ellipsis">
     
   
-    Passive OSINT Enrichment
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/run-temporal-query/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run Temporal Query
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/set-up-mcp-server/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Set Up MCP Server
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/store-threat-actor/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Store Threat Actor
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../how-to/troubleshoot/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Troubleshoot
+    Passive OSINT enrichment
   
 
     
@@ -1210,106 +1134,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../how-to/use-detection-rules/" class="md-nav__link">
+      <a href="../../how-to/troubleshoot/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Use Detection Rules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-        
-        
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Concepts
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Architecture
+    Troubleshoot
   
 
     
@@ -1330,14 +1162,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../two-phase-pipeline/" class="md-nav__link">
+      <a href="../../how-to/build-extensions/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Two-Phase Pipeline
+    Extend ZettelForge
   
 
     
@@ -1358,333 +1190,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../stix-in-zettelforge/" class="md-nav__link">
+      <a href="../../how-to/use-web-interface/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    STIX in ZettelForge
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../epistemic-tiers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Epistemic Tiers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    LLM Budgets & Timeouts
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#the-hidden-thinking-token-problem" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The hidden-thinking-token problem
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#per-call-site-budgets-and-why-each-one-is-what-it-is" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Per-call-site budgets — and why each one is what it is
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Per-call-site budgets — and why each one is what it is">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#causal-triple-extraction-note_constructorpy-8000-tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Causal triple extraction (note_constructor.py, 8000 tokens)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#synthesis-synthesis_generatorpy-2500-tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Synthesis (synthesis_generator.py, 2500 tokens)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fact-extraction-fact_extractorpy-2500-tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fact extraction (fact_extractor.py, 2500 tokens)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#conversational-ner-entity_indexerpy-2500-tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conversational NER (entity_indexer.py, 2500 tokens)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#neighbor-evolution-memory_evolverpy-2500-tokens-2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Neighbor evolution (memory_evolver.py, 2500 tokens × 2)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-shared-timeout" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The shared timeout
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#when-to-override" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to override
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="When to override">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#youre-on-faster-hardware-h100-multi-gpu-large-batch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        You're on faster hardware (H100, multi-GPU, large batch)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#youre-on-a-non-reasoning-model-gemma4-llama-3x-base-qwen25" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        You're on a non-reasoning model (gemma4, llama-3.x base, qwen2.5)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#youre-on-a-much-larger-model-70b-120b-cloud" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        You're on a much larger model (70B, 120B, cloud)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#youre-triggering-synctrue-or-doing-bulk-ingestion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        You're triggering sync=True or doing bulk ingestion
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verifying-your-budgets-are-right" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verifying your budgets are right
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#background" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Background
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../zettelkasten-philosophy/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Zettelkasten Philosophy
+    Use web interface
   
 
     
@@ -1716,8 +1229,6 @@
     
     
       
-      
-        
       
     
     
@@ -1725,12 +1236,10 @@
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -1748,8 +1257,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1766,14 +1275,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+      <a href="../../reference/terminology/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Deep Dive
+    Terminology
   
 
     
@@ -1822,174 +1331,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Detection Rules Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/editions/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Editions
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Entity Indexer Concurrency
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/governance-controls/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Governance Controls
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    KG Edge Schema
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/mcp-protocol/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    MCP Protocol
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/memory-manager-api/" class="md-nav__link">
         
   
@@ -2018,90 +1359,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/module-inventory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Module Inventory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/retrieval-policies/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Retrieval Policies
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Sigma Schema Reference
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../reference/stix-schema/" class="md-nav__link">
         
   
@@ -2109,7 +1366,7 @@
   <span class="md-ellipsis">
     
   
-    STIX Schema
+    STIX schema
   
 
     
@@ -2137,7 +1394,147 @@
   <span class="md-ellipsis">
     
   
-    Web API Reference
+    Web API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/retrieval-policies/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval policies
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/governance-controls/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Governance controls
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/mcp-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/detection-rules-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection rules schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/sigma-schema-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sigma schema
   
 
     
@@ -2165,7 +1562,540 @@
   <span class="md-ellipsis">
     
   
-    YARA Schema Reference
+    YARA schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/kg-edge-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KG edge schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/architecture-deep-dive/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture deep dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/module-inventory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Module inventory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/entity-indexer-concurrency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity indexer concurrency
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture (why SQLite + LanceDB)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../two-phase-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Two-phase extraction pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stix-in-zettelforge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STIX alignment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../epistemic-tiers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Epistemic tiers and confidence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM budgets and timeouts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-token-starvation-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The token-starvation problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#per-call-site-budgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Per-call-site budgets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Per-call-site budgets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-causal-extraction-gets-the-largest-budget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why causal extraction gets the largest budget
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-synthesis-extraction-ner-and-evolution-get-2500-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why synthesis, extraction, NER, and evolution get 2500 tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-shared-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The shared timeout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-reasoning_model-flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The reasoning_model flag
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-override" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to override
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="When to override">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#your-configured-model-returns-compact-answers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Your configured model returns compact answers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#your-configured-model-still-hits-the-cap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Your configured model still hits the cap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifying-your-budgets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying your budgets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-changed-from-v252-to-v270" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What changed from v2.5.2 to v2.7.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../zettelkasten-philosophy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Zettelkasten philosophy
   
 
     
@@ -2198,17 +2128,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
@@ -2267,6 +2193,56 @@
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RFCs
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    RFCs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -2359,14 +2335,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
+      <a href="../../rfcs/RFC-012-litellm-unified-provider/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Architecture Decision Records
+    RFC-012 LiteLLM Unified Provider
   
 
     
@@ -2380,113 +2356,9 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-jsonl-for-community-storage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-001 JSONL for Community Storage
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-blended-retrieval-vector-plus-graph/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-002 Blended Retrieval (Vector + Graph)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-in-process-llm-llama-cpp-python/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-003 In-Process LLM (llama-cpp-python)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-stix-2.1-entity-types/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ADR-004 STIX 2.1 Entity Types
-  
-
-    
-  </span>
-  
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2511,17 +2383,13 @@
     
       
       
-        
-      
     
     
     <li class="md-nav__item md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
         
           
           <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
@@ -2615,10 +2483,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-hidden-thinking-token-problem" class="md-nav__link">
+  <a href="#the-token-starvation-problem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The hidden-thinking-token problem
+        The token-starvation problem
       
     </span>
   </a>
@@ -2626,22 +2494,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#per-call-site-budgets-and-why-each-one-is-what-it-is" class="md-nav__link">
+  <a href="#per-call-site-budgets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Per-call-site budgets — and why each one is what it is
+        Per-call-site budgets
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Per-call-site budgets — and why each one is what it is">
+    <nav class="md-nav" aria-label="Per-call-site budgets">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#causal-triple-extraction-note_constructorpy-8000-tokens" class="md-nav__link">
+  <a href="#why-causal-extraction-gets-the-largest-budget" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Causal triple extraction (note_constructor.py, 8000 tokens)
+        Why causal extraction gets the largest budget
       
     </span>
   </a>
@@ -2649,43 +2517,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#synthesis-synthesis_generatorpy-2500-tokens" class="md-nav__link">
+  <a href="#why-synthesis-extraction-ner-and-evolution-get-2500-tokens" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Synthesis (synthesis_generator.py, 2500 tokens)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fact-extraction-fact_extractorpy-2500-tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fact extraction (fact_extractor.py, 2500 tokens)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#conversational-ner-entity_indexerpy-2500-tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conversational NER (entity_indexer.py, 2500 tokens)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#neighbor-evolution-memory_evolverpy-2500-tokens-2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Neighbor evolution (memory_evolver.py, 2500 tokens × 2)
+        Why synthesis, extraction, NER, and evolution get 2500 tokens
       
     </span>
   </a>
@@ -2709,6 +2544,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-reasoning_model-flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The reasoning_model flag
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#when-to-override" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2721,10 +2567,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#youre-on-faster-hardware-h100-multi-gpu-large-batch" class="md-nav__link">
+  <a href="#your-configured-model-returns-compact-answers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        You're on faster hardware (H100, multi-GPU, large batch)
+        Your configured model returns compact answers
       
     </span>
   </a>
@@ -2732,32 +2578,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#youre-on-a-non-reasoning-model-gemma4-llama-3x-base-qwen25" class="md-nav__link">
+  <a href="#your-configured-model-still-hits-the-cap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        You're on a non-reasoning model (gemma4, llama-3.x base, qwen2.5)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#youre-on-a-much-larger-model-70b-120b-cloud" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        You're on a much larger model (70B, 120B, cloud)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#youre-triggering-synctrue-or-doing-bulk-ingestion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        You're triggering sync=True or doing bulk ingestion
+        Your configured model still hits the cap
       
     </span>
   </a>
@@ -2770,10 +2594,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verifying-your-budgets-are-right" class="md-nav__link">
+  <a href="#verifying-your-budgets" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verifying your budgets are right
+        Verifying your budgets
       
     </span>
   </a>
@@ -2781,10 +2605,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#background" class="md-nav__link">
+  <a href="#what-changed-from-v252-to-v270" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Background
+        What changed from v2.5.2 to v2.7.0
       
     </span>
   </a>
@@ -2823,57 +2647,178 @@
 
 
 <h1 id="llm-budgets-timeouts-and-what-they-cost-you">LLM budgets, timeouts, and what they cost you<a class="headerlink" href="#llm-budgets-timeouts-and-what-they-cost-you" title="Permanent link">&para;</a></h1>
-<p>ZettelForge makes five distinct kinds of LLM calls (causal triple extraction, synthesis, fact extraction, conversational NER, neighbor evolution). Each has a hardcoded <code>max_tokens</code> budget and shares a single configurable <code>llm.timeout</code>. The defaults trade ingest latency for end-to-end correctness on a reference reasoning model (<code>qwen3.5:9b</code>, Q4_K_M). This page explains why the defaults look the way they do and when you should override them.</p>
-<p>If you just want the table of values, see the <a href="../../reference/configuration/#per-call-site-max_tokens-budgets-hardcoded-v252">Configuration Reference §Per-call-site <code>max_tokens</code> budgets</a>. This page is the <em>why</em>.</p>
-<h2 id="the-hidden-thinking-token-problem">The hidden-thinking-token problem<a class="headerlink" href="#the-hidden-thinking-token-problem" title="Permanent link">&para;</a></h2>
-<p>Modern reasoning models — qwen3.5+, qwen3.6, nemotron-3, deepseek-r1, gemini-thinking — generate two streams of tokens for any prompt:</p>
-<ol>
-<li><strong>Reasoning tokens.</strong> Wrapped in <code>&lt;think&gt;...&lt;/think&gt;</code>, these are the model's internal scratch work. Ollama hides them from the <code>response</code> field by default but <strong>they still count against <code>num_predict</code></strong>.</li>
-<li><strong>Answer tokens.</strong> What the model actually emits as the final user-visible output. These appear in <code>response</code>.</li>
-</ol>
-<p>If <code>num_predict</code> is 300 tokens and the model uses 280 of them reasoning, you get 20 tokens of answer — usually not enough for valid JSON. If it uses all 300, you get an empty string and Ollama returns <code>done_reason: "length" eval_count: 300 response: ""</code>. The pre-2.5.2 budgets (300/400/800/1024) were sized for non-reasoning models and silently failed every call on the reasoning model that ZettelForge defaults to. v2.5.2 raised the per-call-site caps to give reasoning room <em>and</em> answer room on the same generation.</p>
-<h2 id="per-call-site-budgets-and-why-each-one-is-what-it-is">Per-call-site budgets — and why each one is what it is<a class="headerlink" href="#per-call-site-budgets-and-why-each-one-is-what-it-is" title="Permanent link">&para;</a></h2>
-<h3 id="causal-triple-extraction-note_constructorpy-8000-tokens">Causal triple extraction (<code>note_constructor.py</code>, <strong>8000 tokens</strong>)<a class="headerlink" href="#causal-triple-extraction-note_constructorpy-8000-tokens" title="Permanent link">&para;</a></h3>
-<p>The largest budget anywhere in the codebase. The prompt asks the model to enumerate <em>every</em> causal relation in a passage of up to 2000 characters, validating each relation against an allowlist. Empirical: <code>qwen3.5:9b</code> at 4000 tokens succeeded only ~70% of the time (eval_count varied 2.8k–4k+, with the longer reasoning chains hitting the budget cap). 8000 keeps the success rate above 95% on the same model. Wall-clock cost: 60–140 s per call.</p>
-<h3 id="synthesis-synthesis_generatorpy-2500-tokens">Synthesis (<code>synthesis_generator.py</code>, <strong>2500 tokens</strong>)<a class="headerlink" href="#synthesis-synthesis_generatorpy-2500-tokens" title="Permanent link">&para;</a></h3>
-<p>Single-answer prompts converge faster than enumerate-everything prompts. 2500 covers reasoning + a paragraph of JSON answer. Wall-clock: 20–50 s per query.</p>
-<h3 id="fact-extraction-fact_extractorpy-2500-tokens">Fact extraction (<code>fact_extractor.py</code>, <strong>2500 tokens</strong>)<a class="headerlink" href="#fact-extraction-fact_extractorpy-2500-tokens" title="Permanent link">&para;</a></h3>
-<p>Similar profile to synthesis — bounded JSON output. The pre-2.5.2 cap was 400, which left this silently no-opping on every reasoning-model call.</p>
-<h3 id="conversational-ner-entity_indexerpy-2500-tokens">Conversational NER (<code>entity_indexer.py</code>, <strong>2500 tokens</strong>)<a class="headerlink" href="#conversational-ner-entity_indexerpy-2500-tokens" title="Permanent link">&para;</a></h3>
-<p>The regex fast-path covers CTI types (CVE, ATT&amp;CK, IOCs); LLM NER fills in <code>person</code>, <code>location</code>, <code>organization</code>, <code>event</code>, <code>activity</code>, <code>temporal</code>. Output is a small JSON object so 2500 is generous. The retry path uses the same budget.</p>
-<h3 id="neighbor-evolution-memory_evolverpy-2500-tokens-2">Neighbor evolution (<code>memory_evolver.py</code>, <strong>2500 tokens</strong> × 2)<a class="headerlink" href="#neighbor-evolution-memory_evolverpy-2500-tokens-2" title="Permanent link">&para;</a></h3>
-<p>Two-note comparison + ADD/UPDATE/DELETE/NOOP decision. Both the first call and the parse-retry call use 2500. Parse-retry exists because reasoning models occasionally emit prose preamble before the JSON; the second call reasserts JSON-only and usually gets it.</p>
+<p>ZettelForge makes five distinct LLM calls: causal triple extraction, synthesis, fact extraction, conversational NER, and neighbor evolution. Each call site reads its own token budget from <code>get_config().llm</code>, and the Ollama provider sends that value as <code>num_predict</code>. The same <code>llm.timeout</code> value flows into <code>ollama.Client(..., timeout=...)</code>.</p>
+<p>Use this page to understand why the defaults are large, what the <code>reasoning_model</code> flag changes, and how to tune the numbers without editing source code. For the exact config keys, see the <a href="../../reference/configuration/#llm"><code>llm</code> section of the Configuration Reference</a>.</p>
+<p>Set <code>llm.model</code> explicitly before you tune budgets. The upstream source default currently names an unresolved model tag, so this page does not treat it as a working reference model.</p>
+<h2 id="the-token-starvation-problem">The token-starvation problem<a class="headerlink" href="#the-token-starvation-problem" title="Permanent link">&para;</a></h2>
+<p>ZettelForge cannot assume that every generated token becomes useful JSON. Reasoning-style models can spend generated tokens before the final answer, and long prompts can also consume the budget before a valid response is complete.</p>
+<p>The observable failure is simple: the provider returns an empty or truncated response. The Ollama provider logs an empty completion as <code>llm_call_empty_response</code> and records the <code>eval_count</code>, <code>done_reason</code>, <code>max_tokens</code>, <code>response_chars</code>, and timing fields. When <code>eval_count</code> reaches <code>max_tokens</code> and <code>done_reason</code> is <code>length</code>, the generation hit the configured cap.</p>
+<p>The pre-v2.5.2 defaults were smaller and used a 60 second timeout. The current defaults give generation more room and extend the read deadline so long causal extraction calls can finish instead of timing out.</p>
+<h2 id="per-call-site-budgets">Per-call-site budgets<a class="headerlink" href="#per-call-site-budgets" title="Permanent link">&para;</a></h2>
+<p>Each call site reads a different config key, so you can raise the expensive path without increasing every LLM request.</p>
+<table>
+<thead>
+<tr>
+<th>Call site</th>
+<th style="text-align: right;">Config key</th>
+<th style="text-align: right;">Default</th>
+<th>Env var</th>
+<th>Module</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Causal triple extraction</td>
+<td style="text-align: right;"><code>max_tokens_causal</code></td>
+<td style="text-align: right;">8000</td>
+<td><code>ZETTELFORGE_LLM_MAX_TOKENS_CAUSAL</code></td>
+<td><code>note_constructor.py</code></td>
+</tr>
+<tr>
+<td>Synthesis</td>
+<td style="text-align: right;"><code>max_tokens_synthesis</code></td>
+<td style="text-align: right;">2500</td>
+<td><code>ZETTELFORGE_LLM_MAX_TOKENS_SYNTHESIS</code></td>
+<td><code>synthesis_generator.py</code></td>
+</tr>
+<tr>
+<td>Fact extraction</td>
+<td style="text-align: right;"><code>max_tokens_extraction</code></td>
+<td style="text-align: right;">2500</td>
+<td><code>ZETTELFORGE_LLM_MAX_TOKENS_EXTRACTION</code></td>
+<td><code>fact_extractor.py</code></td>
+</tr>
+<tr>
+<td>Conversational NER</td>
+<td style="text-align: right;"><code>max_tokens_ner</code></td>
+<td style="text-align: right;">2500</td>
+<td><code>ZETTELFORGE_LLM_MAX_TOKENS_NER</code></td>
+<td><code>entity_indexer.py</code></td>
+</tr>
+<tr>
+<td>Neighbor evolution</td>
+<td style="text-align: right;"><code>max_tokens_evolve</code></td>
+<td style="text-align: right;">2500</td>
+<td><code>ZETTELFORGE_LLM_MAX_TOKENS_EVOLVE</code></td>
+<td><code>memory_evolver.py</code></td>
+</tr>
+<tr>
+<td>General fallback</td>
+<td style="text-align: right;"><code>max_tokens</code></td>
+<td style="text-align: right;">400</td>
+<td><code>ZETTELFORGE_LLM_MAX_TOKENS</code></td>
+<td><code>llm_client.py</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-causal-extraction-gets-the-largest-budget">Why causal extraction gets the largest budget<a class="headerlink" href="#why-causal-extraction-gets-the-largest-budget" title="Permanent link">&para;</a></h3>
+<p>Causal extraction asks the model to return a JSON array of subject, relation, and object triples from up to 2000 characters of note text. It also validates relation names against an allowlist. That is the broadest generation task in the current pipeline, so it gets the 8000 token default.</p>
+<h3 id="why-synthesis-extraction-ner-and-evolution-get-2500-tokens">Why synthesis, extraction, NER, and evolution get 2500 tokens<a class="headerlink" href="#why-synthesis-extraction-ner-and-evolution-get-2500-tokens" title="Permanent link">&para;</a></h3>
+<p>These calls produce smaller outputs than causal extraction, but they still need enough budget for structured JSON. Conversational NER and neighbor evolution also retry parsing failures with the same per-call-site budget, so a too-small value can fail both the first attempt and the retry.</p>
 <h2 id="the-shared-timeout">The shared timeout<a class="headerlink" href="#the-shared-timeout" title="Permanent link">&para;</a></h2>
-<p><code>llm.timeout</code> (default <strong>180 s</strong> in v2.5.2; was 60 s pre-fix) governs the HTTP read deadline on every Ollama call.</p>
-<p>The 60 s default fired before causal extraction at 8000 tokens could complete on a 9B model. The fix had to come at both ends: bigger budget <em>and</em> longer timeout. If you lower one, lower the other together — bumping the budget without bumping the timeout just trades empty-response failures for ReadTimeout failures.</p>
-<h2 id="when-to-override">When to override<a class="headerlink" href="#when-to-override" title="Permanent link">&para;</a></h2>
-<p>The defaults are calibrated for <code>qwen3.5:9b</code> Q4_K_M on a single GPU. You want to override if:</p>
-<h3 id="youre-on-faster-hardware-h100-multi-gpu-large-batch">You're on faster hardware (H100, multi-GPU, large batch)<a class="headerlink" href="#youre-on-faster-hardware-h100-multi-gpu-large-batch" title="Permanent link">&para;</a></h3>
-<p>You can lower <code>llm.timeout</code> to e.g. 60 s without losing correctness, since each generation completes faster. The budgets themselves are about <em>how much room the model needs to think</em>, not how fast it thinks — leave them alone unless you've measured.</p>
-<h3 id="youre-on-a-non-reasoning-model-gemma4-llama-3x-base-qwen25">You're on a non-reasoning model (gemma4, llama-3.x base, qwen2.5)<a class="headerlink" href="#youre-on-a-non-reasoning-model-gemma4-llama-3x-base-qwen25" title="Permanent link">&para;</a></h3>
-<p>These don't emit <code>thinking</code> tokens. Your budgets only need to cover the actual answer length, not reasoning + answer. You can set <code>max_tokens</code> values to ~25% of the v2.5.2 defaults in config (v2.6.0 moved them to <code>LLMConfig</code> — see <a href="https://github.com/rolandpg/zettelforge/issues/125">issue #125</a>). <code>llm.timeout: 60</code> is then enough.</p>
-<h3 id="youre-on-a-much-larger-model-70b-120b-cloud">You're on a much larger model (70B, 120B, cloud)<a class="headerlink" href="#youre-on-a-much-larger-model-70b-120b-cloud" title="Permanent link">&para;</a></h3>
-<p>Reasoning depth often <em>increases</em> with model size. The 8000-token causal cap may not be enough on a 120B reasoning model. Watch the OCSF log for <code>event=llm_call_empty_response done_reason=length eval_count=8000</code> — if you see it, raise the <code>max_tokens=8000</code> literal inside <code>NoteConstructor.extract_causal_triples</code> (in <code>src/zettelforge/note_constructor.py</code>) and re-test.</p>
-<h3 id="youre-triggering-synctrue-or-doing-bulk-ingestion">You're triggering <code>sync=True</code> or doing bulk ingestion<a class="headerlink" href="#youre-triggering-synctrue-or-doing-bulk-ingestion" title="Permanent link">&para;</a></h3>
-<p>The default async path moves causal extraction off the write hot path; <code>remember()</code> returns in ~50 ms while extraction happens later in the enrichment worker. <strong><code>sync=True</code> blocks the caller until the worker finishes.</strong> With v2.5.2 budgets on a 9B reasoning model that's 1–3 minutes per note. For bulk ingestion (1000+ notes), prefer async and let the queue drain at its own pace; for sync use cases (test fixtures, small one-shots), accept the latency or downgrade to a non-reasoning model.</p>
-<h2 id="verifying-your-budgets-are-right">Verifying your budgets are right<a class="headerlink" href="#verifying-your-budgets-are-right" title="Permanent link">&para;</a></h2>
-<p>The OCSF log at <code>~/.amem/logs/zettelforge.log</code> carries every LLM call as a structured event. Two events to know:</p>
-<ul>
-<li><strong><code>llm_call_empty_response</code></strong> — <code>WARNING</code> level, fires whenever an Ollama call returns an empty <code>response</code>. Always visible at the default <code>INFO</code> log level.</li>
-<li><strong><code>llm_call_complete</code></strong> — <code>DEBUG</code> level, fires on every successful call with <code>eval_count</code>, <code>response_chars</code>, <code>max_tokens</code>, <code>duration_ms</code>, etc. Only visible when <code>logging.level: DEBUG</code> is set in <code>config.yaml</code> (or via <code>ZETTELFORGE_LOG_LEVEL=DEBUG</code>).</li>
-</ul>
-<p>To spot too-small budgets at the default log level:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>grep<span class="w"> </span><span class="s1">&#39;&quot;event&quot;:&quot;llm_call_empty_response&quot;&#39;</span><span class="w"> </span>~/.amem/logs/zettelforge.log<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;&quot;\(.model) eval=\(.eval_count) of max=\(.max_tokens) dur_ms=\(.duration_ms)&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<p><code>llm.timeout</code> defaults to <code>180.0</code> seconds. The Ollama provider passes it into <code>ollama.Client(host=..., timeout=...)</code>, so it bounds the HTTP read for each Ollama generation call.</p>
+<p>Raise token budgets and timeouts together. A larger token budget with a short timeout changes a token cap failure into a read timeout. A longer timeout with the same small token budget still leaves the model capped.</p>
+<p>Override the timeout in <code>config.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">llm</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60.0</span>
 </code></pre></div>
-<p><code>eval == max_tokens</code> with <code>done_reason: length</code> is the canonical token-starvation signature — raise the budget for that call site.</p>
-<p>To verify budgets aren't <em>too</em> generous (free wall-clock to claw back), enable DEBUG logging and grep <code>llm_call_complete</code> instead. <code>eval_count &lt;&lt; max_tokens</code> with non-empty <code>response_chars</code> means you could safely lower the cap on faster hardware.</p>
-<h2 id="background">Background<a class="headerlink" href="#background" title="Permanent link">&para;</a></h2>
-<ul>
-<li>v2.5.2 hotfix CHANGELOG entry — full root-cause writeup and per-file diffs.</li>
-<li><a href="https://github.com/rolandpg/zettelforge/issues/125">Issue #125</a> — v2.6.0 plan to make these budgets config-overridable per call site, add <code>&lt;think&gt;</code>-tag stripping as a post-processing guard, and a <code>reasoning_model: bool</code> auto-scale flag.</li>
-</ul>
+<p>Or set it with an environment variable:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_LLM_TIMEOUT</span><span class="o">=</span><span class="m">60</span>
+</code></pre></div>
+<h2 id="the-reasoning_model-flag">The <code>reasoning_model</code> flag<a class="headerlink" href="#the-reasoning_model-flag" title="Permanent link">&para;</a></h2>
+<p>When you set <code>llm.reasoning_model: true</code>, ZettelForge runs <code>_apply_reasoning_model_scaling()</code> after it loads config files and environment variables. The scaling step raises these values to minimum floors:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th style="text-align: right;">Minimum when <code>reasoning_model</code> is true</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>timeout</code></td>
+<td style="text-align: right;">180.0</td>
+</tr>
+<tr>
+<td><code>max_tokens_causal</code></td>
+<td style="text-align: right;">8000</td>
+</tr>
+<tr>
+<td><code>max_tokens_synthesis</code></td>
+<td style="text-align: right;">2500</td>
+</tr>
+<tr>
+<td><code>max_tokens_extraction</code></td>
+<td style="text-align: right;">2500</td>
+</tr>
+<tr>
+<td><code>max_tokens_ner</code></td>
+<td style="text-align: right;">2500</td>
+</tr>
+<tr>
+<td><code>max_tokens_evolve</code></td>
+<td style="text-align: right;">2500</td>
+</tr>
+</tbody>
+</table>
+<p>Use it when your configured model needs reasoning headroom and you want to prevent a later config override from dropping the budgets below the verified floors.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">llm</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">reasoning_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p>The flag defaults to <code>false</code>. ZettelForge does not infer it from the model name.</p>
+<h2 id="when-to-override">When to override<a class="headerlink" href="#when-to-override" title="Permanent link">&para;</a></h2>
+<h3 id="your-configured-model-returns-compact-answers">Your configured model returns compact answers<a class="headerlink" href="#your-configured-model-returns-compact-answers" title="Permanent link">&para;</a></h3>
+<p>If your model does not need reasoning headroom, start with smaller budgets and raise them only when the logs show cap exhaustion.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">llm</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60.0</span>
+<span class="w">  </span><span class="nt">max_tokens_causal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2000</span>
+<span class="w">  </span><span class="nt">max_tokens_synthesis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
+<span class="w">  </span><span class="nt">max_tokens_extraction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
+<span class="w">  </span><span class="nt">max_tokens_ner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
+<span class="w">  </span><span class="nt">max_tokens_evolve</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
+</code></pre></div>
+<p>The matching environment variables let you test a change without editing <code>config.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_LLM_TIMEOUT</span><span class="o">=</span><span class="m">60</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_LLM_MAX_TOKENS_CAUSAL</span><span class="o">=</span><span class="m">2000</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_LLM_MAX_TOKENS_SYNTHESIS</span><span class="o">=</span><span class="m">600</span>
+</code></pre></div>
+<h3 id="your-configured-model-still-hits-the-cap">Your configured model still hits the cap<a class="headerlink" href="#your-configured-model-still-hits-the-cap" title="Permanent link">&para;</a></h3>
+<p>Raise only the call site that fails. For causal extraction, increase <code>max_tokens_causal</code> and give the request enough time to finish:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">llm</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">max_tokens_causal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12000</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300.0</span>
+</code></pre></div>
+<h2 id="verifying-your-budgets">Verifying your budgets<a class="headerlink" href="#verifying-your-budgets" title="Permanent link">&para;</a></h2>
+<p>The OCSF log at <code>~/.amem/logs/zettelforge.log</code> records LLM call outcomes. Set <code>AMEM_DATA_DIR</code> to move the log directory.</p>
+<p>At the default INFO log level, inspect empty completions:</p>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s1">&#39;&quot;event&quot;:&quot;llm_call_empty_response&quot;&#39;</span><span class="w"> </span>~/.amem/logs/zettelforge.log<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;&quot;\(.model) eval=\(.eval_count) of max=\(.max_tokens) dur_ms=\(.duration_ms)&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+</code></pre></div>
+<p>At DEBUG level, <code>llm_call_complete</code> records successful calls with the same token and timing fields. If successful calls use far fewer tokens than the configured maximum, you can lower the relevant budget for that call site.</p>
+<h2 id="what-changed-from-v252-to-v270">What changed from v2.5.2 to v2.7.0<a class="headerlink" href="#what-changed-from-v252-to-v270" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Release</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v2.5.2</td>
+<td><code>llm.timeout</code> increased from 60 seconds to 180 seconds. Per-call-site budgets increased to the current defaults.</td>
+</tr>
+<tr>
+<td>v2.7.0</td>
+<td>Per-call-site budgets became config-overridable through <code>LLMConfig</code> fields and environment variables. The <code>reasoning_model</code> flag now applies floor values after config load.</td>
+</tr>
+<tr>
+<td>v2.7.0</td>
+<td>Structured JSON parsing strips <code>&lt;think&gt;</code> and <code>&lt;thinking&gt;</code> blocks through <code>json_parse.strip_thinking_tags()</code>. Providers still return response text before JSON extraction, so non-JSON callers handle whatever text the provider returns.</td>
+</tr>
+</tbody>
+</table>
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../../reference/configuration/">Configuration Reference</a></li>
@@ -2885,9 +2830,6 @@
 
 
 
-
-  
-  
 
 
 
@@ -2931,12 +2873,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "2.4.0"}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
       <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
-      
-        <script src="../../assets/cf-analytics.js"></script>
       
     
   </body>
