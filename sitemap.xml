@@ -2,218 +2,218 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.threatrecall.ai/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/brand/brandIdentity/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/explanation/architecture/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/explanation/epistemic-tiers/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/explanation/llm-budgets-and-timeouts/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/explanation/stix-in-zettelforge/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/explanation/two-phase-pipeline/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/explanation/zettelkasten-philosophy/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/build-extensions/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/configure-lancedb/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/configure-opencti/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/configure-sigma-ingestion/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/configure-typedb/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/configure-yara-ingestion/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/ingest-news-report/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/integrate-llm-agent/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/integrate-with-crewai/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/integrate-with-langchain/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/maintain-lancedb/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/migrate-jsonl-to-sqlite/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/passive-osint-enrichment/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/query-apt-tools/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/reproduce-benchmarks/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/resolve-aliases/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/run-temporal-query/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/set-up-mcp-server/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/store-threat-actor/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/troubleshoot/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/upgrade/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/use-detection-rules/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/how-to/use-web-interface/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/narrative/2026-04-16-the-memory-problem/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/architecture-deep-dive/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/configuration/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/detection-rules-schema/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/editions/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/entity-indexer-concurrency/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/governance-controls/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/kg-edge-schema/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/mcp-protocol/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/memory-manager-api/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/module-inventory/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/retrieval-policies/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/sigma-schema-reference/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/stix-schema/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/terminology/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/web-api/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/reference/yara-schema-reference/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/rfcs/RFC-001-conversational-entity-extractor/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/rfcs/RFC-002-universal-llm-provider/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/rfcs/RFC-003-read-path-depth-routing/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/rfcs/RFC-012-litellm-unified-provider/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/tutorials/01-quickstart/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
     <url>
          <loc>https://docs.threatrecall.ai/tutorials/02-first-cti-report/</loc>
-         <lastmod>2026-07-10</lastmod>
+         <lastmod>2026-07-11</lastmod>
     </url>
 </urlset>

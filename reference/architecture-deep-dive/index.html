@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, MIT-licensed.">
+        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -3496,7 +3496,7 @@
 python<span class="w"> </span>-m<span class="w"> </span>zettelforge<span class="w"> </span>version<span class="w">  </span><span class="c1"># print version string</span>
 </code></pre></div>
 <h2 id="zettelforge-oss-boundaries-and-trade-offs">ZettelForge OSS: boundaries and trade-offs<a class="headerlink" href="#zettelforge-oss-boundaries-and-trade-offs" title="Permanent link">&para;</a></h2>
-<p>ZettelForge OSS (MIT license) runs fully self-hosted with no external dependencies beyond Python packages. The following are deliberate scope constraints in the current release, not gaps:</p>
+<p>ZettelForge OSS (Apache-2.0 license) runs fully self-hosted with no external dependencies beyond Python packages. The following are deliberate scope constraints in the current release, not gaps:</p>
 <ul>
 <li><strong>No built-in HTTP authentication.</strong> The web server (<code>/api/*</code>) uses an API key guard for non-loopback requests. Multi-user auth and per-tenant isolation are available in <a href="https://threatrecall.ai">ThreatRecall.ai</a>.</li>
 <li><strong>No encryption at rest.</strong> Data is stored in plain SQLite and JSONL. Apply OS-level encryption (dm-crypt, FileVault) for data-at-rest requirements.</li>
