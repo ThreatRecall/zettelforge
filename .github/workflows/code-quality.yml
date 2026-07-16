@@ -73,7 +73,7 @@ jobs:
           src/zettelforge/ > ruff.sarif || true
 
     - name: Upload SARIF to code scanning
-      uses: github/codeql-action/upload-sarif@99df26d4f13ea111d4ec1a7dddef6063f76b97e9
+      uses: github/codeql-action/upload-sarif@7188fc363630916deb702c7fdcf4e481b751f97a
       with:
         sarif_file: ruff.sarif
         category: ruff
