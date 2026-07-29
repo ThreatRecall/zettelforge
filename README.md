@@ -1,5 +1,7 @@
 # ZettelForge
 
+[![MCP Toplist](https://mcptoplist.com/badge/io.github.rolandpg%2Fzettelforge.svg)](https://mcptoplist.com/server/io.github.rolandpg%2Fzettelforge)
+
 <!-- mcp-name: io.github.rolandpg/zettelforge -->
 
 **The only agentic memory system built for cyber threat intelligence.**
