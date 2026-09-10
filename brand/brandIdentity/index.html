@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2930,10 +2930,11 @@ of the pixels in a frame, stop and use a neutral instead.</p>
 <p>Never use Neuropol below ~28px, never for body copy, never for paragraphs,
   never for UI controls. Its wide forms kill legibility at small sizes.
   Default tracking <code>0.01em</code>–<code>0.02em</code>; uppercase for wordmarks.</p>
-<p>The font file ships with the brand assets as <code>fonts/Neuropol.otf</code> and is
-declared via <code>@font-face</code> in <code>colors_and_type.css</code> as <code>font-family: 'Neuropol'</code>.
-Stack: <code>'Neuropol', 'Inter', -apple-system, sans-serif</code> (Inter is the fallback
-so a missing file degrades to the sans headline treatment, not Times).</p>
+<p>The web UI bundle ships the font at <code>web/ui/fonts/Neuropol.otf</code>. The token CSS
+declares it via <code>@font-face</code> in <code>colors_and_type.css</code> as
+<code>font-family: 'Neuropol'</code> and expects a sibling <code>fonts/Neuropol.otf</code> path. Stack:
+<code>'Neuropol', 'Inter', -apple-system, sans-serif</code> (Inter is the fallback so a
+missing file degrades to the sans headline treatment, not Times).</p>
 <h3 id="scale-treatment">Scale &amp; treatment<a class="headerlink" href="#scale-treatment" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3121,6 +3122,7 @@ Stage bodies describe the action in present tense, dot-separated: <code>validate
 </ul>
 <hr />
 <h2 id="9-canonical-assets">9. Canonical assets<a class="headerlink" href="#9-canonical-assets" title="Permanent link">&para;</a></h2>
+<p>Paths are relative to the ZettelForge OSS source checkout.</p>
 <table>
 <thead>
 <tr>
@@ -3130,39 +3132,39 @@ Stage bodies describe the action in present tense, dot-separated: <code>validate
 </thead>
 <tbody>
 <tr>
-<td><code>zettelforge_architecture.svg</code></td>
+<td><code>docs/assets/zettelforge_architecture.svg</code></td>
 <td>Architecture diagram, Neural Dark — canonical</td>
 </tr>
 <tr>
-<td><code>zettelforge_architecture-light.svg</code></td>
+<td><code>docs/assets/zettelforge_architecture-light.svg</code></td>
 <td>Same diagram, light parity for print/GitHub light</td>
 </tr>
 <tr>
-<td><code>colors_and_type.css</code></td>
+<td><code>web/ui/colors_and_type.css</code></td>
 <td>Token source of truth for HTML surfaces</td>
 </tr>
 <tr>
-<td><code>fonts/Neuropol.otf</code></td>
+<td><code>web/ui/fonts/Neuropol.otf</code></td>
 <td>Display face — wordmarks and hero moments only</td>
 </tr>
 <tr>
-<td><code>brandIdentity.md</code></td>
+<td><code>docs/brand/brandIdentity.md</code></td>
 <td>This document</td>
 </tr>
 </tbody>
 </table>
 <h3 id="using-the-fonts-in-a-codebase">Using the fonts in a codebase<a class="headerlink" href="#using-the-fonts-in-a-codebase" title="Permanent link">&para;</a></h3>
-<p>For HTML / web surfaces, import <code>colors_and_type.css</code> — it already declares
-the <code>@font-face</code> for Neuropol (pointing at <code>fonts/Neuropol.otf</code>) and pulls
-Inter + JetBrains Mono from Google Fonts. Copy both <code>colors_and_type.css</code>
-and a <code>fonts/</code> directory containing <code>Neuropol.otf</code> to the target project,
-preserving the relative path so <code>@font-face</code> resolves correctly.</p>
+<p>For HTML / web surfaces, import <code>web/ui/colors_and_type.css</code> from the source
+checkout. It already declares the <code>@font-face</code> for Neuropol and pulls Inter +
+JetBrains Mono from Google Fonts. Copy both <code>colors_and_type.css</code> and a
+<code>fonts/</code> directory containing <code>Neuropol.otf</code> to the target project, preserving
+the relative path so <code>@font-face</code> resolves correctly.</p>
 <p>For anywhere you cannot ship the OTF (third-party slide tools, email, etc.),
 fall back to the <code>font-display: swap</code> stack — Inter renders in place of
 Neuropol and the layout stays intact.</p>
-<p>When producing a new diagram, copy <code>zettelforge_architecture.svg</code> and mutate
-it — do not redraw from scratch. Geometry, stroke weights, and font sizes
-are tuned; drift breaks the family resemblance.</p>
+<p>When producing a new diagram, copy <code>docs/assets/zettelforge_architecture.svg</code>
+and mutate it — do not redraw from scratch. Geometry, stroke weights, and font
+sizes are tuned; drift breaks the family resemblance.</p>
 <hr />
 <h2 id="10-quick-agent-checklist">10. Quick agent checklist<a class="headerlink" href="#10-quick-agent-checklist" title="Permanent link">&para;</a></h2>
 <p>Before shipping any ZettelForge visual, confirm:</p>

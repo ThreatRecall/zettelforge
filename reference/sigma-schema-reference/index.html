@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1592,10 +1592,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-this-reference-covers" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What this reference covers
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Public exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#processing-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Processing layers
       
     </span>
   </a>
@@ -1607,17 +1629,6 @@
     <span class="md-ellipsis">
       
         Vendored schemas
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#schema-dispatch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Schema dispatch
       
     </span>
   </a>
@@ -1648,10 +1659,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#status-enum" class="md-nav__link">
+  <a href="#status-values" class="md-nav__link">
     <span class="md-ellipsis">
       
-        status enum
+        status values
       
     </span>
   </a>
@@ -1659,10 +1670,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#level-enum" class="md-nav__link">
+  <a href="#level-values" class="md-nav__link">
     <span class="md-ellipsis">
       
-        level enum
+        level values
       
     </span>
   </a>
@@ -1670,10 +1681,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#logsource-object" class="md-nav__link">
+  <a href="#logsource-properties" class="md-nav__link">
     <span class="md-ellipsis">
       
-        logsource object
+        logsource properties
       
     </span>
   </a>
@@ -1681,10 +1692,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relatedtype-enum" class="md-nav__link">
+  <a href="#relatedtype-values" class="md-nav__link">
     <span class="md-ellipsis">
       
-        related[].type enum
+        related[].type values
       
     </span>
   </a>
@@ -1697,10 +1708,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#correlation-and-filter-schemas" class="md-nav__link">
+  <a href="#correlation-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Correlation and filter schemas
+        Correlation schema
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filter-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter schema
       
     </span>
   </a>
@@ -1723,7 +1745,7 @@
   <a href="#parse_yaml" class="md-nav__link">
     <span class="md-ellipsis">
       
-        parse_yaml()
+        parse_yaml
       
     </span>
   </a>
@@ -1734,7 +1756,7 @@
   <a href="#parse_file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        parse_file()
+        parse_file
       
     </span>
   </a>
@@ -1745,7 +1767,7 @@
   <a href="#validate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        validate()
+        validate
       
     </span>
   </a>
@@ -1766,14 +1788,25 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Error types">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entity model">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sigmaparseerror" class="md-nav__link">
+  <a href="#detectionrule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SigmaParseError
+        DetectionRule
       
     </span>
   </a>
@@ -1781,10 +1814,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sigmavalidationerror" class="md-nav__link">
+  <a href="#sigmarule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SigmaValidationError
+        SigmaRule
       
     </span>
   </a>
@@ -1797,66 +1830,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validationresult" class="md-nav__link">
+  <a href="#entity-conversion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ValidationResult
+        Entity conversion
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#detectionrule-base-class" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DetectionRule base class
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sigmarule-dataclass" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SigmaRule dataclass
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#from_rule_dict-rule_to_entities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        from_rule_dict() / rule_to_entities()
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="from_rule_dict() / rule_to_entities()">
+    <nav class="md-nav" aria-label="Entity conversion">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#relation-dict-shape" class="md-nav__link">
+  <a href="#emitted-relations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Relation dict shape
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#relation-types-emitted" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Relation types emitted
+        Emitted relations
       
     </span>
   </a>
@@ -1869,10 +1858,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#resolve_sigma_tag" class="md-nav__link">
+  <a href="#tag-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        resolve_sigma_tag()
+        Tag resolution
       
     </span>
   </a>
@@ -1895,7 +1884,7 @@
   <a href="#ingest_rule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ingest_rule()
+        ingest_rule
       
     </span>
   </a>
@@ -1906,7 +1895,18 @@
   <a href="#ingest_rules_dir" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ingest_rules_dir()
+        ingest_rules_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directory-security-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory security controls
       
     </span>
   </a>
@@ -1919,32 +1919,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#idempotency" class="md-nav__link">
+  <a href="#knowledge-graph-edge-metadata" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Idempotency
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-controls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security controls
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kg-edge-metadata" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        KG edge metadata
+        Knowledge-graph edge metadata
       
     </span>
   </a>
@@ -1963,10 +1941,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-reference" class="md-nav__link">
+  <a href="#quick-reference-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick reference
+        Quick reference example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current limitations
       
     </span>
   </a>
@@ -2721,10 +2710,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-this-reference-covers" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What this reference covers
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Public exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#processing-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Processing layers
       
     </span>
   </a>
@@ -2736,17 +2747,6 @@
     <span class="md-ellipsis">
       
         Vendored schemas
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#schema-dispatch" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Schema dispatch
       
     </span>
   </a>
@@ -2777,10 +2777,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#status-enum" class="md-nav__link">
+  <a href="#status-values" class="md-nav__link">
     <span class="md-ellipsis">
       
-        status enum
+        status values
       
     </span>
   </a>
@@ -2788,10 +2788,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#level-enum" class="md-nav__link">
+  <a href="#level-values" class="md-nav__link">
     <span class="md-ellipsis">
       
-        level enum
+        level values
       
     </span>
   </a>
@@ -2799,10 +2799,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#logsource-object" class="md-nav__link">
+  <a href="#logsource-properties" class="md-nav__link">
     <span class="md-ellipsis">
       
-        logsource object
+        logsource properties
       
     </span>
   </a>
@@ -2810,10 +2810,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relatedtype-enum" class="md-nav__link">
+  <a href="#relatedtype-values" class="md-nav__link">
     <span class="md-ellipsis">
       
-        related[].type enum
+        related[].type values
       
     </span>
   </a>
@@ -2826,10 +2826,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#correlation-and-filter-schemas" class="md-nav__link">
+  <a href="#correlation-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Correlation and filter schemas
+        Correlation schema
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#filter-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filter schema
       
     </span>
   </a>
@@ -2852,7 +2863,7 @@
   <a href="#parse_yaml" class="md-nav__link">
     <span class="md-ellipsis">
       
-        parse_yaml()
+        parse_yaml
       
     </span>
   </a>
@@ -2863,7 +2874,7 @@
   <a href="#parse_file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        parse_file()
+        parse_file
       
     </span>
   </a>
@@ -2874,7 +2885,7 @@
   <a href="#validate" class="md-nav__link">
     <span class="md-ellipsis">
       
-        validate()
+        validate
       
     </span>
   </a>
@@ -2895,14 +2906,25 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Error types">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entity model">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sigmaparseerror" class="md-nav__link">
+  <a href="#detectionrule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SigmaParseError
+        DetectionRule
       
     </span>
   </a>
@@ -2910,10 +2932,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sigmavalidationerror" class="md-nav__link">
+  <a href="#sigmarule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SigmaValidationError
+        SigmaRule
       
     </span>
   </a>
@@ -2926,66 +2948,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validationresult" class="md-nav__link">
+  <a href="#entity-conversion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ValidationResult
+        Entity conversion
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#detectionrule-base-class" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        DetectionRule base class
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sigmarule-dataclass" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SigmaRule dataclass
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#from_rule_dict-rule_to_entities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        from_rule_dict() / rule_to_entities()
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="from_rule_dict() / rule_to_entities()">
+    <nav class="md-nav" aria-label="Entity conversion">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#relation-dict-shape" class="md-nav__link">
+  <a href="#emitted-relations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Relation dict shape
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#relation-types-emitted" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Relation types emitted
+        Emitted relations
       
     </span>
   </a>
@@ -2998,10 +2976,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#resolve_sigma_tag" class="md-nav__link">
+  <a href="#tag-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        resolve_sigma_tag()
+        Tag resolution
       
     </span>
   </a>
@@ -3024,7 +3002,7 @@
   <a href="#ingest_rule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ingest_rule()
+        ingest_rule
       
     </span>
   </a>
@@ -3035,7 +3013,18 @@
   <a href="#ingest_rules_dir" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ingest_rules_dir()
+        ingest_rules_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directory-security-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory security controls
       
     </span>
   </a>
@@ -3048,32 +3037,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#idempotency" class="md-nav__link">
+  <a href="#knowledge-graph-edge-metadata" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Idempotency
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-controls" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security controls
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kg-edge-metadata" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        KG edge metadata
+        Knowledge-graph edge metadata
       
     </span>
   </a>
@@ -3092,10 +3059,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#quick-reference" class="md-nav__link">
+  <a href="#quick-reference-example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Quick reference
+        Quick reference example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current limitations
       
     </span>
   </a>
@@ -3123,18 +3101,83 @@
 
 
 <h1 id="sigma-schema-reference">Sigma schema reference<a class="headerlink" href="#sigma-schema-reference" title="Permanent link">&para;</a></h1>
+<p>Use this page to look up the ZettelForge Sigma parser, schema dispatch, entity mapping, ingest API, and command-line interface. The reference covers ZettelForge 2.8.0, released under the MIT license.</p>
 <p>Modules: <code>zettelforge.sigma</code>, <code>zettelforge.sigma.parser</code>, <code>zettelforge.sigma.entities</code>, <code>zettelforge.sigma.tags</code>, <code>zettelforge.sigma.ingest</code></p>
-<p>ZettelForge 2.7.0 — Apache-2.0 license</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">SigmaRule</span><span class="p">,</span> <span class="n">SigmaParseError</span><span class="p">,</span> <span class="n">SigmaValidationError</span><span class="p">,</span>
-    <span class="n">parse_yaml</span><span class="p">,</span> <span class="n">parse_file</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span>
-    <span class="n">from_rule_dict</span><span class="p">,</span> <span class="n">rule_to_entities</span><span class="p">,</span> <span class="n">resolve_sigma_tag</span><span class="p">,</span>
-    <span class="n">ingest_rule</span><span class="p">,</span> <span class="n">ingest_rules_dir</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-<hr />
-<h2 id="what-this-reference-covers">What this reference covers<a class="headerlink" href="#what-this-reference-covers" title="Permanent link">&para;</a></h2>
-<p>The Sigma subsystem has three layers:</p>
+<div class="admonition warning">
+<p class="admonition-title">In progress</p>
+<p>Parsing, validation, entity mapping, persistence, and dry-run ingestion work in ZettelForge 2.8.0. Three mappings remain incomplete: filter bodies do not populate <code>SigmaRule.detection_body</code>, <code>tlp.*</code> tags do not populate <code>SigmaRule.tlp</code>, and <code>sigma_format_version</code> remains unset. See <a href="#current-limitations">Current limitations</a>.</p>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>You need ZettelForge 2.8.0 and Python 3.10 or later. Use <a href="../../how-to/configure-sigma-ingestion/">Configure Sigma ingestion</a> for a task-oriented import procedure. Read <a href="../detection-rules-schema/">Detection rules schema</a> for the shared Sigma and YARA model.</p>
+<h2 id="public-exports">Public exports<a class="headerlink" href="#public-exports" title="Permanent link">&para;</a></h2>
+<p><code>zettelforge.sigma</code> exports these names:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Kind</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>SigmaRule</code></td>
+<td style="text-align: left;">dataclass</td>
+<td style="text-align: left;">Sigma-specific <code>DetectionRule</code> subtype</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SigmaParseError</code></td>
+<td style="text-align: left;">exception</td>
+<td style="text-align: left;">Reports YAML, file, and size errors</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SigmaValidationError</code></td>
+<td style="text-align: left;">exception</td>
+<td style="text-align: left;">Reports JSON Schema failures</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>parse_yaml</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Parses and validates YAML text</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>parse_file</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Reads, parses, and validates one file</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>validate</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Validates an existing rule dictionary</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>from_rule_dict</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Builds a <code>SigmaRule</code> and relation dictionaries without schema validation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rule_to_entities</code></td>
+<td style="text-align: left;">alias</td>
+<td style="text-align: left;">Points to the same function as <code>from_rule_dict</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>resolve_sigma_tag</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Resolves supported tag namespaces to typed entities</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ingest_rule</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Persists one rule and its graph relations</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ingest_rules_dir</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Walks and ingests a rule directory</td>
+</tr>
+</tbody>
+</table>
+<h2 id="processing-layers">Processing layers<a class="headerlink" href="#processing-layers" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -3147,67 +3190,54 @@
 <tr>
 <td style="text-align: left;">Schema</td>
 <td style="text-align: left;"><code>sigma.parser</code> / <code>sigma.schemas</code></td>
-<td style="text-align: left;">YAML parsing + JSON-schema validation</td>
+<td style="text-align: left;">Load YAML and validate it against a vendored schema</td>
 </tr>
 <tr>
 <td style="text-align: left;">Entity</td>
 <td style="text-align: left;"><code>sigma.entities</code> / <code>sigma.tags</code></td>
-<td style="text-align: left;">Map a validated rule dict to <code>SigmaRule</code> + KG edges</td>
+<td style="text-align: left;">Map a validated dictionary to <code>SigmaRule</code> and relation dictionaries</td>
 </tr>
 <tr>
 <td style="text-align: left;">Ingest</td>
 <td style="text-align: left;"><code>sigma.ingest</code></td>
-<td style="text-align: left;">Orchestrate parse → entity → remember → persist</td>
+<td style="text-align: left;">Store the rule as a memory note and write knowledge-graph edges</td>
 </tr>
 </tbody>
 </table>
-<p>This page covers all three layers. The CLI wraps the ingest layer; see <a href="#cli">CLI</a>.</p>
-<hr />
 <h2 id="vendored-schemas">Vendored schemas<a class="headerlink" href="#vendored-schemas" title="Permanent link">&para;</a></h2>
-<p>Three SigmaHQ JSON schemas live in <code>src/zettelforge/sigma/schemas/</code>. Schema selection is automatic based on the top-level keys of the parsed rule dict.</p>
+<p>ZettelForge packages three SigmaHQ JSON schemas in <code>src/zettelforge/sigma/schemas/</code>. The parser loads them through <code>importlib.resources</code>, caches each loaded schema in <code>_SCHEMA_CACHE</code>, and requires no separate schema download.</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">File</th>
 <th style="text-align: left;">Schema title</th>
-<th style="text-align: left;">When used</th>
+<th style="text-align: left;">Required top-level fields</th>
+<th style="text-align: left;">Selected when</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>sigma-detection-rule-schema.json</code></td>
-<td style="text-align: left;">Sigma rule specification V2.0.0</td>
-<td style="text-align: left;">Default; no <code>correlation</code> or <code>filter</code> key</td>
+<td style="text-align: left;">Sigma rule specification V2.0.0 (2024-08-08)</td>
+<td style="text-align: left;"><code>title</code>, <code>logsource</code>, <code>detection</code></td>
+<td style="text-align: left;">Neither <code>correlation</code> nor <code>filter</code> is present</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>sigma-correlation-rules-schema.json</code></td>
-<td style="text-align: left;">Sigma correlation rules</td>
-<td style="text-align: left;"><code>correlation</code> key present</td>
+<td style="text-align: left;">Sigma Meta rule specification V2.1.0 (2025-07-25)</td>
+<td style="text-align: left;"><code>title</code>, <code>correlation</code></td>
+<td style="text-align: left;"><code>correlation</code> is present</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>sigma-filters-schema.json</code></td>
-<td style="text-align: left;">Sigma filters</td>
-<td style="text-align: left;"><code>filter</code> key present</td>
+<td style="text-align: left;">Sigma Global Filter specification V2.0.0 (2024-08-08)</td>
+<td style="text-align: left;"><code>title</code>, <code>logsource</code>, <code>filter</code></td>
+<td style="text-align: left;"><code>filter</code> is present and <code>correlation</code> is absent</td>
 </tr>
 </tbody>
 </table>
-<p><strong>SigmaHQ specification version</strong>: V2.0.0 (2024-08-08). <strong>JSON Schema draft</strong>: 2020-12.</p>
-<p>Schemas load lazily and cache in <code>_SCHEMA_CACHE</code>. The <code>importlib.resources</code> API locates them inside the <code>zettelforge.sigma.schemas</code> package so they install with the package and require no separate download.</p>
-<hr />
-<h2 id="schema-dispatch">Schema dispatch<a class="headerlink" href="#schema-dispatch" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># from sigma/parser.py</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">_pick_schema</span><span class="p">(</span><span class="n">rule</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s2">&quot;correlation&quot;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_load_schema</span><span class="p">(</span><span class="s2">&quot;sigma-correlation-rules-schema.json&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">&quot;filter&quot;</span> <span class="ow">in</span> <span class="n">rule</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_load_schema</span><span class="p">(</span><span class="s2">&quot;sigma-filters-schema.json&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_load_schema</span><span class="p">(</span><span class="s2">&quot;sigma-detection-rule-schema.json&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Dispatch is ordered: correlation check before filter check, filter before detection. A rule with both <code>correlation</code> and <code>filter</code> is dispatched to the correlation schema.</p>
-<hr />
+<p>All three schemas declare JSON Schema draft 2020-12. Dispatch checks <code>correlation</code> first, then <code>filter</code>, then falls back to the detection schema. A dictionary containing both keys therefore selects the correlation schema.</p>
 <h2 id="detection-rule-schema">Detection rule schema<a class="headerlink" href="#detection-rule-schema" title="Permanent link">&para;</a></h2>
-<p>Required top-level keys: <code>title</code>, <code>logsource</code>, <code>detection</code>.</p>
 <h3 id="top-level-properties">Top-level properties<a class="headerlink" href="#top-level-properties" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3221,51 +3251,51 @@
 <tbody>
 <tr>
 <td style="text-align: left;"><code>title</code></td>
-<td style="text-align: left;">string (max 256)</td>
+<td style="text-align: left;">string, max 256</td>
 <td style="text-align: center;">yes</td>
-<td style="text-align: left;">Brief description of what the rule detects</td>
+<td style="text-align: left;">Brief detection title</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>id</code></td>
-<td style="text-align: left;">string (UUID)</td>
+<td style="text-align: left;">UUID string</td>
 <td style="text-align: center;">no</td>
-<td style="text-align: left;">Globally unique identifier; UUID v4 recommended</td>
+<td style="text-align: left;">Globally unique rule identifier</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>name</code></td>
-<td style="text-align: left;">string (max 256)</td>
+<td style="text-align: left;">string, max 256</td>
 <td style="text-align: center;">no</td>
-<td style="text-align: left;">Human-readable name for correlation rule references</td>
+<td style="text-align: left;">Name used by correlation rule references</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>related</code></td>
 <td style="text-align: left;">array of objects</td>
 <td style="text-align: center;">no</td>
-<td style="text-align: left;">Cross-references to other rules</td>
+<td style="text-align: left;">Relationships to other rules</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>taxonomy</code></td>
-<td style="text-align: left;">string (max 256)</td>
+<td style="text-align: left;">string, max 256</td>
 <td style="text-align: center;">no</td>
-<td style="text-align: left;">Taxonomy identifier used in the rule</td>
+<td style="text-align: left;">Taxonomy identifier</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>status</code></td>
-<td style="text-align: left;">string (enum)</td>
+<td style="text-align: left;">enum string</td>
 <td style="text-align: center;">no</td>
-<td style="text-align: left;">Rule lifecycle state (see below)</td>
+<td style="text-align: left;">Rule lifecycle state</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>description</code></td>
-<td style="text-align: left;">string</td>
+<td style="text-align: left;">string, max 65,535</td>
 <td style="text-align: center;">no</td>
-<td style="text-align: left;">Detailed rule description</td>
+<td style="text-align: left;">Detailed description</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>references</code></td>
 <td style="text-align: left;">array of strings</td>
 <td style="text-align: center;">no</td>
-<td style="text-align: left;">External URLs and references</td>
+<td style="text-align: left;">External references</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>author</code></td>
@@ -3275,13 +3305,13 @@
 </tr>
 <tr>
 <td style="text-align: left;"><code>date</code></td>
-<td style="text-align: left;">string (ISO 8601)</td>
+<td style="text-align: left;">date string</td>
 <td style="text-align: center;">no</td>
 <td style="text-align: left;">Creation date</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>modified</code></td>
-<td style="text-align: left;">string (ISO 8601)</td>
+<td style="text-align: left;">date string</td>
 <td style="text-align: center;">no</td>
 <td style="text-align: left;">Last modification date</td>
 </tr>
@@ -3289,25 +3319,25 @@
 <td style="text-align: left;"><code>tags</code></td>
 <td style="text-align: left;">array of strings</td>
 <td style="text-align: center;">no</td>
-<td style="text-align: left;">Namespaced tags (ATT&amp;CK, CVE, TLP, etc.)</td>
+<td style="text-align: left;">Namespaced tags</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>level</code></td>
-<td style="text-align: left;">string (enum)</td>
+<td style="text-align: left;">enum string</td>
 <td style="text-align: center;">no</td>
-<td style="text-align: left;">Severity level (see below)</td>
+<td style="text-align: left;">Severity level</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>logsource</code></td>
 <td style="text-align: left;">object</td>
 <td style="text-align: center;">yes</td>
-<td style="text-align: left;">Log source selector</td>
+<td style="text-align: left;">Product, service, category, and definition fields</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>detection</code></td>
 <td style="text-align: left;">object</td>
 <td style="text-align: center;">yes</td>
-<td style="text-align: left;">Detection logic with selections and condition</td>
+<td style="text-align: left;">Selections plus required <code>condition</code> field</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>falsepositives</code></td>
@@ -3319,17 +3349,23 @@
 <td style="text-align: left;"><code>fields</code></td>
 <td style="text-align: left;">array of strings</td>
 <td style="text-align: center;">no</td>
-<td style="text-align: left;">Log field names to include in output</td>
+<td style="text-align: left;">Output field names</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>license</code></td>
 <td style="text-align: left;">string</td>
 <td style="text-align: center;">no</td>
-<td style="text-align: left;">Rule license identifier (e.g. <code>DRL 1.1</code>)</td>
+<td style="text-align: left;">License for the rule content, separate from the ZettelForge software license</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>scope</code></td>
+<td style="text-align: left;">array</td>
+<td style="text-align: center;">no</td>
+<td style="text-align: left;">Scope values defined by the vendored Sigma schema</td>
 </tr>
 </tbody>
 </table>
-<h3 id="status-enum"><code>status</code> enum<a class="headerlink" href="#status-enum" title="Permanent link">&para;</a></h3>
+<h3 id="status-values"><code>status</code> values<a class="headerlink" href="#status-values" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -3340,27 +3376,27 @@
 <tbody>
 <tr>
 <td style="text-align: left;"><code>stable</code></td>
-<td style="text-align: left;">No obvious false positives in multiple environments over a long period</td>
+<td style="text-align: left;">Used in multiple environments for a long period without obvious false positives</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>test</code></td>
-<td style="text-align: left;">No obvious false positives on a limited set of test systems</td>
+<td style="text-align: left;">Used on a limited set of test systems without obvious false positives</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>experimental</code></td>
-<td style="text-align: left;">Not tested outside lab environments; could lead to many false positives</td>
+<td style="text-align: left;">New and not tested outside lab environments</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>deprecated</code></td>
-<td style="text-align: left;">Replaced by or covered by another rule; linked via the <code>related</code> field</td>
+<td style="text-align: left;">Replaced by or covered by another rule linked through <code>related</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>unsupported</code></td>
-<td style="text-align: left;">Cannot be used in its current state (special log, home-made fields, etc.)</td>
+<td style="text-align: left;">Not usable in its current form</td>
 </tr>
 </tbody>
 </table>
-<h3 id="level-enum"><code>level</code> enum<a class="headerlink" href="#level-enum" title="Permanent link">&para;</a></h3>
+<h3 id="level-values"><code>level</code> values<a class="headerlink" href="#level-values" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -3371,27 +3407,27 @@
 <tbody>
 <tr>
 <td style="text-align: left;"><code>informational</code></td>
-<td style="text-align: left;">Not an attack, but of security interest</td>
+<td style="text-align: left;">Enrichment-only match that does not trigger a case or alert</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>low</code></td>
-<td style="text-align: left;">Low severity</td>
+<td style="text-align: left;">Notable event that rarely represents an incident on its own</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>medium</code></td>
-<td style="text-align: left;">Medium severity</td>
+<td style="text-align: left;">Relevant event that needs regular manual review</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>high</code></td>
-<td style="text-align: left;">High severity</td>
+<td style="text-align: left;">Relevant event that triggers an internal alert and prompt review</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>critical</code></td>
-<td style="text-align: left;">Critical severity</td>
+<td style="text-align: left;">Incident-level event with near-certain significance</td>
 </tr>
 </tbody>
 </table>
-<h3 id="logsource-object"><code>logsource</code> object<a class="headerlink" href="#logsource-object" title="Permanent link">&para;</a></h3>
+<h3 id="logsource-properties"><code>logsource</code> properties<a class="headerlink" href="#logsource-properties" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -3404,93 +3440,120 @@
 <tr>
 <td style="text-align: left;"><code>product</code></td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Log source product (e.g. <code>windows</code>, <code>linux</code>, <code>aws</code>)</td>
+<td style="text-align: left;">Product such as <code>windows</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>service</code></td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Log source service (e.g. <code>security</code>, <code>sysmon</code>)</td>
+<td style="text-align: left;">Product subset such as <code>security</code> or <code>sshd</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>category</code></td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Log source category (e.g. <code>process_creation</code>, <code>file_event</code>)</td>
+<td style="text-align: left;">Product group such as <code>process_creation</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>definition</code></td>
 <td style="text-align: left;">string</td>
-<td style="text-align: left;">Free-text definition for custom log sources</td>
+<td style="text-align: left;">Free-text source definition</td>
 </tr>
 </tbody>
 </table>
-<h3 id="relatedtype-enum"><code>related[].type</code> enum<a class="headerlink" href="#relatedtype-enum" title="Permanent link">&para;</a></h3>
+<h3 id="relatedtype-values"><code>related[].type</code> values<a class="headerlink" href="#relatedtype-values" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Value</th>
-<th style="text-align: left;">How ZettelForge maps it</th>
+<th style="text-align: left;">ZettelForge relation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>derived</code></td>
-<td style="text-align: left;"><code>related_to</code> KG edge</td>
+<td style="text-align: left;"><code>obsolete</code></td>
+<td style="text-align: left;"><code>superseded_by</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>obsolete</code></td>
-<td style="text-align: left;"><code>superseded_by</code> KG edge</td>
+<td style="text-align: left;"><code>derived</code></td>
+<td style="text-align: left;"><code>related_to</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>merged</code></td>
-<td style="text-align: left;"><code>related_to</code> KG edge</td>
+<td style="text-align: left;"><code>related_to</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>renamed</code></td>
-<td style="text-align: left;"><code>related_to</code> KG edge</td>
+<td style="text-align: left;"><code>related_to</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>similar</code></td>
-<td style="text-align: left;"><code>related_to</code> KG edge</td>
+<td style="text-align: left;"><code>related_to</code></td>
 </tr>
 </tbody>
 </table>
-<p>Only <code>obsolete</code> produces a <code>superseded_by</code> edge; all other <code>related[].type</code> values produce <code>related_to</code>.</p>
-<hr />
-<h2 id="correlation-and-filter-schemas">Correlation and filter schemas<a class="headerlink" href="#correlation-and-filter-schemas" title="Permanent link">&para;</a></h2>
-<p>Both schemas share the detection rule common fields and add format-specific keys.</p>
-<p><strong>Correlation rule</strong> (<code>correlation</code> key present):</p>
+<p>Each <code>related</code> item requires <code>id</code> and <code>type</code>. Only <code>obsolete</code> produces <code>superseded_by</code>; every other supported value produces <code>related_to</code>.</p>
+<h2 id="correlation-schema">Correlation schema<a class="headerlink" href="#correlation-schema" title="Permanent link">&para;</a></h2>
+<p>The correlation schema requires <code>title</code> and <code>correlation</code>. The <code>correlation</code> object requires <code>type</code>, <code>rules</code>, and <code>timespan</code>.</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Property</th>
 <th style="text-align: left;">Type</th>
+<th style="text-align: center;">Required</th>
 <th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>correlation.type</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">One of <code>event_count</code>, <code>value_count</code>, <code>temporal</code>, <code>ordered</code>, <code>sequence</code></td>
+<td style="text-align: left;">enum string</td>
+<td style="text-align: center;">yes</td>
+<td style="text-align: left;">Correlation calculation</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>correlation.rule</code></td>
-<td style="text-align: left;">string or array</td>
-<td style="text-align: left;">Referenced rule names or IDs</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>correlation.group-by</code></td>
-<td style="text-align: left;">array</td>
-<td style="text-align: left;">Fields to group correlated events by</td>
+<td style="text-align: left;"><code>correlation.rules</code></td>
+<td style="text-align: left;">array of strings</td>
+<td style="text-align: center;">yes</td>
+<td style="text-align: left;">Referenced rule names or UUIDs</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>correlation.timespan</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">Time window (e.g. <code>15m</code>, <code>1h</code>)</td>
+<td style="text-align: left;">string, max 10</td>
+<td style="text-align: center;">yes</td>
+<td style="text-align: left;">Lowercase number-plus-unit window such as <code>15m</code> or <code>1h</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>correlation.group-by</code></td>
+<td style="text-align: left;">array of strings</td>
+<td style="text-align: center;">conditional</td>
+<td style="text-align: left;">Fields that define separate event scopes</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>correlation.condition</code></td>
+<td style="text-align: left;">object</td>
+<td style="text-align: center;">conditional</td>
+<td style="text-align: left;">Count comparison and, for value calculations, the target field</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>correlation.aliases</code></td>
+<td style="text-align: left;">object</td>
+<td style="text-align: center;">no</td>
+<td style="text-align: left;">Field-name aliases applied to referenced rules</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Filter rule</strong> (<code>filter</code> key present):</p>
+<p>Supported <code>correlation.type</code> values are:</p>
+<ul>
+<li><code>event_count</code></li>
+<li><code>temporal</code></li>
+<li><code>temporal_ordered</code></li>
+<li><code>value_count</code></li>
+<li><code>value_sum</code></li>
+<li><code>value_avg</code></li>
+<li><code>value_percentile</code></li>
+</ul>
+<p>The schema also accepts optional correlation metadata such as <code>id</code>, <code>status</code>, <code>description</code>, <code>author</code>, <code>references</code>, <code>date</code>, <code>modified</code>, <code>taxonomy</code>, <code>falsepositives</code>, <code>level</code>, and <code>generate</code>.</p>
+<h2 id="filter-schema">Filter schema<a class="headerlink" href="#filter-schema" title="Permanent link">&para;</a></h2>
+<p>The filter schema requires <code>title</code>, <code>logsource</code>, and <code>filter</code>. The <code>filter</code> object requires all three fields below.</p>
 <table>
 <thead>
 <tr>
@@ -3501,64 +3564,89 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>filter</code></td>
-<td style="text-align: left;">object</td>
-<td style="text-align: left;">Filter definition with selections and condition</td>
+<td style="text-align: left;"><code>filter.rules</code></td>
+<td style="text-align: left;">array of strings</td>
+<td style="text-align: left;">Rule names that receive the filter</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>filter.selection</code></td>
+<td style="text-align: left;">array or object</td>
+<td style="text-align: left;">Filter values or field/value pairs</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>filter.condition</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;">Relationship between the filter selections</td>
 </tr>
 </tbody>
 </table>
-<hr />
+<p>The filter schema also accepts <code>id</code>, <code>description</code>, <code>date</code>, <code>modified</code>, and <code>taxonomy</code>.</p>
 <h2 id="parser-api">Parser API<a class="headerlink" href="#parser-api" title="Permanent link">&para;</a></h2>
-<h3 id="parse_yaml"><code>parse_yaml()</code><a class="headerlink" href="#parse_yaml" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse_yaml</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-</code></pre></div>
-<p>Parses Sigma YAML text into a validated dict.</p>
-<p>Steps:
-1. <code>yaml.safe_load(text)</code> — raises <code>SigmaParseError</code> on bad YAML
-2. <code>_stringify_dates()</code> — recursively coerces <code>datetime.date</code> and <code>datetime.datetime</code> back to ISO-8601 strings (PyYAML auto-converts date strings; this reversal prevents false schema violations)
-3. <code>validate()</code> — dispatches to the appropriate vendored schema; raises <code>SigmaValidationError</code> on failure</p>
-<h3 id="parse_file"><code>parse_file()</code><a class="headerlink" href="#parse_file" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse_file</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-</code></pre></div>
-<p>Reads and parses a Sigma rule file. Adds the file path to any exception message for easier debugging.</p>
+<h3 id="parse_yaml"><code>parse_yaml</code><a class="headerlink" href="#parse_yaml" title="Permanent link">&para;</a></h3>
+<p>Signature: <code>parse_yaml(text: str) -&gt; dict[str, Any]</code></p>
+<p><code>parse_yaml</code> loads YAML with <code>yaml.safe_load</code>, converts YAML date and datetime objects back to ISO-8601 strings, selects a schema, and validates the result. It returns the validated dictionary.</p>
+<p>It raises:</p>
 <ul>
-<li>File size limit: <code>MAX_RULE_FILE_BYTES = 1_048_576</code> (1 MB)</li>
-<li>Raises <code>SigmaParseError</code> if the file exceeds 1 MB, is unreadable, or contains bad YAML</li>
-<li>Raises <code>SigmaValidationError</code> if the rule fails schema validation</li>
+<li><code>SigmaParseError</code> for invalid YAML or a top-level value that is not a mapping.</li>
+<li><code>SigmaValidationError</code> when the selected JSON Schema rejects the mapping.</li>
 </ul>
-<h3 id="validate"><code>validate()</code><a class="headerlink" href="#validate" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">rule</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ValidationResult</span>
-</code></pre></div>
-<p>Validates a pre-parsed rule dict against the appropriate schema. Returns a <code>ValidationResult</code> with human-readable error messages that include dotted field paths (e.g. <code>detection.condition: 'condition' is a required property</code>).</p>
-<hr />
-<h2 id="error-types">Error types<a class="headerlink" href="#error-types" title="Permanent link">&para;</a></h2>
-<h3 id="sigmaparseerror"><code>SigmaParseError</code><a class="headerlink" href="#sigmaparseerror" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SigmaParseError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span>
-</code></pre></div>
-<p>Raised by: bad YAML, I/O error, oversized file.</p>
-<h3 id="sigmavalidationerror"><code>SigmaValidationError</code><a class="headerlink" href="#sigmavalidationerror" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SigmaValidationError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">)</span>
-</code></pre></div>
-<p>Raised by: rule fails JSON-schema validation.</p>
-<hr />
-<h2 id="validationresult"><code>ValidationResult</code><a class="headerlink" href="#validationresult" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ValidationResult</span><span class="p">:</span>
-    <span class="n">valid</span><span class="p">:</span> <span class="nb">bool</span>
-    <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__bool__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid</span>
-</code></pre></div>
-<p><code>errors</code> contains one entry per violation, with a dotted path to the offending field:</p>
+<h3 id="parse_file"><code>parse_file</code><a class="headerlink" href="#parse_file" title="Permanent link">&para;</a></h3>
+<p>Signature: <code>parse_file(path: str | Path) -&gt; dict[str, Any]</code></p>
+<p><code>parse_file</code> reads one UTF-8 rule file and delegates to <code>parse_yaml</code>. It includes the path in parse and validation errors.</p>
+<p>The parser enforces <code>MAX_RULE_FILE_BYTES = 1_048_576</code> and raises <code>SigmaParseError</code> before YAML parsing when a file exceeds the limit. It also raises <code>SigmaParseError</code> when it cannot stat or read the path.</p>
+<h3 id="validate"><code>validate</code><a class="headerlink" href="#validate" title="Permanent link">&para;</a></h3>
+<p>Signature: <code>validate(rule: dict[str, Any]) -&gt; ValidationResult</code></p>
+<p><code>validate</code> returns a <code>ValidationResult</code> instead of raising. The result contains:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>valid</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;"><code>True</code> when the selected schema accepts the dictionary</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>errors</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">One path-prefixed message per validation failure</td>
+</tr>
+</tbody>
+</table>
+<p><code>bool(result)</code> returns <code>result.valid</code>. A dictionary with no <code>title</code> or <code>logsource</code> and with <code>level: catastrophic</code> returns these errors:</p>
 <ul>
 <li><code>&lt;root&gt;: 'title' is a required property</code></li>
-<li><code>detection.condition: 'selections' is a required property</code></li>
-<li><code>logsource: 'product' is a required property</code></li>
+<li><code>&lt;root&gt;: 'logsource' is a required property</code></li>
+<li><code>level: 'catastrophic' is not valid under any of the given schemas</code></li>
 </ul>
-<hr />
-<h2 id="detectionrule-base-class"><code>DetectionRule</code> base class<a class="headerlink" href="#detectionrule-base-class" title="Permanent link">&para;</a></h2>
-<p><code>SigmaRule</code> inherits from <code>DetectionRule</code> (<code>zettelforge.detection.base</code>). Both Sigma and YARA rules share these base fields:</p>
+<h2 id="error-types">Error types<a class="headerlink" href="#error-types" title="Permanent link">&para;</a></h2>
+<p><code>SigmaParseError</code> and <code>SigmaValidationError</code> both extend <code>ValueError</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Exception</th>
+<th style="text-align: left;">Raised for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>SigmaParseError</code></td>
+<td style="text-align: left;">Invalid YAML, non-mapping YAML, file stat/read failure, or an oversized file</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SigmaValidationError</code></td>
+<td style="text-align: left;">A parsed mapping that fails the selected JSON Schema</td>
+</tr>
+</tbody>
+</table>
+<h2 id="entity-model">Entity model<a class="headerlink" href="#entity-model" title="Permanent link">&para;</a></h2>
+<h3 id="detectionrule"><code>DetectionRule</code><a class="headerlink" href="#detectionrule" title="Permanent link">&para;</a></h3>
+<p><code>SigmaRule</code> extends <code>zettelforge.detection.base.DetectionRule</code>.</p>
 <table>
 <thead>
 <tr>
@@ -3571,7 +3659,7 @@
 <tr>
 <td style="text-align: left;"><code>rule_id</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">Unique identifier (upstream UUID or content-hash prefix)</td>
+<td style="text-align: left;">Upstream UUID or deterministic content-hash identifier</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>title</code></td>
@@ -3581,12 +3669,12 @@
 <tr>
 <td style="text-align: left;"><code>source_format</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;"><code>"sigma"</code> for Sigma rules</td>
+<td style="text-align: left;"><code>sigma</code> for Sigma rules</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>content_sha256</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">SHA-256 of the canonical YAML form (stable dedupe key)</td>
+<td style="text-align: left;">SHA-256 of the canonical, key-sorted YAML form</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>description</code></td>
@@ -3601,12 +3689,12 @@
 <tr>
 <td style="text-align: left;"><code>date</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">Creation date (ISO-8601)</td>
+<td style="text-align: left;">Creation date</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>modified</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">Last modification date (ISO-8601)</td>
+<td style="text-align: left;">Modification date</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>references</code></td>
@@ -3616,27 +3704,27 @@
 <tr>
 <td style="text-align: left;"><code>tags</code></td>
 <td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">Raw Sigma tags</td>
+<td style="text-align: left;">Raw rule tags</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>level</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;"><code>informational</code> | <code>low</code> | <code>medium</code> | <code>high</code> | <code>critical</code></td>
+<td style="text-align: left;">Rule severity</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>status</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;"><code>stable</code> | <code>test</code> | <code>experimental</code> | <code>deprecated</code> | <code>unsupported</code></td>
+<td style="text-align: left;">Rule lifecycle state</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>tlp</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">TLP marking</td>
+<td style="text-align: left;">Inherited TLP field; not populated by Sigma mapping in 2.8.0</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>license</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">Rule license</td>
+<td style="text-align: left;">Rule-content license</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>source_repo</code></td>
@@ -3646,116 +3734,176 @@
 <tr>
 <td style="text-align: left;"><code>source_path</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">Path within source repo</td>
+<td style="text-align: left;">Path inside the upstream repository</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>extra</code></td>
 <td style="text-align: left;"><code>dict[str, Any]</code></td>
-<td style="text-align: left;">Extension fields</td>
+<td style="text-align: left;">Extension values</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="sigmarule-dataclass"><code>SigmaRule</code> dataclass<a class="headerlink" href="#sigmarule-dataclass" title="Permanent link">&para;</a></h2>
-<p><code>SigmaRule</code> extends <code>DetectionRule</code> with Sigma-specific fields:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">SigmaRule</span><span class="p">(</span><span class="n">DetectionRule</span><span class="p">):</span>
-    <span class="n">logsource_product</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">logsource_service</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">logsource_category</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">rule_level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>      <span class="c1"># raw Sigma level before enum mapping</span>
-    <span class="n">rule_status</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1"># raw Sigma status before enum mapping</span>
-    <span class="n">sigma_format_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">detection_body</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># YAML-serialized detection/correlation block</span>
-    <span class="n">rule_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;detection&quot;</span>       <span class="c1"># &quot;detection&quot; | &quot;correlation&quot; | &quot;filter&quot;</span>
-    <span class="n">fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-    <span class="n">falsepositives</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
-</code></pre></div>
-<p><code>rule_type</code> is inferred automatically: <code>"correlation"</code> if the rule dict has a <code>correlation</code> key, <code>"filter"</code> if it has a <code>filter</code> key, otherwise <code>"detection"</code>.</p>
-<p><code>rule_id</code> falls back to <code>"sigma_" + content_sha256[:16]</code> when the rule has no <code>id</code> field. This makes the ID deterministic and stable for re-ingest deduplication.</p>
-<hr />
-<h2 id="from_rule_dict-rule_to_entities"><code>from_rule_dict()</code> / <code>rule_to_entities()</code><a class="headerlink" href="#from_rule_dict-rule_to_entities" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">from_rule_dict</span><span class="p">(</span>
-    <span class="n">rule_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SigmaRule</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span>
-</code></pre></div>
-<p><code>rule_to_entities</code> is an alias for <code>from_rule_dict</code> (same object). Both names are exported from <code>zettelforge.sigma</code>.</p>
-<p>Converts a validated rule dict into:
-- A <code>SigmaRule</code> instance with all fields populated
-- A list of relation dicts describing edges into the knowledge graph</p>
-<h3 id="relation-dict-shape">Relation dict shape<a class="headerlink" href="#relation-dict-shape" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="s2">&quot;from_type&quot;</span><span class="p">:</span> <span class="s2">&quot;SigmaRule&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;from_value&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;rule_id&gt;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;rel&quot;</span><span class="p">:</span>        <span class="s2">&quot;&lt;relation_type&gt;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;to_type&quot;</span><span class="p">:</span>    <span class="s2">&quot;&lt;entity_type&gt;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;to_value&quot;</span><span class="p">:</span>   <span class="s2">&quot;&lt;entity_value&gt;&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span>   <span class="c1"># optional</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="relation-types-emitted">Relation types emitted<a class="headerlink" href="#relation-types-emitted" title="Permanent link">&para;</a></h3>
+<h3 id="sigmarule"><code>SigmaRule</code><a class="headerlink" href="#sigmarule" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Default or behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>logsource_product</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Copied from <code>logsource.product</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>logsource_service</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Copied from <code>logsource.service</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>logsource_category</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Copied from <code>logsource.category</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rule_level</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Raw <code>level</code> value</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rule_status</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Raw <code>status</code> value</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sigma_format_version</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Remains <code>None</code> in 2.8.0</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>detection_body</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">YAML for <code>detection</code> or <code>correlation</code>; remains <code>None</code> for filters</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rule_type</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;"><code>detection</code>, <code>correlation</code>, or <code>filter</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>fields</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">Copied from <code>fields</code>, default <code>[]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>falsepositives</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">Copied from <code>falsepositives</code>, default <code>[]</code></td>
+</tr>
+</tbody>
+</table>
+<p>When a rule has no <code>id</code>, ZettelForge sets <code>rule_id</code> to <code>sigma_</code> plus the first 16 characters of the canonical content hash. The same rule content therefore produces the same fallback identifier.</p>
+<h2 id="entity-conversion">Entity conversion<a class="headerlink" href="#entity-conversion" title="Permanent link">&para;</a></h2>
+<p>Signature: <code>from_rule_dict(rule_dict: dict[str, Any]) -&gt; tuple[SigmaRule, list[dict[str, Any]]]</code></p>
+<p><code>rule_to_entities</code> is the same function object as <code>from_rule_dict</code>. The function returns a populated <code>SigmaRule</code> plus a list of relation dictionaries. It does not validate its input; pass dictionaries through <code>validate</code>, <code>parse_yaml</code>, or <code>parse_file</code> first.</p>
+<p>Each relation dictionary contains:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Key</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>from_type</code></td>
+<td style="text-align: left;"><code>SigmaRule</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>from_value</code></td>
+<td style="text-align: left;">Source rule identifier</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rel</code></td>
+<td style="text-align: left;">ZettelForge relation name</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>to_type</code></td>
+<td style="text-align: left;">Target entity type</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>to_value</code></td>
+<td style="text-align: left;">Target entity value</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>properties</code></td>
+<td style="text-align: left;">Optional relation metadata</td>
+</tr>
+</tbody>
+</table>
+<h3 id="emitted-relations">Emitted relations<a class="headerlink" href="#emitted-relations" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Relation</th>
-<th style="text-align: left;"><code>to_type</code></th>
-<th style="text-align: left;">When emitted</th>
+<th style="text-align: left;">Target type</th>
+<th style="text-align: left;">Emitted when</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>applies_to</code></td>
 <td style="text-align: left;"><code>LogSource</code></td>
-<td style="text-align: left;">One edge per non-null <code>logsource</code> facet (<code>product</code>, <code>service</code>, <code>category</code>). <code>to_value</code> format: <code>facet:value</code> (e.g. <code>product:windows</code>)</td>
+<td style="text-align: left;">A <code>product</code>, <code>service</code>, or <code>category</code> logsource facet exists</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>tagged_with</code></td>
 <td style="text-align: left;"><code>SigmaTag</code></td>
-<td style="text-align: left;">Every tag in <code>tags[]</code>, always. Preserves raw provenance. <code>to_value</code> is the raw tag string</td>
+<td style="text-align: left;">A non-empty raw tag exists</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>detects</code></td>
 <td style="text-align: left;"><code>AttackPattern</code></td>
-<td style="text-align: left;"><code>attack.t*</code> tags (technique and sub-technique). <code>to_value</code> uppercased: <code>T1059</code>, <code>T1059.001</code></td>
+<td style="text-align: left;">An <code>attack.t*</code> technique or sub-technique tag resolves</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>references_cve</code></td>
 <td style="text-align: left;"><code>Vulnerability</code></td>
-<td style="text-align: left;"><code>cve.*</code> tags. <code>to_value</code> normalized to <code>CVE-YYYY-NNNN</code></td>
+<td style="text-align: left;">A <code>cve.*</code> tag resolves</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>attributed_to</code></td>
 <td style="text-align: left;"><code>IntrusionSet</code></td>
-<td style="text-align: left;"><code>attack.g*</code> tags (ATT&amp;CK group IDs). <code>to_value</code> uppercased: <code>G0007</code></td>
+<td style="text-align: left;">An <code>attack.g*</code> group tag resolves</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>attributed_to</code></td>
 <td style="text-align: left;"><code>Malware</code></td>
-<td style="text-align: left;"><code>attack.s*</code> tags (ATT&amp;CK software IDs). <code>to_value</code> uppercased: <code>S0154</code></td>
+<td style="text-align: left;">An <code>attack.s*</code> software tag resolves</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>superseded_by</code></td>
 <td style="text-align: left;"><code>SigmaRule</code></td>
-<td style="text-align: left;"><code>related[].type == "obsolete"</code></td>
+<td style="text-align: left;"><code>related[].type</code> is <code>obsolete</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>related_to</code></td>
 <td style="text-align: left;"><code>SigmaRule</code></td>
-<td style="text-align: left;"><code>related[].type</code> any other value</td>
+<td style="text-align: left;"><code>related[].type</code> is another supported value</td>
 </tr>
 </tbody>
 </table>
-<p>Tags in the <code>tlp.*</code> and <code>detection.*</code> namespaces, and ATT&amp;CK tactic names (e.g. <code>attack.initial-access</code>), emit only a <code>tagged_with</code> edge and are not upgraded to typed entities.</p>
-<hr />
-<h2 id="resolve_sigma_tag"><code>resolve_sigma_tag()</code><a class="headerlink" href="#resolve_sigma_tag" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">resolve_sigma_tag</span><span class="p">(</span><span class="n">tag</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
-</code></pre></div>
-<p>Resolves a single Sigma tag string to <code>(entity_type, entity_value)</code> for typed KG cross-references, or <code>None</code> for metadata-only tags.</p>
+<p>Logsource targets use <code>facet:value</code>, such as <code>product:windows</code>. ZettelForge always keeps a supported or unsupported tag as <code>tagged_with</code>; it adds a typed edge only when <code>resolve_sigma_tag</code> returns a target.</p>
+<h2 id="tag-resolution">Tag resolution<a class="headerlink" href="#tag-resolution" title="Permanent link">&para;</a></h2>
+<p>Signature: <code>resolve_sigma_tag(tag: str) -&gt; tuple[str, str] | None</code></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Input pattern</th>
-<th style="text-align: left;">Returns</th>
+<th style="text-align: left;">Input</th>
+<th style="text-align: left;">Return value</th>
 </tr>
 </thead>
 <tbody>
@@ -3785,119 +3933,99 @@
 </tr>
 <tr>
 <td style="text-align: left;"><code>tlp.amber</code></td>
-<td style="text-align: left;"><code>None</code> (metadata-only)</td>
+<td style="text-align: left;"><code>None</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>detection.emerging</code></td>
-<td style="text-align: left;"><code>None</code> (metadata-only)</td>
+<td style="text-align: left;"><code>None</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>attack.initial-access</code></td>
-<td style="text-align: left;"><code>None</code> (tactic name, not a typed entity)</td>
+<td style="text-align: left;"><code>None</code></td>
 </tr>
 </tbody>
 </table>
-<p>CVE normalization accepts both Sigma's dot separator (<code>cve.2021.44228</code>) and hyphen (<code>cve.2021-44228</code>). Both produce the canonical <code>CVE-YYYY-NNNN</code> format.</p>
-<hr />
+<p>CVE resolution accepts a dot or hyphen between the year and identifier and returns the canonical hyphenated value.</p>
 <h2 id="ingest-api">Ingest API<a class="headerlink" href="#ingest-api" title="Permanent link">&para;</a></h2>
-<h3 id="ingest_rule"><code>ingest_rule()</code><a class="headerlink" href="#ingest_rule" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ingest_rule</span><span class="p">(</span>
-    <span class="n">rule</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
-    <span class="n">mm</span><span class="p">:</span> <span class="n">MemoryManager</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;detection&quot;</span><span class="p">,</span>
-    <span class="n">source_ref</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">sync</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span>
-</code></pre></div>
-<p>Orchestrates the full pipeline for a single rule.</p>
-<p><strong><code>rule</code></strong> accepts three input types:</p>
+<h3 id="ingest_rule"><code>ingest_rule</code><a class="headerlink" href="#ingest_rule" title="Permanent link">&para;</a></h3>
+<p>Signature: <code>ingest_rule(rule, mm, *, domain='detection', source_ref=None, sync=True) -&gt; tuple[note, relations]</code></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: left;">Accepted value</th>
+<th style="text-align: left;">Default</th>
 <th style="text-align: left;">Behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>dict</code></td>
-<td style="text-align: left;">Already-parsed rule dict; skips YAML parsing</td>
+<td style="text-align: left;"><code>rule</code></td>
+<td style="text-align: left;">dictionary, YAML string, path string, or <code>Path</code></td>
+<td style="text-align: left;">required</td>
+<td style="text-align: left;">Strings and paths are parsed and validated; dictionaries are used as-is</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">YAML text, or a file path string if no newlines and the path exists</td>
+<td style="text-align: left;"><code>mm</code></td>
+<td style="text-align: left;"><code>MemoryManager</code>-compatible object</td>
+<td style="text-align: left;">required</td>
+<td style="text-align: left;">Receives the note and knowledge-graph edges</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>Path</code></td>
-<td style="text-align: left;">File path; calls <code>parse_file()</code></td>
+<td style="text-align: left;"><code>domain</code></td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;"><code>detection</code></td>
+<td style="text-align: left;">Stored note domain</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>source_ref</code></td>
+<td style="text-align: left;">string or <code>None</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Overrides the generated source reference</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sync</code></td>
+<td style="text-align: left;">boolean</td>
+<td style="text-align: left;"><code>True</code></td>
+<td style="text-align: left;">Controls inline enrichment in <code>MemoryManager.remember</code></td>
 </tr>
 </tbody>
 </table>
-<p><strong>Pipeline steps</strong>:
-1. Coerce input to <code>(rule_dict, default_source_ref)</code>
-2. <code>from_rule_dict(rule_dict)</code> → <code>(SigmaRule entity, relations)</code>
-3. Compute <code>source_ref = source_ref or f"sigma:{entity.rule_id}:{entity.content_sha256[:12]}"</code>
-4. Idempotency check: <code>store.get_note_by_source_ref(source_ref)</code> — returns existing note if found
-5. Build note content: full YAML body + one-line summary (<code>[sigma] &lt;title&gt; level=&lt;level&gt; status=&lt;status&gt; logsource=[...]</code>)
-6. <code>mm.remember(content, source_type="sigma_rule", source_ref=source_ref, domain=domain, sync=sync)</code>
-7. <code>store.add_kg_edge(...)</code> for each relation</p>
-<p><strong>Returns</strong> <code>(note, relations)</code>. On an idempotent re-ingest of an unchanged rule, returns the existing note and the freshly computed (but not re-persisted) relations.</p>
-<p><strong>Raises</strong>:
-- <code>ValueError</code> if <code>mm is None</code>
-- <code>SigmaParseError</code> / <code>SigmaValidationError</code> from the parse layer</p>
-<h3 id="ingest_rules_dir"><code>ingest_rules_dir()</code><a class="headerlink" href="#ingest_rules_dir" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ingest_rules_dir</span><span class="p">(</span>
-    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
-    <span class="n">mm</span><span class="p">:</span> <span class="n">MemoryManager</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">glob</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;**/*.yml&quot;</span><span class="p">,</span>
-    <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;detection&quot;</span><span class="p">,</span>
-    <span class="n">bulk</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">flush_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
-</code></pre></div>
-<p>Walks a directory and ingests every matching Sigma rule.</p>
-<p>Returns <code>(ingested, skipped)</code>. Parse and validation errors are logged as warnings and increment <code>skipped</code>; they do not abort the walk.</p>
-<p>Security controls during directory walk:
-- Symlinks are skipped; a warning is logged
-- Paths that resolve outside the root directory are skipped</p>
-<p>When <code>bulk=True</code>, <code>sync=False</code> is passed to each <code>ingest_rule</code> call and <code>mm.flush(timeout=flush_timeout)</code> is called once at the end. Use bulk mode for large imports.</p>
-<hr />
-<h2 id="idempotency">Idempotency<a class="headerlink" href="#idempotency" title="Permanent link">&para;</a></h2>
-<p>Source ref format: <code>sigma:&lt;rule_id&gt;:&lt;content_sha256[:12]&gt;</code></p>
-<p>Re-ingesting an unchanged rule returns the original note without creating a duplicate. Re-ingesting a modified rule (different content hash) creates a new note. This matches the YARA ingest idempotency pattern.</p>
-<hr />
-<h2 id="security-controls">Security controls<a class="headerlink" href="#security-controls" title="Permanent link">&para;</a></h2>
+<p>The generated source reference is <code>sigma:&lt;rule_id&gt;:&lt;first-12-content-hash-characters&gt;</code>. If the store already contains that reference, the function returns the existing note and newly computed relations without persisting duplicates.</p>
+<p>For a new rule, the function stores the YAML and a one-line summary as <code>source_type='sigma_rule'</code>, then attempts to persist every relation. It raises <code>ValueError</code> when <code>mm</code> is <code>None</code> and propagates parser and validation errors from string and path inputs. Dictionary input bypasses schema validation.</p>
+<h3 id="ingest_rules_dir"><code>ingest_rules_dir</code><a class="headerlink" href="#ingest_rules_dir" title="Permanent link">&para;</a></h3>
+<p>Signature: <code>ingest_rules_dir(path, mm, *, glob='**/*.yml', domain='detection', bulk=False, flush_timeout=None) -&gt; tuple[int, int]</code></p>
+<p>The function returns <code>(ingested, skipped)</code>. It raises <code>FileNotFoundError</code> when the root path does not exist. It matches both <code>.yml</code> and <code>.yaml</code>, logs per-file failures, increments <code>skipped</code>, and continues the walk.</p>
+<p>When <code>bulk=True</code>, it calls each <code>ingest_rule</code> with <code>sync=False</code> and calls <code>mm.flush(timeout=flush_timeout)</code> once after the walk.</p>
+<h3 id="directory-security-controls">Directory security controls<a class="headerlink" href="#directory-security-controls" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Control</th>
-<th style="text-align: left;">Details</th>
+<th style="text-align: left;">Behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">File size cap</td>
-<td style="text-align: left;"><code>MAX_RULE_FILE_BYTES = 1_048_576</code> (1 MB). Raises <code>SigmaParseError</code> before reading the file.</td>
+<td style="text-align: left;">File size</td>
+<td style="text-align: left;"><code>parse_file</code> rejects files larger than 1,048,576 bytes</td>
 </tr>
 <tr>
-<td style="text-align: left;">YAML parsing</td>
-<td style="text-align: left;"><code>yaml.safe_load</code> only. No arbitrary Python object deserialization.</td>
+<td style="text-align: left;">YAML loading</td>
+<td style="text-align: left;"><code>yaml.safe_load</code> prevents Python object construction</td>
 </tr>
 <tr>
-<td style="text-align: left;">Symlink traversal</td>
-<td style="text-align: left;">Blocked in <code>ingest_rules_dir</code>. Symlinks are skipped with a warning.</td>
+<td style="text-align: left;">Symlinks</td>
+<td style="text-align: left;"><code>ingest_rules_dir</code> skips symlinked files</td>
 </tr>
 <tr>
-<td style="text-align: left;">Path traversal</td>
-<td style="text-align: left;">Files that resolve outside the rules root are skipped with a warning.</td>
+<td style="text-align: left;">Root containment</td>
+<td style="text-align: left;"><code>ingest_rules_dir</code> skips resolved paths outside the requested root</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="kg-edge-metadata">KG edge metadata<a class="headerlink" href="#kg-edge-metadata" title="Permanent link">&para;</a></h2>
-<p>Every edge written by <code>ingest_rule</code> carries two additional properties:</p>
+<h2 id="knowledge-graph-edge-metadata">Knowledge-graph edge metadata<a class="headerlink" href="#knowledge-graph-edge-metadata" title="Permanent link">&para;</a></h2>
+<p>Before persistence, <code>ingest_rule</code> adds these properties unless the relation already supplies them:</p>
 <table>
 <thead>
 <tr>
@@ -3909,82 +4037,93 @@
 <tbody>
 <tr>
 <td style="text-align: left;"><code>edge_type</code></td>
-<td style="text-align: left;"><code>"detection"</code></td>
-<td style="text-align: left;">Distinguish from causal (<code>"causal"</code>) or heuristic (<code>"heuristic"</code>) edges</td>
+<td style="text-align: left;"><code>detection</code></td>
+<td style="text-align: left;">Distinguishes detection edges from causal and heuristic edges</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>source</code></td>
-<td style="text-align: left;"><code>"sigma_ingest"</code></td>
-<td style="text-align: left;">Provenance tag for downstream graph queries</td>
+<td style="text-align: left;"><code>sigma_ingest</code></td>
+<td style="text-align: left;">Records ingest provenance</td>
 </tr>
 </tbody>
 </table>
-<hr />
+<p>If one edge write raises an exception, ZettelForge logs <code>sigma_edge_persist_failed</code> and continues with the next relation.</p>
 <h2 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python -m zettelforge.sigma.ingest [--dry-run] [--domain DOMAIN] [--glob GLOB] &lt;path&gt;
+<p>The verified dry-run invocation against the v2.8.0 release fixture is:</p>
+<div class="highlight"><pre><span></span><code><span class="go">python3 -m zettelforge.sigma.ingest --dry-run tests/fixtures/sigma/tagged_example.yml</span>
 </code></pre></div>
-<p><code>path</code> can be a single <code>.yml</code> / <code>.yaml</code> file or a directory.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Flag</th>
+<th style="text-align: left;">Argument</th>
 <th style="text-align: left;">Default</th>
 <th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td style="text-align: left;"><code>path</code></td>
+<td style="text-align: left;">required</td>
+<td style="text-align: left;">One <code>.yml</code> or <code>.yaml</code> file, or a directory</td>
+</tr>
+<tr>
 <td style="text-align: left;"><code>--dry-run</code></td>
 <td style="text-align: left;">off</td>
-<td style="text-align: left;">Parse + validate + map entities without writing to memory or KG</td>
+<td style="text-align: left;">Parses, validates, and maps without persistence</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--domain</code></td>
 <td style="text-align: left;"><code>detection</code></td>
-<td style="text-align: left;">Memory domain for ingested notes</td>
+<td style="text-align: left;">Memory domain for persisted notes</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--glob</code></td>
 <td style="text-align: left;"><code>**/*.yml</code></td>
-<td style="text-align: left;">Glob pattern for directory walks; also matches <code>.yaml</code> automatically</td>
+<td style="text-align: left;">Directory glob; ZettelForge also checks the corresponding <code>.yaml</code> glob</td>
 </tr>
 </tbody>
 </table>
-<p>Dry-run output per rule:</p>
-<div class="highlight"><pre><span></span><code>OK  rules/proc_creation_win_whoami.yml  id=7e3d88a2-...  type=detection  tags=3  edges=5
-FAIL rules/bad.yml  rules/bad.yml: invalid YAML: ...
+<p>A successful dry run writes:</p>
+<div class="highlight"><pre><span></span><code>OK  tests/fixtures/sigma/tagged_example.yml  id=7e3d88a2-bfaa-4f52-9e0b-2bbbdd0d4ea1  type=detection  tags=5  edges=11
 
-Dry-run summary: 12/13 parsed, 1 failed.
+Dry-run summary: 1/1 parsed, 0 failed.
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The LLM rule explainer (<code>detection/explainer.py</code>) is not invoked by the CLI in v1. It runs asynchronously from the enrichment worker in v1.1+. The <code>ZETTELFORGE_EXPLAIN_RPM</code> env var (default 60) caps the explainer's call rate when wired up.</p>
-</div>
-<hr />
-<h2 id="quick-reference">Quick reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">parse_yaml</span><span class="p">,</span> <span class="n">parse_file</span><span class="p">,</span> <span class="n">validate</span><span class="p">,</span>
-    <span class="n">from_rule_dict</span><span class="p">,</span> <span class="n">ingest_rule</span><span class="p">,</span>
-    <span class="n">SigmaParseError</span><span class="p">,</span> <span class="n">SigmaValidationError</span><span class="p">,</span>
-<span class="p">)</span>
+<p>ZettelForge 2.8.0 also exposes <code>python3 -m zettelforge.sigma.cli</code>. The <code>ingest</code> module invocation emits a non-fatal <code>runpy</code> warning on stderr because <code>zettelforge.sigma.__init__</code> imports <code>ingest</code> before Python executes it as a module. The command still exits successfully; use the <code>cli</code> module to avoid that warning.</p>
+<p>The CLI does not invoke the LLM rule explainer in 2.8.0.</p>
+<h2 id="quick-reference-example">Quick reference example<a class="headerlink" href="#quick-reference-example" title="Permanent link">&para;</a></h2>
+<p>This self-contained example parses a rule and inspects the entity relations without writing data:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">from_rule_dict</span><span class="p">,</span> <span class="n">parse_yaml</span>
 
-<span class="c1"># Parse + validate only</span>
+<span class="n">yaml_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;title: Command shell start</span>
+<span class="s2">logsource:</span>
+<span class="s2">  product: windows</span>
+<span class="s2">  category: process_creation</span>
+<span class="s2">detection:</span>
+<span class="s2">  selection:</span>
+<span class="s2">    Image: cmd.exe</span>
+<span class="s2">  condition: selection</span>
+<span class="s2">tags:</span>
+<span class="s2">  - attack.t1059.003</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
 <span class="n">rule_dict</span> <span class="o">=</span> <span class="n">parse_yaml</span><span class="p">(</span><span class="n">yaml_text</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="n">rule_dict</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
-
-<span class="c1"># Parse + build entity + inspect relations</span>
-<span class="n">rule_dict</span> <span class="o">=</span> <span class="n">parse_file</span><span class="p">(</span><span class="s2">&quot;/path/to/rule.yml&quot;</span><span class="p">)</span>
 <span class="n">entity</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">from_rule_dict</span><span class="p">(</span><span class="n">rule_dict</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">rule_id</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">rule_type</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">rule_level</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">relations</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;rel&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;to_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;to_value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Full ingest (parse + persist + KG edges)</span>
-<span class="n">note</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="s2">&quot;/path/to/rule.yml&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">rule_id</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">rule_type</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">([(</span><span class="n">edge</span><span class="p">[</span><span class="s2">&quot;rel&quot;</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="s2">&quot;to_value&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">relations</span><span class="p">])</span>
 </code></pre></div>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code>sigma_158aaf05e376149d detection
+[(&#39;applies_to&#39;, &#39;product:windows&#39;), (&#39;applies_to&#39;, &#39;category:process_creation&#39;), (&#39;tagged_with&#39;, &#39;attack.t1059.003&#39;), (&#39;detects&#39;, &#39;T1059.003&#39;)]
+</code></pre></div>
+<h2 id="current-limitations">Current limitations<a class="headerlink" href="#current-limitations" title="Permanent link">&para;</a></h2>
+<p>These ZettelForge 2.8.0 behaviors are in progress:</p>
+<ul>
+<li><code>from_rule_dict</code> validates filter rules and sets <code>rule_type='filter'</code>, but it leaves <code>detection_body=None</code> instead of preserving the <code>filter</code> object.</li>
+<li><code>tlp.*</code> tags remain available through <code>tags</code> and <code>tagged_with</code> relations, but they do not populate the inherited <code>tlp</code> field.</li>
+<li><code>sigma_format_version</code> remains <code>None</code> for parsed detection, correlation, and filter rules.</li>
+<li><code>from_rule_dict</code> and dictionary input to <code>ingest_rule</code> bypass schema validation; validate dictionaries before calling either API.</li>
+<li>The CLI parses, validates, maps, and persists rules, but it does not run the LLM rule explainer.</li>
+</ul>
 
 
 

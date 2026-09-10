@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Use remember() with automatic entity extraction to store threat actor intelligence and populate the knowledge graph.">
+        <meta name="description" content="Store a CTI note, verify its normalized entities, and inspect the graph relationships ZettelForge creates.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -678,93 +678,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#1-create-a-memory-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        1. Create a memory manager
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-create-a-memorymanager-instance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Create a MemoryManager instance
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-store-threat-actor-intelligence-with-remember" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Store threat actor intelligence with remember()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-verify-extracted-entities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Verify extracted entities
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-check-the-knowledge-graph" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Check the knowledge graph
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-traverse-the-graph-from-the-actor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Traverse the graph from the actor
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-store-with-memory-evolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Store with memory evolution
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#2-store-a-synthetic-cti-note" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        2. Store a synthetic CTI note
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-verify-the-extracted-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verify the extracted entities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-inspect-direct-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Inspect direct relationships
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-traverse-one-hop-from-the-actor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Traverse one hop from the actor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpret-the-graph-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpret the graph correctly
       
     </span>
   </a>
@@ -822,7 +794,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2455,93 +2427,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#1-create-a-memory-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        1. Create a memory manager
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-create-a-memorymanager-instance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Create a MemoryManager instance
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-store-threat-actor-intelligence-with-remember" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Store threat actor intelligence with remember()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-verify-extracted-entities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Verify extracted entities
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-check-the-knowledge-graph" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Check the knowledge graph
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-traverse-the-graph-from-the-actor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Traverse the graph from the actor
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-store-with-memory-evolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Store with memory evolution
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#2-store-a-synthetic-cti-note" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM Quick Reference
+        2. Store a synthetic CTI note
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-verify-the-extracted-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verify the extracted entities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-inspect-direct-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Inspect direct relationships
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-traverse-one-hop-from-the-actor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Traverse one hop from the actor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpret-the-graph-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpret the graph correctly
       
     </span>
   </a>
@@ -2569,200 +2513,126 @@
 
 
 <h1 id="store-threat-intelligence-about-an-actor">Store threat intelligence about an actor<a class="headerlink" href="#store-threat-intelligence-about-an-actor" title="Permanent link">&para;</a></h1>
-<p>Store threat actor intelligence with <code>remember()</code>. ZettelForge automatically extracts entities
-(intrusion sets, tools, CVEs, campaigns), normalizes them, and populates the knowledge graph
-with inferred relationships.</p>
+<p>Use <code>MemoryManager.remember()</code> to store a CTI note. In this exercise, you store synthetic
+actor data, confirm the normalized entities, and inspect the one-hop relationships that
+ZettelForge writes to its local knowledge graph.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge installed (<code>pip install zettelforge</code>)</li>
-<li>Embedding and LLM models available (download automatically on first use)</li>
-<li>TypeDB running (optional; falls back to JSONL graph)</li>
+<li>Install ZettelForge 2.8.0 and confirm it imports. Start with the
+  <a href="../../tutorials/01-quickstart/">Quickstart</a> if you need a working installation.</li>
+<li>Allow the first run to download the default fastembed model, or warm that model in your
+  local cache before you work offline.</li>
+<li>Set <code>ZETTELFORGE_ENRICHMENT_ENABLED=false</code> in the Python process environment for this
+  fast-path exercise. This keeps the output deterministic and avoids LLM calls.</li>
 </ul>
-<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<h3 id="1-create-a-memorymanager-instance">1. Create a MemoryManager instance<a class="headerlink" href="#1-create-a-memorymanager-instance" title="Permanent link">&para;</a></h3>
+<p>The default installation stores notes and graph data in SQLite and vectors in LanceDB. You
+do not need TypeDB for this task.</p>
+<h2 id="1-create-a-memory-manager">1. Create a memory manager<a class="headerlink" href="#1-create-a-memory-manager" title="Permanent link">&para;</a></h2>
+<p>Start Python from a writable directory, then create the default manager:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
 
 <span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
 </code></pre></div>
-<p>To use custom storage paths:</p>
-<div class="highlight"><pre><span></span><code><span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">(</span>
-    <span class="n">jsonl_path</span><span class="o">=</span><span class="s2">&quot;/data/zettelforge/notes.jsonl&quot;</span><span class="p">,</span>
-    <span class="n">lance_path</span><span class="o">=</span><span class="s2">&quot;/data/zettelforge/lance&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-<h3 id="2-store-threat-actor-intelligence-with-remember">2. Store threat actor intelligence with <code>remember()</code><a class="headerlink" href="#2-store-threat-actor-intelligence-with-remember" title="Permanent link">&para;</a></h3>
+<h2 id="2-store-a-synthetic-cti-note">2. Store a synthetic CTI note<a class="headerlink" href="#2-store-a-synthetic-cti-note" title="Permanent link">&para;</a></h2>
+<p>Keep test data visibly synthetic. This prevents an exercise from looking like a real-world
+attribution claim.</p>
 <div class="highlight"><pre><span></span><code><span class="n">content</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;APT28 (Fancy Bear) deployed Cobalt Strike beacons against NATO-aligned &quot;</span>
-    <span class="s2">&quot;government networks in Q1 2026. The campaign exploited CVE-2024-3094, &quot;</span>
-    <span class="s2">&quot;a critical backdoor in xz-utils, for initial access. Post-exploitation &quot;</span>
-    <span class="s2">&quot;relied on Mimikatz for credential harvesting.&quot;</span>
+    <span class="s2">&quot;Synthetic exercise: APT28 deployed Cobalt Strike and Mimikatz. &quot;</span>
+    <span class="s2">&quot;The exercise associates both tools with CVE-2024-3094.&quot;</span>
 <span class="p">)</span>
 
 <span class="n">note</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
     <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">,</span>
     <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span>
-    <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;mandiant-apt28-q1-2026&quot;</span><span class="p">,</span>
+    <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;synthetic-actor-exercise&quot;</span><span class="p">,</span>
     <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note ID: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Status: </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">created_at</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note ID starts with note_: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;note_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<blockquote>
-<p>The <code>domain="cti"</code> parameter triggers CTI-specific entity extraction and causal triple
-extraction (MAGMA-style) for richer graph edges.</p>
-</blockquote>
-<h3 id="3-verify-extracted-entities">3. Verify extracted entities<a class="headerlink" href="#3-verify-extracted-entities" title="Permanent link">&para;</a></h3>
+<p>The direct write returns:</p>
+<div class="highlight"><pre><span></span><code>Status: created
+Note ID starts with note_: True
+</code></pre></div>
+<p><code>domain="cti"</code> scopes the note to CTI workflows. <code>source_type</code> and <code>source_ref</code> preserve
+where the note came from; they do not validate the content.</p>
+<h2 id="3-verify-the-extracted-entities">3. Verify the extracted entities<a class="headerlink" href="#3-verify-the-extracted-entities" title="Permanent link">&para;</a></h2>
+<p>Run the same deterministic regex extractor used by the fast write path:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.entity_indexer</span><span class="w"> </span><span class="kn">import</span> <span class="n">EntityExtractor</span>
 
 <span class="n">extractor</span> <span class="o">=</span> <span class="n">EntityExtractor</span><span class="p">()</span>
 <span class="n">entities</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract_all</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">entities</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="k">for</span> <span class="n">entity_type</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">entities</span><span class="p">):</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">entities</span><span class="p">[</span><span class="n">entity_type</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">values</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">values</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">values</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Expected output:</p>
-<div class="highlight"><pre><span></span><code>  cve: [&#39;cve-2024-3094&#39;]
-  intrusion_set: [&#39;apt28&#39;]
-  tool: [&#39;cobalt-strike&#39;, &#39;mimikatz&#39;]
+<p>You get normalized, lowercase entity values:</p>
+<div class="highlight"><pre><span></span><code>cve: [&#39;cve-2024-3094&#39;]
+intrusion_set: [&#39;apt28&#39;]
+tool: [&#39;cobalt-strike&#39;, &#39;mimikatz&#39;]
 </code></pre></div>
-<p>Entity values are normalized to lowercase. Tool names are hyphenated (<code>cobalt-strike</code>).
-CVEs are stored lowercase (<code>cve-2024-3094</code>). APT group designators like APT28 are classified
-as <code>intrusion_set</code>, not <code>actor</code>. The <code>actor</code> type captures named actors matched by common
-name (Lazarus, Sandworm, Volt Typhoon).</p>
-<blockquote>
-<p>"Fancy Bear" does not appear in the extracted output above. Regex-based extraction matches
-structured designators like <code>APT28</code> directly. Text aliases like "Fancy Bear" resolve to
-their canonical form only when TypeDB is running with <code>alias-of</code> relations populated, or
-when LLM NER is enabled with <code>extract_all(content, use_llm=True)</code>.</p>
-</blockquote>
-<h3 id="4-check-the-knowledge-graph">4. Check the knowledge graph<a class="headerlink" href="#4-check-the-knowledge-graph" title="Permanent link">&para;</a></h3>
-<p>Use the correct entity type (<code>intrusion_set</code> for APT groups) when querying. The return value
-is a list of dicts, each containing a <code>"node"</code> sub-dict and a <code>"relationship"</code> key:</p>
+<p>APT-style designators such as <code>APT28</code> use the <code>intrusion_set</code> type. Tool names use hyphens,
+and CVE identifiers use lowercase.</p>
+<h2 id="4-inspect-direct-relationships">4. Inspect direct relationships<a class="headerlink" href="#4-inspect-direct-relationships" title="Permanent link">&para;</a></h2>
+<p>Query with the normalized entity type and value:</p>
 <div class="highlight"><pre><span></span><code><span class="n">relationships</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">get_entity_relationships</span><span class="p">(</span><span class="s2">&quot;intrusion_set&quot;</span><span class="p">,</span> <span class="s2">&quot;apt28&quot;</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">rel</span> <span class="ow">in</span> <span class="n">relationships</span><span class="p">:</span>
+<span class="k">for</span> <span class="n">rel</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="n">relationships</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="p">(</span>
+        <span class="n">item</span><span class="p">[</span><span class="s2">&quot;relationship&quot;</span><span class="p">],</span>
+        <span class="n">item</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">][</span><span class="s2">&quot;entity_type&quot;</span><span class="p">],</span>
+        <span class="n">item</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">][</span><span class="s2">&quot;entity_value&quot;</span><span class="p">],</span>
+    <span class="p">),</span>
+<span class="p">):</span>
     <span class="n">node</span> <span class="o">=</span> <span class="n">rel</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;entity_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;entity_value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;&lt;stored-note&gt;&quot;</span> <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;entity_value&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">note</span><span class="o">.</span><span class="n">id</span> <span class="k">else</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;entity_value&quot;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;entity_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Expected output (after step 2 runs):</p>
-<div class="highlight"><pre><span></span><code>  USES_TOOL: tool:cobalt-strike
-  USES_TOOL: tool:mimikatz
-  EXPLOITS_CVE: cve:cve-2024-3094
-  MENTIONED_IN: note:&lt;note_id&gt;
+<p>The stored note produces these relationships:</p>
+<div class="highlight"><pre><span></span><code>EXPLOITS_CVE: cve:cve-2024-3094
+MENTIONED_IN: note:&lt;stored-note&gt;
+USES_TOOL: tool:cobalt-strike
+USES_TOOL: tool:mimikatz
 </code></pre></div>
-<h3 id="5-traverse-the-graph-from-the-actor">5. Traverse the graph from the actor<a class="headerlink" href="#5-traverse-the-graph-from-the-actor" title="Permanent link">&para;</a></h3>
-<p><code>traverse_graph</code> returns a list of paths. Each path is a list of step dicts with
-<code>from_type</code>, <code>from_value</code>, <code>relationship</code>, <code>to_type</code>, and <code>to_value</code>:</p>
+<h2 id="5-traverse-one-hop-from-the-actor">5. Traverse one hop from the actor<a class="headerlink" href="#5-traverse-one-hop-from-the-actor" title="Permanent link">&para;</a></h2>
+<p>Use a one-hop traversal to enumerate the same neighbors as paths:</p>
 <div class="highlight"><pre><span></span><code><span class="n">paths</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">traverse_graph</span><span class="p">(</span>
     <span class="n">start_type</span><span class="o">=</span><span class="s2">&quot;intrusion_set&quot;</span><span class="p">,</span>
     <span class="n">start_value</span><span class="o">=</span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span>
-    <span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">max_depth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;from_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;from_value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot; --[</span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]--&gt;&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;to_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;to_value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
-</code></pre></div>
-<blockquote>
-<p>If TypeDB is not running, graph traversal uses the JSONL fallback. Relationship data is
-identical, but query performance degrades above ~50,000 edges.</p>
-<p><code>max_depth</code> is capped at 2 in the default installation. Passing a higher value logs a
-warning and traversal proceeds at depth 2.</p>
-</blockquote>
-<h3 id="6-store-with-memory-evolution">6. Store with memory evolution<a class="headerlink" href="#6-store-with-memory-evolution" title="Permanent link">&para;</a></h3>
-<p>Use <code>evolve=True</code> to deduplicate against existing notes. The LLM extracts facts, compares
-them to existing memory, and returns the operation taken per fact:</p>
-<div class="highlight"><pre><span></span><code><span class="n">note</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
-    <span class="n">content</span><span class="o">=</span><span class="p">(</span>
-        <span class="s2">&quot;Lazarus Group used Cobalt Strike and a custom loader called &quot;</span>
-        <span class="s2">&quot;DTrack to target cryptocurrency exchanges in March 2026. &quot;</span>
-        <span class="s2">&quot;CISA advisory AA26-078A links the campaign to CVE-2024-3094.&quot;</span>
-    <span class="p">),</span>
-    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
-    <span class="n">evolve</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="n">one_hop_steps</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">step</span><span class="p">:</span> <span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s2">&quot;relationship&quot;</span><span class="p">],</span> <span class="n">step</span><span class="p">[</span><span class="s2">&quot;to_type&quot;</span><span class="p">],</span> <span class="n">step</span><span class="p">[</span><span class="s2">&quot;to_value&quot;</span><span class="p">]),</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="c1"># status: &quot;created&quot;, &quot;updated&quot;, &quot;corrected&quot;, or &quot;noop&quot;</span>
+
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">one_hop_steps</span><span class="p">:</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;&lt;stored-note&gt;&quot;</span> <span class="k">if</span> <span class="n">step</span><span class="p">[</span><span class="s2">&quot;to_value&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">note</span><span class="o">.</span><span class="n">id</span> <span class="k">else</span> <span class="n">step</span><span class="p">[</span><span class="s2">&quot;to_value&quot;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;from_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;from_value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;--[</span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]--&gt; &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;to_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
 </code></pre></div>
-<h2 id="llm-quick-reference">LLM Quick Reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
-<p><strong>Task:</strong> Store threat actor intelligence with automatic entity extraction and knowledge graph
-population.</p>
-<p><strong>Primary method:</strong> <code>mm.remember(content, source_type="report", source_ref="...", domain="cti")</code>
-returns <code>(MemoryNote, str)</code>. Entities (intrusion sets, actors, tools, CVEs, campaigns, assets)
-are extracted automatically, values normalized, and graph edges created.</p>
-<p><strong>Entity extraction pipeline:</strong> Content passes through <code>EntityExtractor().extract_all()</code>, which
-applies a regex fast-path for CTI types. Each extracted value is normalized (lowercased,
-hyphenated) before indexing and graph storage.</p>
-<p><strong>Entity types for CTI content:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Entity type</th>
-<th>Matches</th>
-<th>Example value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>intrusion_set</code></td>
-<td>APT\d+, UNC\d+, TA\d+, FIN\d+, TEMP\d+</td>
-<td><code>apt28</code></td>
-</tr>
-<tr>
-<td><code>actor</code></td>
-<td>Lazarus, Sandworm, Volt Typhoon</td>
-<td><code>lazarus</code></td>
-</tr>
-<tr>
-<td><code>tool</code></td>
-<td>Cobalt Strike, Mimikatz, Metasploit, …</td>
-<td><code>cobalt-strike</code></td>
-</tr>
-<tr>
-<td><code>cve</code></td>
-<td>CVE-YYYY-NNNNN</td>
-<td><code>cve-2024-3094</code></td>
-</tr>
-<tr>
-<td><code>campaign</code></td>
-<td>Operation \&lt;name&gt;</td>
-<td><code>operation aurora</code></td>
-</tr>
-<tr>
-<td><code>attack_pattern</code></td>
-<td>T1234, T1234.001</td>
-<td><code>T1566</code></td>
-</tr>
-</tbody>
-</table>
-<p><strong>Graph edges created automatically:</strong> <code>USES_TOOL</code> (intrusion-set/actor → tool),
-<code>EXPLOITS_CVE</code> (intrusion-set/actor → cve, tool → cve), <code>TARGETS_ASSET</code>
-(intrusion-set/actor/tool → asset), <code>CONDUCTS_CAMPAIGN</code> (intrusion-set/actor → campaign),
-<code>MENTIONED_IN</code> (all entities → note).</p>
-<p><strong><code>get_entity_relationships</code> return shape:</strong> <code>list[dict]</code> where each dict has <code>"relationship"</code>
-(str), <code>"node"</code> (dict with <code>entity_type</code>, <code>entity_value</code>, <code>properties</code>),
-<code>"edge_properties"</code> (dict), and <code>"note_id"</code> (str).</p>
-<p><strong><code>traverse_graph</code> return shape:</strong> <code>list[list[dict]]</code> — a list of paths. Each path is a list
-of step dicts with <code>from_type</code>, <code>from_value</code>, <code>relationship</code>, <code>to_type</code>, <code>to_value</code>.</p>
-<p><strong>Causal triples:</strong> For <code>domain="cti"</code> notes or content &gt;200 chars, LLM-based causal triple
-extraction runs in the background, adding richer semantic edges to the graph.</p>
-<p><strong>Memory evolution:</strong> <code>mm.remember(content, domain="cti", evolve=True)</code> extracts facts,
-compares each against existing notes, and returns the operation taken. For programmatic batch
-use, <code>remember_with_extraction()</code> returns a list of <code>(MemoryNote, status)</code> tuples.</p>
-<p><strong>Alias resolution:</strong> Structured designators like <code>APT28</code> normalize to <code>apt28</code> automatically.
-Common name aliases ("Fancy Bear", "Pawn Storm") resolve to the canonical designator only when
-TypeDB is running with <code>alias-of</code> relations populated, or when LLM NER is enabled. Without
-these, use the canonical designator directly in your content.</p>
-<p><strong>Key parameters:</strong> <code>domain="cti"</code> activates CTI entity extraction. <code>source_type</code> accepts
-<code>"conversation"</code>, <code>"report"</code>, <code>"task_output"</code>. <code>source_ref</code> is a free-text provenance string.
-<code>tlp</code> sets a TLP marking on the note (<code>"WHITE"</code>, <code>"GREEN"</code>, <code>"AMBER"</code>, <code>"RED"</code>).</p>
+<p>The traversal returns:</p>
+<div class="highlight"><pre><span></span><code>intrusion_set:apt28 --[EXPLOITS_CVE]--&gt; cve:cve-2024-3094
+intrusion_set:apt28 --[MENTIONED_IN]--&gt; note:&lt;stored-note&gt;
+intrusion_set:apt28 --[USES_TOOL]--&gt; tool:cobalt-strike
+intrusion_set:apt28 --[USES_TOOL]--&gt; tool:mimikatz
+</code></pre></div>
+<h2 id="interpret-the-graph-correctly">Interpret the graph correctly<a class="headerlink" href="#interpret-the-graph-correctly" title="Permanent link">&para;</a></h2>
+<p>The fast path infers these edges because the entities occur in the same note. The edges make
+the note traversable; they do not independently prove that the actor used a tool or exploited
+a CVE. Preserve trustworthy source metadata and review the underlying note before you treat an
+edge as attribution evidence.</p>
+<p>For complete method signatures and return shapes, use the
+<a href="../../reference/memory-manager-api/">Memory Manager API reference</a>. To retrieve stored actor
+knowledge as an analyst, continue with <a href="../query-apt-tools/">Query APT tool usage</a>.</p>
 
 
 

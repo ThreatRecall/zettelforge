@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -3025,10 +3025,16 @@
 
 
 <h1 id="web-api-reference">Web API reference<a class="headerlink" href="#web-api-reference" title="Permanent link">&para;</a></h1>
-<p>ZettelForge ships a FastAPI backend (<code>web/app.py</code>) that exposes the memory system over HTTP and serves the management SPA. Start it with:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>web.app<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">8088</span>
+<p>ZettelForge 2.8.0 ships a FastAPI backend (<code>web/app.py</code>) that exposes the memory system over HTTP and serves the management SPA.</p>
+<p><strong>Prerequisites:</strong> Install ZettelForge 2.8.0 with its <code>web</code> optional dependencies
+and choose an unused loopback port. The verified command below uses port 8089:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>web.app<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">8089</span>
 </code></pre></div>
-<p>The server reports itself as <code>ZettelForge v2.7.0</code>. All paths under <code>/api/</code> are guarded; the SPA at <code>/</code> is not.</p>
+<p>The server reports itself as <code>ZettelForge v2.8.0</code>. All paths under <code>/api/</code> are guarded; the SPA at <code>/</code> is not.</p>
+<div class="admonition warning">
+<p class="admonition-title">Current in-progress endpoint</p>
+<p><code>/api/sync</code> is not ready in ZettelForge OSS. The endpoint returns HTTP 501, but the current runtime response body still uses a legacy extension-package error string that is pending cleanup. This page documents the status code and product boundary without reproducing that deprecated package name.</p>
+</div>
 <h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
 <p>Every <code>/api/*</code> route depends on a single guard. Supply your key in either header:</p>
 <div class="highlight"><pre><span></span><code>X-API-Key: &lt;key&gt;
@@ -3253,7 +3259,7 @@ Authorization: Bearer &lt;key&gt;
 <p>An unsupported <code>format</code> returns <code>400 Unsupported synthesis format</code>. Response: <code>{ "query", "format", "synthesis", "sources_count", "latency_ms" }</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Synthesis format availability</p>
-<p>In ZettelForge OSS, the extended formats (<code>synthesized_brief</code>, <code>timeline_analysis</code>, <code>relationship_map</code>) fall back to <code>direct_answer</code> output. Full multi-format synthesis is provided by the hosted ThreatRecall.ai SaaS. <code>synthesize</code> also depends on a configured LLM provider; without one it returns a well-formed result with no answer.</p>
+<p>In ZettelForge OSS, the extended formats (<code>synthesized_brief</code>, <code>timeline_analysis</code>, <code>relationship_map</code>) return a direct-answer-shaped <code>synthesis</code> payload. The HTTP <code>format</code> field still echoes the requested format. ThreatRecall.ai SaaS exposes its own authenticated synthesis endpoint for hosted recall workflows. <code>synthesize</code> also depends on a configured LLM provider; without one it returns a well-formed result with no answer.</p>
 </div>
 <h2 id="knowledge-graph-endpoints">Knowledge graph endpoints<a class="headerlink" href="#knowledge-graph-endpoints" title="Permanent link">&para;</a></h2>
 <h3 id="get-apigraphnodes">GET /api/graph/nodes<a class="headerlink" href="#get-apigraphnodes" title="Permanent link">&para;</a></h3>
@@ -3269,7 +3275,7 @@ Authorization: Bearer &lt;key&gt;
 <p>Full system snapshot:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.7.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2.8.0&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;edition&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;community&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;edition_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ZettelForge&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;storage_backend&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sqlite&quot;</span><span class="p">,</span>
@@ -3336,12 +3342,9 @@ Authorization: Bearer &lt;key&gt;
 <p>Fields in <code>restart_required_fields</code> are reported under <code>pending_restart</code> and take effect only after a restart.</p>
 <h2 id="saas-only-endpoints">SaaS-only endpoints<a class="headerlink" href="#saas-only-endpoints" title="Permanent link">&para;</a></h2>
 <h3 id="post-apisync">POST /api/sync<a class="headerlink" href="#post-apisync" title="Permanent link">&para;</a></h3>
-<p>OpenCTI synchronization is not available in ZettelForge OSS. In an OSS install this endpoint returns:</p>
-<div class="highlight"><pre><span></span><code>HTTP 501
-{ &quot;error&quot;: &quot;OpenCTI sync requires an integration not present in this build.&quot; }
-</code></pre></div>
-<p>OpenCTI ingestion is provided by the hosted <strong>ThreatRecall.ai</strong> SaaS. See <a href="../../#two-products-one-core">Two products, one core</a> for the OSS-versus-SaaS split.</p>
-<p><code>GET /api/edition</code> reports the running build's capability set in its <code>features</code> map. On an OSS install <code>edition</code> is <code>community</code> and the integration-dependent features (OpenCTI sync, TypeDB STIX ontology, alias resolution over TypeDB, Sigma generation, context injection, multi-tenant auth) resolve to <code>false</code>; those capabilities belong to ThreatRecall.ai SaaS.</p>
+<p>OpenCTI synchronization is in progress in ZettelForge OSS. In the current OSS runtime this endpoint returns HTTP 501. The response body is pending cleanup because it still uses a legacy extension-package error string.</p>
+<p>ThreatRecall.ai SaaS provides STIX 2.1 import/export workflows for exchange with OpenCTI and MISP. Native OpenCTI pull/push sync remains in progress. See <a href="../../#two-products-one-core">Two products, one core</a> for the OSS-versus-SaaS split.</p>
+<p><code>GET /api/edition</code> reports the running build's capability set in its <code>features</code> map. On an OSS install <code>edition</code> is <code>community</code>. <code>opencti_integration</code>, <code>typedb_stix_ontology</code>, <code>alias_resolution_typedb</code>, <code>sigma_generation</code>, <code>context_injection</code>, and <code>multi_tenant_auth</code> resolve to <code>false</code>; they are not available in ZettelForge OSS through this API. Core features such as vector search, blended retrieval, temporal graph queries, graph traversal, report ingestion, and direct-answer synthesis resolve to <code>true</code>.</p>
 <h2 id="html-routes">HTML routes<a class="headerlink" href="#html-routes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

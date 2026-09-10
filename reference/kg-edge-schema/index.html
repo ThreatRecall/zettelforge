@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1659,6 +1659,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#feature-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature state
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#node-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1804,6 +1815,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#osint-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OSINT relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#temporal-relationships" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1941,6 +1963,17 @@
     <span class="md-ellipsis">
       
         add_temporal_edge()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timestamp-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timestamp handling
       
     </span>
   </a>
@@ -2749,6 +2782,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#feature-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature state
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#node-schema" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2887,6 +2931,17 @@
     <span class="md-ellipsis">
       
         Detection rule relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#osint-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OSINT relationships
       
     </span>
   </a>
@@ -3038,6 +3093,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#timestamp-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timestamp handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#get_entity_timeline" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3163,14 +3229,20 @@
 <hr />
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>ZettelForge maintains a knowledge graph of entities and typed relationships extracted from analyst notes and detection rules. The graph stores entity nodes and directed relationship edges with optional temporal indexing for time-based queries.</p>
+<p><strong>Prerequisites:</strong> Use ZettelForge v2.8.0 with Python 3.10 or newer. The direct <code>KnowledgeGraph</code> examples on this page use local JSONL files and do not require a graph service. If you use <code>MemoryManager</code>, read the <a href="../memory-manager-api/">Memory Manager API</a> first.</p>
 <p><strong>Two storage paths exist in parallel:</strong></p>
 <ul>
 <li><strong>SQLite (default).</strong> When you use <code>MemoryManager</code> with the default backend, KG writes go to the <code>kg_nodes</code> and <code>kg_edges</code> tables in <code>zettelforge.db</code>. This is the primary path for most deployments.</li>
 <li><strong>JSONL in-process.</strong> The <code>KnowledgeGraph</code> class (below) writes to <code>kg_nodes.jsonl</code> and <code>kg_edges.jsonl</code> in the data directory. It is used when you call <code>get_knowledge_graph()</code> directly or when the TypeDB extension is not installed and the backend is explicitly set to something other than SQLite.</li>
 </ul>
-<p>The edge field names and relationship types are identical in both paths. The SQLite edge table adds a <code>note_id</code> column (see below).</p>
-<p>On ThreatRecall.ai SaaS, the graph backend is TypeDB, which provides a richer semantic layer. All relationship types documented here apply across backends.</p>
-<p><strong>Thread safety:</strong> All write operations in <code>KnowledgeGraph</code> use <code>threading.RLock</code>.</p>
+<p>The edge field names and relationship types are identical in both OSS paths. The SQLite edge table adds a <code>note_id</code> column (see below).</p>
+<p>This page is the OSS ZettelForge schema reference. ThreatRecall.ai SaaS uses its own tenant-scoped PostgreSQL <code>kg_nodes</code> and <code>kg_edges</code> tables with <code>tenant_id</code>, TLP, confidence, and SaaS-specific node and edge columns. Do not treat the OSS DDL below as the SaaS database contract; use the Web API reference for SaaS integration behavior.</p>
+<p>TypeDB is not part of the public ZettelForge package in this checkout. Direct <code>get_knowledge_graph()</code> access returns JSONL unless the process is configured with a compatible graph extension. Default <code>MemoryManager</code> writes stay on SQLite.</p>
+<p><strong>Thread safety:</strong> The public <code>add_node()</code> and <code>add_edge()</code> write paths use <code>threading.RLock</code>.</p>
+<hr />
+<h2 id="feature-state">Feature state<a class="headerlink" href="#feature-state" title="Permanent link">&para;</a></h2>
+<p>Core node and edge storage, SQLite DDL, JSONL node and edge writes, relationship labels, the functional OSINT relationships listed below, and the examples on this page were verified against ZettelForge v2.8.0 on August 18, 2026.</p>
+<p>The direct JSONL temporal helper is in progress. In this run, one <code>add_temporal_edge()</code> call produced two identical <code>get_changes_since()</code> entries for the same change. The helper also stores timestamps verbatim and compares them as strings; it does not call <code>_parse_timestamp()</code> to validate or normalize them. Use consistently formatted ISO 8601 timestamps and deduplicate JSONL temporal results by <code>(timestamp, from, relationship, to)</code> before presenting them. The SQLite graph row shape remains verified.</p>
 <hr />
 <h2 id="node-schema">Node schema<a class="headerlink" href="#node-schema" title="Permanent link">&para;</a></h2>
 <p>Nodes are created automatically when edges reference them. The <code>entity_type</code> field identifies the domain; the <code>entity_value</code> holds the canonical string.</p>
@@ -3344,6 +3416,78 @@
 </tr>
 </tbody>
 </table>
+<p><strong>OSINT domain</strong> (written by functional collectors):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><code>entity_type</code></th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>DomainName</code></td>
+<td style="text-align: left;">Domain seed or discovered domain</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>IPv4Address</code></td>
+<td style="text-align: left;">IPv4 address resolved from DNS, WHOIS, or BGP context</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>IPv6Address</code></td>
+<td style="text-align: left;">IPv6 address resolved from DNS, WHOIS, or BGP context</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ASNumber</code></td>
+<td style="text-align: left;">Autonomous system number</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Netblock</code></td>
+<td style="text-align: left;">CIDR network block</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>MXRecord</code></td>
+<td style="text-align: left;">Mail exchanger record</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>NSRecord</code></td>
+<td style="text-align: left;">Name server record</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Port</code></td>
+<td style="text-align: left;">Network port discovered by the opt-in active scanner</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Organization</code></td>
+<td style="text-align: left;">Registrar, registrant, or owning organization</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>EmailAddress</code></td>
+<td style="text-align: left;">Email seed or WHOIS registrant address</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Alias</code></td>
+<td style="text-align: left;">Username or handle used as an OSINT seed</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CryptoWallet</code></td>
+<td style="text-align: left;">Cryptocurrency wallet address</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Transaction</code></td>
+<td style="text-align: left;">Blockchain transaction</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SocialAccount</code></td>
+<td style="text-align: left;">Account found for an alias</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Breach</code></td>
+<td style="text-align: left;">Named breach associated with an email address</td>
+</tr>
+</tbody>
+</table>
+<p>The OSINT module declares more ontology types than its functional collectors write. This reference lists only the OSINT nodes and relationships observed from v2.8.0 collectors and focused tests.</p>
 <h3 id="sqlite-ddl">SQLite DDL<a class="headerlink" href="#sqlite-ddl" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">kg_nodes</span><span class="w"> </span><span class="p">(</span>
 <span class="w">    </span><span class="n">node_id</span><span class="w">       </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
@@ -3391,7 +3535,7 @@
 <tr>
 <td style="text-align: left;"><code>edge_type</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;"><code>heuristic</code> | <code>causal</code> | <code>detection</code> (default: <code>heuristic</code>)</td>
+<td style="text-align: left;"><code>heuristic</code> | <code>causal</code> | <code>detection</code> | <code>osint</code> (default: <code>heuristic</code>)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>properties</code></td>
@@ -3451,6 +3595,11 @@
 <td style="text-align: left;"><code>detection</code></td>
 <td style="text-align: left;">Detection rule relationship</td>
 <td style="text-align: left;">Sigma/YARA ingest</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>osint</code></td>
+<td style="text-align: left;">Validated collector result</td>
+<td style="text-align: left;">OSINT collection executor</td>
 </tr>
 </tbody>
 </table>
@@ -3690,6 +3839,99 @@
 </tr>
 </tbody>
 </table>
+<h3 id="osint-relationships">OSINT relationships<a class="headerlink" href="#osint-relationships" title="Permanent link">&para;</a></h3>
+<p>Created by functional <code>zettelforge.osint</code> collectors through <code>run_osint_collection()</code>. Passive collectors write through the normal KG API. The port scanner writes only when you explicitly enable active scanning with <code>ZETTELFORGE_OSINT_ACTIVE_SCAN=1</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Relationship</th>
+<th style="text-align: left;">From</th>
+<th style="text-align: left;">To</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>resolves_to</code></td>
+<td style="text-align: left;"><code>DomainName</code></td>
+<td style="text-align: left;"><code>IPv4Address</code>, <code>IPv6Address</code></td>
+<td style="text-align: left;">DNS A or AAAA result</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ns_for</code></td>
+<td style="text-align: left;"><code>DomainName</code></td>
+<td style="text-align: left;"><code>NSRecord</code></td>
+<td style="text-align: left;">DNS NS record</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mx_for</code></td>
+<td style="text-align: left;"><code>DomainName</code></td>
+<td style="text-align: left;"><code>MXRecord</code></td>
+<td style="text-align: left;">DNS MX record</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>owned_by</code></td>
+<td style="text-align: left;"><code>DomainName</code>, <code>Netblock</code></td>
+<td style="text-align: left;"><code>Organization</code></td>
+<td style="text-align: left;">WHOIS registrant or netblock owner</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>associated_with</code></td>
+<td style="text-align: left;"><code>IPv4Address</code>, <code>IPv6Address</code></td>
+<td style="text-align: left;"><code>Netblock</code></td>
+<td style="text-align: left;">IP address belongs to a netblock</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>part_of_as</code></td>
+<td style="text-align: left;"><code>IPv4Address</code>, <code>IPv6Address</code>, <code>Netblock</code></td>
+<td style="text-align: left;"><code>ASNumber</code></td>
+<td style="text-align: left;">IP address or netblock is announced by an autonomous system</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>listens_on</code></td>
+<td style="text-align: left;"><code>IPv4Address</code>, <code>IPv6Address</code></td>
+<td style="text-align: left;"><code>Port</code></td>
+<td style="text-align: left;">Active scanner found an open port</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>related_to</code></td>
+<td style="text-align: left;"><code>DomainName</code></td>
+<td style="text-align: left;"><code>DomainName</code></td>
+<td style="text-align: left;">Certificate transparency SAN domain association</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>registered_by</code></td>
+<td style="text-align: left;"><code>DomainName</code></td>
+<td style="text-align: left;"><code>EmailAddress</code></td>
+<td style="text-align: left;">WHOIS data names a registrant email address</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>has_account</code></td>
+<td style="text-align: left;"><code>Alias</code></td>
+<td style="text-align: left;"><code>SocialAccount</code></td>
+<td style="text-align: left;">Account discovery links a handle to a platform account</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>appeared_in_breach</code></td>
+<td style="text-align: left;"><code>EmailAddress</code></td>
+<td style="text-align: left;"><code>Breach</code></td>
+<td style="text-align: left;">Breach lookup associates an email address with a named breach</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sent_transaction</code></td>
+<td style="text-align: left;"><code>CryptoWallet</code></td>
+<td style="text-align: left;"><code>Transaction</code></td>
+<td style="text-align: left;">Wallet appears as the transaction sender</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>received_transaction</code></td>
+<td style="text-align: left;"><code>CryptoWallet</code></td>
+<td style="text-align: left;"><code>Transaction</code></td>
+<td style="text-align: left;">Wallet appears as the transaction recipient</td>
+</tr>
+</tbody>
+</table>
+<p>The OSINT ontology also declares <code>hosts</code>, <code>delegated_to</code>, <code>receives_mail_on</code>, and <code>controls_wallet</code>. No v2.8.0 functional collector emitted those relationships during this audit, so treat them as declared vocabulary, not observed writes.</p>
 <h3 id="temporal-relationships">Temporal relationships<a class="headerlink" href="#temporal-relationships" title="Permanent link">&para;</a></h3>
 <p>For tracking entity state over time. Used with <code>add_temporal_edge()</code>.</p>
 <table>
@@ -3751,7 +3993,8 @@
 <h2 id="knowledgegraph-class-api">KnowledgeGraph class API<a class="headerlink" href="#knowledgegraph-class-api" title="Permanent link">&para;</a></h2>
 <p>Use <code>KnowledgeGraph</code> directly when you need in-process JSONL graph access, or call <code>get_knowledge_graph()</code> for the shared singleton.</p>
 <h3 id="add_node">add_node()<a class="headerlink" href="#add_node" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>Creates or updates a node. Returns <code>node_id</code>. If the node already exists, merges properties and refreshes <code>updated_at</code>.</p>
 <h3 id="add_edge">add_edge()<a class="headerlink" href="#add_edge" title="Permanent link">&para;</a></h3>
@@ -3763,29 +4006,35 @@
     <span class="n">to_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">relationship</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>Creates or updates a directed edge. Auto-creates both endpoint nodes. Deduplicates on <code>(from_node_id, to_node_id, relationship)</code>. If a duplicate exists with <code>edge_type="heuristic"</code> and you pass a more specific <code>edge_type</code> in <code>properties</code>, it is promoted.</p>
 <h3 id="get_node">get_node()<a class="headerlink" href="#get_node" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>Looks up a node by type and value. Returns <code>None</code> if not found.</p>
 <h3 id="get_node_by_id">get_node_by_id()<a class="headerlink" href="#get_node_by_id" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_node_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_node_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>Looks up a node by its internal <code>node_id</code>.</p>
 <h3 id="get_outgoing_edges">get_outgoing_edges()<a class="headerlink" href="#get_outgoing_edges" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_outgoing_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_outgoing_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>Returns all outgoing edges for a <code>node_id</code>. Each dict contains at minimum <code>edge_id</code>, <code>from_node_id</code>, <code>to_node_id</code>, <code>relationship</code>, <code>properties</code>, <code>created_at</code>, <code>updated_at</code>.</p>
 <h3 id="get_neighbors">get_neighbors()<a class="headerlink" href="#get_neighbors" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_neighbors</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">relationship</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>Returns adjacent nodes reachable via outgoing edges, with optional relationship filter. Each result contains <code>node</code> (the target node dict), <code>relationship</code>, and <code>edge_properties</code>.</p>
 <h3 id="traverse">traverse()<a class="headerlink" href="#traverse" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">traverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">traverse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>Depth-first traversal up to <code>max_depth</code>. Returns a list of paths; each path is a list of step dicts with keys <code>from_type</code>, <code>from_value</code>, <code>relationship</code>, <code>to_type</code>, <code>to_value</code>.</p>
 <hr />
@@ -3800,10 +4049,13 @@
     <span class="n">relationship</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>    <span class="c1"># TEMPORAL_BEFORE | TEMPORAL_AFTER | SUPERSEDES</span>
     <span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>Creates an edge and indexes it in <code>_temporal_index</code> (keyed by timestamp string) and <code>_entity_timeline</code> (keyed by <code>"entity_type:entity_value"</code>).</p>
-<p>Timestamp formats accepted by <code>_parse_timestamp()</code>:</p>
+<h3 id="timestamp-handling">Timestamp handling<a class="headerlink" href="#timestamp-handling" title="Permanent link">&para;</a></h3>
+<p><code>add_temporal_edge()</code> stores the timestamp string you pass without validation. <code>get_changes_since()</code> filters and sorts those strings lexicographically. Use one fixed-width ISO 8601 representation, such as <code>2026-01-15T00:00:00Z</code>, throughout a graph so string order matches chronological order.</p>
+<p>The private <code>_parse_timestamp()</code> helper can parse the following formats, but the public temporal write and query methods do not call it in v2.8.0:</p>
 <ul>
 <li>ISO 8601 (including <code>Z</code> suffix)</li>
 <li><code>%Y-%m-%d</code></li>
@@ -3812,15 +4064,18 @@
 <li><code>%B %d, %Y</code> (e.g. <code>January 15, 2026</code>)</li>
 </ul>
 <h3 id="get_entity_timeline">get_entity_timeline()<a class="headerlink" href="#get_entity_timeline" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_entity_timeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_entity_timeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>Returns the chronological state history for an entity. Each entry: <code>{"edge": dict, "timestamp": str, "to_entity": "type:value"}</code>.</p>
 <h3 id="get_changes_since">get_changes_since()<a class="headerlink" href="#get_changes_since" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_changes_since</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_changes_since</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="o">...</span>
 </code></pre></div>
-<p>Returns all temporal entity changes at or after <code>timestamp</code>. Results are sorted chronologically. Each entry: <code>{"timestamp": str, "from": "type:value", "relationship": str, "to": "type:value"}</code>.</p>
+<p>Returns temporal entity changes whose stored timestamp string is lexicographically greater than or equal to <code>timestamp</code>. Results are sorted by that string. Each entry: <code>{"timestamp": str, "from": "type:value", "relationship": str, "to": "type:value"}</code>.</p>
 <h3 id="get_latest_state">get_latest_state()<a class="headerlink" href="#get_latest_state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_latest_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_latest_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>Returns the most recent temporal edge entry for an entity, or <code>None</code> if no temporal data exists.</p>
 <hr />
@@ -3830,26 +4085,32 @@
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_causal_edges</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">max_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">max_visited</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>BFS over <strong>outgoing</strong> causal edges — traces forward from cause to effects. Useful for "what does this actor or event lead to?" queries.</p>
 <h3 id="get_incoming_causal">get_incoming_causal()<a class="headerlink" href="#get_incoming_causal" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_incoming_causal</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">max_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">max_visited</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="o">...</span>
 </code></pre></div>
 <p>BFS over <strong>incoming</strong> causal edges — traces back to root causes. Useful for "why did this happen?" queries.</p>
 <hr />
 <h2 id="global-singleton">Global singleton<a class="headerlink" href="#global-singleton" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_knowledge_graph</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">KnowledgeGraph</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.knowledge_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">KnowledgeGraph</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_knowledge_graph</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">KnowledgeGraph</span><span class="p">:</span>
+    <span class="o">...</span>
 </code></pre></div>
-<p>Returns the process-global <code>KnowledgeGraph</code> instance. Checks <code>ZETTELFORGE_BACKEND</code> (default: <code>sqlite</code>):</p>
+<p>Returns the process-global <code>KnowledgeGraph</code> instance for direct graph access. Checks <code>ZETTELFORGE_BACKEND</code> (default: <code>sqlite</code>):</p>
 <ul>
-<li>If <code>ZETTELFORGE_BACKEND=typedb</code> and the TypeDB extension is installed, uses TypeDB. On ThreatRecall.ai SaaS, TypeDB is the active KG backend.</li>
-<li>Otherwise: uses the JSONL <code>KnowledgeGraph</code> instance.</li>
+<li>If <code>ZETTELFORGE_BACKEND=typedb</code> and a compatible TypeDB graph extension is importable, it tries that extension.</li>
+<li>Otherwise, it returns the JSONL <code>KnowledgeGraph</code> instance.</li>
 </ul>
-<p>Note: when you use <code>MemoryManager</code> with the default SQLite backend, KG writes go directly to the SQLite tables via <code>self.store.add_kg_edge()</code>, not through <code>get_knowledge_graph()</code>. Call <code>get_knowledge_graph()</code> for direct graph access independent of the memory manager.</p>
+<p>When you use <code>MemoryManager</code> with the default SQLite backend, KG writes go directly to the SQLite tables via <code>self.store.add_kg_edge()</code>, not through <code>get_knowledge_graph()</code>. Call <code>get_knowledge_graph()</code> for direct graph access independent of the memory manager.</p>
 <hr />
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.knowledge_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">KnowledgeGraph</span>

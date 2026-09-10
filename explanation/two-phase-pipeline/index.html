@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="How ZettelForge extracts durable facts, reconciles them with existing memory, and handles provider failures.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1845,10 +1845,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-problem-append-only-memory" class="md-nav__link">
+  <a href="#why-append-only-memory-degrades" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The problem: append-only memory
+        Why append-only memory degrades
       
     </span>
   </a>
@@ -1856,10 +1856,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-1-extraction-factextractor" class="md-nav__link">
+  <a href="#phase-1-extract-candidate-facts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 1: extraction (FactExtractor)
+        Phase 1: extract candidate facts
       
     </span>
   </a>
@@ -1867,10 +1867,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-2-update-memoryupdater" class="md-nav__link">
+  <a href="#phase-2-reconcile-with-memory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 2: update (MemoryUpdater)
+        Phase 2: reconcile with memory
       
     </span>
   </a>
@@ -1878,10 +1878,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-the-pipeline-affects-retrieval" class="md-nav__link">
+  <a href="#how-supersession-preserves-history" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How the pipeline affects retrieval
+        How supersession preserves history
       
     </span>
   </a>
@@ -1889,10 +1889,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#write-latency-fast-path-and-background-enrichment" class="md-nav__link">
+  <a href="#what-callers-receive" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Write latency: fast path and background enrichment
+        What callers receive
       
     </span>
   </a>
@@ -1900,32 +1900,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
+  <a href="#failure-behavior-determines-the-safe-write-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-not-modify-or-delete-old-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why not modify or delete old notes?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#when-to-enable-evolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to enable evolution
+        Failure behavior determines the safe write path
       
     </span>
   </a>
@@ -2427,10 +2405,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-problem-append-only-memory" class="md-nav__link">
+  <a href="#why-append-only-memory-degrades" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The problem: append-only memory
+        Why append-only memory degrades
       
     </span>
   </a>
@@ -2438,10 +2416,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-1-extraction-factextractor" class="md-nav__link">
+  <a href="#phase-1-extract-candidate-facts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 1: extraction (FactExtractor)
+        Phase 1: extract candidate facts
       
     </span>
   </a>
@@ -2449,10 +2427,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#phase-2-update-memoryupdater" class="md-nav__link">
+  <a href="#phase-2-reconcile-with-memory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 2: update (MemoryUpdater)
+        Phase 2: reconcile with memory
       
     </span>
   </a>
@@ -2460,10 +2438,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-the-pipeline-affects-retrieval" class="md-nav__link">
+  <a href="#how-supersession-preserves-history" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How the pipeline affects retrieval
+        How supersession preserves history
       
     </span>
   </a>
@@ -2471,10 +2449,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#write-latency-fast-path-and-background-enrichment" class="md-nav__link">
+  <a href="#what-callers-receive" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Write latency: fast path and background enrichment
+        What callers receive
       
     </span>
   </a>
@@ -2482,32 +2460,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
+  <a href="#failure-behavior-determines-the-safe-write-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#why-not-modify-or-delete-old-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why not modify or delete old notes?
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#when-to-enable-evolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When to enable evolution
+        Failure behavior determines the safe write path
       
     </span>
   </a>
@@ -2535,181 +2491,156 @@
 
 
 <h1 id="the-two-phase-extraction-pipeline">The two-phase extraction pipeline<a class="headerlink" href="#the-two-phase-extraction-pipeline" title="Permanent link">&para;</a></h1>
-<p>ZettelForge's memory evolution pipeline — activated with <code>evolve=True</code> on <code>remember()</code> — implements a Mem0-inspired two-phase process that solves the core problem of append-only memory systems: redundancy, contradiction, and noise accumulate over time until retrieval quality degrades.</p>
-<p>The MCP server (<code>zettelforge_remember</code>) and web API (<code>POST /api/remember</code>) both enable evolution by default. You can also call <code>remember_with_extraction()</code> directly for programmatic use.</p>
-<p><strong>Prerequisites</strong>: familiarity with <code>remember()</code> and <code>recall()</code> as covered in the <a href="../../tutorials/01-quickstart/">Quickstart</a>.</p>
-<h2 id="the-problem-append-only-memory">The problem: append-only memory<a class="headerlink" href="#the-problem-append-only-memory" title="Permanent link">&para;</a></h2>
-<p>The naive approach to agent memory is to store everything: every report paragraph, every conversation turn. Append it and let vector search surface what's relevant later.</p>
-<p>This fails at scale in three ways:</p>
+<p>ZettelForge's two-phase pipeline turns source text into a small set of durable facts, then reconciles each fact with nearby memory. You use it through <code>MemoryManager.remember(evolve=True)</code>, <code>remember_with_extraction()</code>, or the OSS <code>zettelforge_remember</code> MCP tool, which enables <code>evolve</code> by default.</p>
+<p>The pipeline reduces duplicate, stale, and low-value notes. It does not provide lossless report ingestion in ZettelForge 2.8.0.</p>
+<div class="admonition warning">
+<p class="admonition-title">Extraction remains in progress</p>
+<p><code>FactExtractor</code> sends only the first 2,000 characters of each input or report chunk to the LLM. An empty or unparseable extraction response produces no facts. <code>remember(evolve=True)</code> then stores the original input through the direct path, but <code>remember_report()</code> stores nothing for the affected chunk. Use a direct, non-evolved write when every source character must be preserved.</p>
+</div>
+<p>Prerequisites: complete the <a href="../../tutorials/01-quickstart/">Quickstart</a> and configure a working provider with the <a href="../../reference/configuration/#llm">LLM settings</a>.</p>
+<hr />
+<h2 id="why-append-only-memory-degrades">Why append-only memory degrades<a class="headerlink" href="#why-append-only-memory-degrades" title="Permanent link">&para;</a></h2>
+<p>An append-only memory system stores every report paragraph, repeated claim, and conversational aside. Semantic search still finds related notes, but three problems accumulate:</p>
 <ul>
-<li><strong>Redundancy</strong>: "APT28 uses Cobalt Strike" stored 47 times across different reports. Each retrieval returns duplicate context, wasting LLM tokens.</li>
-<li><strong>Contradiction</strong>: "Server ALPHA is compromised" from January and "Server ALPHA has been remediated" from March are both retrievable. Without evolution, both surface and the agent cannot determine which is current.</li>
-<li><strong>Noise</strong>: Greetings and meta-commentary stored alongside intelligence. Vector search has no way to distinguish them from substantive content.</li>
+<li><strong>Redundancy:</strong> repeated reporting competes for the same result slots.</li>
+<li><strong>Contradiction:</strong> current and superseded assessments appear together.</li>
+<li><strong>Noise:</strong> durable intelligence and temporary conversation receive equal weight.</li>
 </ul>
-<p>Mem0's research on memory management for AI agents (mem0.ai/paper) demonstrated that selective extraction with update operations substantially reduces these problems compared to full-context storage approaches.</p>
-<h2 id="phase-1-extraction-factextractor">Phase 1: extraction (FactExtractor)<a class="headerlink" href="#phase-1-extraction-factextractor" title="Permanent link">&para;</a></h2>
-<p><code>FactExtractor</code> takes raw content and distills it into concise, atomic facts. Each fact gets an importance score from 1 to 10. The LLM prompt instructs the extractor to:</p>
-<ul>
-<li>Extract only facts worth remembering long-term</li>
-<li>Skip greetings, filler, and meta-commentary</li>
-<li>Score each fact by importance to the intelligence domain</li>
-</ul>
-<p>Facts below <code>min_importance</code> (default: 3) are discarded before Phase 2. This is the first filter — low-value content never reaches the memory store.</p>
-<p><strong>Configuration:</strong></p>
-<ul>
-<li><code>model</code> (default: <code>qwen2.5:3b</code>) — the LLM used for extraction</li>
-<li><code>max_facts</code> (default: 5 per <code>remember_with_extraction</code> call) — caps facts extracted per input</li>
-</ul>
-<p><strong>Fallback behavior</strong>: if the LLM is unreachable, the extractor returns the raw content (first 500 characters) as a single fact with importance 5. The system degrades to append-only rather than dropping the write.</p>
-<p><strong>Example input:</strong></p>
-<div class="highlight"><pre><span></span><code>APT28 has shifted tactics. They dropped DROPBEAR and now exploit edge devices
-using compromised credentials.
-</code></pre></div>
-<p><strong>Example extracted facts (requires configured LLM):</strong></p>
+<p>The two-phase pipeline makes a decision before each extracted fact enters the main store. It keeps provenance through supersession instead of rewriting history in place.</p>
+<h2 id="phase-1-extract-candidate-facts">Phase 1: extract candidate facts<a class="headerlink" href="#phase-1-extract-candidate-facts" title="Permanent link">&para;</a></h2>
+<p><code>FactExtractor</code> treats the input as untrusted evidence and rejects recognized prompt-injection patterns before it calls the configured LLM provider. The extraction prompt asks for a JSON array of concise facts with importance values from 1 through 10.</p>
 <div class="highlight"><pre><span></span><code><span class="p">[</span>
-<span class="w">  </span><span class="p">{</span><span class="nt">&quot;fact&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 shifted to edge device exploitation&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;importance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">},</span>
-<span class="w">  </span><span class="p">{</span><span class="nt">&quot;fact&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 dropped DROPBEAR malware&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;importance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">},</span>
-<span class="w">  </span><span class="p">{</span><span class="nt">&quot;fact&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 uses compromised credentials for edge access&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;importance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">}</span>
+<span class="w">  </span><span class="p">{</span><span class="nt">&quot;fact&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 shifted to edge-device exploitation&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;importance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span><span class="nt">&quot;fact&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;APT28 stopped using DROPBEAR&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;importance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">}</span>
 <span class="p">]</span>
 </code></pre></div>
-<h2 id="phase-2-update-memoryupdater">Phase 2: update (MemoryUpdater)<a class="headerlink" href="#phase-2-update-memoryupdater" title="Permanent link">&para;</a></h2>
-<p>For each extracted fact that passes the importance threshold, the updater determines what to do with it relative to existing memory.</p>
-<p><strong>Step 1</strong>: Retrieve the top 3 most similar existing notes via vector search.</p>
-<p><strong>Step 2</strong>: If no similar notes exist, the operation is <code>added</code>. If similar notes exist, the LLM compares the new fact against them and decides one of four operations:</p>
+<p>The parser clamps each importance value to the 1–10 range, sorts the facts from highest to lowest importance, and keeps the first <code>max_facts</code>. <code>remember_with_extraction()</code> then removes facts below <code>min_importance</code>.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Status returned</th>
-<th style="text-align: left;">When</th>
-<th style="text-align: left;">What happens</th>
+<th>Boundary</th>
+<th>ZettelForge 2.8.0 behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>added</code></td>
-<td style="text-align: left;">No similar notes exist</td>
-<td style="text-align: left;">New note stored; entities indexed in SQLite and LanceDB</td>
+<td>Input sent to the extraction prompt</td>
+<td>First 2,000 characters</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>updated</code></td>
-<td style="text-align: left;">Fact refines an existing note</td>
-<td style="text-align: left;">New note stored; old note marked <code>superseded_by</code></td>
+<td><code>max_facts</code> for <code>remember_with_extraction()</code></td>
+<td>5</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>corrected</code></td>
-<td style="text-align: left;">Fact contradicts an existing note</td>
-<td style="text-align: left;">Correction note stored; old note marked <code>superseded_by</code></td>
+<td><code>min_importance</code></td>
+<td>3</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>noop</code></td>
-<td style="text-align: left;">Fact already captured</td>
-<td style="text-align: left;">Nothing stored</td>
+<td><code>max_facts</code> for <code>remember_report()</code></td>
+<td>10 per chunk</td>
+</tr>
+<tr>
+<td>Default report chunk target</td>
+<td>3,000 characters, split at sentence boundaries</td>
+</tr>
+<tr>
+<td><code>llm.max_tokens_extraction</code></td>
+<td>2,500 output tokens</td>
 </tr>
 </tbody>
 </table>
-<p>The <code>updated</code> and <code>corrected</code> paths never modify or delete old notes. They create new notes and mark old ones as <code>superseded_by</code>. This preserves the full history — consistent with the Zettelkasten principle of evolution over deletion — while ensuring <code>recall()</code> returns current intelligence by default.</p>
-<p><code>remember_with_extraction()</code> returns a list of <code>(MemoryNote | None, status)</code> tuples, one per extracted fact. Status is one of <code>"added"</code>, <code>"updated"</code>, <code>"corrected"</code>, or <code>"noop"</code>.</p>
-<h2 id="how-the-pipeline-affects-retrieval">How the pipeline affects retrieval<a class="headerlink" href="#how-the-pipeline-affects-retrieval" title="Permanent link">&para;</a></h2>
-<p>The pipeline's filtering and deduplication directly improve retrieval quality:</p>
+<p>The 3,000-character report chunk target is larger than the 2,000-character extraction-prompt limit. The remaining portion of a chunk does not reach phase 1. This mismatch is the main reason report extraction remains marked in progress.</p>
+<h2 id="phase-2-reconcile-with-memory">Phase 2: reconcile with memory<a class="headerlink" href="#phase-2-reconcile-with-memory" title="Permanent link">&para;</a></h2>
+<p>For every fact that passes phase 1, <code>MemoryUpdater</code> retrieves the three nearest notes in the same domain. It removes retrieved notes that contain recognized prompt-injection patterns, then asks the LLM to choose one internal operation.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Scenario</th>
-<th style="text-align: left;">Without pipeline</th>
-<th style="text-align: left;">With pipeline</th>
+<th>Internal operation</th>
+<th>Returned status</th>
+<th>Storage effect</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Repeated reporting on APT28/Cobalt Strike</td>
-<td style="text-align: left;">47 separate notes</td>
-<td style="text-align: left;">1 authoritative note (46 noop'd)</td>
+<td><code>ADD</code></td>
+<td><code>added</code></td>
+<td>Store a new note with <code>source_type="extraction"</code></td>
 </tr>
 <tr>
-<td style="text-align: left;">Contradictory server status notes</td>
-<td style="text-align: left;">Both retrieved equally</td>
-<td style="text-align: left;">Old note superseded; only current returned</td>
+<td><code>UPDATE</code></td>
+<td><code>updated</code></td>
+<td>Store the refined fact and supersede the nearest safe note</td>
 </tr>
 <tr>
-<td style="text-align: left;">Greeting mixed with intelligence</td>
-<td style="text-align: left;">Retrieved as a note</td>
-<td style="text-align: left;">Filtered at min_importance</td>
+<td><code>DELETE</code></td>
+<td><code>corrected</code></td>
+<td>Store a correction note and supersede the nearest safe note</td>
+</tr>
+<tr>
+<td><code>NOOP</code></td>
+<td><code>noop</code></td>
+<td>Store nothing</td>
 </tr>
 </tbody>
 </table>
-<p>Fewer, more relevant notes in the retrieval context means the synthesis LLM produces more focused answers and uses fewer tokens per response.</p>
-<h2 id="write-latency-fast-path-and-background-enrichment">Write latency: fast path and background enrichment<a class="headerlink" href="#write-latency-fast-path-and-background-enrichment" title="Permanent link">&para;</a></h2>
-<p><code>remember()</code> uses a dual-stream write path:</p>
-<ul>
-<li><strong>Fast path</strong>: embedding, SQLite storage, LanceDB vector write, entity index update, heuristic knowledge graph edges. Returns in approximately 45 ms.</li>
-<li><strong>Background (slow) path</strong>: LLM causal triple extraction, deferred to a background worker. Not required for the call to return.</li>
-</ul>
-<p>Pass <code>sync=True</code> if you need causal enrichment to be visible before your next <code>recall()</code>.</p>
-<p>When <code>evolve=True</code>, the full Phase 1 + Phase 2 cycle runs on the calling thread and returns before control is released.</p>
-<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<p>Two parameters control the pipeline's selectivity:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Parameter</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>max_facts</code></td>
-<td style="text-align: left;">5 (<code>remember_with_extraction</code>), 10 (<code>remember_report</code>)</td>
-<td style="text-align: left;">Maximum facts extracted per call. Higher values capture more from long reports but add LLM calls in Phase 2.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>min_importance</code></td>
-<td style="text-align: left;">3</td>
-<td style="text-align: left;">Threshold below which facts are discarded. Raise to 7 for high-confidence-only ingestion; lower to 1 to store more context at the cost of noise.</td>
-</tr>
-</tbody>
-</table>
-<p>For report ingestion via <code>remember_report()</code>, <code>max_facts</code> defaults to 10 and <code>chunk_size</code> defaults to 3,000 characters. A 9,000-character report split into 3 chunks gets up to 30 facts (10 per chunk) processed through the full two-phase pipeline independently per chunk.</p>
-<h2 id="why-not-modify-or-delete-old-notes">Why not modify or delete old notes?<a class="headerlink" href="#why-not-modify-or-delete-old-notes" title="Permanent link">&para;</a></h2>
-<p>Each note in ZettelForge carries a temporal identity: it reflects what was believed true at the time of ingestion. Deleting it loses that provenance. Instead, the pipeline:</p>
+<p>Here, <code>DELETE</code> means that the previous assessment loses authority. ZettelForge does not erase the old note.</p>
+<p>If no safe similar note remains, phase 2 chooses <code>ADD</code> without an LLM decision. If the decision response is non-empty but invalid, ZettelForge retries once with an explicit JSON-format instruction. An empty response, a second parse failure, an invalid operation, or an exception defaults to <code>ADD</code>. That failure policy favors retaining a new fact over silently discarding it, but it can create duplicates.</p>
+<h2 id="how-supersession-preserves-history">How supersession preserves history<a class="headerlink" href="#how-supersession-preserves-history" title="Permanent link">&para;</a></h2>
+<p>The <code>UPDATE</code> and <code>DELETE</code> paths write a new note first. <code>mark_note_superseded()</code> then records the new note in the old note's <code>superseded_by</code> field, adds the old ID to the new note's <code>supersedes</code> list, rewrites both notes, removes the old note from entity-index mappings, and writes a <code>SUPERSEDES</code> temporal edge from the new note to the old note.</p>
+<p>Direct <code>MemoryManager.recall()</code> hides superseded notes by default. The OSS MCP recall handler explicitly sets <code>exclude_superseded=False</code>, so MCP recall can return both the current and historical assessments.</p>
+<p>This split supports two legitimate views of the same corpus:</p>
 <ol>
-<li>Creates a new note capturing the current understanding.</li>
-<li>Marks the old note as <code>superseded_by</code> with the new note's ID.</li>
+<li>Current-only recall gives an operator the active assessment.</li>
+<li>Historical recall preserves the chain of evidence and correction for review.</li>
 </ol>
-<p><code>recall()</code> filters superseded notes by default. Analysts who need the full history can pass <code>include_superseded=True</code>. This design mirrors how intelligence assessments work in practice: previous assessments are not destroyed when new ones arrive, but they are no longer the authoritative answer.</p>
-<h2 id="when-to-enable-evolution">When to enable evolution<a class="headerlink" href="#when-to-enable-evolution" title="Permanent link">&para;</a></h2>
+<h2 id="what-callers-receive">What callers receive<a class="headerlink" href="#what-callers-receive" title="Permanent link">&para;</a></h2>
+<p><code>remember_with_extraction()</code> returns one <code>(MemoryNote | None, status)</code> tuple for every processed fact. A <code>NOOP</code> result contains <code>None</code>; the other operations contain the new note.</p>
+<p><code>remember(evolve=True)</code> returns only the first tuple even when the pipeline processes several facts. If phase 1 returns no facts, it falls through to the direct write path and returns the directly stored note with status <code>created</code>.</p>
+<p><code>remember_report()</code> returns the combined tuples from all chunks. It returns an empty list when every chunk produces no qualifying facts, and it does not perform the direct-write fallback.</p>
+<p>The MCP <code>zettelforge_remember</code> handler returns the first note ID, status, and up to ten extracted entities. When the first operation is <code>NOOP</code>, the note ID is <code>null</code> and the entity list is empty.</p>
+<h2 id="failure-behavior-determines-the-safe-write-path">Failure behavior determines the safe write path<a class="headerlink" href="#failure-behavior-determines-the-safe-write-path" title="Permanent link">&para;</a></h2>
+<p>Extraction failures have different consequences:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Scenario</th>
-<th style="text-align: left;">Recommendation</th>
+<th>Failure</th>
+<th>Observed fallback</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Ingesting CTI reports over time</td>
-<td style="text-align: left;"><code>remember_report()</code> — chunked, evolved by default</td>
+<td>The extraction LLM call raises an exception</td>
+<td>Return the first 500 input characters as one importance-5 candidate; the importance filter then determines whether it reaches phase 2</td>
 </tr>
 <tr>
-<td style="text-align: left;">One-time factual storage</td>
-<td style="text-align: left;"><code>remember(evolve=False)</code> — skip extraction overhead</td>
+<td>The extraction response is empty or cannot be parsed</td>
+<td>Return no facts</td>
 </tr>
 <tr>
-<td style="text-align: left;">Conversational agent with long context</td>
-<td style="text-align: left;"><code>remember(evolve=True)</code> — removes conversational noise</td>
+<td><code>remember(evolve=True)</code> receives no facts</td>
+<td>Store the original input through the direct path</td>
 </tr>
 <tr>
-<td style="text-align: left;">Bulk historical import</td>
-<td style="text-align: left;"><code>remember(evolve=False)</code> — speed; run evolution later via <code>evolve_note()</code></td>
+<td><code>remember_report()</code> receives no facts for a chunk</td>
+<td>Store nothing for that chunk</td>
+</tr>
+<tr>
+<td>The phase-2 decision fails</td>
+<td>Choose <code>ADD</code></td>
 </tr>
 </tbody>
 </table>
+<p>Use evolved writes when deduplication and correction matter and your inputs fit inside the verified extraction boundary. Use <code>remember(evolve=False)</code> or another direct-ingestion path when complete source preservation matters more than LLM reconciliation.</p>
+<p>The design deliberately preserves history: new evidence can replace the current assessment without destroying the record that explains how the assessment changed.</p>
 
 
 
 
 
 
+
+  
+  
 
 
 

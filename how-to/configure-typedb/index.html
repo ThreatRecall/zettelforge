@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -830,10 +830,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-start-typedb-with-docker-compose" class="md-nav__link">
+  <a href="#1-keep-zettelforge-on-sqlite" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Start TypeDB with Docker Compose
+        1. Keep ZettelForge on SQLite
       
     </span>
   </a>
@@ -841,10 +841,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-configure-configyaml" class="md-nav__link">
+  <a href="#2-review-the-typedb-connection-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Configure config.yaml
+        2. Review the TypeDB connection fields
       
     </span>
   </a>
@@ -852,10 +852,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-set-environment-variables" class="md-nav__link">
+  <a href="#3-validate-the-compose-definition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Set environment variables
+        3. Validate the Compose definition
       
     </span>
   </a>
@@ -863,10 +863,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-verify-the-configuration" class="md-nav__link">
+  <a href="#4-confirm-the-runtime-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Verify the configuration
+        4. Confirm the runtime boundary
       
     </span>
   </a>
@@ -874,10 +874,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-activate-the-typedb-backend-requires-threatrecallai-saas-extension" class="md-nav__link">
+  <a href="#5-choose-the-working-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Activate the TypeDB backend (requires ThreatRecall.ai SaaS extension)
+        5. Choose the working path
       
     </span>
   </a>
@@ -890,17 +890,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -908,6 +897,45 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend-typedb-returns-sqlitebackend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        backend: typedb returns SQLiteBackend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compose-validation-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compose validation fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-typedb-container-starts-but-zettelforge-still-uses-sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The TypeDB container starts but ZettelForge still uses SQLite
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2467,10 +2495,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-start-typedb-with-docker-compose" class="md-nav__link">
+  <a href="#1-keep-zettelforge-on-sqlite" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Start TypeDB with Docker Compose
+        1. Keep ZettelForge on SQLite
       
     </span>
   </a>
@@ -2478,10 +2506,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-configure-configyaml" class="md-nav__link">
+  <a href="#2-review-the-typedb-connection-fields" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Configure config.yaml
+        2. Review the TypeDB connection fields
       
     </span>
   </a>
@@ -2489,10 +2517,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-set-environment-variables" class="md-nav__link">
+  <a href="#3-validate-the-compose-definition" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Set environment variables
+        3. Validate the Compose definition
       
     </span>
   </a>
@@ -2500,10 +2528,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-verify-the-configuration" class="md-nav__link">
+  <a href="#4-confirm-the-runtime-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Verify the configuration
+        4. Confirm the runtime boundary
       
     </span>
   </a>
@@ -2511,10 +2539,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-activate-the-typedb-backend-requires-threatrecallai-saas-extension" class="md-nav__link">
+  <a href="#5-choose-the-working-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Activate the TypeDB backend (requires ThreatRecall.ai SaaS extension)
+        5. Choose the working path
       
     </span>
   </a>
@@ -2527,17 +2555,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2545,6 +2562,45 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backend-typedb-returns-sqlitebackend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        backend: typedb returns SQLiteBackend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compose-validation-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compose validation fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-typedb-container-starts-but-zettelforge-still-uses-sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The TypeDB container starts but ZettelForge still uses SQLite
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2569,85 +2625,41 @@
 
 
 <h1 id="configure-typedb">Configure TypeDB<a class="headerlink" href="#configure-typedb" title="Permanent link">&para;</a></h1>
-<p>TypeDB is an optional knowledge graph layer for ZettelForge. The default backend is SQLite + LanceDB, which requires no external server. TypeDB adds a schema-enforced STIX 2.1 ontology with inference rules; this capability ships with ThreatRecall.ai SaaS.</p>
-<p>This guide covers the configuration keys and Docker Compose setup that ship in the OSS repository. Activating the TypeDB backend requires an additional extension included with ThreatRecall.ai SaaS.</p>
+<p>TypeDB support is in progress. In ZettelForge 2.8.0, the public package reads
+TypeDB connection settings, but <code>ZETTELFORGE_BACKEND=typedb</code> still creates a
+<code>SQLiteBackend</code> and uses the built-in <code>KnowledgeGraph</code>. ThreatRecall.ai lists a
+TypeDB upgrade path in one pricing tier, but its current runtime uses PostgreSQL
+and does not run TypeDB. Do not plan production TypeDB storage in either product
+yet.</p>
+<p>This guide lets you inspect the shipped configuration and confirm the current
+runtime boundary yourself.</p>
 <div class="admonition info">
-<p class="admonition-title">Default backend</p>
-<p>If you are running ZettelForge OSS without ThreatRecall.ai SaaS, keep <code>backend: sqlite</code>. You do not need TypeDB for standard CTI ingestion, recall, and synthesis.</p>
+<p class="admonition-title">Verified storage path</p>
+<p>Use SQLite + LanceDB with ZettelForge. Use the managed PostgreSQL-backed
+graph with ThreatRecall.ai. Both paths work without a TypeDB server.</p>
 </div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Docker and Docker Compose installed</li>
-<li>ZettelForge installed: <code>pip install zettelforge</code></li>
-<li>ThreatRecall.ai SaaS subscription (required to activate the TypeDB backend)</li>
+<li>ZettelForge 2.8.0 installed with Python 3.10 or later.</li>
+<li>A ZettelForge 2.8.0 source checkout and Docker Compose if you want to inspect
+  the checked-in TypeDB service definition.</li>
 </ul>
 <h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<h3 id="1-start-typedb-with-docker-compose">1. Start TypeDB with Docker Compose<a class="headerlink" href="#1-start-typedb-with-docker-compose" title="Permanent link">&para;</a></h3>
-<p>The OSS repository ships a <code>docker/docker-compose.yml</code> for TypeDB. From the ZettelForge project root:</p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/docker-compose.yml<span class="w"> </span>up<span class="w"> </span>-d
+<h3 id="1-keep-zettelforge-on-sqlite">1. Keep ZettelForge on SQLite<a class="headerlink" href="#1-keep-zettelforge-on-sqlite" title="Permanent link">&para;</a></h3>
+<p>Keep the verified backend in <code>config.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">backend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite</span>
 </code></pre></div>
-<p>Verify the container is running:</p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/docker-compose.yml<span class="w"> </span>ps
-</code></pre></div>
-<p>Expected output:</p>
-<div class="highlight"><pre><span></span><code>NAME              IMAGE                STATUS
-docker-typedb-1   typedb/typedb:latest Up (healthy)
-</code></pre></div>
-<p>TypeDB exposes port <code>1729</code> for gRPC connections. Data persists in the <code>typedb-data</code> Docker volume across restarts.</p>
-<p>Verify the health endpoint from your host:</p>
-<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-f<span class="w"> </span>http://localhost:8100/health
-</code></pre></div>
-<p>The <code>docker-compose.yml</code> maps host port 8100 to container port 8000 (<code>8100:8000</code>). The host-accessible health URL is <code>http://localhost:8100/health</code>.</p>
-<h3 id="2-configure-configyaml">2. Configure <code>config.yaml</code><a class="headerlink" href="#2-configure-configyaml" title="Permanent link">&para;</a></h3>
-<p>Add or update the TypeDB block in your <code>config.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">typedb</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
-<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1729</span>
-<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zettelforge</span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TYPEDB_USERNAME}</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TYPEDB_PASSWORD}</span>
-
-<span class="nt">backend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">typedb</span>
-</code></pre></div>
-<p>Do not commit credentials to version control. Use <code>${TYPEDB_USERNAME}</code> and <code>${TYPEDB_PASSWORD}</code> placeholders, and supply values as environment variables.</p>
-<h3 id="3-set-environment-variables">3. Set environment variables<a class="headerlink" href="#3-set-environment-variables" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_HOST</span><span class="o">=</span>localhost
-<span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_PORT</span><span class="o">=</span><span class="m">1729</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_DATABASE</span><span class="o">=</span>zettelforge
-<span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_USERNAME</span><span class="o">=</span>&lt;your-typedb-username&gt;
-<span class="nb">export</span><span class="w"> </span><span class="nv">TYPEDB_PASSWORD</span><span class="o">=</span>&lt;your-password&gt;
-<span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_BACKEND</span><span class="o">=</span>typedb
-</code></pre></div>
-<p>Environment variables take priority over <code>config.yaml</code>. Use them for secrets; use <code>config.yaml</code> for structural settings like host and port.</p>
-<h3 id="4-verify-the-configuration">4. Verify the configuration<a class="headerlink" href="#4-verify-the-configuration" title="Permanent link">&para;</a></h3>
-<p>Confirm ZettelForge reads your TypeDB settings correctly:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_config</span>
-
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">get_config</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">typedb</span><span class="p">)</span>
-<span class="c1"># TypeDBConfig(host=&#39;localhost&#39;, port=1729, database=&#39;zettelforge&#39;,</span>
-<span class="c1">#              username=&#39;admin&#39;, password=&#39;***&#39;)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Backend: </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">backend</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="c1"># Backend: typedb</span>
-</code></pre></div>
-<h3 id="5-activate-the-typedb-backend-requires-threatrecallai-saas-extension">5. Activate the TypeDB backend (requires ThreatRecall.ai SaaS extension)<a class="headerlink" href="#5-activate-the-typedb-backend-requires-threatrecallai-saas-extension" title="Permanent link">&para;</a></h3>
-<p>With <code>ZETTELFORGE_BACKEND=typedb</code> set, <code>get_knowledge_graph()</code> loads TypeDB when the extension is present:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.knowledge_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_knowledge_graph</span>
-
-<span class="n">kg</span> <span class="o">=</span> <span class="n">get_knowledge_graph</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">kg</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
-<span class="c1"># TypeDBKnowledgeGraph  — extension present (ThreatRecall.ai SaaS)</span>
-<span class="c1"># KnowledgeGraph        — extension absent (OSS fallback, JSONL-backed)</span>
-</code></pre></div>
-<p>Without the extension, ZettelForge logs a <code>typedb_unavailable_fallback_jsonl</code> warning and falls back to the JSONL-backed <code>KnowledgeGraph</code>. Ingestion and recall continue using the OSS backend; TypeDB-specific features (STIX ontology, inference rules) are not available in this mode.</p>
-<h2 id="configuration-reference">Configuration reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h2>
+<p>The TypeDB connection block can remain in the file. ZettelForge reads those
+fields, but they do not activate a TypeDB storage backend.</p>
+<h3 id="2-review-the-typedb-connection-fields">2. Review the TypeDB connection fields<a class="headerlink" href="#2-review-the-typedb-connection-fields" title="Permanent link">&para;</a></h3>
+<p>ZettelForge 2.8.0 defines these fields and environment overrides:</p>
 <table>
 <thead>
 <tr>
 <th>Config key</th>
-<th>Env var</th>
+<th>Environment variable</th>
 <th>Default</th>
-<th>Description</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody>
@@ -2655,7 +2667,7 @@ docker-typedb-1   typedb/typedb:latest Up (healthy)
 <td><code>typedb.host</code></td>
 <td><code>TYPEDB_HOST</code></td>
 <td><code>localhost</code></td>
-<td>TypeDB server hostname or IP</td>
+<td>TypeDB host</td>
 </tr>
 <tr>
 <td><code>typedb.port</code></td>
@@ -2667,63 +2679,86 @@ docker-typedb-1   typedb/typedb:latest Up (healthy)
 <td><code>typedb.database</code></td>
 <td><code>TYPEDB_DATABASE</code></td>
 <td><code>zettelforge</code></td>
-<td>TypeDB database name</td>
+<td>Database name</td>
 </tr>
 <tr>
 <td><code>typedb.username</code></td>
 <td><code>TYPEDB_USERNAME</code></td>
 <td><code>""</code></td>
-<td>TypeDB username (empty string disables auth)</td>
+<td>Authentication username</td>
 </tr>
 <tr>
 <td><code>typedb.password</code></td>
 <td><code>TYPEDB_PASSWORD</code></td>
 <td><code>""</code></td>
-<td>TypeDB password</td>
+<td>Authentication password; redacted in config display</td>
 </tr>
 <tr>
 <td><code>backend</code></td>
 <td><code>ZETTELFORGE_BACKEND</code></td>
 <td><code>sqlite</code></td>
-<td>Storage backend: <code>sqlite</code> or <code>typedb</code></td>
+<td>Parsed selection; <code>typedb</code> does not activate a TypeDB storage backend</td>
 </tr>
 </tbody>
 </table>
-<p>Configuration precedence (highest first):</p>
-<ol>
-<li>Environment variables (<code>TYPEDB_HOST</code>, <code>TYPEDB_PORT</code>, …)</li>
-<li><code>config.yaml</code> in the current working directory</li>
-<li><code>config.yaml</code> in the project root</li>
-<li><code>config.default.yaml</code> in the project root</li>
-<li>Hardcoded defaults in <code>config.py</code></li>
-</ol>
+<p>Environment variables take priority over <code>config.yaml</code>. Keep credentials out
+of version control even though the current backend does not use them.</p>
+<h3 id="3-validate-the-compose-definition">3. Validate the Compose definition<a class="headerlink" href="#3-validate-the-compose-definition" title="Permanent link">&para;</a></h3>
+<p>From the ZettelForge 2.8.0 source root, render the checked-in service definition:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/docker-compose.yml<span class="w"> </span>config
+</code></pre></div>
+<p>The rendered definition publishes TypeDB gRPC on host port <code>1729</code> and maps the
+container health endpoint on port <code>8000</code> to host port <code>8100</code>. It uses the
+unversioned <code>typedb/typedb:latest</code> image. This command validates Compose syntax;
+it does not pull the image, start TypeDB, or prove ZettelForge integration.</p>
+<h3 id="4-confirm-the-runtime-boundary">4. Confirm the runtime boundary<a class="headerlink" href="#4-confirm-the-runtime-boundary" title="Permanent link">&para;</a></h3>
+<p>Run this probe in the environment where ZettelForge 2.8.0 is installed:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">ZETTELFORGE_LOG_LEVEL</span><span class="o">=</span>critical<span class="w"> </span><span class="se">\</span>
+<span class="nv">ZETTELFORGE_BACKEND</span><span class="o">=</span>typedb<span class="w"> </span><span class="se">\</span>
+python3<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;&#39;PY&#39;</span>
+<span class="s">from importlib.metadata import version</span>
+<span class="s">from tempfile import TemporaryDirectory</span>
+
+<span class="s">from zettelforge.backend_factory import get_storage_backend</span>
+<span class="s">from zettelforge.knowledge_graph import get_knowledge_graph</span>
+
+<span class="s">with TemporaryDirectory() as data_dir:</span>
+<span class="s">    backend = get_storage_backend(data_dir=data_dir)</span>
+<span class="s">    backend.initialize()</span>
+<span class="s">    print(version(&quot;zettelforge&quot;))</span>
+<span class="s">    print(type(backend).__name__)</span>
+<span class="s">    print(backend.health_check()[&quot;backend&quot;])</span>
+<span class="s">    print(type(get_knowledge_graph()).__name__)</span>
+<span class="s">    backend.close()</span>
+<span class="s">PY</span>
+</code></pre></div>
+<p>Verified output for the official 2.8.0 wheel:</p>
+<div class="highlight"><pre><span></span><code>2.8.0
+SQLiteBackend
+SQLiteBackend
+KnowledgeGraph
+</code></pre></div>
+<p>The configuration accepts <code>typedb</code>, but the storage factory returns SQLite and
+the graph factory returns the built-in graph. Treat a different result as a
+software-version change that requires a fresh integration test.</p>
+<h3 id="5-choose-the-working-path">5. Choose the working path<a class="headerlink" href="#5-choose-the-working-path" title="Permanent link">&para;</a></h3>
+<p>For ZettelForge, keep <code>backend: sqlite</code>. The checked-in Compose file is useful
+for development inspection, but it does not make TypeDB a working backend.</p>
+<p>For ThreatRecall.ai, use its managed graph as provided. The SaaS plan metadata
+labels TypeDB as an upgrade path, while the current implementation keeps
+PostgreSQL as its authority of record. TypeDB setup for ThreatRecall.ai remains
+in progress, so there is no verified customer setup procedure.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<p><strong>TypeDB container fails to start</strong></p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/docker-compose.yml<span class="w"> </span>logs<span class="w"> </span>typedb
-</code></pre></div>
-<p>Common causes:</p>
-<ul>
-<li>Port 1729 already in use: <code>lsof -i :1729</code></li>
-<li>Insufficient memory: TypeDB requires approximately 1 GB RAM minimum</li>
-</ul>
-<p><strong>Connection refused on port 1729</strong></p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>docker/docker-compose.yml<span class="w"> </span>restart<span class="w"> </span>typedb
-</code></pre></div>
-<p>Wait for the container health check to pass (interval 10 s, up to 5 retries) before starting ZettelForge.</p>
-<p><strong>Backend does not activate</strong></p>
-<p>ZettelForge silently falls back if the extension is absent or TypeDB is unreachable. Run with structured logging to see the warning:</p>
-<div class="highlight"><pre><span></span><code><span class="nv">ZETTELFORGE_LOG_LEVEL</span><span class="o">=</span>debug<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from zettelforge.knowledge_graph import get_knowledge_graph; get_knowledge_graph()&quot;</span>
-</code></pre></div>
-<p>Look for <code>typedb_unavailable_fallback_jsonl</code> in the output. If you see it, either TypeDB is not reachable on port 1729, or the ThreatRecall.ai SaaS extension is not installed.</p>
-<p><strong>Remote TypeDB server</strong></p>
-<p>Update <code>typedb.host</code> (or <code>TYPEDB_HOST</code>) to the server address:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">typedb</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.1.50</span>
-<span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1729</span>
-<span class="w">  </span><span class="nt">database</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zettelforge</span>
-<span class="w">  </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TYPEDB_USERNAME}</span>
-<span class="w">  </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${TYPEDB_PASSWORD}</span>
-</code></pre></div>
+<h3 id="backend-typedb-returns-sqlitebackend"><code>backend: typedb</code> returns <code>SQLiteBackend</code><a class="headerlink" href="#backend-typedb-returns-sqlitebackend" title="Permanent link">&para;</a></h3>
+<p>This is the verified ZettelForge 2.8.0 behavior. Keep <code>backend: sqlite</code> and do
+not treat the TypeDB connection fields as backend activation.</p>
+<h3 id="compose-validation-fails">Compose validation fails<a class="headerlink" href="#compose-validation-fails" title="Permanent link">&para;</a></h3>
+<p>Run the command from the ZettelForge source root and confirm that
+<code>docker/docker-compose.yml</code> comes from the 2.8.0 tag.</p>
+<h3 id="the-typedb-container-starts-but-zettelforge-still-uses-sqlite">The TypeDB container starts but ZettelForge still uses SQLite<a class="headerlink" href="#the-typedb-container-starts-but-zettelforge-still-uses-sqlite" title="Permanent link">&para;</a></h3>
+<p>The container and the application backend are separate. Starting the shipped
+service does not add a TypeDB client or change the storage factory. Stop at the
+runtime probe and keep TypeDB-dependent work marked in progress.</p>
 
 
 

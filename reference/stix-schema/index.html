@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Entity types, note metadata fields, and knowledge graph relationship types used by ZettelForge's extraction and graph pipeline.">
+        <meta name="description" content="Lowercase extraction labels, STIX-adjacent note metadata, and knowledge-graph relationships used by ZettelForge 2.8.0.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -29,7 +29,7 @@
     
     
       
-        <title>STIX schema reference - ZettelForge Documentation</title>
+        <title>STIX-aligned extraction and graph reference - ZettelForge Documentation</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#stix-schema-reference" class="md-skip">
+        <a href="#stix-aligned-extraction-and-graph-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              STIX schema reference
+              STIX-aligned extraction and graph reference
             
           </span>
         </div>
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1424,22 +1424,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#entity-types" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entity types
+        Prerequisites
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Entity types">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scope-and-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope and naming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extraction-index-entity-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extraction-index entity labels
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extraction-index entity labels">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cti-entity-types-regex" class="md-nav__link">
+  <a href="#cti-labels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CTI entity types (regex)
+        CTI labels
       
     </span>
   </a>
@@ -1447,10 +1469,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ioc-entity-types-stix-cyber-observables-regex" class="md-nav__link">
+  <a href="#observable-labels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        IOC entity types / STIX Cyber Observables (regex)
+        Observable labels
       
     </span>
   </a>
@@ -1458,21 +1480,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#conversational-entity-types-llm-ner" class="md-nav__link">
+  <a href="#conversational-labels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Conversational entity types (LLM NER)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#entity-type-aliases-in-recall-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entity type aliases in recall methods
+        Conversational labels
       
     </span>
   </a>
@@ -1485,66 +1496,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#note-metadata-stix-fields" class="md-nav__link">
+  <a href="#entity-recall-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Note metadata: STIX fields
+        Entity recall methods
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Note metadata: STIX fields">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note-metadata-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note metadata fields
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Note metadata fields">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#stix_confidence" class="md-nav__link">
+  <a href="#vulnerabilitymeta" class="md-nav__link">
     <span class="md-ellipsis">
       
-        stix_confidence
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tier" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        tier
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tlp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        tlp
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#confidence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        confidence
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vuln-vulnerabilitymeta" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vuln (VulnerabilityMeta)
+        VulnerabilityMeta
       
     </span>
   </a>
@@ -1557,27 +1535,16 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#knowledge-graph-relationship-types" class="md-nav__link">
+  <a href="#built-in-sqlite-graph-relationships" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Knowledge graph relationship types
+        Built-in SQLite graph relationships
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Knowledge graph relationship types">
+    <nav class="md-nav" aria-label="Built-in SQLite graph relationships">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#edge-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Edge types
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#ingest_relationship" class="md-nav__link">
@@ -1592,6 +1559,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typed-cti-ontology-vocabulary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typed CTI ontology vocabulary
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2511,22 +2489,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#entity-types" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entity types
+        Prerequisites
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Entity types">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scope-and-naming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope and naming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extraction-index-entity-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extraction-index entity labels
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extraction-index entity labels">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cti-entity-types-regex" class="md-nav__link">
+  <a href="#cti-labels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CTI entity types (regex)
+        CTI labels
       
     </span>
   </a>
@@ -2534,10 +2534,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ioc-entity-types-stix-cyber-observables-regex" class="md-nav__link">
+  <a href="#observable-labels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        IOC entity types / STIX Cyber Observables (regex)
+        Observable labels
       
     </span>
   </a>
@@ -2545,21 +2545,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#conversational-entity-types-llm-ner" class="md-nav__link">
+  <a href="#conversational-labels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Conversational entity types (LLM NER)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#entity-type-aliases-in-recall-methods" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entity type aliases in recall methods
+        Conversational labels
       
     </span>
   </a>
@@ -2572,66 +2561,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#note-metadata-stix-fields" class="md-nav__link">
+  <a href="#entity-recall-methods" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Note metadata: STIX fields
+        Entity recall methods
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Note metadata: STIX fields">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#note-metadata-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Note metadata fields
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Note metadata fields">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#stix_confidence" class="md-nav__link">
+  <a href="#vulnerabilitymeta" class="md-nav__link">
     <span class="md-ellipsis">
       
-        stix_confidence
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tier" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        tier
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tlp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        tlp
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#confidence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        confidence
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vuln-vulnerabilitymeta" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vuln (VulnerabilityMeta)
+        VulnerabilityMeta
       
     </span>
   </a>
@@ -2644,27 +2600,16 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#knowledge-graph-relationship-types" class="md-nav__link">
+  <a href="#built-in-sqlite-graph-relationships" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Knowledge graph relationship types
+        Built-in SQLite graph relationships
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Knowledge graph relationship types">
+    <nav class="md-nav" aria-label="Built-in SQLite graph relationships">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#edge-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Edge types
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#ingest_relationship" class="md-nav__link">
@@ -2679,6 +2624,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typed-cti-ontology-vocabulary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typed CTI ontology vocabulary
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2702,313 +2658,401 @@
   
 
 
-<h1 id="stix-schema-reference">STIX schema reference<a class="headerlink" href="#stix-schema-reference" title="Permanent link">&para;</a></h1>
-<p>ZettelForge recognizes STIX-aligned entity types during extraction, stores STIX
-metadata fields on every note, and maintains a knowledge graph of relationships
-between entities. This page describes all three.</p>
-<div class="admonition note">
-<p class="admonition-title">TypeDB STIX 2.1 ontology</p>
-<p>The full STIX 2.1 TypeDB ontology — including TypeQL entity hierarchies,
-relation types, and inference functions — is available in
-<a href="https://threatrecall.ai">ThreatRecall.ai</a>, the hosted SaaS. The OSS package
-stores entity references in SQLite and an in-memory graph; the data structures
-on this page cover that path.</p>
-</div>
-<hr />
-<h2 id="entity-types">Entity types<a class="headerlink" href="#entity-types" title="Permanent link">&para;</a></h2>
-<p>ZettelForge extracts entities from text when you call <code>remember()</code>. Two extraction
-paths run in sequence:</p>
+<h1 id="stix-aligned-extraction-and-graph-reference">STIX-aligned extraction and graph reference<a class="headerlink" href="#stix-aligned-extraction-and-graph-reference" title="Permanent link">&para;</a></h1>
+<p>ZettelForge turns common CTI indicators and names into lowercase entity labels,
+then connects co-occurring entities in its local knowledge graph. Use this
+reference when you call an entity-recall method, inspect note metadata, or write
+a relationship directly.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Regex fast-path</strong> — deterministic, no LLM required. Covers CTI and IOC types.</li>
-<li><strong>LLM NER</strong> — conversational types. Requires a configured LLM provider.</li>
+<li>ZettelForge 2.8.0.</li>
+<li>A <code>MemoryManager</code> instance when you use the recall or relationship methods.</li>
+<li>A working LLM provider only when you need the conversational enrichment
+  labels marked <strong>in progress</strong> below.</li>
 </ul>
-<h3 id="cti-entity-types-regex">CTI entity types (regex)<a class="headerlink" href="#cti-entity-types-regex" title="Permanent link">&para;</a></h3>
+<h2 id="scope-and-naming">Scope and naming<a class="headerlink" href="#scope-and-naming" title="Permanent link">&para;</a></h2>
+<p>This page covers the ZettelForge open-source extraction index, note metadata,
+and the SQLite knowledge-graph path used by <code>MemoryManager</code>. It does not describe
+the hosted ThreatRecall.ai graph schema.</p>
+<p>ZettelForge 2.8.0 has two related vocabularies. Keep their spelling separate:</p>
+<ul>
+<li>The extraction index and <code>MemoryManager</code> use lowercase labels such as
+  <code>intrusion_set</code> and uppercase graph relationships such as <code>USES_TOOL</code>.</li>
+<li>The typed ontology validator uses PascalCase entities such as <code>IntrusionSet</code>
+  and lowercase relationships such as <code>uses_tool</code>. It is a separate validation
+  surface; do not pass its PascalCase names to the recall methods on this page.</li>
+</ul>
+<h2 id="extraction-index-entity-labels">Extraction-index entity labels<a class="headerlink" href="#extraction-index-entity-labels" title="Permanent link">&para;</a></h2>
+<p><code>remember()</code> runs the deterministic regex extractor before it writes entity
+mappings. Regex matches are lowercased, and spaces become hyphens. Match order is
+not stable because the extractor deduplicates with sets.</p>
+<h3 id="cti-labels">CTI labels<a class="headerlink" href="#cti-labels" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Entity type</th>
-<th>Example match</th>
-<th>Pattern</th>
+<th>Label</th>
+<th>Example output</th>
+<th>Deterministic match</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>cve</code></td>
-<td><code>CVE-2024-1234</code></td>
-<td><code>CVE-\d{4}-\d{4,}</code></td>
+<td><code>cve-2024-3094</code></td>
+<td><code>CVE-</code> + four digits + at least four digits</td>
 </tr>
 <tr>
 <td><code>intrusion_set</code></td>
-<td><code>APT28</code>, <code>UNC4990</code>, <code>TA505</code>, <code>FIN7</code></td>
-<td><code>(apt\|unc\|ta\|fin\|temp)\s*-?\s*\d+</code></td>
+<td><code>apt28</code>, <code>unc4990</code>, <code>ta505</code>, <code>fin7</code></td>
+<td>APT, UNC, TA, FIN, or TEMP designation plus digits</td>
 </tr>
 <tr>
 <td><code>actor</code></td>
-<td><code>Lazarus</code>, <code>Sandworm</code>, <code>Volt Typhoon</code></td>
-<td>hardcoded known names</td>
+<td><code>lazarus</code>, <code>sandworm</code>, <code>volt-typhoon</code></td>
+<td>One of the three built-in actor names</td>
 </tr>
 <tr>
 <td><code>tool</code></td>
-<td><code>Cobalt Strike</code>, <code>Mimikatz</code>, <code>BloodHound</code></td>
-<td>hardcoded known names</td>
+<td><code>cobalt-strike</code>, <code>metasploit</code>, <code>mimikatz</code>, <code>bloodhound</code>, <code>dropbear</code>, <code>empire</code>, <code>covenant</code></td>
+<td>One of the seven built-in tool names</td>
 </tr>
 <tr>
 <td><code>campaign</code></td>
-<td><code>Operation Aurora</code></td>
-<td><code>operation\s+\w+</code></td>
+<td><code>operation-aurora</code></td>
+<td><code>operation</code> followed by one word</td>
 </tr>
 <tr>
 <td><code>attack_pattern</code></td>
-<td><code>T1059</code>, <code>T1059.001</code></td>
-<td><code>T\d{4}(?:\.\d{3})?</code></td>
+<td><code>t1059</code>, <code>t1059.001</code></td>
+<td>ATT&amp;CK technique or sub-technique identifier</td>
 </tr>
 </tbody>
 </table>
-<h3 id="ioc-entity-types-stix-cyber-observables-regex">IOC entity types / STIX Cyber Observables (regex)<a class="headerlink" href="#ioc-entity-types-stix-cyber-observables-regex" title="Permanent link">&para;</a></h3>
+<h3 id="observable-labels">Observable labels<a class="headerlink" href="#observable-labels" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Entity type</th>
-<th>Description</th>
+<th>Label</th>
+<th>Match</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>ipv4</code></td>
-<td>IPv4 address</td>
+<td>IPv4 address with each octet constrained to 0–255</td>
 </tr>
 <tr>
 <td><code>domain</code></td>
-<td>Registered domain name</td>
+<td>Domain name with one of the suffixes registered in the extractor</td>
 </tr>
 <tr>
 <td><code>url</code></td>
-<td>HTTP/HTTPS URL</td>
+<td>Text beginning with <code>http://</code> or <code>https://</code> up to a delimiter</td>
 </tr>
 <tr>
 <td><code>md5</code></td>
-<td>32-character hex hash</td>
+<td>32 hexadecimal characters</td>
 </tr>
 <tr>
 <td><code>sha1</code></td>
-<td>40-character hex hash</td>
+<td>40 hexadecimal characters</td>
 </tr>
 <tr>
 <td><code>sha256</code></td>
-<td>64-character hex hash</td>
+<td>64 hexadecimal characters</td>
 </tr>
 <tr>
 <td><code>email</code></td>
-<td>Email address</td>
+<td>Address-shaped text with a dotted suffix</td>
 </tr>
 </tbody>
 </table>
-<h3 id="conversational-entity-types-llm-ner">Conversational entity types (LLM NER)<a class="headerlink" href="#conversational-entity-types-llm-ner" title="Permanent link">&para;</a></h3>
-<p>Requires a configured LLM provider. Falls back to empty lists when no provider
-is available.</p>
+<p>The hash extractor rejects candidates that appear in assignment, Git commit,
+or fenced-code contexts. The URL regex does not strip terminal periods or
+commas; surround a URL with a delimiter or normalize the captured value before
+you use it as an IOC.</p>
+<h3 id="conversational-labels">Conversational labels<a class="headerlink" href="#conversational-labels" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Entity type</th>
-<th>Description</th>
+<th>Label</th>
+<th>Deterministic path</th>
+<th>LLM enrichment path</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>person</code></td>
-<td>Named person (non-threat-actor context)</td>
+<td>A name of 3–16 letters at the start of a <code>Name:</code> dialogue line, minus the built-in stop list</td>
+<td>Broader person names</td>
 </tr>
 <tr>
 <td><code>location</code></td>
-<td>Place name</td>
+<td>One of 43 built-in city or place names</td>
+<td>Broader locations</td>
 </tr>
 <tr>
 <td><code>organization</code></td>
-<td>Named organization</td>
+<td>None</td>
+<td>Named organizations</td>
 </tr>
 <tr>
 <td><code>event</code></td>
-<td>Named event</td>
+<td>None</td>
+<td>Named events</td>
 </tr>
 <tr>
 <td><code>activity</code></td>
-<td>Described activity</td>
+<td>None</td>
+<td>Described activities</td>
 </tr>
 <tr>
 <td><code>temporal</code></td>
-<td>Time expression</td>
+<td>None</td>
+<td>Time expressions</td>
 </tr>
 </tbody>
 </table>
-<h3 id="entity-type-aliases-in-recall-methods">Entity type aliases in recall methods<a class="headerlink" href="#entity-type-aliases-in-recall-methods" title="Permanent link">&para;</a></h3>
-<p><code>recall_actor()</code> searches across three entity types in one call: <code>actor</code>,
-<code>threat_actor</code>, and <code>intrusion_set</code>. All three map to the same lookup
-path.</p>
-<p><code>recall_entity()</code> accepts any entity type string directly. Pass <code>"cve"</code>, <code>"tool"</code>,
-<code>"campaign"</code>, or any other recognized type.</p>
-<hr />
-<h2 id="note-metadata-stix-fields">Note metadata: STIX fields<a class="headerlink" href="#note-metadata-stix-fields" title="Permanent link">&para;</a></h2>
-<p>Every <code>MemoryNote</code> carries these STIX-adjacent fields on its <code>metadata</code> object.</p>
-<h3 id="stix_confidence"><code>stix_confidence</code><a class="headerlink" href="#stix_confidence" title="Permanent link">&para;</a></h3>
-<p><strong>Type:</strong> <code>int</code><br />
-<strong>Default:</strong> <code>-1</code> (unset)<br />
-<strong>Range:</strong> <code>0</code> to <code>100</code><br />
-<strong>Standard:</strong> STIX 2.1 confidence scale</p>
-<p>Set automatically during OpenCTI sync when the source platform provides a
-confidence value. <code>-1</code> means no STIX confidence has been assigned.</p>
-<h3 id="tier"><code>tier</code><a class="headerlink" href="#tier" title="Permanent link">&para;</a></h3>
-<p><strong>Type:</strong> <code>str</code><br />
-<strong>Default:</strong> <code>"B"</code><br />
-<strong>Values:</strong> <code>"A"</code> | <code>"B"</code> | <code>"C"</code></p>
-<p>Epistemic tier:</p>
+<div class="admonition warning">
+<p class="admonition-title">Conversational LLM enrichment is in progress</p>
+<p>No Ollama service was listening on <code>127.0.0.1:11434</code> during this run, so the
+LLM enrichment path was not verified. When generation fails, the extractor
+catches the error and returns empty lists for all six conversational labels.
+The deterministic <code>person</code> and <code>location</code> matches above were executed.</p>
+</div>
+<h2 id="entity-recall-methods">Entity recall methods<a class="headerlink" href="#entity-recall-methods" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Tier</th>
-<th>Meaning</th>
+<th>Method</th>
+<th>ZettelForge 2.8.0 signature</th>
+<th>Lookup behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>A</code></td>
-<td>Authoritative — from a primary, verified source</td>
+<td><code>recall_entity</code></td>
+<td><code>(entity_type: str, entity_value: str, k: int = 5) -&gt; list[MemoryNote]</code></td>
+<td>Looks up one lowercase extraction-index label. It lowercases the value.</td>
 </tr>
 <tr>
-<td><code>B</code></td>
-<td>Operational — derived, processed, or synthesized</td>
+<td><code>recall_actor</code></td>
+<td><code>(actor_name: str, k: int = 5) -&gt; list[MemoryNote]</code></td>
+<td>Searches <code>actor</code>, <code>threat_actor</code>, then <code>intrusion_set</code>, and removes duplicate notes.</td>
 </tr>
 <tr>
-<td><code>C</code></td>
-<td>Support — background, context, or low-confidence</td>
+<td><code>recall_technique</code></td>
+<td><code>(technique_id: str, k: int = 25) -&gt; list[MemoryNote]</code></td>
+<td>Searches <code>attack_pattern</code>; the wrapper uppercases the input before the shared lookup lowercases it.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="tlp"><code>tlp</code><a class="headerlink" href="#tlp" title="Permanent link">&para;</a></h3>
-<p><strong>Type:</strong> <code>str</code><br />
-<strong>Default:</strong> <code>""</code> (unclassified)<br />
-<strong>Values:</strong> <code>"WHITE"</code> | <code>"GREEN"</code> | <code>"AMBER"</code> | <code>"RED"</code> | <code>""</code></p>
-<p>Traffic Light Protocol marking. Notes with <code>AMBER</code> or <code>RED</code> markings are
-excluded from snapshot exports unless an audited TLP override is provided.</p>
-<h3 id="confidence"><code>confidence</code><a class="headerlink" href="#confidence" title="Permanent link">&para;</a></h3>
-<p><strong>Type:</strong> <code>float</code><br />
-<strong>Default:</strong> <code>1.0</code><br />
-<strong>Range:</strong> <code>0.0</code> to <code>1.0</code></p>
-<p>Internal confidence score. Decays when a note is evolved: each evolution
-caps confidence at <code>0.95</code>. Distinct from <code>stix_confidence</code>.</p>
-<h3 id="vuln-vulnerabilitymeta"><code>vuln</code> (VulnerabilityMeta)<a class="headerlink" href="#vuln-vulnerabilitymeta" title="Permanent link">&para;</a></h3>
-<p>Structured CVE scoring fields. Populated during OpenCTI sync, not during
-text extraction.</p>
+<p><code>recall_entity()</code> does not validate <code>entity_type</code>. An unknown label returns no
+mapped notes unless a caller has written mappings under that label.</p>
+<h2 id="note-metadata-fields">Note metadata fields<a class="headerlink" href="#note-metadata-fields" title="Permanent link">&para;</a></h2>
+<p>Every <code>MemoryNote</code> has a <code>metadata</code> object. These are the STIX-adjacent fields
+and related confidence fields in ZettelForge 2.8.0.</p>
 <table>
 <thead>
 <tr>
 <th>Field</th>
 <th>Type</th>
-<th>Description</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>stix_confidence</code></td>
+<td><code>int</code></td>
+<td><code>-1</code></td>
+<td>STIX confidence from 0–100; <code>-1</code> means unset. The model does not enforce the range.</td>
+</tr>
+<tr>
+<td><code>tier</code></td>
+<td><code>str</code></td>
+<td><code>"B"</code></td>
+<td>Epistemic tier. <code>A</code> is authoritative, <code>B</code> operational, and <code>C</code> support. The model does not restrict other strings.</td>
+</tr>
+<tr>
+<td><code>tlp</code></td>
+<td><code>str</code></td>
+<td><code>""</code></td>
+<td>Stored TLP text. ZettelForge 2.8.0 does not normalize or validate this field in <code>Metadata</code>.</td>
+</tr>
+<tr>
+<td><code>confidence</code></td>
+<td><code>float</code></td>
+<td><code>1.0</code></td>
+<td>Internal confidence. <code>increment_evolution()</code> caps it at <code>0.95</code>.</td>
+</tr>
+<tr>
+<td><code>vuln</code></td>
+<td><code>VulnerabilityMeta | None</code></td>
+<td><code>None</code></td>
+<td>Structured vulnerability data attached by an import or sync path.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vulnerabilitymeta"><code>VulnerabilityMeta</code><a class="headerlink" href="#vulnerabilitymeta" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Default</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>cvss_v3_score</code></td>
-<td><code>float \| None</code></td>
-<td>CVSS v3 base score (0.0–10.0)</td>
+<td><code>float | None</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>cvss_v3_vector</code></td>
-<td><code>str \| None</code></td>
-<td>CVSS v3 vector string, e.g. <code>CVSS:3.1/AV:N/AC:L/...</code></td>
+<td><code>str | None</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>epss_score</code></td>
-<td><code>float \| None</code></td>
-<td>EPSS exploitation probability (0.0–1.0, daily)</td>
+<td><code>float | None</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>epss_percentile</code></td>
-<td><code>float \| None</code></td>
-<td>EPSS percentile relative to all scored CVEs (0.0–1.0)</td>
+<td><code>float | None</code></td>
+<td><code>None</code></td>
 </tr>
 <tr>
 <td><code>cisa_kev</code></td>
 <td><code>bool</code></td>
-<td><code>True</code> if the CVE is in the CISA Known Exploited Vulnerabilities catalog</td>
+<td><code>False</code></td>
 </tr>
 </tbody>
 </table>
-<p><code>vuln</code> is <code>None</code> for non-CVE notes. For CVE notes before any OpenCTI sync, it
-is also <code>None</code>.</p>
-<hr />
-<h2 id="knowledge-graph-relationship-types">Knowledge graph relationship types<a class="headerlink" href="#knowledge-graph-relationship-types" title="Permanent link">&para;</a></h2>
-<p>When you call <code>remember()</code>, ZettelForge heuristically creates edges in the
-knowledge graph when STIX-relevant entities co-occur in the same note. You can
-also write edges directly with <code>ingest_relationship()</code>.</p>
-<h3 id="edge-types">Edge types<a class="headerlink" href="#edge-types" title="Permanent link">&para;</a></h3>
+<p>The model describes the numeric ranges in comments but does not enforce bounds
+at construction time.</p>
+<h2 id="built-in-sqlite-graph-relationships">Built-in SQLite graph relationships<a class="headerlink" href="#built-in-sqlite-graph-relationships" title="Permanent link">&para;</a></h2>
+<p><code>remember()</code> creates a note node, <code>MENTIONED_IN</code> edges, and heuristic edges for
+co-occurring entities. Heuristic edges store <code>first_observed</code> and the note's
+internal confidence as properties.</p>
 <table>
 <thead>
 <tr>
 <th>Relationship</th>
-<th>From entity type</th>
-<th>To entity type</th>
-<th>Created by</th>
+<th>From</th>
+<th>To</th>
+<th>Writer</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>MENTIONED_IN</code></td>
-<td>any</td>
+<td>Any extracted entity</td>
 <td><code>note</code></td>
 <td><code>remember()</code></td>
 </tr>
 <tr>
 <td><code>USES_TOOL</code></td>
-<td><code>actor</code>, <code>campaign</code></td>
+<td><code>actor</code>, <code>threat_actor</code>, <code>intrusion_set</code></td>
 <td><code>tool</code></td>
-<td><code>remember()</code> (heuristic)</td>
+<td><code>remember()</code></td>
 </tr>
 <tr>
 <td><code>EXPLOITS_CVE</code></td>
-<td><code>actor</code>, <code>tool</code></td>
+<td>Actor label or <code>tool</code></td>
 <td><code>cve</code></td>
-<td><code>remember()</code> (heuristic)</td>
+<td><code>remember()</code></td>
 </tr>
 <tr>
 <td><code>TARGETS_ASSET</code></td>
-<td><code>actor</code>, <code>tool</code></td>
+<td>Actor label or <code>tool</code></td>
 <td><code>asset</code></td>
-<td><code>remember()</code> (heuristic)</td>
+<td><code>remember()</code> when another path supplies <code>asset</code> entities</td>
 </tr>
 <tr>
 <td><code>CONDUCTS_CAMPAIGN</code></td>
-<td><code>actor</code></td>
+<td>Actor label</td>
 <td><code>campaign</code></td>
-<td><code>remember()</code> (heuristic)</td>
+<td><code>remember()</code></td>
+</tr>
+<tr>
+<td><code>USES_TECHNIQUE</code></td>
+<td>Actor label</td>
+<td><code>attack_pattern</code></td>
+<td><code>remember()</code></td>
+</tr>
+<tr>
+<td><code>IMPLEMENTS</code></td>
+<td><code>malware</code></td>
+<td><code>attack_pattern</code></td>
+<td><code>remember()</code> when another path supplies <code>malware</code> entities</td>
+</tr>
+<tr>
+<td><code>AFFILIATED_WITH</code></td>
+<td><code>person</code></td>
+<td><code>organization</code></td>
+<td>LLM entity enrichment</td>
+</tr>
+<tr>
+<td><code>ATTENDED</code></td>
+<td><code>person</code></td>
+<td><code>event</code></td>
+<td>LLM entity enrichment</td>
+</tr>
+<tr>
+<td><code>LOCATED_AT</code></td>
+<td><code>person</code></td>
+<td><code>location</code></td>
+<td>LLM entity enrichment</td>
+</tr>
+<tr>
+<td><code>PARTICIPATES_IN</code></td>
+<td><code>person</code></td>
+<td><code>activity</code></td>
+<td>LLM entity enrichment</td>
+</tr>
+<tr>
+<td><code>HELD_AT</code></td>
+<td><code>event</code></td>
+<td><code>location</code></td>
+<td>LLM entity enrichment</td>
+</tr>
+<tr>
+<td><code>ORGANIZED_BY</code></td>
+<td><code>event</code></td>
+<td><code>organization</code></td>
+<td>LLM entity enrichment</td>
+</tr>
+<tr>
+<td><code>OCCURRED_ON</code></td>
+<td><code>event</code></td>
+<td><code>temporal</code></td>
+<td>LLM entity enrichment</td>
+</tr>
+<tr>
+<td><code>BASED_IN</code></td>
+<td><code>organization</code></td>
+<td><code>location</code></td>
+<td>LLM entity enrichment</td>
 </tr>
 <tr>
 <td><code>SUPERSEDES</code></td>
-<td><code>note</code></td>
-<td><code>note</code></td>
+<td>New <code>note</code></td>
+<td>Old <code>note</code></td>
 <td><code>mark_note_superseded()</code></td>
-</tr>
-<tr>
-<td><code>TEMPORAL_BEFORE</code></td>
-<td><code>note</code></td>
-<td><code>note</code></td>
-<td>temporal ordering</td>
-</tr>
-<tr>
-<td><code>TEMPORAL_AFTER</code></td>
-<td><code>note</code></td>
-<td><code>note</code></td>
-<td>temporal ordering</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Heuristic edges</strong> are created when two entity types appear in the same note.
-They carry <code>edge_type: "heuristic"</code>. Causal edges written via
-<code>ingest_relationship()</code> or provenance chains carry <code>edge_type: "causal"</code>.</p>
+<p>The regex extractor does not emit <code>asset</code> or <code>malware</code>. Their rows activate only
+when an import, sync, or enrichment path supplies those entity lists. The eight
+conversational relationships remain in progress because this run did not
+exercise LLM enrichment.</p>
 <h3 id="ingest_relationship"><code>ingest_relationship()</code><a class="headerlink" href="#ingest_relationship" title="Permanent link">&para;</a></h3>
-<p>Write a relationship edge directly into the knowledge graph without creating a
-memory note. Useful for sync clients that carry relationship data from external
-platforms.</p>
+<p>The method accepts source and target labels, a relationship string, and optional
+properties. It returns <code>None</code>. The method does not validate the labels against
+the typed ontology.</p>
 <div class="highlight"><pre><span></span><code><span class="n">mm</span><span class="o">.</span><span class="n">ingest_relationship</span><span class="p">(</span>
     <span class="n">from_type</span><span class="o">=</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span>
     <span class="n">from_value</span><span class="o">=</span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span>
@@ -3018,9 +3062,21 @@ platforms.</p>
     <span class="n">properties</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">},</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>The call is idempotent: repeated writes with the same
-<code>(from_type, from_value, to_type, to_value, relationship)</code> tuple update the
-edge properties rather than creating duplicates.</p>
+<p>The SQLite edge key is the source node, target node, and relationship. Repeating
+the call updates the existing edge properties instead of adding another edge.
+The method also writes the same edge to the legacy JSONL knowledge graph for
+backward compatibility.</p>
+<h2 id="typed-cti-ontology-vocabulary">Typed CTI ontology vocabulary<a class="headerlink" href="#typed-cti-ontology-vocabulary" title="Permanent link">&para;</a></h2>
+<p>The separate <code>OntologyValidator</code> exposes these core CTI names in 2.8.0:</p>
+<ul>
+<li>Entity types: <code>IntrusionSet</code>, <code>ThreatActor</code>, <code>Vulnerability</code>, <code>Malware</code>,
+  <code>Campaign</code>, <code>Incident</code>, and <code>AttackPattern</code>.</li>
+<li>Relationship types: <code>attributed_to</code>, <code>uses</code>, <code>uses_technique</code>, <code>uses_tool</code>,
+  <code>exploits</code>, <code>implements</code>, and <code>targets</code>.</li>
+</ul>
+<p>Use this PascalCase/snake_case vocabulary only with the ontology validation
+surface. Use the lowercase/uppercase vocabulary in the earlier tables with
+<code>MemoryManager</code>.</p>
 
 
 

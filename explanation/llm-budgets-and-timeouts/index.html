@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2051,10 +2051,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-changed-from-v252-to-v270" class="md-nav__link">
+  <a href="#how-the-current-behavior-evolved" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What changed from v2.5.2 to v2.7.0
+        How the current behavior evolved
       
     </span>
   </a>
@@ -2605,10 +2605,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-changed-from-v252-to-v270" class="md-nav__link">
+  <a href="#how-the-current-behavior-evolved" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What changed from v2.5.2 to v2.7.0
+        How the current behavior evolved
       
     </span>
   </a>
@@ -2647,9 +2647,10 @@
 
 
 <h1 id="llm-budgets-timeouts-and-what-they-cost-you">LLM budgets, timeouts, and what they cost you<a class="headerlink" href="#llm-budgets-timeouts-and-what-they-cost-you" title="Permanent link">&para;</a></h1>
-<p>ZettelForge makes five distinct LLM calls: causal triple extraction, synthesis, fact extraction, conversational NER, and neighbor evolution. Each call site reads its own token budget from <code>get_config().llm</code>, and the Ollama provider sends that value as <code>num_predict</code>. The same <code>llm.timeout</code> value flows into <code>ollama.Client(..., timeout=...)</code>.</p>
+<p>ZettelForge gives five structured-output paths their own configurable LLM budgets: causal triple extraction, synthesis, fact extraction, conversational NER, and neighbor evolution. Each of these paths reads its budget from <code>get_config().llm</code>, and the Ollama provider sends that value as <code>num_predict</code>. The same <code>llm.timeout</code> value flows into <code>ollama.Client(..., timeout=...)</code>.</p>
+<p>These five paths are not every LLM call site. Intent classification, memory-update decisions, and detection-rule explanations use fixed caps in ZettelForge 2.8.0. Calls that omit a cap use the general <code>llm.max_tokens</code> fallback.</p>
 <p>Use this page to understand why the defaults are large, what the <code>reasoning_model</code> flag changes, and how to tune the numbers without editing source code. For the exact config keys, see the <a href="../../reference/configuration/#llm"><code>llm</code> section of the Configuration Reference</a>.</p>
-<p>Set <code>llm.model</code> explicitly before you tune budgets. The upstream source default currently names an unresolved model tag, so this page does not treat it as a working reference model.</p>
+<p>Before you tune these values, use ZettelForge 2.8.0 and confirm that your configured provider and model already generate responses. The official 2.8.0 configuration defaults to the published Ollama tag <a href="https://ollama.com/library/qwen3.5:9b"><code>qwen3.5:9b</code></a>, but ZettelForge does not install or start Ollama for you.</p>
 <h2 id="the-token-starvation-problem">The token-starvation problem<a class="headerlink" href="#the-token-starvation-problem" title="Permanent link">&para;</a></h2>
 <p>ZettelForge cannot assume that every generated token becomes useful JSON. Reasoning-style models can spend generated tokens before the final answer, and long prompts can also consume the budget before a valid response is complete.</p>
 <p>The observable failure is simple: the provider returns an empty or truncated response. The Ollama provider logs an empty completion as <code>llm_call_empty_response</code> and records the <code>eval_count</code>, <code>done_reason</code>, <code>max_tokens</code>, <code>response_chars</code>, and timing fields. When <code>eval_count</code> reaches <code>max_tokens</code> and <code>done_reason</code> is <code>length</code>, the generation hit the configured cap.</p>
@@ -2789,14 +2790,14 @@
 <span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300.0</span>
 </code></pre></div>
 <h2 id="verifying-your-budgets">Verifying your budgets<a class="headerlink" href="#verifying-your-budgets" title="Permanent link">&para;</a></h2>
-<p>The OCSF log at <code>~/.amem/logs/zettelforge.log</code> records LLM call outcomes. Set <code>AMEM_DATA_DIR</code> to move the log directory.</p>
+<p>The structured JSON log at <code>~/.amem/logs/zettelforge.log</code> records LLM call outcomes. Set <code>AMEM_DATA_DIR</code> to move the log directory.</p>
 <p>At the default INFO log level, inspect empty completions:</p>
 <div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s1">&#39;&quot;event&quot;:&quot;llm_call_empty_response&quot;&#39;</span><span class="w"> </span>~/.amem/logs/zettelforge.log<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;&quot;\(.model) eval=\(.eval_count) of max=\(.max_tokens) dur_ms=\(.duration_ms)&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <p>At DEBUG level, <code>llm_call_complete</code> records successful calls with the same token and timing fields. If successful calls use far fewer tokens than the configured maximum, you can lower the relevant budget for that call site.</p>
-<h2 id="what-changed-from-v252-to-v270">What changed from v2.5.2 to v2.7.0<a class="headerlink" href="#what-changed-from-v252-to-v270" title="Permanent link">&para;</a></h2>
+<h2 id="how-the-current-behavior-evolved">How the current behavior evolved<a class="headerlink" href="#how-the-current-behavior-evolved" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2810,12 +2811,12 @@
 <td><code>llm.timeout</code> increased from 60 seconds to 180 seconds. Per-call-site budgets increased to the current defaults.</td>
 </tr>
 <tr>
-<td>v2.7.0</td>
-<td>Per-call-site budgets became config-overridable through <code>LLMConfig</code> fields and environment variables. The <code>reasoning_model</code> flag now applies floor values after config load.</td>
+<td>v2.6.0</td>
+<td>The five per-call-site budgets moved into <code>LLMConfig</code>, with environment-variable overrides.</td>
 </tr>
 <tr>
-<td>v2.7.0</td>
-<td>Structured JSON parsing strips <code>&lt;think&gt;</code> and <code>&lt;thinking&gt;</code> blocks through <code>json_parse.strip_thinking_tags()</code>. Providers still return response text before JSON extraction, so non-JSON callers handle whatever text the provider returns.</td>
+<td>v2.8.0</td>
+<td>The <code>reasoning_model</code> flag added floor values after config load. Structured JSON parsing also began stripping <code>&lt;think&gt;</code> and <code>&lt;thinking&gt;</code> blocks through <code>json_parse.strip_thinking_tags()</code>. Providers still return response text before JSON extraction, so non-JSON callers handle whatever text the provider returns.</td>
 </tr>
 </tbody>
 </table>

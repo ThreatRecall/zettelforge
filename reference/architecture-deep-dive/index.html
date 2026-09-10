@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1676,10 +1676,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#module-organization" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module organization
+        Prerequisites
       
     </span>
   </a>
@@ -1687,22 +1687,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-pipeline" class="md-nav__link">
+  <a href="#runtime-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data pipeline
+        Runtime boundaries
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Data pipeline">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage model">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#write-path-remember" class="md-nav__link">
+  <a href="#sqlite-is-the-source-of-record" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Write path (remember())
+        SQLite is the source of record
       
     </span>
   </a>
@@ -1710,10 +1743,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#read-path-recall" class="md-nav__link">
+  <a href="#lancedb-is-a-rebuildable-index" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Read path (recall())
+        LanceDB is a rebuildable index
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-jsonl-graph-is-a-separate-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The JSONL graph is a separate API
       
     </span>
   </a>
@@ -1726,60 +1770,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage-architecture" class="md-nav__link">
+  <a href="#failure-and-concurrency-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Storage architecture
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Storage architecture">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sqlite-schema-default-backend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SQLite schema (default backend)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#two-kg-paths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Two KG paths
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lancedb-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LanceDB configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#entity-extraction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entity extraction
+        Failure and concurrency behavior
       
     </span>
   </a>
@@ -1787,10 +1781,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#retrieval-policies" class="md-nav__link">
+  <a href="#security-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Retrieval policies
+        Security boundaries
       
     </span>
   </a>
@@ -1798,10 +1792,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#synthesis-system" class="md-nav__link">
+  <a href="#integration-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Synthesis system
+        Integration boundary
       
     </span>
   </a>
@@ -1809,10 +1803,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-integration" class="md-nav__link">
+  <a href="#design-trade-offs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM integration
+        Design trade-offs
       
     </span>
   </a>
@@ -1820,154 +1814,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance-characteristics" class="md-nav__link">
+  <a href="#source-trail" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Performance characteristics
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-and-governance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security and governance
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Security and governance">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ocsf-audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        OCSF audit logging
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#governance-controls-write-time" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Governance controls (write-time)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#epistemic-tiers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Epistemic tiers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#secrets-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Secrets handling
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#resolution-order-highest-priority-first" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolution order (highest priority first)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-sections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key sections
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#public-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Public API
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mcp-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MCP server
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cli" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zettelforge-oss-boundaries-and-trade-offs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ZettelForge OSS: boundaries and trade-offs
+        Source trail
       
     </span>
   </a>
@@ -2649,10 +2499,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#module-organization" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Module organization
+        Prerequisites
       
     </span>
   </a>
@@ -2660,22 +2510,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#data-pipeline" class="md-nav__link">
+  <a href="#runtime-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Data pipeline
+        Runtime boundaries
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Data pipeline">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage model">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#write-path-remember" class="md-nav__link">
+  <a href="#sqlite-is-the-source-of-record" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Write path (remember())
+        SQLite is the source of record
       
     </span>
   </a>
@@ -2683,10 +2566,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#read-path-recall" class="md-nav__link">
+  <a href="#lancedb-is-a-rebuildable-index" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Read path (recall())
+        LanceDB is a rebuildable index
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-jsonl-graph-is-a-separate-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The JSONL graph is a separate API
       
     </span>
   </a>
@@ -2699,60 +2593,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#storage-architecture" class="md-nav__link">
+  <a href="#failure-and-concurrency-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Storage architecture
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Storage architecture">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#sqlite-schema-default-backend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SQLite schema (default backend)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#two-kg-paths" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Two KG paths
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#lancedb-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LanceDB configuration
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#entity-extraction" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entity extraction
+        Failure and concurrency behavior
       
     </span>
   </a>
@@ -2760,10 +2604,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#retrieval-policies" class="md-nav__link">
+  <a href="#security-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Retrieval policies
+        Security boundaries
       
     </span>
   </a>
@@ -2771,10 +2615,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#synthesis-system" class="md-nav__link">
+  <a href="#integration-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Synthesis system
+        Integration boundary
       
     </span>
   </a>
@@ -2782,10 +2626,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-integration" class="md-nav__link">
+  <a href="#design-trade-offs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM integration
+        Design trade-offs
       
     </span>
   </a>
@@ -2793,154 +2637,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#performance-characteristics" class="md-nav__link">
+  <a href="#source-trail" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Performance characteristics
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-and-governance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security and governance
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Security and governance">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ocsf-audit-logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        OCSF audit logging
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#governance-controls-write-time" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Governance controls (write-time)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#epistemic-tiers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Epistemic tiers
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#secrets-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Secrets handling
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#resolution-order-highest-priority-first" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolution order (highest priority first)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#key-sections" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key sections
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#public-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Public API
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mcp-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MCP server
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cli" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CLI
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zettelforge-oss-boundaries-and-trade-offs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ZettelForge OSS: boundaries and trade-offs
+        Source trail
       
     </span>
   </a>
@@ -2979,530 +2679,196 @@
 
 
 <h1 id="architecture-deep-dive">Architecture deep dive<a class="headerlink" href="#architecture-deep-dive" title="Permanent link">&para;</a></h1>
-<p>ZettelForge v2.7.0 is a hybrid-storage agentic memory system with 107 Python source files organized into 17 packages. It processes threat intelligence through extraction, storage, retrieval, and synthesis pipelines running entirely on-device by default.</p>
-<h2 id="module-organization">Module organization<a class="headerlink" href="#module-organization" title="Permanent link">&para;</a></h2>
-<p>ZettelForge has 17 packages under <code>src/zettelforge/</code>:</p>
+<p>Use this page when you need to trace a note through ZettelForge or decide where an integration belongs. ZettelForge coordinates governance, note construction, hybrid storage, retrieval, and optional LLM synthesis through <code>MemoryManager</code>.</p>
+<p>This reference describes ZettelForge v2.8.0, the self-hosted open-source product. The verified release metadata declares an MIT license and Python 3.10 or later. ThreatRecall.ai is the SaaS product; it is outside the runtime boundary described here.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>Read <a href="../configuration/">Configuration Reference</a> before you change providers or storage paths. Use <a href="../memory-manager-api/">Memory Manager API</a> for method signatures and <a href="../retrieval-policies/">Retrieval Policies</a> for intent weights.</p>
+<h2 id="runtime-boundaries">Runtime boundaries<a class="headerlink" href="#runtime-boundaries" title="Permanent link">&para;</a></h2>
+<p><code>MemoryManager</code> owns the main process boundary. It initializes the durable note store, the vector index, entity extraction, retrieval, governance, consolidation, memory defense, and a background enrichment worker.</p>
 <table>
 <thead>
 <tr>
-<th>Package</th>
-<th>Files</th>
-<th>Function</th>
+<th>Boundary</th>
+<th>v2.8.0 implementation</th>
+<th>Responsibility</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Root (<code>zettelforge/</code>)</td>
-<td>43</td>
-<td>Core: memory_manager, config, note_schema, retrieval, synthesis, KG</td>
+<td>Coordinator</td>
+<td><code>MemoryManager</code></td>
+<td>Runs write, recall, synthesis, telemetry, and lifecycle paths</td>
 </tr>
 <tr>
-<td><code>detection/</code></td>
-<td>4</td>
-<td>Detection rule base + consumer protocol</td>
+<td>Durable records</td>
+<td>SQLite at <code>~/.amem/zettelforge.db</code> by default</td>
+<td>Stores notes, graph nodes, graph edges, entity mappings, and enrichment jobs</td>
 </tr>
 <tr>
-<td><code>integrations/</code></td>
-<td>3</td>
-<td>External system connectors</td>
+<td>Vector index</td>
+<td>LanceDB at <code>~/.amem/vectordb</code> by default</td>
+<td>Stores one vector table per domain and serves semantic candidates</td>
 </tr>
 <tr>
-<td><code>llm_providers/</code></td>
-<td>7</td>
-<td>Provider adapters (local, Ollama, mock, NVIDIA, litellm)</td>
+<td>Entity layer</td>
+<td><code>EntityIndexer</code> and <code>AliasResolver</code></td>
+<td>Extract and normalize entities, then map them to notes</td>
 </tr>
 <tr>
-<td><code>mcp/</code></td>
-<td>3</td>
-<td>MCP server (FastMCP protocol 2024-11-05)</td>
+<td>Retrieval</td>
+<td><code>VectorRetriever</code>, <code>GraphRetriever</code>, and <code>BlendedRetriever</code></td>
+<td>Rank semantic and graph candidates, then add entity matches</td>
 </tr>
 <tr>
-<td><code>osint/</code> + collectors</td>
-<td>23</td>
-<td>Passive OSINT enrichment pipeline</td>
+<td>Governance</td>
+<td><code>GovernanceValidator</code> and <code>MemoryAnomalyGate</code></td>
+<td>Enforce input limits and prompt-injection checks, apply optional PII handling, and evaluate memory anomalies</td>
 </tr>
 <tr>
-<td><code>scripts/</code></td>
-<td>6</td>
-<td>Migration and maintenance tools</td>
+<td>Generation</td>
+<td><code>SynthesisGenerator</code></td>
+<td>Retrieves context and asks the configured LLM provider for a structured answer</td>
 </tr>
 <tr>
-<td><code>sigma/</code></td>
-<td>7</td>
-<td>Sigma rule ingestion, entities, tags, CLI</td>
-</tr>
-<tr>
-<td><code>yara/</code></td>
-<td>8</td>
-<td>YARA rule ingestion, CCCS metadata, CLI</td>
+<td>Integration surface</td>
+<td>MCP server over JSON-RPC 2.0 on standard input and output</td>
+<td>Exposes the memory operations to compatible clients</td>
 </tr>
 </tbody>
 </table>
-<p>Key internal dependencies (by import count):</p>
+<p>The storage backend factory always constructs <code>SQLiteBackend</code> in v2.8.0. If you set the legacy JSONL backend selector, the factory logs a warning and still uses SQLite.</p>
+<h2 id="write-path">Write path<a class="headerlink" href="#write-path" title="Permanent link">&para;</a></h2>
+<p>When you call <code>remember()</code>, ZettelForge runs these stages in order:</p>
 <ol>
-<li><code>zettelforge.log</code> — structured logging via structlog (19 importers)</li>
-<li><code>pathlib.Path</code> — path handling (11 importers)</li>
-<li><code>threading</code> — background workers (9 importers)</li>
-<li><code>datetime.datetime</code> — temporal tracking (9 importers)</li>
-<li><code>zettelforge.note_schema.MemoryNote</code> — core data type (8 importers)</li>
+<li><code>GovernanceValidator</code> validates the input. It enforces the configured content limit, rejects detected prompt-injection patterns, and applies PII handling only when you enable the optional PII dependency and configuration.</li>
+<li>If you set <code>evolve=True</code>, the fact extraction and update path can add, update, correct, or skip facts. If it produces no fact above the configured threshold, the normal write path continues.</li>
+<li><code>NoteConstructor</code> builds a <code>MemoryNote</code>, derives lightweight context and keywords, extracts entities, and generates an embedding.</li>
+<li><code>MemoryAnomalyGate</code> evaluates the note under the configured audit, block, or quarantine mode.</li>
+<li><code>SQLiteBackend</code> writes the note to the <code>notes</code> table.</li>
+<li><code>MemoryStore</code> writes the vector into the domain-specific LanceDB table when LanceDB is available. A vector-index failure is logged and does not roll back the SQLite write.</li>
+<li>The entity path resolves aliases, updates the in-process index, and persists entity-to-note mappings in SQLite.</li>
+<li>Consolidation and supersession checks run before heuristic graph nodes and edges are written to SQLite.</li>
+<li>When enrichment is enabled, the coordinator dispatches causal extraction, LLM entity extraction, and neighbor evolution jobs. <code>sync=False</code> queues the work on the background worker; <code>sync=True</code> runs it inline.</li>
+<li>ZettelForge emits structured operation telemetry and returns the note with its write status.</li>
 </ol>
-<h2 id="data-pipeline">Data pipeline<a class="headerlink" href="#data-pipeline" title="Permanent link">&para;</a></h2>
-<h3 id="write-path-remember">Write path (remember())<a class="headerlink" href="#write-path-remember" title="Permanent link">&para;</a></h3>
-<p><code>MemoryManager.remember()</code> uses a dual-stream write path (MAGMA-inspired):</p>
-<div class="highlight"><pre><span></span><code>Content
-  └─ 1. Entity Extraction    (EntityExtractor — regex + optional LLM NER)
-  └─ 2. Governance Validation (GovernanceValidator — size, injection, PII, anomaly)
-  └─ 3. Alias Resolution     (AliasResolver — normalizes actor/CVE names)
-  └─ 4. Dual-Stream Write
-         ├─ Fast path → SQLite (notes + kg_nodes/kg_edges) + LanceDB (embeddings)
-         │              Returns in ~45ms (fastembed in-process)
-         └─ Slow path → Background worker (causal triple extraction, LLM NER)
-</code></pre></div>
-<h3 id="read-path-recall">Read path (recall())<a class="headerlink" href="#read-path-recall" title="Permanent link">&para;</a></h3>
-<p><code>MemoryManager.recall()</code> routes through intent classification then blended retrieval:</p>
-<div class="highlight"><pre><span></span><code>Query
-  └─ IntentClassifier  (keyword heuristics + vector fallback)
-  └─ Three retrievers run in parallel:
-         ├─ VectorRetriever   (LanceDB cosine similarity + entity boost)
-         ├─ GraphRetriever    (BFS from query entities in SQLite KG)
-         └─ EntityRetriever   (exact-match lookup in EntityExtractor index)
-  └─ BlendedRetriever.blend() (min-max normalized score fusion)
-  └─ Cross-encoder rerank     (ms-marco-MiniLM-L-6-v2, 8 candidates, 256 chars)
-  └─ Results
-</code></pre></div>
-<h2 id="storage-architecture">Storage architecture<a class="headerlink" href="#storage-architecture" title="Permanent link">&para;</a></h2>
-<p>ZettelForge uses three storage layers by default:</p>
+<p>This ordering creates an important failure boundary: SQLite holds the durable note record, while LanceDB is a derived search index. Monitor vector-index warnings because a successful note write does not prove that semantic indexing succeeded.</p>
+<h2 id="read-path">Read path<a class="headerlink" href="#read-path" title="Permanent link">&para;</a></h2>
+<p>When you call <code>recall()</code>, ZettelForge runs a bounded hybrid retrieval pipeline:</p>
+<ol>
+<li>The prompt-injection guard validates the query.</li>
+<li><code>IntentClassifier</code> selects a retrieval policy.</li>
+<li><code>EntityIndexer</code> extracts query entities, <code>AliasResolver</code> normalizes them, and a fan-out filter removes low-signal entities.</li>
+<li><code>VectorRetriever</code> queries LanceDB. If that path fails or returns no candidates, it falls back to in-memory cosine search.</li>
+<li><code>GraphRetriever</code> performs breadth-first traversal against the same SQLite graph that the write path populated. It does not use the separate process-wide JSONL graph helper for <code>recall()</code>.</li>
+<li><code>BlendedRetriever</code> min-max normalizes vector and graph scores, applies the intent policy weights, and ranks the merged candidates.</li>
+<li>Causal queries can add candidates from forward and incoming causal edges. Entity lookup can add exact entity matches.</li>
+<li>When reranking is enabled and more than one result remains, the cross-encoder reranks only the configured candidate head. A reranker failure preserves the prior order.</li>
+<li>The coordinator removes superseded and expired notes unless you request them, caps the result at <code>k</code>, updates access metadata, and emits telemetry.</li>
+</ol>
+<p>Vector and graph retrieval run sequentially in the v2.8.0 implementation. Treat diagrams or older descriptions that call these stages parallel as stale.</p>
+<h2 id="storage-model">Storage model<a class="headerlink" href="#storage-model" title="Permanent link">&para;</a></h2>
+<h3 id="sqlite-is-the-source-of-record">SQLite is the source of record<a class="headerlink" href="#sqlite-is-the-source-of-record" title="Permanent link">&para;</a></h3>
+<p><code>SQLiteBackend.initialize()</code> enables write-ahead logging, normal synchronous mode, foreign keys, and a five-second busy timeout. It creates five tables:</p>
 <table>
 <thead>
 <tr>
-<th>Layer</th>
-<th>Technology</th>
-<th>Purpose</th>
+<th>Table</th>
+<th>Stored data</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Structured</td>
-<td>SQLite (<code>~/.amem/</code>)</td>
-<td>Notes, KG nodes/edges, entities</td>
+<td><code>notes</code></td>
+<td>Content, provenance, semantic fields, embedding metadata, confidence, persistence, evolution, and links</td>
 </tr>
 <tr>
-<td>Vector</td>
-<td>LanceDB</td>
-<td>768-dim embeddings for semantic search</td>
+<td><code>kg_nodes</code></td>
+<td>Normalized graph nodes keyed by entity type and value</td>
 </tr>
 <tr>
-<td>Graph (direct access)</td>
-<td>JSONL (<code>kg_nodes.jsonl</code>, <code>kg_edges.jsonl</code>)</td>
-<td>KnowledgeGraph class for graph queries</td>
+<td><code>kg_edges</code></td>
+<td>Directed relationships, provenance, edge type, and properties</td>
+</tr>
+<tr>
+<td><code>entity_index</code></td>
+<td>Entity-to-note mappings</td>
+</tr>
+<tr>
+<td><code>enrichment_jobs</code></td>
+<td>Background job state and attempt metadata</td>
 </tr>
 </tbody>
 </table>
-<h3 id="sqlite-schema-default-backend">SQLite schema (default backend)<a class="headerlink" href="#sqlite-schema-default-backend" title="Permanent link">&para;</a></h3>
-<p><strong><code>notes</code> table</strong> — 35 columns including:</p>
+<p>SQLite uses a process-local reentrant lock for writes. Closing the backend checkpoints and truncates the write-ahead log before the connection closes.</p>
+<h3 id="lancedb-is-a-rebuildable-index">LanceDB is a rebuildable index<a class="headerlink" href="#lancedb-is-a-rebuildable-index" title="Permanent link">&para;</a></h3>
+<p><code>MemoryStore</code> creates <code>~/.amem/vectordb</code> by default and lazily opens LanceDB. Each domain uses a table named <code>notes_&lt;domain&gt;</code>. Rows contain the note ID, vector, a bounded content excerpt, semantic context, keywords, tags, and creation time.</p>
+<p><code>VectorRetriever</code> resolves the full note through SQLite after LanceDB returns an ID. This split keeps the vector row small while preserving the complete record in the source-of-record database.</p>
+<h3 id="the-jsonl-graph-is-a-separate-api">The JSONL graph is a separate API<a class="headerlink" href="#the-jsonl-graph-is-a-separate-api" title="Permanent link">&para;</a></h3>
+<p>The public <code>KnowledgeGraph</code> helper persists <code>kg_nodes.jsonl</code> and <code>kg_edges.jsonl</code>. It supports direct graph and temporal queries, but <code>MemoryManager.recall()</code> wraps the active storage backend with <code>StoreGraphSource</code> and reads SQLite graph tables instead. Do not assume that writing through the standalone JSONL helper updates recall results.</p>
+<h2 id="failure-and-concurrency-behavior">Failure and concurrency behavior<a class="headerlink" href="#failure-and-concurrency-behavior" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Observed v2.8.0 behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQLite initialization fails</td>
+<td><code>MemoryManager</code> cannot establish its durable store</td>
+</tr>
+<tr>
+<td>LanceDB connection or indexing fails</td>
+<td>ZettelForge logs the error; a completed SQLite write remains durable</td>
+</tr>
+<tr>
+<td>Vector retrieval fails</td>
+<td><code>VectorRetriever</code> falls back to in-memory cosine search</td>
+</tr>
+<tr>
+<td>Reranking fails</td>
+<td>Recall keeps the blended order</td>
+</tr>
+<tr>
+<td>Recall exceeds its configured timeout</td>
+<td>Recall logs the timeout and returns an empty list</td>
+</tr>
+<tr>
+<td>Background queue is full</td>
+<td>The dispatch path logs the condition; the completed fast-path write remains durable</td>
+</tr>
+<tr>
+<td>Process exits normally</td>
+<td>Registered exit handlers drain enrichment work before closing SQLite</td>
+</tr>
+</tbody>
+</table>
+<p>The enrichment queue has one daemon worker per <code>MemoryManager</code> instance. The MCP server creates its process-wide manager lazily on the first tool call, so importing the server or listing its tool definitions does not open storage or start the worker.</p>
+<h2 id="security-boundaries">Security boundaries<a class="headerlink" href="#security-boundaries" title="Permanent link">&para;</a></h2>
+<p>The write path applies deterministic prompt-injection checks before storage. The recall and synthesis paths apply the same class of guard before untrusted text reaches retrieval or an LLM prompt. Optional PII handling remains disabled until you install its dependency and enable it.</p>
+<p>Memory anomaly defense is enabled in audit mode by the v2.8.0 dataclass defaults. Audit mode records a decision without blocking the write. Change the mode deliberately if you need block or quarantine behavior, and verify the effective configuration in your environment.</p>
+<p>ZettelForge does not encrypt SQLite, LanceDB, or JSONL files itself. Use operating-system or volume encryption when you need encryption at rest.</p>
+<h2 id="integration-boundary">Integration boundary<a class="headerlink" href="#integration-boundary" title="Permanent link">&para;</a></h2>
+<p>The MCP server speaks JSON-RPC 2.0 over standard input and output and reports MCP protocol version <code>2024-11-05</code>. Its handlers delegate memory operations to the process-wide <code>MemoryManager</code>.</p>
+<p>Native OpenCTI pull and push synchronization is in progress. The registered sync tool does not provide a working sync path in the verified ZettelForge v2.8.0 base release. Use <a href="../mcp-protocol/">MCP Protocol Reference</a> for the currently verified tool contract.</p>
+<h2 id="design-trade-offs">Design trade-offs<a class="headerlink" href="#design-trade-offs" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>id</code>, <code>created_at</code>, <code>updated_at</code> — lifecycle</li>
-<li><code>content_raw</code>, <code>source_type</code>, <code>source_ref</code> — content and provenance</li>
-<li><code>embedding_vector</code>, <code>embedding_model</code> — vector metadata</li>
-<li><code>entities</code>, <code>domain</code>, <code>tier</code>, <code>confidence</code> — semantic classification</li>
-<li><code>superseded_by</code>, <code>supersedes</code> — versioning chain</li>
+<li>SQLite and LanceDB separate durable records from semantic indexing. You can recover from an index failure, but you must detect and rebuild drift.</li>
+<li>Intent-weighted fusion combines semantic similarity with explicit relationships. It costs more than a single lookup and can degrade to the surviving signal when one retriever fails.</li>
+<li>The background worker shortens the foreground write path. Derived causal and LLM-enriched data becomes eventually consistent with the durable note.</li>
+<li>The standalone JSONL graph preserves a direct graph API, while the main recall path stays scoped to the manager's SQLite store. Mixing those paths creates divergent graph views.</li>
+<li>Local files keep self-hosting simple. They also place backup, access control, encryption, and multi-process coordination responsibilities on you.</li>
 </ul>
-<p><strong><code>kg_nodes</code> table</strong>: <code>node_id</code>, <code>entity_type</code>, <code>entity_value</code>, <code>properties</code>, <code>created_at</code>, <code>updated_at</code></p>
-<p><strong><code>kg_edges</code> table</strong>: <code>edge_id</code>, <code>from_node_id</code>, <code>to_node_id</code>, <code>relationship</code>, <code>edge_type</code>, <code>note_id</code>, <code>properties</code>, <code>created_at</code>, <code>updated_at</code></p>
-<p>Indexes on <code>(entity_type, entity_value)</code> for nodes and on <code>from_node_id</code>, <code>to_node_id</code>, <code>relationship</code>, <code>edge_type</code> for edges.</p>
-<h3 id="two-kg-paths">Two KG paths<a class="headerlink" href="#two-kg-paths" title="Permanent link">&para;</a></h3>
-<p><code>MemoryManager.remember()</code> writes KG data through <code>SqliteBackend.add_kg_node()</code> and <code>add_kg_edge()</code>. These writes go to the SQLite <code>kg_nodes</code>/<code>kg_edges</code> tables.</p>
-<p><code>KnowledgeGraph</code> (imported via <code>zettelforge.get_knowledge_graph()</code>) uses JSONL persistence (<code>kg_nodes.jsonl</code>, <code>kg_edges.jsonl</code>) for direct graph queries: <code>get_neighbors()</code>, <code>traverse()</code>, <code>get_changes_since()</code>. <code>StoreGraphSource</code> wraps the per-store SQLite KG for isolated reads during recall, preventing phantom note IDs from other stores.</p>
-<h3 id="lancedb-configuration">LanceDB configuration<a class="headerlink" href="#lancedb-configuration" title="Permanent link">&para;</a></h3>
+<h2 id="source-trail">Source trail<a class="headerlink" href="#source-trail" title="Permanent link">&para;</a></h2>
+<p>This page was verified against the <a href="https://github.com/ThreatRecall/zettelforge/releases/tag/v2.8.0">ZettelForge v2.8.0 release</a> and its <a href="https://github.com/ThreatRecall/zettelforge/tree/v2.8.0/src/zettelforge">tagged source tree</a>:</p>
 <ul>
-<li><strong>Default model</strong>: nomic-ai/nomic-embed-text-v1.5-Q (768-dim ONNX via fastembed)</li>
-<li><strong>Index type</strong>: IVF_FLAT (avoids double-quantization artifacts)</li>
-<li><strong>Provider</strong>: fastembed (in-process, ~7ms/embed) or Ollama (HTTP, ~30ms/embed)</li>
-<li><strong>Fallback</strong>: deterministic mock embeddings (offline/CI use)</li>
-</ul>
-<h2 id="entity-extraction">Entity extraction<a class="headerlink" href="#entity-extraction" title="Permanent link">&para;</a></h2>
-<p><code>EntityExtractor</code> recognizes 19 entity types across three categories:</p>
-<table>
-<thead>
-<tr>
-<th>Category</th>
-<th>Types</th>
-<th>Extraction method</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CTI</td>
-<td><code>cve</code>, <code>intrusion_set</code>, <code>actor</code>, <code>tool</code>, <code>campaign</code>, <code>attack_pattern</code></td>
-<td>Regex</td>
-</tr>
-<tr>
-<td>IOC (STIX Cyber Observables)</td>
-<td><code>ipv4</code>, <code>domain</code>, <code>url</code>, <code>md5</code>, <code>sha1</code>, <code>sha256</code>, <code>email</code></td>
-<td>Regex</td>
-</tr>
-<tr>
-<td>Conversational</td>
-<td><code>person</code>, <code>location</code>, <code>organization</code>, <code>event</code>, <code>activity</code>, <code>temporal</code></td>
-<td>LLM NER (optional; requires LLM provider)</td>
-</tr>
-</tbody>
-</table>
-<p>Total: 13 regex patterns + 6 LLM types = 19 entity types.</p>
-<p>Selected regex patterns (source: <code>entity_indexer.py</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="s2">&quot;cve&quot;</span><span class="p">:</span>           <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(CVE-\d</span><span class="si">{4}</span><span class="s2">-\d{4,})&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
-<span class="s2">&quot;intrusion_set&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b((?:apt|unc|ta|fin|temp)\s*-?\s*\d+)\b&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
-<span class="s2">&quot;attack_pattern&quot;</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(T\d</span><span class="si">{4}</span><span class="s2">(?:\.\d</span><span class="si">{3}</span><span class="s2">)?)\b&quot;</span><span class="p">)</span>
-<span class="s2">&quot;ipv4&quot;</span><span class="p">:</span>          <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.)</span><span class="si">{3}</span><span class="s2">(?:...)\b&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>A code-context filter (<code>_CODE_CONTEXT_PATTERN</code>) suppresses hash false-positives from git commit lines, code fences, and function definitions.</p>
-<h2 id="retrieval-policies">Retrieval policies<a class="headerlink" href="#retrieval-policies" title="Permanent link">&para;</a></h2>
-<p>Intent classification assigns each query to a category that sets retrieval weights:</p>
-<table>
-<thead>
-<tr>
-<th>Intent</th>
-<th>Vector</th>
-<th>Entity</th>
-<th>Graph</th>
-<th>Temporal</th>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FACTUAL</td>
-<td>0.3</td>
-<td>0.7</td>
-<td>0.2</td>
-<td>0.0</td>
-<td>CVE lookups, specific entity queries</td>
-</tr>
-<tr>
-<td>RELATIONAL</td>
-<td>0.2</td>
-<td>0.2</td>
-<td>0.5</td>
-<td>0.1</td>
-<td>Tool attribution, actor relationships</td>
-</tr>
-<tr>
-<td>CAUSAL</td>
-<td>0.1</td>
-<td>0.1</td>
-<td>0.6</td>
-<td>0.2</td>
-<td>Root cause analysis, kill chain</td>
-</tr>
-<tr>
-<td>EXPLORATORY</td>
-<td>0.5</td>
-<td>0.2</td>
-<td>0.2</td>
-<td>0.1</td>
-<td>General threat landscape research</td>
-</tr>
-</tbody>
-</table>
-<p><code>BlendedRetriever.blend()</code> uses min-max normalized score fusion. <code>blend_rrf()</code> provides Reciprocal Rank Fusion (rrf_k=60) as an alternative. See <a href="../retrieval-policies/">Retrieval Policies</a> for full keyword lists and fusion formulas.</p>
-<h2 id="synthesis-system">Synthesis system<a class="headerlink" href="#synthesis-system" title="Permanent link">&para;</a></h2>
-<p><code>SynthesisGenerator.synthesize()</code> assembles context from up to 10 notes (500 characters each, 3000 max tokens), then calls the configured LLM. Token budget is estimated as <code>len(text) // 4</code>.</p>
-<p>Four output formats:</p>
-<table>
-<thead>
-<tr>
-<th>Format</th>
-<th>Schema</th>
-<th>Use case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>direct_answer</code></td>
-<td><code>{answer, confidence, sources}</code></td>
-<td>Quick facts (ZettelForge OSS, ThreatRecall.ai SaaS)</td>
-</tr>
-<tr>
-<td><code>synthesized_brief</code></td>
-<td><code>{summary, themes[], confidence}</code></td>
-<td>Executive summary (ThreatRecall.ai SaaS)</td>
-</tr>
-<tr>
-<td><code>timeline_analysis</code></td>
-<td><code>{timeline[{date, event}], confidence}</code></td>
-<td>Incident reconstruction (ThreatRecall.ai SaaS)</td>
-</tr>
-<tr>
-<td><code>relationship_map</code></td>
-<td><code>{entities[], relationships[]}</code></td>
-<td>Threat landscape (ThreatRecall.ai SaaS)</td>
-</tr>
-</tbody>
-</table>
-<p><code>direct_answer</code> is the only format available in ZettelForge OSS without a synthesis extension. The other three formats are available in ThreatRecall.ai SaaS. The system falls back to <code>direct_answer</code> when the requested format is not available.</p>
-<h2 id="llm-integration">LLM integration<a class="headerlink" href="#llm-integration" title="Permanent link">&para;</a></h2>
-<p>The LLM layer has three embedding providers and a separate generation path:</p>
-<p><strong>Embedding providers</strong> (in preference order):</p>
-<ol>
-<li><strong>fastembed</strong> (ONNX, in-process): ~7ms/embed, default — no server required</li>
-<li><strong>Ollama</strong> (HTTP): ~30ms/embed, optional</li>
-<li><strong>Mock</strong>: deterministic fallback for offline/test use</li>
-</ol>
-<p><strong>Generation (LLM)</strong> source defaults:</p>
-<table>
-<thead>
-<tr>
-<th>Setting</th>
-<th>Default</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>llm.provider</code></td>
-<td><code>ollama</code></td>
-<td>Also supports <code>local</code> (llama-cpp-python) and <code>mock</code></td>
-</tr>
-<tr>
-<td><code>llm.model</code></td>
-<td><code>qwen3.5:9b</code></td>
-<td>Source default in <code>config.py:123</code> and <code>config.default.yaml</code>; unresolved upstream, so set an explicit model your provider can load</td>
-</tr>
-<tr>
-<td><code>llm.temperature</code></td>
-<td><code>0.1</code></td>
-<td>Low for deterministic extraction</td>
-</tr>
-<tr>
-<td><code>llm.timeout</code></td>
-<td><code>180.0s</code></td>
-<td>Bumped from 60s at v2.5.2 for 9B reasoning models</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition warning">
-<p class="admonition-title">Set an explicit LLM model</p>
-<p>This docs set has not verified <code>qwen3.5:9b</code> as a working Ollama tag. For Ollama, set <code>llm.model</code> or <code>ZETTELFORGE_LLM_MODEL</code> to an installed tag such as <code>qwen2.5:3b</code>. For the local provider, use a local HuggingFace model ID such as <code>Qwen/Qwen2.5-3B-Instruct-GGUF</code> with the matching GGUF filename.</p>
-</div>
-<p>LLM NER and synthesis are optional. The system runs fully offline with mock embeddings and no generation capability — <code>recall()</code> and entity extraction still work; <code>synthesize()</code> returns a zero-confidence answer.</p>
-<h2 id="performance-characteristics">Performance characteristics<a class="headerlink" href="#performance-characteristics" title="Permanent link">&para;</a></h2>
-<p>Benchmarks measured on DGX Spark GB10, v2.7.0 baseline, deterministic config (no LLM for judge):</p>
-<table>
-<thead>
-<tr>
-<th>Metric</th>
-<th>v2.7.0 baseline</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CTI retrieval accuracy</td>
-<td>75.0%</td>
-</tr>
-<tr>
-<td>LoCoMo accuracy (keyword judge)</td>
-<td>7.0%</td>
-</tr>
-<tr>
-<td>CTI recall p50 (idle machine)</td>
-<td>79ms</td>
-</tr>
-<tr>
-<td>recall mean (profiled, 60 calls)</td>
-<td>117.6ms</td>
-</tr>
-<tr>
-<td>recall p95 (profiled)</td>
-<td>258ms</td>
-</tr>
-<tr>
-<td>LoCoMo p50 / p95</td>
-<td>336ms / 387ms</td>
-</tr>
-<tr>
-<td>remember() fast path</td>
-<td>~45ms</td>
-</tr>
-<tr>
-<td>Embedding (fastembed)</td>
-<td>~7ms</td>
-</tr>
-</tbody>
-</table>
-<p>Source: <code>benchmarks/BENCHMARK_REPORT.md</code>, session 2026-06-09. The CTI and LoCoMo benchmarks were measured with the keyword-judge path (no synthesis LLM installed on this host).</p>
-<p><strong>Key optimizations in v2.4.0+</strong> that produced the current baseline:</p>
-<ol>
-<li>Cross-encoder rerank (Xenova/ms-marco-MiniLM-L-6-v2): 8 candidates, 256 chars/doc — accounts for +15pp CTI accuracy</li>
-<li>IVF_FLAT index in LanceDB: avoids double-quantization artifacts</li>
-<li>fastembed (ONNX in-process) vs Ollama HTTP: ~23ms vs ~30ms per embed</li>
-<li>StoreGraphSource per-store KG isolation: eliminates phantom note IDs from mixed-store traversal</li>
-<li>MemSAD vectorization: write-time anomaly gate from O(n²) to ~3.4ms via numpy pairwise scoring</li>
-</ol>
-<h2 id="security-and-governance">Security and governance<a class="headerlink" href="#security-and-governance" title="Permanent link">&para;</a></h2>
-<h3 id="ocsf-audit-logging">OCSF audit logging<a class="headerlink" href="#ocsf-audit-logging" title="Permanent link">&para;</a></h3>
-<p>All operations emit structured OCSF v1.3 events via <code>ocsf.py</code> (GOV-012 compliant):</p>
-<ul>
-<li><code>log_api_activity()</code> — remember/recall/synthesize calls (class 6002)</li>
-<li><code>log_authentication()</code> — auth events (class 3001)</li>
-<li><code>log_authorization()</code> — access decisions (class 3003)</li>
-<li><code>log_config_change()</code> — configuration mutations (class 5001)</li>
-<li><code>log_file_activity()</code> — storage operations (class 4001)</li>
-<li><code>log_process_activity()</code> — background worker events (class 7002)</li>
-<li><code>log_account_change()</code> — account lifecycle (class 3005)</li>
-</ul>
-<h3 id="governance-controls-write-time">Governance controls (write-time)<a class="headerlink" href="#governance-controls-write-time" title="Permanent link">&para;</a></h3>
-<p>Four controls execute on every <code>remember()</code> call in this order:</p>
-<ol>
-<li><strong>Size limits</strong> (<code>LimitsConfig</code>): max 50MB content, 30s recall timeout</li>
-<li><strong>Prompt injection detection</strong> (<code>PromptSecurityValidator</code>): 7 deterministic pattern categories, always active, no LLM required</li>
-<li><strong>PII detection</strong> (<code>PIIValidator</code>): disabled by default; requires <code>pip install zettelforge[pii]</code>; CTI allowlist (IP addresses, URLs, domains never redacted)</li>
-<li><strong>Memory anomaly gate</strong> (<code>MemSAD</code>): enabled in audit mode by default; scores inbound content against recent store history; quarantines anomalies to JSONL</li>
-</ol>
-<p>See <a href="../governance-controls/">Governance Controls</a> for full parameter reference.</p>
-<h3 id="epistemic-tiers">Epistemic tiers<a class="headerlink" href="#epistemic-tiers" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Tier</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>A (Authoritative)</td>
-<td>Verified from a trusted source</td>
-</tr>
-<tr>
-<td>B (Operational)</td>
-<td>Working knowledge, plausible</td>
-</tr>
-<tr>
-<td>C (Support)</td>
-<td>Inferred or speculative</td>
-</tr>
-</tbody>
-</table>
-<p>Tiers filter retrieval (<code>SynthesisConfig.tier_filter</code>) and propagate to OCSF events.</p>
-<h3 id="secrets-handling">Secrets handling<a class="headerlink" href="#secrets-handling" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Config: <code>${ENV_VAR}</code> syntax in YAML; resolved at load time via <code>_resolve_env_refs()</code></li>
-<li>Redaction: automatic in <code>repr()</code> for keys matching "key", "token", "secret", "password"</li>
-<li>Sensitive config keys never appear in log output or <code>/api/config</code> responses</li>
-</ul>
-<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<h3 id="resolution-order-highest-priority-first">Resolution order (highest priority first)<a class="headerlink" href="#resolution-order-highest-priority-first" title="Permanent link">&para;</a></h3>
-<ol>
-<li>Environment variables (<code>ZETTELFORGE_*</code>)</li>
-<li><code>config.yaml</code> in the working directory</li>
-<li><code>config.yaml</code> at the project root</li>
-<li><code>config.default.yaml</code> (reference defaults)</li>
-<li>Hardcoded dataclass defaults</li>
-</ol>
-<h3 id="key-sections">Key sections<a class="headerlink" href="#key-sections" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Section</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>storage</code></td>
-<td>Data directory (default <code>~/.amem</code>)</td>
-</tr>
-<tr>
-<td><code>backend</code></td>
-<td><code>sqlite</code> (default) or <code>typedb</code> (requires additional extension)</td>
-</tr>
-<tr>
-<td><code>embedding</code></td>
-<td>Provider, model, dimensions</td>
-</tr>
-<tr>
-<td><code>llm</code></td>
-<td>Provider, model, temperature, timeout</td>
-</tr>
-<tr>
-<td><code>retrieval</code></td>
-<td><code>default_k</code> (10), <code>similarity_threshold</code> (0.25)</td>
-</tr>
-<tr>
-<td><code>synthesis</code></td>
-<td><code>max_context_tokens</code> (3000), <code>tier_filter</code></td>
-</tr>
-<tr>
-<td><code>governance</code></td>
-<td>Prompt injection, PII, memory anomaly, limits</td>
-</tr>
-</tbody>
-</table>
-<p>See <a href="../configuration/">Configuration Reference</a> for every key and its environment variable override.</p>
-<h2 id="public-api">Public API<a class="headerlink" href="#public-api" title="Permanent link">&para;</a></h2>
-<p>29 items in <code>zettelforge.__all__</code> (v2.7.0):</p>
-<p><strong>Classes:</strong>
-<code>BlendedRetriever</code>, <code>Edition</code>, <code>EditionError</code>, <code>ExtractedFact</code>, <code>FactExtractor</code>, <code>GraphRetriever</code>, <code>IntentClassifier</code>, <code>KnowledgeGraph</code>, <code>MemoryManager</code>, <code>MemoryNote</code>, <code>MemoryUpdater</code>, <code>NoteConstructor</code>, <code>QueryIntent</code>, <code>ScoredResult</code>, <code>SynthesisGenerator</code>, <code>SynthesisValidator</code>, <code>UpdateOperation</code>, <code>VectorRetriever</code></p>
-<p><strong>Constants:</strong>
-<code>ENTITY_TYPES</code>, <code>RELATION_TYPES</code></p>
-<p><strong>Factory functions:</strong>
-<code>get_edition</code>, <code>get_intent_classifier</code>, <code>get_knowledge_graph</code>, <code>get_memory_manager</code>, <code>get_synthesis_generator</code>, <code>get_synthesis_validator</code></p>
-<p><strong>Edition inspection:</strong>
-<code>edition_name</code>, <code>is_community</code>, <code>is_enterprise</code>, <code>get_edition</code></p>
-<p><code>is_enterprise()</code> returns <code>True</code> when the legacy SaaS compatibility hook reports active. <code>is_community()</code> is the inverse. <code>edition_name()</code> returns <code>"ZettelForge + Extensions"</code> when extensions are active, or <code>"ZettelForge"</code> for the base OSS installation. These identifiers are runtime compatibility hooks; the public product model remains ZettelForge OSS and ThreatRecall.ai SaaS.</p>
-<p>See <a href="../memory-manager-api/">Memory Manager API</a> for method-level signatures.</p>
-<h2 id="mcp-server">MCP server<a class="headerlink" href="#mcp-server" title="Permanent link">&para;</a></h2>
-<p>The MCP server (<code>mcp/server.py</code>) exposes 7 tools over the MCP 2024-11-05 protocol:</p>
-<table>
-<thead>
-<tr>
-<th>Tool</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>zettelforge_remember</code></td>
-<td>Ingest a note with full governance pipeline</td>
-</tr>
-<tr>
-<td><code>zettelforge_recall</code></td>
-<td>Retrieve notes by query with TLP controls</td>
-</tr>
-<tr>
-<td><code>zettelforge_synthesize</code></td>
-<td>Generate an LLM-based synthesis</td>
-</tr>
-<tr>
-<td><code>zettelforge_entity</code></td>
-<td>Look up notes by entity type and value</td>
-</tr>
-<tr>
-<td><code>zettelforge_graph</code></td>
-<td>Traverse the knowledge graph</td>
-</tr>
-<tr>
-<td><code>zettelforge_stats</code></td>
-<td>Return store statistics</td>
-</tr>
-<tr>
-<td><code>zettelforge_sync</code></td>
-<td>OpenCTI sync (ThreatRecall.ai SaaS; returns 501 in OSS)</td>
-</tr>
-</tbody>
-</table>
-<p>See <a href="../mcp-protocol/">MCP Protocol Reference</a> for full input/output schemas.</p>
-<h2 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>zettelforge<span class="w"> </span>demo<span class="w">     </span><span class="c1"># interactive CTI demo (ingests 5 reports, runs recall + synthesis)</span>
-python<span class="w"> </span>-m<span class="w"> </span>zettelforge<span class="w"> </span>version<span class="w">  </span><span class="c1"># print version string</span>
-</code></pre></div>
-<h2 id="zettelforge-oss-boundaries-and-trade-offs">ZettelForge OSS: boundaries and trade-offs<a class="headerlink" href="#zettelforge-oss-boundaries-and-trade-offs" title="Permanent link">&para;</a></h2>
-<p>ZettelForge OSS (Apache-2.0 license) runs fully self-hosted with no external dependencies beyond Python packages. The following are deliberate scope constraints in the current release, not gaps:</p>
-<ul>
-<li><strong>No built-in HTTP authentication.</strong> The web server (<code>/api/*</code>) uses an API key guard for non-loopback requests. Multi-user auth and per-tenant isolation are available in <a href="https://threatrecall.ai">ThreatRecall.ai</a>.</li>
-<li><strong>No encryption at rest.</strong> Data is stored in plain SQLite and JSONL. Apply OS-level encryption (dm-crypt, FileVault) for data-at-rest requirements.</li>
-<li><strong>SQLite KG lacks graph inference.</strong> The SQLite KG supports BFS traversal and edge queries but not TypeDB-style reasoning rules. TypeDB-based deep inference is available in ThreatRecall.ai SaaS.</li>
-<li><strong>Token estimation is naive.</strong> <code>len(text) // 4</code> approximates tokens; actual token counts vary by model. This affects context window management in synthesis.</li>
-<li><strong>No embedding cache TTL.</strong> The LRU embedding cache is keyed by (model, content hash) with no expiry; memory consumption grows with unique content volume.</li>
+<li><code>memory_manager.py</code> for initialization, write, recall, synthesis, and worker lifecycle</li>
+<li><code>sqlite_backend.py</code> for the durable schema and connection settings</li>
+<li><code>memory_store.py</code> and <code>vector_retriever.py</code> for vector indexing and fallback search</li>
+<li><code>graph_retriever.py</code> and <code>knowledge_graph.py</code> for the two graph paths</li>
+<li><code>governance_validator.py</code> and <code>prompt_injection_guard.py</code> for input controls</li>
+<li><code>mcp/server.py</code> for JSON-RPC and lazy manager initialization</li>
 </ul>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>

@@ -844,7 +844,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2613,15 +2613,19 @@
 
 
 <h1 id="ingest-your-first-cti-report">Ingest your first CTI report<a class="headerlink" href="#ingest-your-first-cti-report" title="Permanent link">&para;</a></h1>
-<p><strong>What you will build</strong>: A fully indexed threat intelligence report with extracted STIX entities (threat actor, malware, vulnerability), queryable graph relationships, and a synthesized threat brief about APT28.</p>
+<p><strong>What you will build</strong>: A stored threat intelligence report with extracted CTI entities, queryable SQLite graph relationships, semantic recall, and a direct-answer synthesis call about APT28.</p>
 <p><strong>Time estimate</strong>: 15 minutes</p>
 <p><strong>Prerequisites</strong>:</p>
 <ul>
 <li>You have completed <a href="../01-quickstart/">Quickstart (Tutorial 01)</a>.</li>
 <li>ZettelForge 2.7.0 is installed (<code>pip install zettelforge</code>).</li>
-<li>An LLM provider is configured and running. Steps 3, 4, and 8 require LLM inference for fact extraction and synthesis. The default provider is <code>local</code> (Qwen2.5-3B-Instruct GGUF via llama-cpp-python, downloaded automatically). To use Ollama instead, set <code>ZETTELFORGE_LLM_PROVIDER=ollama</code> and run <code>ollama pull qwen2.5:3b</code>.</li>
+<li>An LLM provider is configured and running. Steps 3, 4, and 8 require LLM inference for full fact extraction and synthesis. Set <code>ZETTELFORGE_LLM_PROVIDER</code> and <code>ZETTELFORGE_LLM_MODEL</code> explicitly before you run this tutorial. Use an installed Ollama tag such as <code>qwen2.5:3b</code>, use <code>local</code> with <code>Qwen/Qwen2.5-3B-Instruct-GGUF</code> and the matching GGUF file, or use <code>litellm</code> with the API key required by your hosted model.</li>
 <li>ZettelForge uses SQLite by default. No external database required.</li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">Verification state</p>
+<p>This tutorial is <code>in progress</code>. On July 28, 2026, a verification run covered the SQLite runtime path, the no-LLM fallback, and the API shapes with a deterministic mock provider. A production LLM provider was not available in this environment, so LLM-generated wording, counts, and relationship richness are examples you verify against your provider before relying on them.</p>
+</div>
 <hr />
 <h2 id="step-1-start-a-python-session">Step 1: Start a Python session<a class="headerlink" href="#step-1-start-a-python-session" title="Permanent link">&para;</a></h2>
 <p>Open a terminal and start a Python REPL.</p>
@@ -2635,7 +2639,7 @@
 <p>On the default SQLite backend, the manager initializes with no connection message. The storage backend is <code>SQLiteBackend</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>TypeDB support for full STIX 2.1 entity types and deeper graph traversal is available on <a href="https://threatrecall.ai">ThreatRecall.ai</a> SaaS. Set <code>ZETTELFORGE_BACKEND=typedb</code> with a running TypeDB instance on <code>localhost:1729</code>. This tutorial works with the default SQLite backend.</p>
+<p>This tutorial works with the default SQLite backend. If you set <code>ZETTELFORGE_BACKEND=typedb</code>, run TypeDB on <code>localhost:1729</code> before you initialize the manager. Local SQLite graph traversal is capped at depth 2.</p>
 </div>
 <hr />
 <h2 id="step-2-create-a-sample-threat-report">Step 2: Create a sample threat report<a class="headerlink" href="#step-2-create-a-sample-threat-report" title="Permanent link">&para;</a></h2>
@@ -2685,7 +2689,7 @@
 <p>Feed the report into ZettelForge. The <code>remember_report()</code> method chunks the text, runs two-phase LLM extraction on each chunk, and stores the results with CTI domain metadata.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This step requires a configured LLM provider. If the LLM is unavailable, the method returns an empty list and logs a warning. Start Ollama (<code>ollama serve</code>) or configure the local GGUF provider before continuing.</p>
+<p>This step requires a configured LLM provider for the full tutorial output. If the LLM is unavailable, <code>remember_report()</code> stores a degraded fallback fact from the chunk and logs warnings; it does not produce the five extracted facts shown below. Start your provider before continuing.</p>
 </div>
 <div class="highlight"><pre><span></span><code><span class="n">results</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember_report</span><span class="p">(</span>
     <span class="n">content</span><span class="o">=</span><span class="n">report</span><span class="p">,</span>
@@ -2695,15 +2699,7 @@
     <span class="n">chunk_size</span><span class="o">=</span><span class="mi">3000</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>Representative output (exact log lines depend on your LLM configuration):</p>
-<div class="highlight"><pre><span></span><code>[Extraction] Phase 1: Extracted 5 facts from chunk 0
-[Extraction] Phase 2: ADD &quot;APT28 is conducting cyber espionage against energy sector&quot; (importance: 8)
-[Extraction] Phase 2: ADD &quot;APT28 uses Cobalt Strike beacons via spear-phishing PDFs&quot; (importance: 9)
-[Extraction] Phase 2: ADD &quot;CVE-2024-1111 is a critical RCE in PDF rendering (CVSS 9.8)&quot; (importance: 9)
-[Extraction] Phase 2: ADD &quot;APT28 targets OT/SCADA systems in energy utilities&quot; (importance: 8)
-[Extraction] Phase 2: ADD &quot;C2 domain: update-service.energy-grid.com&quot; (importance: 7)
-[Causal] Extracted 3 triples, stored 3 edges for note note_20260409_...
-</code></pre></div>
+<p>The call returns a list of <code>(note, status)</code> tuples. Print the list in the next step to inspect the notes ZettelForge stored.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>The output shows both phases in action. Phase 1 (extraction) pulls candidate facts and scores them by importance (1-10). Phase 2 (update) compares each fact against existing memory and decides ADD, UPDATE, or NOOP.</p>
@@ -2724,52 +2720,52 @@
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Entities:   </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">semantic</span><span class="o">.</span><span class="n">entities</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">()</span>
 </code></pre></div>
-<p>Representative output:</p>
+<p>Representative output shape:</p>
 <div class="highlight"><pre><span></span><code>Total memory operations: 5
 
-[ADDED] note_20260409_143201_a8f2
-  Content:    APT28 is conducting a sustained cyber espionage campaign against energy sector o...
+[ADDED] note_20260728_010541_ad4e
+  Content:    APT28 uses Cobalt Strike beacons delivered through spear-phishing PDF attach...
   Domain:     cti
-  Tier:       B
-  Importance: 8
-  Keywords:   [&#39;apt28&#39;, &#39;energy sector&#39;, &#39;cyber espionage&#39;, &#39;western europe&#39;]
-  Entities:   [&#39;APT28&#39;, &#39;energy sector&#39;]
-
-[ADDED] note_20260409_143202_b3c7
-  Content:    APT28 uses Cobalt Strike beacons delivered through spear-phishing emails with we...
-  Domain:     cti
-  Tier:       B
+  Tier:       A
   Importance: 9
-  Keywords:   [&#39;apt28&#39;, &#39;cobalt strike&#39;, &#39;spear-phishing&#39;, &#39;beacon&#39;]
-  Entities:   [&#39;APT28&#39;, &#39;Cobalt Strike&#39;]
+  Keywords:   [&#39;uses&#39;, &#39;cobalt&#39;, &#39;strike&#39;, &#39;beacons&#39;, &#39;delivered&#39;, &#39;through&#39;, &#39;spear&#39;]
+  Entities:   [&#39;apt28&#39;, &#39;cobalt-strike&#39;]
 
-[ADDED] note_20260409_143203_d1e4
+[ADDED] note_20260728_010541_25e0
   Content:    CVE-2024-1111 is a critical remote code execution vulnerability in PDF rendering...
   Domain:     cti
-  Tier:       B
+  Tier:       A
   Importance: 9
-  Keywords:   [&#39;cve-2024-1111&#39;, &#39;rce&#39;, &#39;pdf rendering&#39;, &#39;cvss 9.8&#39;]
-  Entities:   [&#39;CVE-2024-1111&#39;]
+  Keywords:   [&#39;critical&#39;, &#39;remote&#39;, &#39;code&#39;, &#39;execution&#39;, &#39;vulnerability&#39;, &#39;rendering&#39;, &#39;libraries&#39;]
+  Entities:   [&#39;cve-2024-1111&#39;]
 
-[ADDED] note_20260409_143204_f5a9
-  Content:    APT28 targets operational technology and SCADA systems in compromised energy util...
+[ADDED] note_20260728_010542_50b4
+  Content:    APT28 is conducting cyber espionage against Western European energy sector...
   Domain:     cti
-  Tier:       B
+  Tier:       A
   Importance: 8
-  Keywords:   [&#39;apt28&#39;, &#39;scada&#39;, &#39;ot&#39;, &#39;lateral movement&#39;]
-  Entities:   [&#39;APT28&#39;, &#39;SCADA&#39;]
+  Keywords:   [&#39;conducting&#39;, &#39;cyber&#39;, &#39;espionage&#39;, &#39;against&#39;, &#39;western&#39;, &#39;european&#39;, &#39;energy&#39;]
+  Entities:   [&#39;apt28&#39;]
 
-[ADDED] note_20260409_143205_c2b8
-  Content:    C2 domain update-service.energy-grid.com used by APT28 Cobalt Strike beacons...
+[ADDED] note_20260728_010542_ef58
+  Content:    APT28 targets operational technology and SCADA systems in energy utilities...
   Domain:     cti
-  Tier:       B
+  Tier:       A
+  Importance: 8
+  Keywords:   [&#39;targets&#39;, &#39;operational&#39;, &#39;technology&#39;, &#39;scada&#39;, &#39;systems&#39;, &#39;energy&#39;, &#39;utilities&#39;]
+  Entities:   [&#39;apt28&#39;]
+
+[ADDED] note_20260728_010542_316d
+  Content:    C2 domain update-service.energy-grid.com is used by APT28 Cobalt Strike...
+  Domain:     cti
+  Tier:       A
   Importance: 7
-  Keywords:   [&#39;c2&#39;, &#39;cobalt strike&#39;, &#39;ioc&#39;, &#39;domain&#39;]
-  Entities:   [&#39;APT28&#39;, &#39;Cobalt Strike&#39;]
+  Keywords:   [&#39;domain&#39;, &#39;update&#39;, &#39;service&#39;, &#39;energy&#39;, &#39;grid&#39;, &#39;used&#39;, &#39;cobalt&#39;]
+  Entities:   [&#39;apt28&#39;, &#39;cobalt-strike&#39;, &#39;update-service.energy-grid.com&#39;]
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Your note IDs and timestamps will differ. The number of operations depends on how the LLM segments the facts. Expect between 4 and 6 ADDED operations.</p>
+<p>Your note IDs and timestamps differ. A successful LLM pass returns one tuple per extracted fact; the sample fact set above produced five <code>added</code> tuples in the July 28, 2026 verification run. Without a working LLM provider, the same script produced one <code>added</code> fallback note for the whole chunk.</p>
 </div>
 <hr />
 <h2 id="step-5-query-entity-relationships-from-the-knowledge-graph">Step 5: Query entity relationships from the knowledge graph<a class="headerlink" href="#step-5-query-entity-relationships-from-the-knowledge-graph" title="Permanent link">&para;</a></h2>
@@ -2792,21 +2788,21 @@
     <span class="n">node</span> <span class="o">=</span> <span class="n">rel</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Cobalt Strike --[</span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]--&gt; </span><span class="si">{</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;entity_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;entity_value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Expected output (shape verified from source; exact edges depend on LLM extraction results):</p>
+<p>Observed output from the July 28, 2026 SQLite verification run:</p>
 <div class="highlight"><pre><span></span><code>=== APT28 Relationships ===
   APT28 --[USES_TOOL]--&gt; tool:cobalt-strike
-  APT28 --[EXPLOITS_CVE]--&gt; cve:CVE-2024-1111
-  APT28 --[TARGETS_ASSET]--&gt; asset:energy sector
-  APT28 --[MENTIONED_IN]--&gt; note:note_20260409_143201_a8f2
-  APT28 --[MENTIONED_IN]--&gt; note:note_20260409_143202_b3c7
+  APT28 --[MENTIONED_IN]--&gt; note:note_20260728_010541_ad4e
+  APT28 --[MENTIONED_IN]--&gt; note:note_20260728_010542_50b4
+  APT28 --[MENTIONED_IN]--&gt; note:note_20260728_010542_ef58
+  APT28 --[MENTIONED_IN]--&gt; note:note_20260728_010542_316d
 
 === Cobalt Strike Relationships ===
-  Cobalt Strike --[EXPLOITS_CVE]--&gt; cve:CVE-2024-1111
-  Cobalt Strike --[MENTIONED_IN]--&gt; note:note_20260409_143202_b3c7
+  Cobalt Strike --[MENTIONED_IN]--&gt; note:note_20260728_010541_ad4e
+  Cobalt Strike --[MENTIONED_IN]--&gt; note:note_20260728_010542_316d
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>ZettelForge creates <code>USES_TOOL</code>, <code>EXPLOITS_CVE</code>, and <code>TARGETS_ASSET</code> edges from entity co-occurrence in the report text. The <code>MENTIONED_IN</code> edges link entities to the notes that mention them.</p>
+<p>The SQLite path creates <code>MENTIONED_IN</code> edges and selected heuristic co-occurrence edges such as <code>USES_TOOL</code>. The July 28, 2026 verification run did not create explicit <code>EXPLOITS_CVE</code> or <code>TARGETS_ASSET</code> edges from this sample. Treat richer attack-chain edges as provider- and enrichment-dependent until you verify them in your environment.</p>
 </div>
 <hr />
 <h2 id="step-6-use-recall-to-find-the-ingested-intel">Step 6: Use <code>recall()</code> to find the ingested intel<a class="headerlink" href="#step-6-use-recall-to-find-the-ingested-intel" title="Permanent link">&para;</a></h2>
@@ -2819,23 +2815,20 @@
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">()</span>
 </code></pre></div>
-<p>Expected output:</p>
-<div class="highlight"><pre><span></span><code>Found 5 relevant notes:
+<p>Observed output from the July 28, 2026 SQLite verification run:</p>
+<div class="highlight"><pre><span></span><code>Found 4 relevant notes:
 
-  [note_20260409_143202_b3c7] (importance=9)
-    APT28 uses Cobalt Strike beacons delivered through spear-phishing emails with we...
+  [note_20260728_010542_50b4] (importance=8)
+    APT28 is conducting cyber espionage against Western European energy sector organizations...
 
-  [note_20260409_143201_a8f2] (importance=8)
-    APT28 is conducting a sustained cyber espionage campaign against energy sector o...
+  [note_20260728_010542_ef58] (importance=8)
+    APT28 targets operational technology and SCADA systems in energy utilities...
 
-  [note_20260409_143203_d1e4] (importance=9)
+  [note_20260728_010541_25e0] (importance=9)
     CVE-2024-1111 is a critical remote code execution vulnerability in PDF rendering...
 
-  [note_20260409_143204_f5a9] (importance=8)
-    APT28 targets operational technology and SCADA systems in compromised energy util...
-
-  [note_20260409_143205_c2b8] (importance=7)
-    C2 domain update-service.energy-grid.com used by APT28 Cobalt Strike beacons...
+  [note_20260728_010542_316d] (importance=7)
+    C2 domain update-service.energy-grid.com is used by APT28 Cobalt Strike beacons...
 </code></pre></div>
 <hr />
 <h2 id="step-7-walk-the-relationship-chain-with-traverse_graph">Step 7: Walk the relationship chain with <code>traverse_graph()</code><a class="headerlink" href="#step-7-walk-the-relationship-chain-with-traverse_graph" title="Permanent link">&para;</a></h2>
@@ -2851,23 +2844,25 @@
         <span class="n">chain</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--[</span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]--&gt; </span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;to_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">step</span><span class="p">[</span><span class="s1">&#39;to_value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Path </span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chain</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Expected output (paths vary with stored data):</p>
-<div class="highlight"><pre><span></span><code>Graph traversal found 6 paths:
+<p>Observed output from the July 28, 2026 SQLite verification run:</p>
+<div class="highlight"><pre><span></span><code>Graph traversal found 8 paths:
 
-  Path 1: intrusion_set:apt28 --[USES_TOOL]--&gt; tool:cobalt-strike
-  Path 2: intrusion_set:apt28 --[USES_TOOL]--&gt; tool:cobalt-strike --[EXPLOITS_CVE]--&gt; cve:CVE-2024-1111
-  Path 3: intrusion_set:apt28 --[EXPLOITS_CVE]--&gt; cve:CVE-2024-1111
-  Path 4: intrusion_set:apt28 --[TARGETS_ASSET]--&gt; asset:energy sector
-  Path 5: intrusion_set:apt28 --[MENTIONED_IN]--&gt; note:note_20260409_143201_a8f2
-  Path 6: intrusion_set:apt28 --[MENTIONED_IN]--&gt; note:note_20260409_143202_b3c7
+  Path 1: intrusion_set:apt28 --[MENTIONED_IN]--&gt; note:note_20260728_010542_ef58
+  Path 2: intrusion_set:apt28 --[MENTIONED_IN]--&gt; note:note_20260728_010542_50b4
+  Path 3: intrusion_set:apt28 --[MENTIONED_IN]--&gt; note:note_20260728_010542_316d
+  Path 4: intrusion_set:apt28 --[MENTIONED_IN]--&gt; note:note_20260728_010542_316d --[SUPERSEDES]--&gt; note:note_20260728_010541_ad4e
+  Path 5: intrusion_set:apt28 --[USES_TOOL]--&gt; tool:cobalt-strike
+  Path 6: intrusion_set:apt28 --[USES_TOOL]--&gt; tool:cobalt-strike --[MENTIONED_IN]--&gt; note:note_20260728_010542_316d
+  Path 7: intrusion_set:apt28 --[USES_TOOL]--&gt; tool:cobalt-strike --[MENTIONED_IN]--&gt; note:note_20260728_010541_ad4e
+  Path 8: intrusion_set:apt28 --[MENTIONED_IN]--&gt; note:note_20260728_010541_ad4e
 </code></pre></div>
-<p>Path 2 shows the complete attack chain from APT28 through Cobalt Strike to CVE-2024-1111.</p>
+<p>The <code>USES_TOOL</code> path shows APT28 connected to Cobalt Strike. This verification run did not produce an explicit path from APT28 to <code>CVE-2024-1111</code> on the SQLite path.</p>
 <hr />
 <h2 id="step-8-synthesize-a-threat-brief">Step 8: Synthesize a threat brief<a class="headerlink" href="#step-8-synthesize-a-threat-brief" title="Permanent link">&para;</a></h2>
 <p>Use <code>synthesize()</code> to generate a direct-answer brief about APT28 from all ingested memory. The synthesis engine retrieves relevant notes, builds context, and produces a structured answer through the LLM.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This step requires a configured LLM. Without an LLM, synthesis returns a confirmed fallback response: <code>synthesis["answer"] = "No specific answer found..."</code>, <code>synthesis["confidence"] = 0.0</code>, <code>synthesis["sources"] = []</code>. Retrieval still runs (sources are found and counted) but the LLM answer is empty. The <code>synthesized_brief</code> format (structured themes and summary) is available on <a href="https://threatrecall.ai">ThreatRecall.ai</a> SaaS. This tutorial uses <code>direct_answer</code>, which is available in ZettelForge OSS.</p>
+<p>This step requires a configured LLM. Without an LLM, synthesis returns a confirmed fallback response: <code>synthesis["answer"] = "No specific answer found..."</code>, <code>synthesis["confidence"] = 0.0</code>, <code>synthesis["sources"] = []</code>. Retrieval still runs, but the LLM answer is empty. This tutorial uses <code>direct_answer</code>; re-audit the other synthesis formats before you rely on them in production.</p>
 </div>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
     <span class="n">query</span><span class="o">=</span><span class="s2">&quot;What do we know about APT28?&quot;</span><span class="p">,</span>
@@ -2885,29 +2880,26 @@
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model: </span><span class="si">{</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;model_used&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Latency: </span><span class="si">{</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;latency_ms&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">ms&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Expected output (requires LLM):</p>
+<p>Output shape (requires a working LLM provider):</p>
 <div class="highlight"><pre><span></span><code>=== APT28 Direct Answer ===
 
-APT28 (Fancy Bear) is a Russian state-sponsored threat actor conducting cyber
-espionage against Western European energy sector organizations since January 2026.
-The campaign uses Cobalt Strike beacons via spear-phishing PDFs exploiting
-CVE-2024-1111 (CVSS 9.8), targeting OT/SCADA network segments.
+&lt;LLM-generated answer grounded in the retrieved notes&gt;
 
-Confidence: 0.85
+Confidence: &lt;float between 0 and 1&gt;
 
-Sources used: 5
+Sources used: &lt;number of retrieved notes&gt;
 Model: qwen2.5:3b
-Latency: 1240ms
+Latency: &lt;milliseconds&gt;ms
 </code></pre></div>
 <hr />
 <h2 id="what-you-built">What you built<a class="headerlink" href="#what-you-built" title="Permanent link">&para;</a></h2>
 <p>You ingested a raw threat intelligence report and turned it into structured, queryable knowledge:</p>
 <ol>
 <li><strong>Chunked ingestion</strong> -- <code>remember_report()</code> split the report and ran two-phase LLM extraction on each chunk</li>
-<li><strong>Fact extraction</strong> -- The LLM identified 5 high-importance facts and scored them</li>
-<li><strong>STIX entity creation</strong> -- The knowledge graph now has <code>actor:apt28</code>, <code>tool:cobalt-strike</code>, <code>cve:CVE-2024-1111</code>, and <code>asset:energy sector</code> with inferred relationships</li>
+<li><strong>Fact extraction</strong> -- The sample fact set produced five scored facts with a configured provider; the fallback path produced one degraded chunk-level note when the provider was unavailable</li>
+<li><strong>Entity indexing</strong> -- The entity index records values such as <code>intrusion_set:apt28</code>, <code>tool:cobalt-strike</code>, <code>cve:cve-2024-1111</code>, and <code>domain:update-service.energy-grid.com</code> when those entities appear in extracted facts</li>
 <li><strong>Relationship query</strong> -- <code>get_entity_relationships()</code> retrieves direct KG edges for any entity</li>
-<li><strong>Graph traversal</strong> -- <code>traverse_graph()</code> walks the relationship chain to map the full attack path</li>
+<li><strong>Graph traversal</strong> -- <code>traverse_graph()</code> walks the available relationship paths from an entity</li>
 <li><strong>Semantic recall</strong> -- <code>recall()</code> blends vector similarity and graph traversal for ranked retrieval</li>
 <li><strong>Synthesis</strong> -- <code>synthesize()</code> generates an LLM-backed answer grounded in your stored intelligence</li>
 </ol>
@@ -2921,13 +2913,13 @@ Latency: 1240ms
 <hr />
 <h2 id="llm-quick-reference">LLM quick reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
 <p>This section is for LLM agents consuming ZettelForge's CTI ingestion pipeline programmatically.</p>
-<p><strong>Ingest a report</strong> -- <code>mm.remember_report(content, source_url, published_date, domain="cti", chunk_size=3000)</code>. Returns <code>List[Tuple[Optional[MemoryNote], str]]</code> where each tuple is <code>(note, status)</code> and status is one of <code>"added"</code>, <code>"updated"</code>, <code>"corrected"</code>, <code>"noop"</code>. Chunks on sentence boundaries, runs Phase 1 fact extraction (LLM scores importance 1-10, filters by <code>min_importance=3</code>), then Phase 2 update decisions (ADD/UPDATE/DELETE/NOOP against existing memory). Default <code>max_facts=10</code> per chunk. <strong>Requires LLM.</strong></p>
-<p><strong>Recall intel</strong> -- <code>mm.recall(query, domain="cti", k=10)</code>. Returns <code>List[MemoryNote]</code> ranked by blended vector + graph score. Superseded notes excluded by default. For entity-specific lookup: <code>mm.recall_entity(entity_type, entity_value)</code> where <code>entity_type</code> is one of <code>cve</code>, <code>actor</code>, <code>tool</code>, <code>campaign</code>, <code>sector</code>. Shortcuts: <code>mm.recall_cve("CVE-2024-1111")</code>, <code>mm.recall_actor("apt28")</code>, <code>mm.recall_tool("cobalt-strike")</code>.</p>
+<p><strong>Ingest a report</strong> -- <code>mm.remember_report(content, source_url, published_date, domain="cti", chunk_size=3000)</code>. Returns <code>List[Tuple[Optional[MemoryNote], str]]</code> where each tuple is <code>(note, status)</code> and status is one of <code>"added"</code>, <code>"updated"</code>, <code>"corrected"</code>, <code>"noop"</code>. Chunks on sentence boundaries, runs Phase 1 fact extraction (LLM scores importance 1-10, filters by <code>min_importance=3</code>), then Phase 2 update decisions (ADD/UPDATE/DELETE/NOOP against existing memory). Default <code>max_facts=10</code> per chunk. <strong>Requires LLM for multi-fact extraction.</strong> If the provider is unavailable, the current fallback stores one degraded fact from the chunk.</p>
+<p><strong>Recall intel</strong> -- <code>mm.recall(query, domain="cti", k=10)</code>. Returns <code>List[MemoryNote]</code> ranked by blended vector + graph score. Superseded notes are excluded by default. For entity-specific lookup: <code>mm.recall_entity(entity_type, entity_value)</code> where <code>entity_type</code> is one of the indexed entity buckets, including <code>cve</code>, <code>intrusion_set</code>, <code>actor</code>, <code>tool</code>, <code>campaign</code>, <code>attack_pattern</code>, <code>domain</code>, <code>url</code>, <code>md5</code>, <code>sha1</code>, and <code>sha256</code>. Shortcuts: <code>mm.recall_cve("CVE-2024-1111")</code>, <code>mm.recall_actor("apt28")</code>, <code>mm.recall_tool("cobalt-strike")</code>.</p>
 <p><strong>Query entity relationships</strong> -- <code>mm.get_entity_relationships(entity_type, entity_value)</code>. Returns <code>List[Dict]</code> where each item has <code>node</code> (dict with <code>entity_type</code>, <code>entity_value</code>), <code>relationship</code> (str), <code>edge_properties</code> (dict), and <code>note_id</code> (str). Writes to the SQLite KG during <code>remember()</code> and <code>remember_report()</code>.</p>
-<p><strong>Traverse the graph</strong> -- <code>mm.traverse_graph(start_type, start_value, max_depth=2)</code>. Returns <code>List[List[Dict]]</code> -- a list of paths, each path a list of steps. Each step has <code>from_type</code>, <code>from_value</code>, <code>relationship</code>, <code>to_type</code>, <code>to_value</code>. Depth capped at 2 in OSS. Valid <code>start_type</code> values: <code>intrusion_set</code>, <code>actor</code>, <code>tool</code>, <code>cve</code>, <code>campaign</code>, <code>asset</code>, <code>note</code>. APT-numbered groups (APT28, UNC series) are indexed as <code>intrusion_set</code>, not <code>actor</code>. Relationships: <code>USES_TOOL</code>, <code>EXPLOITS_CVE</code>, <code>TARGETS_ASSET</code>, <code>CONDUCTS_CAMPAIGN</code>, <code>MENTIONED_IN</code>, <code>SUPERSEDES</code>.</p>
-<p><strong>Synthesize a brief</strong> -- <code>mm.synthesize(query, format="direct_answer", k=10)</code>. Returns <code>dict</code> with top-level keys <code>query</code>, <code>format</code>, <code>synthesis</code>, <code>metadata</code>, <code>sources</code>. For <code>"direct_answer"</code>: <code>synthesis["answer"]</code> (str), <code>synthesis["confidence"]</code> (float 0-1), <code>synthesis["sources"]</code> (list). The <code>"synthesized_brief"</code>, <code>"timeline_analysis"</code>, and <code>"relationship_map"</code> formats are available on <a href="https://threatrecall.ai">ThreatRecall.ai</a> SaaS; OSS falls back to <code>"direct_answer"</code>. <strong>Requires LLM for non-fallback output.</strong></p>
+<p><strong>Traverse the graph</strong> -- <code>mm.traverse_graph(start_type, start_value, max_depth=2)</code>. Returns <code>List[List[Dict]]</code> -- a list of paths, each path a list of steps. Each step has <code>from_type</code>, <code>from_value</code>, <code>relationship</code>, <code>to_type</code>, <code>to_value</code>. Depth is capped at 2 in the local SQLite path. Valid <code>start_type</code> values include <code>intrusion_set</code>, <code>actor</code>, <code>tool</code>, <code>cve</code>, <code>campaign</code>, <code>asset</code>, and <code>note</code>. APT-numbered groups (APT28, UNC series) are indexed as <code>intrusion_set</code>, not <code>actor</code>. The July 28, 2026 SQLite tutorial run observed <code>USES_TOOL</code>, <code>MENTIONED_IN</code>, and <code>SUPERSEDES</code> relationships.</p>
+<p><strong>Synthesize a brief</strong> -- <code>mm.synthesize(query, format="direct_answer", k=10)</code>. Returns <code>dict</code> with top-level keys <code>query</code>, <code>format</code>, <code>synthesis</code>, <code>metadata</code>, <code>sources</code>. For <code>"direct_answer"</code>: <code>synthesis["answer"]</code> (str), <code>synthesis["confidence"]</code> (float 0-1), <code>synthesis["sources"]</code> (list). ZettelForge exposes additional synthesis formats in source, but this tutorial only verifies <code>direct_answer</code>. <strong>Requires LLM for non-fallback output.</strong></p>
 <p><strong>MemoryNote fields</strong> -- <code>id</code> (str), <code>content.raw</code> (str), <code>semantic.keywords</code> (list), <code>semantic.entities</code> (list), <code>metadata.domain</code> (str), <code>metadata.tier</code> (str, A/B/C), <code>metadata.importance</code> (int 1-10), <code>metadata.confidence</code> (float), <code>links.superseded_by</code> (optional str), <code>links.supersedes</code> (list).</p>
-<p><strong>Configuration</strong> -- Default LLM provider is <code>local</code> (Qwen2.5-3B-Instruct Q4_K_M GGUF via llama-cpp-python, in-process, downloads automatically). Default embedding is <code>nomic-embed-text-v1.5-Q</code> via fastembed (in-process). For Ollama: set <code>ZETTELFORGE_LLM_PROVIDER=ollama</code> and <code>ZETTELFORGE_LLM_MODEL=qwen2.5:3b</code>. Environment overrides: <code>ZETTELFORGE_LLM_MODEL</code>, <code>ZETTELFORGE_LLM_PROVIDER</code>, <code>ZETTELFORGE_LLM_URL</code>, <code>TYPEDB_HOST</code>, <code>TYPEDB_PORT</code>, <code>TYPEDB_DATABASE</code>.</p>
+<p><strong>Configuration</strong> -- Set <code>ZETTELFORGE_LLM_PROVIDER</code> and <code>ZETTELFORGE_LLM_MODEL</code> explicitly before you run extraction. The July 28, 2026 source checkout has hardcoded Ollama-oriented fallback values in <code>LLMConfig</code>, a <code>config.default.yaml</code> sample with an unresolved Ollama model placeholder, and a root <code>config.yaml</code> that selects <code>litellm</code> with <code>nvidia/meta/llama-3.1-70b-instruct</code>. The verification run did not confirm the sample placeholder as a working upstream model tag. To run fully offline, set <code>ZETTELFORGE_LLM_PROVIDER=local</code>, use <code>Qwen/Qwen2.5-3B-Instruct-GGUF</code>, and set the matching GGUF filename in provider extra options. Default embedding is <code>nomic-embed-text-v1.5-Q</code> via fastembed (in-process). Environment overrides: <code>ZETTELFORGE_LLM_MODEL</code>, <code>ZETTELFORGE_LLM_PROVIDER</code>, <code>ZETTELFORGE_LLM_URL</code>, <code>ZETTELFORGE_LLM_API_KEY</code>, <code>TYPEDB_HOST</code>, <code>TYPEDB_PORT</code>, <code>TYPEDB_DATABASE</code>.</p>
 
 
 

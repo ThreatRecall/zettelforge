@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="Understand how ZettelForge 2.8.0 uses STIX-adjacent labels without storing STIX objects, and where ThreatRecall.ai provides native bundle interchange.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -29,7 +29,7 @@
     
     
       
-        <title>STIX alignment - ZettelForge Documentation</title>
+        <title>STIX alignment in ZettelForge - ZettelForge Documentation</title>
       
     
     
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              STIX alignment
+              STIX alignment in ZettelForge
             
           </span>
         </div>
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1873,10 +1873,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-stix-is-briefly" class="md-nav__link">
+  <a href="#the-mental-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What STIX is, briefly
+        The mental model
       
     </span>
   </a>
@@ -1884,93 +1884,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-zettelforge-aligns-with-stix" class="md-nav__link">
+  <a href="#where-the-vocabulary-aligns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where ZettelForge aligns with STIX
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Where ZettelForge aligns with STIX">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#entity-taxonomy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entity taxonomy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#note-metadata-fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Note metadata fields
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tlp-access-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TLP access control
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vulnerability-metadata-vulnerabilitymeta" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vulnerability metadata (VulnerabilityMeta)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#graph-relationships" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Graph relationships
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#alias-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alias resolution
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-zettelforge-does-not-implement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What ZettelForge does not implement
+        Where the vocabulary aligns
       
     </span>
   </a>
@@ -1978,10 +1895,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-design-choice" class="md-nav__link">
+  <a href="#metadata-preserves-analyst-judgments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The design choice
+        Metadata preserves analyst judgments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relationships-stay-flexible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relationships stay flexible
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-zettelforge-stops-short-of-native-stix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why ZettelForge stops short of native STIX
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-two-product-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two-product boundary
       
     </span>
   </a>
@@ -2455,10 +2405,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-stix-is-briefly" class="md-nav__link">
+  <a href="#the-mental-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What STIX is, briefly
+        The mental model
       
     </span>
   </a>
@@ -2466,93 +2416,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-zettelforge-aligns-with-stix" class="md-nav__link">
+  <a href="#where-the-vocabulary-aligns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where ZettelForge aligns with STIX
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Where ZettelForge aligns with STIX">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#entity-taxonomy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entity taxonomy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#note-metadata-fields" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Note metadata fields
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tlp-access-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TLP access control
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vulnerability-metadata-vulnerabilitymeta" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vulnerability metadata (VulnerabilityMeta)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#graph-relationships" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Graph relationships
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#alias-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alias resolution
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-zettelforge-does-not-implement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What ZettelForge does not implement
+        Where the vocabulary aligns
       
     </span>
   </a>
@@ -2560,10 +2427,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-design-choice" class="md-nav__link">
+  <a href="#metadata-preserves-analyst-judgments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The design choice
+        Metadata preserves analyst judgments
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relationships-stay-flexible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relationships stay flexible
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-zettelforge-stops-short-of-native-stix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why ZettelForge stops short of native STIX
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-two-product-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The two-product boundary
       
     </span>
   </a>
@@ -2591,192 +2491,165 @@
 
 
 <h1 id="stix-alignment-in-zettelforge">STIX alignment in ZettelForge<a class="headerlink" href="#stix-alignment-in-zettelforge" title="Permanent link">&para;</a></h1>
-<p>ZettelForge does not implement a STIX 2.1 database. It implements a CTI memory system whose entity taxonomy, metadata schema, and access-control model align with STIX 2.1 concepts so that notes you write in, search, and export fit naturally into a STIX workflow. Understanding where the alignment is tight and where it loosens helps you use ZettelForge correctly and integrate it with STIX-native platforms.</p>
-<h2 id="what-stix-is-briefly">What STIX is, briefly<a class="headerlink" href="#what-stix-is-briefly" title="Permanent link">&para;</a></h2>
-<p>STIX (Structured Threat Information Expression) organizes threat intelligence into three object categories:</p>
-<ul>
-<li><strong>SDOs</strong> (STIX Domain Objects): the analytical subjects — threat actors, malware, vulnerabilities, campaigns</li>
-<li><strong>SROs</strong> (STIX Relationship Objects): how subjects connect — <em>uses</em>, <em>targets</em>, <em>attributed-to</em></li>
-<li><strong>SCOs</strong> (STIX Cyber Observables): technical indicators — IP addresses, file hashes, domain names</li>
-</ul>
-<p>ZettelForge aligns with all three categories, but expresses them differently from a STIX JSON store.</p>
-<h2 id="where-zettelforge-aligns-with-stix">Where ZettelForge aligns with STIX<a class="headerlink" href="#where-zettelforge-aligns-with-stix" title="Permanent link">&para;</a></h2>
-<h3 id="entity-taxonomy">Entity taxonomy<a class="headerlink" href="#entity-taxonomy" title="Permanent link">&para;</a></h3>
-<p>When ZettelForge extracts entities from a note, it produces typed strings that mirror STIX naming. There are 19 entity types in three groups (source: <code>entity_indexer.py:73-96</code>, live-verified):</p>
+<p>ZettelForge 2.8.0 is a CTI memory system, not a STIX 2.1 object store. It
+extracts STIX-adjacent labels from unstructured text and stores them as note
+metadata and graph entities. ThreatRecall.ai is the separate hosted SaaS and
+owns native STIX bundle interchange.</p>
+<p>This boundary lets you capture intelligence quickly without mistaking a
+ZettelForge note for a standards-conformant STIX object.</p>
+<p><strong>Prerequisites:</strong> None. Use the <a href="../../reference/stix-schema/">STIX schema
+reference</a> for exact labels and fields, and the <a href="../../reference/kg-edge-schema/">KG
+edge schema</a> for stored relationship shapes.</p>
+<h2 id="the-mental-model">The mental model<a class="headerlink" href="#the-mental-model" title="Permanent link">&para;</a></h2>
+<p>The <a href="https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html">OASIS STIX 2.1
+specification</a>
+separates threat intelligence into domain objects (SDOs), cyber observable
+objects (SCOs), and relationship objects (SROs). ZettelForge borrows that
+vocabulary at three lighter-weight layers:</p>
+<ol>
+<li>A memory note keeps the source text and editorial metadata.</li>
+<li>The extractor attaches typed strings such as <code>intrusion_set</code>, <code>cve</code>,
+   <code>ipv4</code>, and <code>attack_pattern</code>.</li>
+<li>The graph connects those strings with labels such as <code>USES_TOOL</code>,
+   <code>EXPLOITS_CVE</code>, and <code>MENTIONED_IN</code>.</li>
+</ol>
+<p>The labels preserve enough structure for CTI retrieval. They do not turn the
+note, entity, or edge into a STIX object.</p>
+<h2 id="where-the-vocabulary-aligns">Where the vocabulary aligns<a class="headerlink" href="#where-the-vocabulary-aligns" title="Permanent link">&para;</a></h2>
+<p>The released extractor recognizes 19 labels:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Group</th>
-<th style="text-align: left;">Entity types</th>
-<th style="text-align: left;">Extraction method</th>
-<th style="text-align: left;">STIX alignment</th>
+<th>Layer</th>
+<th>ZettelForge labels</th>
+<th>STIX relationship</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">CTI</td>
-<td style="text-align: left;"><code>cve</code>, <code>intrusion_set</code>, <code>actor</code>, <code>tool</code>, <code>campaign</code>, <code>attack_pattern</code></td>
-<td style="text-align: left;">Regex</td>
-<td style="text-align: left;">SDO-aligned</td>
+<td>CTI subjects</td>
+<td><code>cve</code>, <code>intrusion_set</code>, <code>actor</code>, <code>tool</code>, <code>campaign</code>, <code>attack_pattern</code></td>
+<td>SDO-adjacent subjects</td>
 </tr>
 <tr>
-<td style="text-align: left;">IOC</td>
-<td style="text-align: left;"><code>ipv4</code>, <code>domain</code>, <code>url</code>, <code>md5</code>, <code>sha1</code>, <code>sha256</code>, <code>email</code></td>
-<td style="text-align: left;">Regex</td>
-<td style="text-align: left;">SCO-aligned</td>
+<td>Observables</td>
+<td><code>ipv4</code>, <code>domain</code>, <code>url</code>, <code>md5</code>, <code>sha1</code>, <code>sha256</code>, <code>email</code></td>
+<td>SCO-adjacent values</td>
 </tr>
 <tr>
-<td style="text-align: left;">Conversational</td>
-<td style="text-align: left;"><code>person</code>, <code>location</code>, <code>organization</code>, <code>event</code>, <code>activity</code>, <code>temporal</code></td>
-<td style="text-align: left;">LLM NER</td>
-<td style="text-align: left;">Non-STIX</td>
+<td>Conversational context</td>
+<td><code>person</code>, <code>location</code>, <code>organization</code>, <code>event</code>, <code>activity</code>, <code>temporal</code></td>
+<td>ZettelForge context, not STIX objects</td>
 </tr>
 </tbody>
 </table>
-<p><code>actor</code> and <code>intrusion_set</code> are aliases for the STIX <code>threat-actor</code> SDO. When you call <code>mm.recall_actor("APT28")</code>, ZettelForge searches all three entity type strings (<code>actor</code>, <code>threat_actor</code>, <code>intrusion_set</code>) to handle notes regardless of which label was applied during extraction (<code>memory_manager.py:1184</code>).</p>
-<h3 id="note-metadata-fields">Note metadata fields<a class="headerlink" href="#note-metadata-fields" title="Permanent link">&para;</a></h3>
-<p>Every <code>MemoryNote</code> carries three STIX-aligned fields in its <code>Metadata</code> object (source: <code>note_schema.py:73-76</code>, live-verified):</p>
+<p>The distinction between <code>intrusion_set</code> and <code>actor</code> is operational rather than
+fully ontological. The deterministic extractor assigns APT, UNC, TA, FIN, and
+TEMP designations to <code>intrusion_set</code>; it assigns a short built-in list of named
+groups to <code>actor</code>. <code>recall_actor()</code> searches <code>actor</code>, the compatibility label
+<code>threat_actor</code>, and <code>intrusion_set</code> so older and newer notes remain findable.</p>
+<p>This is alignment, not conformance. A conformant STIX object also carries an
+object type, a STIX identifier, a specification version, and the common fields
+required for that object. ZettelForge's extracted strings carry none of that
+object envelope.</p>
+<h2 id="metadata-preserves-analyst-judgments">Metadata preserves analyst judgments<a class="headerlink" href="#metadata-preserves-analyst-judgments" title="Permanent link">&para;</a></h2>
+<p>Each <code>MemoryNote</code> has fields that let an integration retain STIX-adjacent
+judgments without adopting the STIX data model:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Field</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Meaning</th>
+<th>Field</th>
+<th>Released default</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>metadata.stix_confidence</code></td>
-<td style="text-align: left;"><code>int</code></td>
-<td style="text-align: left;"><code>-1</code></td>
-<td style="text-align: left;">STIX confidence 0–100; <code>-1</code> means not set</td>
+<td><code>metadata.stix_confidence</code></td>
+<td><code>-1</code></td>
+<td>Holds an integer confidence supplied by your integration; <code>-1</code> means unset.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>metadata.tier</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;"><code>"B"</code></td>
-<td style="text-align: left;">Epistemic tier: <code>A</code> (authoritative), <code>B</code> (operational), <code>C</code> (support)</td>
+<td><code>metadata.tier</code></td>
+<td><code>"B"</code></td>
+<td>Records ZettelForge's editorial tier: authoritative, operational, or support.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>metadata.tlp</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;"><code>""</code></td>
-<td style="text-align: left;">TLP marking; empty string means unclassified (treated as <code>TLP:CLEAR</code>)</td>
+<td><code>metadata.tlp</code></td>
+<td><code>""</code></td>
+<td>Stores the marking text supplied by a caller.</td>
+</tr>
+<tr>
+<td><code>metadata.vuln</code></td>
+<td><code>None</code></td>
+<td>Holds optional CVSS, EPSS, and CISA KEV fields for vulnerability notes.</td>
 </tr>
 </tbody>
 </table>
-<p>The <code>tier</code> field is ZettelForge's own contribution. STIX uses an integer <code>confidence</code> field (0–100) without a categorical classification. ZettelForge adds <code>tier</code> because CTI analysts routinely classify sources by type, not just score: an authoritative CISA advisory is tier A regardless of the number you assign it; an unverified forum post is tier C.</p>
-<p>The two fields coexist: <code>stix_confidence</code> carries the numeric value when you import from a STIX-native platform; <code>tier</code> carries the editorial classification applied by analysts or by ZettelForge's extraction pipeline.</p>
-<h3 id="tlp-access-control">TLP access control<a class="headerlink" href="#tlp-access-control" title="Permanent link">&para;</a></h3>
-<p>ZettelForge enforces TLP markings on every read path. The six supported levels match the FIRST Traffic Light Protocol standard (source: <code>tlp_policy.py:17-52</code>, live-verified):</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Level</th>
-<th style="text-align: left;">Rank</th>
-<th style="text-align: left;">Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>TLP:CLEAR</code></td>
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">Unrestricted; default for notes with no marking</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>TLP:WHITE</code></td>
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">Legacy alias for <code>TLP:CLEAR</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>TLP:GREEN</code></td>
-<td style="text-align: left;">1</td>
-<td style="text-align: left;">Community-shareable</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>TLP:AMBER</code></td>
-<td style="text-align: left;">2</td>
-<td style="text-align: left;">Limited to organization and named recipients</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>TLP:AMBER+STRICT</code></td>
-<td style="text-align: left;">3</td>
-<td style="text-align: left;">Recipients only, no further sharing</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>TLP:RED</code></td>
-<td style="text-align: left;">4</td>
-<td style="text-align: left;">Named recipients only; not for sharing</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Default behavior:</strong> Notes are created with <code>TLP:CLEAR</code>. Every <code>recall()</code> call applies a <code>max_tlp</code> ceiling; the default ceiling for sharing contexts is <code>TLP:GREEN</code>. Notes above the ceiling are silently filtered and logged. To retrieve <code>TLP:AMBER</code> or higher notes, you pass a <code>max_tlp</code> override with an audit reason string.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Default recall — returns up to TLP:GREEN</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;APT28 lateral movement TTPs&quot;</span><span class="p">)</span>
-
-<span class="c1"># Elevated recall — returns up to TLP:RED; requires an audit reason</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span>
-    <span class="s2">&quot;APT28 lateral movement TTPs&quot;</span><span class="p">,</span>
-    <span class="n">max_tlp</span><span class="o">=</span><span class="s2">&quot;TLP:RED&quot;</span><span class="p">,</span>
-    <span class="n">tlp_override_reason</span><span class="o">=</span><span class="s2">&quot;threat hunt authorized by SOC lead 2026-06-20&quot;</span>
-<span class="p">)</span>
-</code></pre></div>
-<p>This enforcement is in-process within ZettelForge. It does not replace your platform's access control; it adds a second layer that prevents TLP:AMBER material from leaking into a recall that feeds a TLP:GREEN-bounded workflow.</p>
-<h3 id="vulnerability-metadata-vulnerabilitymeta">Vulnerability metadata (VulnerabilityMeta)<a class="headerlink" href="#vulnerability-metadata-vulnerabilitymeta" title="Permanent link">&para;</a></h3>
-<p>When a note represents a CVE, the <code>metadata.vuln</code> field holds structured scoring data (source: <code>note_schema.py:47-60</code>, live-verified):</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">VulnerabilityMeta</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">cvss_v3_score</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>       <span class="c1"># 0.0–10.0</span>
-    <span class="n">cvss_v3_vector</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>        <span class="c1"># e.g. &quot;CVSS:3.1/AV:N/AC:L/...&quot;</span>
-    <span class="n">epss_score</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>          <span class="c1"># 0.0–1.0, exploitation probability</span>
-    <span class="n">epss_percentile</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>     <span class="c1"># 0.0–1.0, relative to all scored CVEs</span>
-    <span class="n">cisa_kev</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>                   <span class="c1"># True if in CISA KEV catalog</span>
-</code></pre></div>
-<p>This data is not extracted from note text. It is populated programmatically during an OpenCTI sync, which maps OpenCTI's CVSS fields to <code>VulnerabilityMeta</code>. If you are using ZettelForge without OpenCTI, <code>vuln</code> remains <code>None</code> on CVE notes.</p>
-<h3 id="graph-relationships">Graph relationships<a class="headerlink" href="#graph-relationships" title="Permanent link">&para;</a></h3>
-<p>The in-memory knowledge graph stores entities and relationships that are STIX-inspired. You write relationships with <code>ingest_relationship()</code> (source: <code>memory_manager.py:1737-1773</code>, live-verified):</p>
-<div class="highlight"><pre><span></span><code><span class="n">mm</span><span class="o">.</span><span class="n">ingest_relationship</span><span class="p">(</span>
-    <span class="n">from_type</span><span class="o">=</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span>
-    <span class="n">from_value</span><span class="o">=</span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span>
-    <span class="n">to_type</span><span class="o">=</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span>
-    <span class="n">to_value</span><span class="o">=</span><span class="s2">&quot;mimikatz&quot;</span><span class="p">,</span>
-    <span class="n">relationship</span><span class="o">=</span><span class="s2">&quot;USES_TOOL&quot;</span><span class="p">,</span>
-    <span class="n">properties</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span> <span class="s2">&quot;note_id&quot;</span><span class="p">:</span> <span class="s2">&quot;note_20260620_001&quot;</span><span class="p">},</span>
-<span class="p">)</span>
-</code></pre></div>
-<p>The edge is stored in SQLite (<code>kg_edges</code> table) and deduplicated by <code>(from_type, from_value, to_type, to_value, relationship)</code>. Relationship label strings are not constrained to a fixed schema — use the labels that match your workflow. The KG edge schema reference documents the labels ZettelForge itself produces during extraction.</p>
-<h3 id="alias-resolution">Alias resolution<a class="headerlink" href="#alias-resolution" title="Permanent link">&para;</a></h3>
-<p><code>recall_actor()</code> resolves common aliases before searching. In OSS, the resolver checks a local JSON file and hardcoded fallbacks (source: <code>alias_resolver.py:30-37</code>, live-verified):</p>
-<div class="highlight"><pre><span></span><code>&quot;fancy bear&quot;  → &quot;apt28&quot;
-&quot;fancy-bear&quot;  → &quot;apt28&quot;
-&quot;pawn storm&quot;  → &quot;apt28&quot;
-&quot;cozy bear&quot;   → &quot;apt29&quot;
-&quot;cozy-bear&quot;   → &quot;apt29&quot;
-</code></pre></div>
-<p>You can extend the alias list by placing a JSON file at <code>~/.amem/entity_aliases.json</code> with the structure <code>{"actor": {"alias": "canonical"}}</code>. The resolver loads that file at startup and merges it with the hardcoded list.</p>
-<p>When TypeDB is configured (ThreatRecall.ai SaaS or an optional TypeDB extension), the resolver queries the <code>alias-of</code> relation in TypeDB first and falls back to local aliases only if TypeDB is unavailable.</p>
-<h2 id="what-zettelforge-does-not-implement">What ZettelForge does not implement<a class="headerlink" href="#what-zettelforge-does-not-implement" title="Permanent link">&para;</a></h2>
-<p><strong>A STIX JSON store.</strong> ZettelForge does not parse STIX bundles or store STIX JSON objects. MemoryNotes are the internal representation; STIX fields in <code>Metadata</code> are a mapping layer, not a native STIX schema.</p>
-<p><strong>STIX IDs.</strong> ZettelForge does not generate or validate <code>threat-actor--uuid</code> identifiers. Notes have a <code>note_YYYYMMDD_HHMMSS_xxxx</code> ID scheme. If you need STIX IDs on entities for platform interoperability, generate them from your import pipeline and store them as properties on <code>ingest_relationship()</code> calls or as content in notes.</p>
-<p><strong>STIX Sighting objects.</strong> The sighting SRO (who observed what, when) is not a first-class type. Sighting context lives in the text content of notes, in temporal attributes on KG edges, and in <code>VulnerabilityMeta</code> for KEV membership.</p>
-<p><strong>STIX Grouping and Opinion objects.</strong> ZettelForge replaces these with the <code>tier</code> classification and the two-phase extraction pipeline's <code>importance</code> score.</p>
-<p><strong>TypeDB STIX ontology.</strong> A full TypeDB schema with typed STIX entities (<code>threat-actor</code>, <code>vulnerability</code>, etc.), abstract base types, and STIX SRO relations is available in ThreatRecall.ai (the hosted SaaS). It is not in the OSS package.</p>
-<h2 id="the-design-choice">The design choice<a class="headerlink" href="#the-design-choice" title="Permanent link">&para;</a></h2>
-<p>ZettelForge chose a STIX-aligned taxonomy over a full STIX implementation for two reasons:</p>
-<p><strong>Operational speed.</strong> A regex over "CVE-" is faster than deserializing a STIX bundle and querying a TypeDB constraint graph. ZettelForge's p50 recall latency on the keyword-judge path is around 79 ms (from <code>BENCHMARK_REPORT.md</code> session 2026-06-09). A full STIX database that enforces schema constraints at write time would increase write latency significantly for a system whose primary value is fast ingestion from conversational sources.</p>
-<p><strong>Source flexibility.</strong> CTI analysts ingest intelligence from incident notes, Slack threads, draft reports, and chat logs — none of which arrive as STIX JSON. ZettelForge's entity extraction runs against raw text. Aligning the extracted entity names with STIX types lets you connect ZettelForge output to a STIX platform without requiring that every input source be STIX-formatted.</p>
-<p>The result: ZettelForge works as a structured cache for CTI reasoning. You write raw text in; you get STIX-aligned entities and relationships out; you pass those to OpenCTI, MISP, or a SIEM.</p>
-<hr />
-<div class="admonition note">
-<p class="admonition-title">ThreatRecall.ai SaaS</p>
-<p>ThreatRecall.ai adds a TypeDB graph layer with a full STIX 2.1 schema, typed entity hierarchies, the <code>alias-of</code> relation for inference-driven alias resolution, and STIX 2.1 bundle export. The OSS package described on this page uses SQLite for the KG and does not include TypeDB or STIX bundle I/O.</p>
+<p>The released Pydantic models store these values but do not enforce their
+documented numeric ranges. Your importer remains responsible for validating a
+STIX confidence value before assigning it.</p>
+<div class="admonition warning">
+<p class="admonition-title">TLP enforcement is in progress</p>
+<p>ZettelForge 2.8.0 stores <code>metadata.tlp</code> as an unrestricted string. The
+released package does not normalize TLP values or apply a TLP ceiling in
+core recall and snapshot paths. Enforce sharing policy in the calling
+application. ThreatRecall.ai applies its own tenant-scoped controls in the
+hosted service.</p>
 </div>
+<p>The separation between <code>stix_confidence</code> and <code>tier</code> is deliberate. A numeric
+score describes confidence in one assertion. A tier describes the editorial
+role of the source. Keeping both prevents an authoritative advisory and an
+unverified report from becoming indistinguishable just because they carry the
+same number.</p>
+<h2 id="relationships-stay-flexible">Relationships stay flexible<a class="headerlink" href="#relationships-stay-flexible" title="Permanent link">&para;</a></h2>
+<p>ZettelForge writes graph nodes and edges to SQLite and mirrors explicit
+<code>ingest_relationship()</code> writes to its legacy JSONL graph. The SQLite edge key
+uses the source node, target node, relationship label, and optional <code>note_id</code>
+provenance. Repeating the same key updates its properties.</p>
+<p><code>MemoryManager</code> does not validate relationship labels against a STIX schema.
+That flexibility is useful when raw reports describe organization-specific
+relationships, but it also means an edge named <code>USES_TOOL</code> is not a STIX
+Relationship Object. The separate ontology validator exposes a stricter
+vocabulary, yet the v2.8.0 release does not wire it into <code>MemoryManager</code> writes.</p>
+<h2 id="why-zettelforge-stops-short-of-native-stix">Why ZettelForge stops short of native STIX<a class="headerlink" href="#why-zettelforge-stops-short-of-native-stix" title="Permanent link">&para;</a></h2>
+<p>ZettelForge accepts conversational notes, reports, and observations as raw
+text. Its deterministic extractor can identify a CVE, ATT&amp;CK technique, threat
+group, tool, or observable without first constructing a complete bundle. That
+keeps the ingestion path useful for material that never arrives as STIX JSON.</p>
+<p>A native STIX store solves a different problem: preserving object identifiers,
+required properties, markings, relationship endpoints, and bundle round trips.
+ZettelForge 2.8.0 does not parse or emit STIX bundles, generate STIX object IDs,
+or validate SDOs, SCOs, and SROs.</p>
+<p>The release also contains legacy hooks that look for an external TypeDB adapter,
+but the open-source distribution does not ship that adapter or its driver. The
+default graph path remains SQLite with a JSONL compatibility mirror.</p>
+<div class="admonition warning">
+<p class="admonition-title">TypeDB integration is in progress</p>
+<p>Treat the TypeDB loader hooks as compatibility code, not as a shipped
+ZettelForge backend. The released adapter tests skip when the absent adapter
+cannot be imported.</p>
+</div>
+<h2 id="the-two-product-boundary">The two-product boundary<a class="headerlink" href="#the-two-product-boundary" title="Permanent link">&para;</a></h2>
+<p>Use ZettelForge when you want self-hosted memory and retrieval over raw CTI
+text. Build custom integration code when you need to translate its notes and
+edges into another platform's STIX model.</p>
+<p>Use ThreatRecall.ai when you need hosted STIX interchange. Its current OpenAPI
+surface exposes authenticated STIX import at <code>/api/ingest/stix</code> and STIX export
+from recall sessions and threat-agent graph workflows. The service maps those
+objects to tenant-scoped PostgreSQL <code>kg_nodes</code> and <code>kg_edges</code> records.</p>
+<p>That product boundary is the central design choice: ZettelForge optimizes the
+path from unstructured evidence to recallable memory; ThreatRecall.ai owns the
+standards-conformant interchange surface.</p>
 
 
 
 
 
 
+
+  
+  
 
 
 

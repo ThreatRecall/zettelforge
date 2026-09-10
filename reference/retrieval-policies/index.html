@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Intent classification, policy weight mapping, scoring formulas, and merge algorithm for the BlendedRetriever pipeline.">
+        <meta name="description" content="Intent classification, vector and graph scoring, blend behavior, and active retrieval controls in ZettelForge.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1480,10 +1480,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#intent-types" class="md-nav__link">
+  <a href="#read-path-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Intent types
+        Read-path order
       
     </span>
   </a>
@@ -1503,10 +1503,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#keyword-matching" class="md-nav__link">
+  <a href="#intent-values" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Keyword matching
+        Intent values
       
     </span>
   </a>
@@ -1514,10 +1514,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#classification-decision-tree" class="md-nav__link">
+  <a href="#keywords" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Classification decision tree
+        Keywords
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision rules
       
     </span>
   </a>
@@ -1530,26 +1541,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#policy-weights" class="md-nav__link">
+  <a href="#policy-dictionary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Policy weights
+        Policy dictionary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Policy dictionary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#runtime-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime use
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#vectorretriever" class="md-nav__link">
+  <a href="#vector-retrieval" class="md-nav__link">
     <span class="md-ellipsis">
       
-        VectorRetriever
+        Vector retrieval
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="VectorRetriever">
+    <nav class="md-nav" aria-label="Vector retrieval">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1564,10 +1592,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#score-calculation" class="md-nav__link">
+  <a href="#return-values" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Score calculation
+        Return values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-memory-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-memory scoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lancedb-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LanceDB scoring
       
     </span>
   </a>
@@ -1585,83 +1635,39 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#lancedb-vs-in-memory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LanceDB vs. in-memory
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#embedding-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Embedding validation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#return-type" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Return type
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#graphretriever" class="md-nav__link">
+  <a href="#graph-retrieval" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GraphRetriever
+        Graph retrieval
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="GraphRetriever">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#normalized-score-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normalized score fusion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Normalized score fusion">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#graph-source" class="md-nav__link">
+  <a href="#reciprocal-rank-fusion-alternative" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Graph source
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#scoredresult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ScoredResult
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bfs-traversal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BFS traversal
+        Reciprocal Rank Fusion alternative
       
     </span>
   </a>
@@ -1674,49 +1680,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#blendedretriever" class="md-nav__link">
+  <a href="#post-blend-augmentation-and-reranking" class="md-nav__link">
     <span class="md-ellipsis">
       
-        BlendedRetriever
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="BlendedRetriever">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#blend-normalized-score-fusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        blend() — normalized score fusion
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#blend_rrf-reciprocal-rank-fusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        blend_rrf() — Reciprocal Rank Fusion
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#full-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Full pipeline
+        Post-blend augmentation and reranking
       
     </span>
   </a>
@@ -1724,10 +1691,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-reference" class="md-nav__link">
+  <a href="#configuration-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration reference
+        Configuration status
       
     </span>
   </a>
@@ -2594,10 +2561,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#intent-types" class="md-nav__link">
+  <a href="#read-path-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Intent types
+        Read-path order
       
     </span>
   </a>
@@ -2617,10 +2584,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#keyword-matching" class="md-nav__link">
+  <a href="#intent-values" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Keyword matching
+        Intent values
       
     </span>
   </a>
@@ -2628,10 +2595,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#classification-decision-tree" class="md-nav__link">
+  <a href="#keywords" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Classification decision tree
+        Keywords
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision rules
       
     </span>
   </a>
@@ -2644,26 +2622,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#policy-weights" class="md-nav__link">
+  <a href="#policy-dictionary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Policy weights
+        Policy dictionary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Policy dictionary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#runtime-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime use
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#vectorretriever" class="md-nav__link">
+  <a href="#vector-retrieval" class="md-nav__link">
     <span class="md-ellipsis">
       
-        VectorRetriever
+        Vector retrieval
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="VectorRetriever">
+    <nav class="md-nav" aria-label="Vector retrieval">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2678,10 +2673,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#score-calculation" class="md-nav__link">
+  <a href="#return-values" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Score calculation
+        Return values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-memory-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-memory scoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lancedb-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LanceDB scoring
       
     </span>
   </a>
@@ -2699,83 +2716,39 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#lancedb-vs-in-memory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LanceDB vs. in-memory
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#embedding-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Embedding validation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#return-type" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Return type
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#graphretriever" class="md-nav__link">
+  <a href="#graph-retrieval" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GraphRetriever
+        Graph retrieval
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="GraphRetriever">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#normalized-score-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Normalized score fusion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Normalized score fusion">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#graph-source" class="md-nav__link">
+  <a href="#reciprocal-rank-fusion-alternative" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Graph source
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#scoredresult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ScoredResult
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#bfs-traversal" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        BFS traversal
+        Reciprocal Rank Fusion alternative
       
     </span>
   </a>
@@ -2788,49 +2761,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#blendedretriever" class="md-nav__link">
+  <a href="#post-blend-augmentation-and-reranking" class="md-nav__link">
     <span class="md-ellipsis">
       
-        BlendedRetriever
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="BlendedRetriever">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#blend-normalized-score-fusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        blend() — normalized score fusion
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#blend_rrf-reciprocal-rank-fusion" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        blend_rrf() — Reciprocal Rank Fusion
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#full-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Full pipeline
+        Post-blend augmentation and reranking
       
     </span>
   </a>
@@ -2838,10 +2772,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration-reference" class="md-nav__link">
+  <a href="#configuration-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration reference
+        Configuration status
       
     </span>
   </a>
@@ -2869,471 +2803,421 @@
 
 
 <h1 id="retrieval-policies">Retrieval policies<a class="headerlink" href="#retrieval-policies" title="Permanent link">&para;</a></h1>
-<p>Modules: <code>zettelforge.intent_classifier</code>, <code>zettelforge.vector_retriever</code>, <code>zettelforge.graph_retriever</code>, <code>zettelforge.blended_retriever</code></p>
-<p>When you call <code>mm.recall()</code>, ZettelForge classifies your query's intent, routes it through parallel vector and graph retrievers, and blends the results using intent-specific policy weights. This page documents every parameter and formula in that pipeline for ZettelForge 2.7.0.</p>
-<hr />
-<h2 id="intent-types">Intent types<a class="headerlink" href="#intent-types" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.intent_classifier</span><span class="w"> </span><span class="kn">import</span> <span class="n">QueryIntent</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">QueryIntent</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="n">FACTUAL</span> <span class="o">=</span> <span class="s2">&quot;factual&quot;</span>
-    <span class="n">TEMPORAL</span> <span class="o">=</span> <span class="s2">&quot;temporal&quot;</span>
-    <span class="n">RELATIONAL</span> <span class="o">=</span> <span class="s2">&quot;relational&quot;</span>
-    <span class="n">CAUSAL</span> <span class="o">=</span> <span class="s2">&quot;causal&quot;</span>
-    <span class="n">EXPLORATORY</span> <span class="o">=</span> <span class="s2">&quot;exploratory&quot;</span>
-    <span class="n">UNKNOWN</span> <span class="o">=</span> <span class="s2">&quot;unknown&quot;</span>
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Intent</th>
-<th style="text-align: left;">Description</th>
-<th style="text-align: left;">Example query</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>FACTUAL</code></td>
-<td style="text-align: left;">Entity lookup, direct fact retrieval</td>
-<td style="text-align: left;"><code>"What CVE was used in the SolarWinds attack?"</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>TEMPORAL</code></td>
-<td style="text-align: left;">Time-based queries, timeline reconstruction</td>
-<td style="text-align: left;"><code>"What changed since the last incident?"</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>RELATIONAL</code></td>
-<td style="text-align: left;">Graph traversal, relationship mapping</td>
-<td style="text-align: left;"><code>"Who uses Cobalt Strike?"</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>CAUSAL</code></td>
-<td style="text-align: left;">Cause-effect chains</td>
-<td style="text-align: left;"><code>"Why did the attacker pivot to the domain controller?"</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>EXPLORATORY</code></td>
-<td style="text-align: left;">General exploration, broad context</td>
-<td style="text-align: left;"><code>"Tell me about APT28"</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>UNKNOWN</code></td>
-<td style="text-align: left;">Ambiguous or unclassifiable</td>
-<td style="text-align: left;">Fallback when no keywords match</td>
-</tr>
-</tbody>
-</table>
-<hr />
+<p>Use this reference to trace how ZettelForge 2.8.0 ranks notes when you call <code>MemoryManager.recall()</code>. The read path classifies your query, retrieves vector and graph candidates, blends those two scored signals, adds intent-specific candidates, reranks a bounded head, applies result filters, and returns at most <code>k</code> notes.</p>
+<p><strong>Prerequisite:</strong> Read the <a href="../memory-manager-api/">Memory Manager API</a> for the public <code>recall()</code> signature. Read the <a href="../configuration/">Configuration reference</a> before you change retrieval settings.</p>
+<div class="admonition warning">
+<p class="admonition-title">Retrieval controls are in progress</p>
+<p>ZettelForge loads <code>retrieval.default_k</code>, <code>retrieval.similarity_threshold</code>, <code>retrieval.entity_boost</code>, and <code>retrieval.max_graph_depth</code>, but <code>MemoryManager.recall()</code> does not read those four values in v2.8.0. Pass <code>k</code> to <code>recall()</code> directly. The direct read path uses the <code>VectorRetriever</code> constructor defaults and passes graph depth <code>2</code> directly.</p>
+<p>The LanceDB branch also does not apply <code>VectorRetriever.similarity_threshold</code>. Treat threshold configuration as in progress. The run-238 verification of the high-fanout entity boundary also fails, so do not treat <code>retrieval.entity_max_fanout</code> as a guaranteed cutoff until that defect is resolved.</p>
+</div>
+<h2 id="read-path-order">Read-path order<a class="headerlink" href="#read-path-order" title="Permanent link">&para;</a></h2>
+<p><code>MemoryManager.recall()</code> executes these stages in order:</p>
+<ol>
+<li>Classify the query and load its policy dictionary.</li>
+<li>Extract and resolve query entities, then apply the high-fanout filter.</li>
+<li>Retrieve scored vector candidates.</li>
+<li>For a temporal query, move candidates containing recognized query dates to the head when <code>dateparser</code> is installed.</li>
+<li>Traverse the active store's knowledge graph to depth <code>2</code>.</li>
+<li>Normalize and blend vector and graph scores.</li>
+<li>Fall back to the vector list when blending returns fewer notes than vector retrieval produced.</li>
+<li>For a causal query, add notes reached through forward and incoming causal edges.</li>
+<li>Add up to three entity-index notes per resolved query entity.</li>
+<li>Rerank a bounded head when reranking is enabled.</li>
+<li>Filter superseded and expired notes according to the <code>recall()</code> arguments.</li>
+<li>Truncate the final list to <code>k</code>.</li>
+</ol>
+<p>The policy dictionary does not control every stage. Only its <code>vector</code> and <code>graph</code> fields enter normalized score fusion. Entity, temporal, causal, rerank, and final-limit behavior use separate logic.</p>
 <h2 id="intent-classification">Intent classification<a class="headerlink" href="#intent-classification" title="Permanent link">&para;</a></h2>
-<h3 id="keyword-matching">Keyword matching<a class="headerlink" href="#keyword-matching" title="Permanent link">&para;</a></h3>
-<p>The classifier counts keyword hits against the query (lowercased) for each intent.</p>
-<p><strong>FACTUAL keywords</strong></p>
-<div class="highlight"><pre><span></span><code>&quot;cve-&quot;  &quot;cve &quot;  &quot;vulnerability&quot;  &quot;exploit&quot;  &quot;threat&quot;
-&quot;what is&quot;  &quot;what was&quot;  &quot;who is&quot;  &quot;name&quot;  &quot;identify&quot;
-</code></pre></div>
-<p><strong>TEMPORAL keywords</strong></p>
-<div class="highlight"><pre><span></span><code>&quot;when&quot;  &quot;timeline&quot;  &quot;since&quot;  &quot;before&quot;  &quot;after&quot;  &quot;changed&quot;
-&quot;history&quot;  &quot;previously&quot;  &quot;earlier&quot;  &quot;latest&quot;  &quot;recent&quot;
-</code></pre></div>
-<p><strong>RELATIONAL keywords</strong></p>
-<div class="highlight"><pre><span></span><code>&quot;who uses&quot;  &quot;who targets&quot;  &quot;who conducts&quot;  &quot;what tools does&quot;  &quot;what malware does&quot;
-&quot;what technique&quot;  &quot;what cve does&quot;  &quot;used by&quot;  &quot;attributed to&quot;  &quot;related to&quot;
-&quot;connected to&quot;  &quot;associated with&quot;  &quot;linked to&quot;  &quot;uses tool&quot;  &quot;between&quot;
-&quot;relationship&quot;  &quot;connection&quot;  &quot;link&quot;  &quot;which actor&quot;  &quot;which group&quot;  &quot;which apt&quot;
-&quot;what does&quot;
-</code></pre></div>
-<p><strong>CAUSAL keywords</strong></p>
-<div class="highlight"><pre><span></span><code>&quot;why&quot;  &quot;because&quot;  &quot;caused by&quot;  &quot;enables&quot;  &quot;leads to&quot;
-&quot;results in&quot;  &quot;due to&quot;  &quot;reason for&quot;
-</code></pre></div>
-<p><strong>EXPLORATORY keywords</strong></p>
-<div class="highlight"><pre><span></span><code>&quot;tell me about&quot;  &quot;explain&quot;  &quot;describe&quot;  &quot;overview&quot;  &quot;information on&quot;
-&quot;details about&quot;  &quot;context&quot;  &quot;summarize&quot;  &quot;what do we know&quot;  &quot;brief&quot;
-</code></pre></div>
-<h3 id="classification-decision-tree">Classification decision tree<a class="headerlink" href="#classification-decision-tree" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>1. Score each intent: count keyword hits in lowercased query.
-2. best_score = max score across all intents.
-   competing = count of other intents with score &gt; 0.
-
-3. If best_score &gt;= 2:
-      → return best intent, confidence = min(1.0, best_score / 4), method = &quot;keyword&quot;
-
-4. If best_score == 1 AND competing == 0:
-      → return best intent, confidence = 0.6, method = &quot;keyword_unambiguous&quot;
-         (clear single-keyword match with no competing signal)
-
-5. If use_llm_fallback is True:
-      → call LLM, return intent, confidence = 0.8, method = &quot;llm&quot;
-         (on LLM failure: EXPLORATORY, confidence = 0.5, method = &quot;llm_fallback&quot;)
-
-6. Default fallback:
-      → EXPLORATORY, confidence = 0.3, method = &quot;default&quot;
-</code></pre></div>
-<p>The global <code>IntentClassifier</code> instance (returned by <code>get_intent_classifier()</code>) is created with <code>use_llm_fallback=False</code>. The LLM fallback is opt-in: create your own instance with <code>IntentClassifier(use_llm_fallback=True)</code> to enable it. When enabled, the LLM call uses <code>max_tokens=20</code> and <code>temperature=0.1</code>.</p>
-<hr />
-<h2 id="policy-weights">Policy weights<a class="headerlink" href="#policy-weights" title="Permanent link">&para;</a></h2>
-<p>Each intent maps to a policy dict that controls how results from each retrieval source are weighted.</p>
+<p>Module: <code>zettelforge.intent_classifier</code></p>
+<h3 id="intent-values">Intent values<a class="headerlink" href="#intent-values" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Intent</th>
-<th style="text-align: center;"><code>vector</code></th>
-<th style="text-align: center;"><code>entity_index</code></th>
-<th style="text-align: center;"><code>graph</code></th>
-<th style="text-align: center;"><code>temporal</code></th>
-<th style="text-align: center;"><code>top_k</code></th>
+<th style="text-align: left;">Value</th>
+<th style="text-align: left;">Meaning</th>
+<th style="text-align: left;">Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>FACTUAL</code></td>
-<td style="text-align: center;">0.3</td>
-<td style="text-align: center;">0.7</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.0</td>
-<td style="text-align: center;">3</td>
+<td style="text-align: left;"><code>factual</code></td>
+<td style="text-align: left;">Direct fact or entity lookup</td>
+<td style="text-align: left;"><code>What CVE was used in the SolarWinds attack?</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>TEMPORAL</code></td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.1</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.5</td>
-<td style="text-align: center;">5</td>
+<td style="text-align: left;"><code>temporal</code></td>
+<td style="text-align: left;">Time or change query</td>
+<td style="text-align: left;"><code>What changed since May 2024?</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>RELATIONAL</code></td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.5</td>
-<td style="text-align: center;">0.1</td>
-<td style="text-align: center;">10</td>
+<td style="text-align: left;"><code>relational</code></td>
+<td style="text-align: left;">Relationship or graph query</td>
+<td style="text-align: left;"><code>Who uses Cobalt Strike?</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>CAUSAL</code></td>
-<td style="text-align: center;">0.1</td>
-<td style="text-align: center;">0.1</td>
-<td style="text-align: center;">0.6</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">10</td>
+<td style="text-align: left;"><code>causal</code></td>
+<td style="text-align: left;">Cause-and-effect query</td>
+<td style="text-align: left;"><code>Why did the attacker pivot?</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>EXPLORATORY</code></td>
-<td style="text-align: center;">0.5</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.1</td>
-<td style="text-align: center;">10</td>
+<td style="text-align: left;"><code>exploratory</code></td>
+<td style="text-align: left;">Broad context query and classifier fallback</td>
+<td style="text-align: left;"><code>Tell me about APT28</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>UNKNOWN</code></td>
-<td style="text-align: center;">0.4</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">5</td>
+<td style="text-align: left;"><code>unknown</code></td>
+<td style="text-align: left;">Enum and policy value available to callers</td>
+<td style="text-align: left;">The built-in classifier does not return this value as its no-match fallback.</td>
 </tr>
 </tbody>
 </table>
-<p>Weights do not sum to 1.0. They control relative contribution to the blended score after per-source normalization. <code>top_k</code> is the suggested result count; the caller may override it.</p>
-<p>The <code>FACTUAL</code> graph weight (0.2) is non-zero even though FACTUAL is an entity lookup. Many factual CTI questions require a single graph hop to answer — for example, "What CVE does APT28 exploit?" traverses a <code>targets</code> edge.</p>
-<hr />
-<h2 id="vectorretriever">VectorRetriever<a class="headerlink" href="#vectorretriever" title="Permanent link">&para;</a></h2>
+<p>With the default <code>IntentClassifier(use_llm_fallback=False)</code>, a query with no accepted keyword result returns <code>exploratory</code> with confidence <code>0.3</code> and method <code>default</code>.</p>
+<h3 id="keywords">Keywords<a class="headerlink" href="#keywords" title="Permanent link">&para;</a></h3>
+<p>The classifier lowercases the query and counts substring matches.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Intent</th>
+<th style="text-align: left;">Keywords</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>factual</code></td>
+<td style="text-align: left;"><code>cve-</code>, <code>cve</code>, <code>vulnerability</code>, <code>exploit</code>, <code>threat</code>, <code>what is</code>, <code>what was</code>, <code>who is</code>, <code>name</code>, <code>identify</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>temporal</code></td>
+<td style="text-align: left;"><code>when</code>, <code>timeline</code>, <code>since</code>, <code>before</code>, <code>after</code>, <code>changed</code>, <code>history</code>, <code>previously</code>, <code>earlier</code>, <code>latest</code>, <code>recent</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>relational</code></td>
+<td style="text-align: left;"><code>who uses</code>, <code>who targets</code>, <code>who conducts</code>, <code>what tools does</code>, <code>what malware does</code>, <code>what technique</code>, <code>what cve does</code>, <code>used by</code>, <code>attributed to</code>, <code>related to</code>, <code>connected to</code>, <code>associated with</code>, <code>linked to</code>, <code>uses tool</code>, <code>between</code>, <code>relationship</code>, <code>connection</code>, <code>link</code>, <code>which actor</code>, <code>which group</code>, <code>which apt</code>, <code>what does</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>causal</code></td>
+<td style="text-align: left;"><code>why</code>, <code>because</code>, <code>caused by</code>, <code>enables</code>, <code>leads to</code>, <code>results in</code>, <code>due to</code>, <code>reason for</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>exploratory</code></td>
+<td style="text-align: left;"><code>tell me about</code>, <code>explain</code>, <code>describe</code>, <code>overview</code>, <code>information on</code>, <code>details about</code>, <code>context</code>, <code>summarize</code>, <code>what do we know</code>, <code>brief</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="decision-rules">Decision rules<a class="headerlink" href="#decision-rules" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Condition</th>
+<th style="text-align: left;">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Best score is at least <code>2</code></td>
+<td style="text-align: left;">Return the best intent; confidence is <code>min(1.0, score / 4)</code>; method is <code>keyword</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Best score is <code>1</code> and no other intent has a positive score</td>
+<td style="text-align: left;">Return the best intent; confidence is <code>0.6</code>; method is <code>keyword_unambiguous</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Neither rule accepts the result and LLM fallback is enabled</td>
+<td style="text-align: left;">Call the LLM classifier with <code>max_tokens=20</code> and <code>temperature=0.1</code>. A recognized response has confidence <code>0.8</code> and method <code>llm</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">LLM classification fails or returns an unrecognized value</td>
+<td style="text-align: left;">Return <code>exploratory</code>; confidence is <code>0.5</code>; method is <code>llm_fallback</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Neither keyword rule accepts the result and LLM fallback is disabled</td>
+<td style="text-align: left;">Return <code>exploratory</code>; confidence is <code>0.3</code>; method is <code>default</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><code>get_intent_classifier()</code> creates its global classifier with LLM fallback disabled.</p>
+<h2 id="policy-dictionary">Policy dictionary<a class="headerlink" href="#policy-dictionary" title="Permanent link">&para;</a></h2>
+<p><code>IntentClassifier.get_traversal_policy()</code> returns these values:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Intent</th>
+<th style="text-align: right;"><code>vector</code></th>
+<th style="text-align: right;"><code>entity_index</code></th>
+<th style="text-align: right;"><code>graph</code></th>
+<th style="text-align: right;"><code>temporal</code></th>
+<th style="text-align: right;"><code>top_k</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>factual</code></td>
+<td style="text-align: right;">0.3</td>
+<td style="text-align: right;">0.7</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>temporal</code></td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>relational</code></td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>causal</code></td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">0.6</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>exploratory</code></td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.1</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>unknown</code></td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
+<p>The four weights total <code>1.2</code> for <code>factual</code> and <code>1.0</code> for every other row. ZettelForge does not normalize the whole policy dictionary.</p>
+<h3 id="runtime-use">Runtime use<a class="headerlink" href="#runtime-use" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Runtime effect in <code>MemoryManager.recall()</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>vector</code></td>
+<td style="text-align: left;">Multiplies the normalized vector score during <code>BlendedRetriever.blend()</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>graph</code></td>
+<td style="text-align: left;">Multiplies the normalized graph score during <code>BlendedRetriever.blend()</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>entity_index</code></td>
+<td style="text-align: left;">Not consumed. Entity augmentation uses a fixed <code>k=3</code> per resolved entity.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>temporal</code></td>
+<td style="text-align: left;">Not consumed. Temporal handling reorders date-matching vector tuples without changing their scores.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>top_k</code></td>
+<td style="text-align: left;">Not consumed. The <code>k</code> argument passed to <code>recall()</code> controls retrieval and the final limit.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="vector-retrieval">Vector retrieval<a class="headerlink" href="#vector-retrieval" title="Permanent link">&para;</a></h2>
 <p>Module: <code>zettelforge.vector_retriever</code></p>
 <h3 id="constructor-defaults">Constructor defaults<a class="headerlink" href="#constructor-defaults" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Parameter</th>
-<th style="text-align: center;">Default</th>
-<th style="text-align: left;">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>similarity_threshold</code></td>
-<td style="text-align: center;"><code>0.15</code></td>
-<td style="text-align: left;">Minimum cosine similarity to include a result</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>entity_boost</code></td>
-<td style="text-align: center;"><code>2.5</code></td>
-<td style="text-align: left;">Per-overlapping-entity score multiplier</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>exact_match_boost</code></td>
-<td style="text-align: center;"><code>1.0</code></td>
-<td style="text-align: left;">Multiplier when a query entity appears verbatim in note content (default has no effect)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>regenerate_invalid_embeddings</code></td>
-<td style="text-align: center;"><code>True</code></td>
-<td style="text-align: left;">Re-embed notes with invalid vectors before scoring</td>
-</tr>
-</tbody>
-</table>
-<h3 id="score-calculation">Score calculation<a class="headerlink" href="#score-calculation" title="Permanent link">&para;</a></h3>
-<p><strong>Cosine similarity</strong> (module-level function):</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cosine_similarity</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="n">dot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">dot</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">)))</span>
-    <span class="c1"># Returns 0.0 if either norm is zero</span>
-</code></pre></div>
-<p>Embedding model: <code>nomic-embed-text-v1.5-Q</code>, 768 dimensions, generated in-process via fastembed ONNX.</p>
-<p><strong>Entity boost</strong> (applied post-retrieval):</p>
-<div class="highlight"><pre><span></span><code><span class="n">boost</span> <span class="o">=</span> <span class="n">entity_boost</span> <span class="o">**</span> <span class="n">overlap_count</span>   <span class="c1"># default 2.5 per overlapping entity</span>
-<span class="n">boost</span> <span class="o">*=</span> <span class="n">exact_match_boost</span>              <span class="c1"># default 1.0 — no effective change</span>
-<span class="n">score</span> <span class="o">=</span> <span class="n">cosine_similarity</span> <span class="o">*</span> <span class="n">boost</span>
-</code></pre></div>
-<p>Where <code>overlap_count</code> is the number of query entities that also appear in the note's entity set.</p>
-<p><strong>Similarity threshold</strong>: notes scoring below <code>similarity_threshold</code> (default <code>0.15</code>) are excluded.</p>
-<h3 id="link-expansion">Link expansion<a class="headerlink" href="#link-expansion" title="Permanent link">&para;</a></h3>
-<p>After scoring, <code>VectorRetriever</code> adds directly linked notes with a decayed score:</p>
-<div class="highlight"><pre><span></span><code><span class="n">linked_note_score</span> <span class="o">=</span> <span class="n">parent_score</span> <span class="o">*</span> <span class="mf">0.5</span>
-</code></pre></div>
-<p>This "hop decay" lets a strong match pull in its immediate neighbors. Maximum expanded results: <code>k * 2</code>.</p>
-<h3 id="lancedb-vs-in-memory">LanceDB vs. in-memory<a class="headerlink" href="#lancedb-vs-in-memory" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Mode</th>
-<th style="text-align: left;">Condition</th>
-<th style="text-align: left;">Score origin</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">LanceDB</td>
-<td style="text-align: left;"><code>use_lancedb=True</code> and <code>store.lancedb is not None</code></td>
-<td style="text-align: left;"><code>similarity = 1.0 - _distance</code> (LanceDB returns L2 distance)</td>
-</tr>
-<tr>
-<td style="text-align: left;">In-memory</td>
-<td style="text-align: left;">LanceDB unavailable or <code>use_lancedb=False</code></td>
-<td style="text-align: left;">Direct <code>cosine_similarity(query_vector, note_vector)</code></td>
-</tr>
-</tbody>
-</table>
-<p>The entity boost and link expansion are applied in both modes.</p>
-<h3 id="embedding-validation">Embedding validation<a class="headerlink" href="#embedding-validation" title="Permanent link">&para;</a></h3>
-<p>Before scoring, <code>VectorRetriever</code> checks each note's embedding:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Check</th>
-<th style="text-align: left;">Condition</th>
-<th style="text-align: left;">Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Null vector</td>
-<td style="text-align: left;"><code>vector is None</code></td>
-<td style="text-align: left;">Regenerate</td>
-</tr>
-<tr>
-<td style="text-align: left;">Wrong dimensions</td>
-<td style="text-align: left;"><code>len(vector) != 768</code></td>
-<td style="text-align: left;">Regenerate</td>
-</tr>
-<tr>
-<td style="text-align: left;">All zeros</td>
-<td style="text-align: left;"><code>all(v == 0.0 for v in vector)</code></td>
-<td style="text-align: left;">Regenerate</td>
-</tr>
-<tr>
-<td style="text-align: left;">Low variance</td>
-<td style="text-align: left;"><code>np.var(vector) &lt; 0.001</code></td>
-<td style="text-align: left;">Regenerate</td>
-</tr>
-</tbody>
-</table>
-<p>Regeneration calls <code>get_embedding(note.content.raw[:1000])</code>. Notes that fail regeneration are skipped.</p>
-<h3 id="return-type">Return type<a class="headerlink" href="#return-type" title="Permanent link">&para;</a></h3>
-<p><code>retrieve()</code> accepts <code>return_scores: bool = False</code>:</p>
-<ul>
-<li><code>False</code> (default): returns <code>list[MemoryNote]</code></li>
-<li><code>True</code>: returns <code>list[tuple[MemoryNote, float]]</code> — required by <code>BlendedRetriever.blend()</code></li>
-</ul>
-<hr />
-<h2 id="graphretriever">GraphRetriever<a class="headerlink" href="#graphretriever" title="Permanent link">&para;</a></h2>
-<p>Module: <code>zettelforge.graph_retriever</code></p>
-<h3 id="graph-source">Graph source<a class="headerlink" href="#graph-source" title="Permanent link">&para;</a></h3>
-<p><code>GraphRetriever</code> accepts any object implementing the <code>GraphSource</code> protocol:</p>
-<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GraphSource</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_node_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_outgoing_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span> <span class="o">...</span>
-</code></pre></div>
-<p>The concrete implementation used in production is <code>StoreGraphSource</code>, which wraps a <code>StorageBackend</code> and reads a per-store scoped knowledge graph. Using per-store scoping prevents phantom note IDs from cross-store graph data.</p>
-<h3 id="scoredresult">ScoredResult<a class="headerlink" href="#scoredresult" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ScoredResult</span><span class="p">:</span>
-    <span class="n">note_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">score</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">hops</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">path</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>  <span class="c1"># e.g. [&quot;actor:APT28&quot;, &quot;tool:Mimikatz&quot;, &quot;note:note_20240315_...&quot;]</span>
-</code></pre></div>
-<h3 id="bfs-traversal">BFS traversal<a class="headerlink" href="#bfs-traversal" title="Permanent link">&para;</a></h3>
-<p><code>retrieve_note_ids(query_entities, max_depth=2)</code> accepts <code>query_entities</code> as <code>dict[str, list[str]]</code> (entity type to list of values). It starts a BFS from each entity node and scores every <code>note</code> node it reaches:</p>
-<div class="highlight"><pre><span></span><code><span class="n">score</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">hop_distance</span><span class="p">)</span>
-</code></pre></div>
-<table>
-<thead>
-<tr>
-<th style="text-align: center;">Hops</th>
-<th style="text-align: center;">Score</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: center;">0</td>
-<td style="text-align: center;">1.000</td>
-</tr>
-<tr>
-<td style="text-align: center;">1</td>
-<td style="text-align: center;">0.500</td>
-</tr>
-<tr>
-<td style="text-align: center;">2</td>
-<td style="text-align: center;">0.333</td>
-</tr>
-<tr>
-<td style="text-align: center;">3</td>
-<td style="text-align: center;">0.250</td>
-</tr>
-</tbody>
-</table>
-<p>When multiple paths reach the same note, the path with the highest score (fewest hops) wins. Results are returned sorted by score descending.</p>
-<hr />
-<h2 id="blendedretriever">BlendedRetriever<a class="headerlink" href="#blendedretriever" title="Permanent link">&para;</a></h2>
-<p>Module: <code>zettelforge.blended_retriever</code> (v2.3.1)</p>
-<p>The v2.3.1 update replaced positional scoring with normalized score fusion.</p>
-<h3 id="blend-normalized-score-fusion">blend() — normalized score fusion<a class="headerlink" href="#blend-normalized-score-fusion" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">blend</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span>
-    <span class="n">vector_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">],</span>      <span class="c1"># List[Tuple[MemoryNote, float]] — actual similarity scores</span>
-    <span class="n">graph_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ScoredResult</span><span class="p">],</span>
-    <span class="n">policy</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
-    <span class="n">note_lookup</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">MemoryNote</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
-    <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">]</span>
-</code></pre></div>
-<p><strong>Algorithm:</strong></p>
-<div class="highlight"><pre><span></span><code>1. Normalize vector scores to [0, 1] via min-max normalization.
-   If all scores are equal: assign uniform 0.5.
-
-2. Normalize graph scores to [0, 1] via min-max normalization.
-
-3. Vector signal:
-     For each (note, norm_score) in normalized vector results:
-       blended = norm_score * policy[&quot;vector&quot;]
-       scores[note.id] = (blended, note)
-
-4. Graph signal:
-     For each (note_id, norm_score) in normalized graph results:
-       graph_score = norm_score * policy[&quot;graph&quot;]
-       If note_id already in scores:
-         scores[note_id] = (existing_score + graph_score, existing_note)  ← both-source bonus
-       Else:
-         note = note_lookup(note_id)
-         If found: scores[note_id] = (graph_score, note)
-
-5. Sort by blended score descending, return top-k notes.
-</code></pre></div>
-<p>Notes found by both vector and graph retrieval receive <strong>additive scores</strong> from both signals. This "both-source bonus" ranks notes that are semantically similar and graph-proximate above notes from only one source.</p>
-<p>Min-max normalization formula:</p>
-<div class="highlight"><pre><span></span><code><span class="n">normalized</span> <span class="o">=</span> <span class="p">(</span><span class="n">score</span> <span class="o">-</span> <span class="n">min_score</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_score</span> <span class="o">-</span> <span class="n">min_score</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="blend_rrf-reciprocal-rank-fusion">blend_rrf() — Reciprocal Rank Fusion<a class="headerlink" href="#blend_rrf-reciprocal-rank-fusion" title="Permanent link">&para;</a></h3>
-<p>An alternative merge method that is robust to score scale differences across retrievers:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">blend_rrf</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span>
-    <span class="n">vector_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">],</span>    <span class="c1"># List[Tuple[MemoryNote, float]]</span>
-    <span class="n">graph_results</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ScoredResult</span><span class="p">],</span>
-    <span class="n">note_lookup</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="n">MemoryNote</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
-    <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
-    <span class="n">rrf_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>               <span class="c1"># standard RRF constant</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">]</span>
-</code></pre></div>
-<p>RRF score for each note: <code>sum(1 / (rrf_k + rank))</code> across all signals in which the note appears. A rank-1 vector result at default <code>rrf_k=60</code> scores <code>1/61 ≈ 0.016</code>. This is the fusion method used by production retrieval systems (Elasticsearch, Vespa). Notes found in both signals still receive an additive bonus.</p>
-<hr />
-<h2 id="full-pipeline">Full pipeline<a class="headerlink" href="#full-pipeline" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>Query
-  |
-  v
-IntentClassifier.classify(query)
-  |
-  +-- QueryIntent + confidence + method
-  |
-  v
-IntentClassifier.get_traversal_policy(intent)
-  |
-  +-- policy weights dict
-  |
-  v
-[Parallel]
-  |
-  +-- VectorRetriever.retrieve(query, domain, k, return_scores=True)
-  |     cosine similarity (LanceDB or in-memory)
-  |     → entity boost (2.5x per overlapping entity)
-  |     → link expansion (0.5x score decay for linked notes)
-  |     → filter below similarity_threshold (0.15)
-  |     → List[Tuple[MemoryNote, float]]
-  |
-  +-- GraphRetriever.retrieve_note_ids(query_entities, max_depth=2)
-  |     BFS from resolved entity nodes via StoreGraphSource
-  |     score = 1/(1+hops), best score per note wins
-  |     → List[ScoredResult]
-  |
-  v
-BlendedRetriever.blend(vector_results, graph_results, policy, note_lookup, k)
-  |
-  +-- Min-max normalize vector scores
-  +-- Min-max normalize graph scores
-  +-- Weighted additive fusion (both-source bonus for notes found by both)
-  +-- Sort descending, truncate to top-k
-  |
-  v
-List[MemoryNote]
-</code></pre></div>
-<hr />
-<h2 id="configuration-reference">Configuration reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h2>
-<p>These config keys control retrieval pipeline behavior. Full defaults and env var overrides are in the <a href="../configuration/">Configuration reference</a>.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Config key</th>
-<th style="text-align: center;">Default</th>
+<th style="text-align: left;">Default</th>
 <th style="text-align: left;">Effect</th>
 </tr>
 </thead>
 <tbody>
 <tr>
+<td style="text-align: left;"><code>similarity_threshold</code></td>
+<td style="text-align: left;"><code>0.15</code></td>
+<td style="text-align: left;">Filters the in-memory branch after boosts. The LanceDB branch does not apply it.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>entity_boost</code></td>
+<td style="text-align: left;"><code>2.5</code></td>
+<td style="text-align: left;">Multiplies a score once per overlapping resolved entity.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>exact_match_boost</code></td>
+<td style="text-align: left;"><code>1.0</code></td>
+<td style="text-align: left;">Multiplies once for each resolved query entity whose text appears in the note content. The default leaves the score unchanged.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>regenerate_invalid_embeddings</code></td>
+<td style="text-align: left;"><code>True</code></td>
+<td style="text-align: left;">Regenerates invalid note vectors in the in-memory branch.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>memory_store</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Creates a <code>MemoryStore</code> when you do not pass one.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>note_lookup</code></td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Uses the retriever's store unless you provide a cross-backend lookup.</td>
+</tr>
+</tbody>
+</table>
+<p><code>retrieve()</code> defaults to <code>domain=None</code>, <code>k=10</code>, <code>include_links=True</code>, <code>use_lancedb=True</code>, and <code>return_scores=False</code>.</p>
+<h3 id="return-values">Return values<a class="headerlink" href="#return-values" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"><code>return_scores</code></th>
+<th style="text-align: left;">Return value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>False</code></td>
+<td style="text-align: left;"><code>list[MemoryNote]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>True</code></td>
+<td style="text-align: left;"><code>list[tuple[MemoryNote, float]]</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>MemoryManager.recall()</code> requests scores because the blend stage requires them.</p>
+<h3 id="in-memory-scoring">In-memory scoring<a class="headerlink" href="#in-memory-scoring" title="Permanent link">&para;</a></h3>
+<p>The in-memory branch computes cosine similarity. A zero-norm input produces <code>0.0</code>.</p>
+<p>For each candidate, the branch applies these multipliers before thresholding:</p>
+<ul>
+<li>Entity overlap: <code>entity_boost ** overlap_count</code>.</li>
+<li>Exact text matches: one <code>exact_match_boost</code> multiplier for each resolved query entity found in the note content.</li>
+</ul>
+<p>The branch keeps a note when its boosted score is at least <code>similarity_threshold</code>, sorts retained notes by score, and keeps the first <code>k</code> before link expansion.</p>
+<p>The branch treats an embedding as invalid when it is missing, has a length other than <code>768</code>, contains only zeros, or has variance below <code>0.001</code>. With regeneration enabled, it calls <code>get_embedding()</code> on the first <code>1,000</code> content characters. It skips a note when the resulting vector remains invalid.</p>
+<p>The default embedding configuration uses provider <code>fastembed</code>, model <code>nomic-ai/nomic-embed-text-v1.5-Q</code>, and <code>768</code> dimensions.</p>
+<h3 id="lancedb-scoring">LanceDB scoring<a class="headerlink" href="#lancedb-scoring" title="Permanent link">&para;</a></h3>
+<p>When LanceDB is available and enabled, the retriever searches each selected table, requests up to <code>k * 2</code> rows, and calculates a score as <code>1.0 - row["_distance"]</code>. It sorts across tables, keeps the first <code>k</code>, applies entity and exact-match boosts, and then expands links.</p>
+<p>This branch does not apply <code>similarity_threshold</code> and does not run the in-memory embedding validation routine. If LanceDB raises an exception or returns no usable result, <code>retrieve()</code> runs the in-memory branch.</p>
+<h3 id="link-expansion">Link expansion<a class="headerlink" href="#link-expansion" title="Permanent link">&para;</a></h3>
+<p>With <code>include_links=True</code>, each directly related note receives <code>parent_score * 0.5</code>. The retriever de-duplicates linked note IDs and returns at most <code>k * 2</code> vector-stage results.</p>
+<h2 id="graph-retrieval">Graph retrieval<a class="headerlink" href="#graph-retrieval" title="Permanent link">&para;</a></h2>
+<p>Module: <code>zettelforge.graph_retriever</code></p>
+<p><code>GraphRetriever.retrieve_note_ids()</code> accepts <code>query_entities: dict[str, list[str]]</code> and defaults <code>max_depth</code> to <code>2</code>. <code>MemoryManager.recall()</code> wraps its active storage backend in <code>StoreGraphSource</code>, which reads the same per-store knowledge graph populated by the write path.</p>
+<p>The graph source supplies <code>get_node()</code>, <code>get_node_by_id()</code>, and <code>get_outgoing_edges()</code>. Breadth-first search starts at each resolved entity and scores every reached note as <code>1 / (1 + hops)</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Hops</th>
+<th style="text-align: right;">Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.000</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.500</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.333</td>
+</tr>
+</tbody>
+</table>
+<p>When more than one path reaches a note, the result keeps the shortest path. <code>retrieve_note_ids()</code> sorts <code>ScoredResult</code> values by descending score. Each result contains <code>note_id</code>, <code>score</code>, <code>hops</code>, and <code>path</code>.</p>
+<h2 id="normalized-score-fusion">Normalized score fusion<a class="headerlink" href="#normalized-score-fusion" title="Permanent link">&para;</a></h2>
+<p>Module: <code>zettelforge.blended_retriever</code></p>
+<p><code>BlendedRetriever.blend()</code> normalizes vector and graph scores independently with <code>(score - minimum) / (maximum - minimum)</code>. When every score in one signal is equal, it assigns <code>0.5</code> to every item in that signal.</p>
+<p>It then calculates contributions as follows:</p>
+<ul>
+<li>Vector contribution: <code>normalized_vector_score * policy["vector"]</code>.</li>
+<li>Graph contribution: <code>normalized_graph_score * policy["graph"]</code>.</li>
+<li>A note present in both signals receives the sum of both contributions.</li>
+</ul>
+<p>The method sorts by the combined score and returns at most its <code>k</code> argument. It does not read <code>entity_index</code>, <code>temporal</code>, or <code>top_k</code> from the policy dictionary.</p>
+<h3 id="reciprocal-rank-fusion-alternative">Reciprocal Rank Fusion alternative<a class="headerlink" href="#reciprocal-rank-fusion-alternative" title="Permanent link">&para;</a></h3>
+<p><code>blend_rrf()</code> is an available alternative, but <code>MemoryManager.recall()</code> calls <code>blend()</code> in v2.8.0. <code>blend_rrf()</code> defaults <code>rrf_k</code> to <code>60</code> and adds <code>1 / (rrf_k + rank)</code> for every signal containing the note.</p>
+<h2 id="post-blend-augmentation-and-reranking">Post-blend augmentation and reranking<a class="headerlink" href="#post-blend-augmentation-and-reranking" title="Permanent link">&para;</a></h2>
+<p>The direct recall path performs additional work outside <code>BlendedRetriever</code>:</p>
+<ul>
+<li>A causal intent traverses outgoing and incoming causal edges with <code>max_depth=3</code> and <code>max_visited=50</code>, then adds note endpoints and source-note references.</li>
+<li>Entity augmentation calls <code>recall_entity(..., k=3)</code> for every retained resolved query entity and de-duplicates note IDs.</li>
+<li>Reranking processes only the first <code>retrieval.rerank_max_candidates</code> notes and the first <code>retrieval.rerank_doc_chars</code> characters of each note. The tail keeps its pre-rerank order.</li>
+<li>A reranker load or scoring failure logs a warning and preserves the original order.</li>
+</ul>
+<h2 id="configuration-status">Configuration status<a class="headerlink" href="#configuration-status" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Key</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">v2.8.0 direct-recall status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>retrieval.default_k</code></td>
+<td style="text-align: left;"><code>10</code></td>
+<td style="text-align: left;">Loaded but not read; <code>recall()</code> defaults its own <code>k</code> to <code>10</code>.</td>
+</tr>
+<tr>
 <td style="text-align: left;"><code>retrieval.similarity_threshold</code></td>
-<td style="text-align: center;"><code>0.25</code></td>
-<td style="text-align: left;">Config-level threshold (VectorRetriever constructor overrides to <code>0.15</code>)</td>
+<td style="text-align: left;"><code>0.25</code></td>
+<td style="text-align: left;">Loaded but not passed to <code>VectorRetriever</code>; its constructor defaults to <code>0.15</code>, and LanceDB does not enforce either value.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>retrieval.entity_boost</code></td>
-<td style="text-align: center;"><code>2.5</code></td>
-<td style="text-align: left;">Score multiplier per overlapping entity</td>
+<td style="text-align: left;"><code>2.5</code></td>
+<td style="text-align: left;">Loaded but not passed to <code>VectorRetriever</code>; its constructor independently defaults to <code>2.5</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>retrieval.max_graph_depth</code></td>
-<td style="text-align: center;"><code>2</code></td>
-<td style="text-align: left;">Max BFS hops in GraphRetriever</td>
+<td style="text-align: left;"><code>2</code></td>
+<td style="text-align: left;">Loaded but not read; <code>recall()</code> passes <code>2</code> directly.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>retrieval.max_results</code></td>
-<td style="text-align: center;"><code>10</code></td>
-<td style="text-align: left;">Default <code>k</code> passed to retrieval calls</td>
+<td style="text-align: left;"><code>retrieval.rerank_enabled</code></td>
+<td style="text-align: left;"><code>true</code></td>
+<td style="text-align: left;">Read before reranking.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>retrieval.use_lancedb</code></td>
-<td style="text-align: center;"><code>true</code></td>
-<td style="text-align: left;">Prefer LanceDB when available</td>
+<td style="text-align: left;"><code>retrieval.rerank_max_candidates</code></td>
+<td style="text-align: left;"><code>8</code></td>
+<td style="text-align: left;">Bounds the reranked head.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>retrieval.rerank_doc_chars</code></td>
+<td style="text-align: left;"><code>256</code></td>
+<td style="text-align: left;">Bounds candidate text sent to the reranker.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>retrieval.rerank_model</code></td>
+<td style="text-align: left;"><code>Xenova/ms-marco-MiniLM-L-6-v2</code></td>
+<td style="text-align: left;">Selects the <code>TextCrossEncoder</code> model.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>retrieval.rerank_threads</code></td>
+<td style="text-align: left;"><code>8</code></td>
+<td style="text-align: left;">Sets ONNX threads; <code>0</code> delegates to the runtime default.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>retrieval.entity_max_fanout</code></td>
+<td style="text-align: left;"><code>25</code></td>
+<td style="text-align: left;">Supplies the high-fanout filter threshold; run-238 behavior verification fails and remains in progress.</td>
 </tr>
 </tbody>
 </table>

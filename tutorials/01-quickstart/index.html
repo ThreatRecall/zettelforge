@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Install ZettelForge, store your first threat intelligence, and recall it by query and by actor name in about five minutes. Runs fully offline, no API keys required.">
+        <meta name="description" content="Install ZettelForge, store your first threat intelligence, and recall it by query and by actor name. The core workflow runs locally with no API keys.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -537,10 +537,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-2-store-your-first-memories" class="md-nav__link">
+  <a href="#step-2-keep-this-run-offline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Store your first memories
+        Step 2: Keep this run offline
       
     </span>
   </a>
@@ -548,10 +548,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3-recall-by-query" class="md-nav__link">
+  <a href="#step-3-store-and-recall-your-first-memories" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Recall by query
+        Step 3: Store and recall your first memories
       
     </span>
   </a>
@@ -559,10 +559,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-4-recall-by-actor-name" class="md-nav__link">
+  <a href="#step-4-run-the-tutorial" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Recall by actor name
+        Step 4: Run the tutorial
       
     </span>
   </a>
@@ -783,7 +783,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2416,10 +2416,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-2-store-your-first-memories" class="md-nav__link">
+  <a href="#step-2-keep-this-run-offline" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Store your first memories
+        Step 2: Keep this run offline
       
     </span>
   </a>
@@ -2427,10 +2427,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3-recall-by-query" class="md-nav__link">
+  <a href="#step-3-store-and-recall-your-first-memories" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Recall by query
+        Step 3: Store and recall your first memories
       
     </span>
   </a>
@@ -2438,10 +2438,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-4-recall-by-actor-name" class="md-nav__link">
+  <a href="#step-4-run-the-tutorial" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 4: Recall by actor name
+        Step 4: Run the tutorial
       
     </span>
   </a>
@@ -2501,8 +2501,12 @@
 <p><strong>Prerequisites</strong></p>
 <ul>
 <li>Python 3.10 or newer</li>
+<li>Git and an internet connection for the clone, Python packages, and initial
+  embedding-model download</li>
 </ul>
-<p>That is the entire list. The default install runs embeddings in-process and stores everything in a local SQLite database plus a LanceDB vector index. You do not need Docker, TypeDB, Ollama, or any API key for this tutorial.</p>
+<p>The tutorial runs embeddings in-process and stores your notes in a local SQLite
+database plus a LanceDB vector index. You do not need Docker, TypeDB, Ollama, or
+an API key.</p>
 <hr />
 <h2 id="step-1-install-zettelforge">Step 1: Install ZettelForge<a class="headerlink" href="#step-1-install-zettelforge" title="Permanent link">&para;</a></h2>
 <p>Clone the repository and install it into a virtual environment.</p>
@@ -2512,16 +2516,25 @@ python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </
 <span class="nb">source</span><span class="w"> </span>.venv/bin/activate
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </code></pre></div>
-<p>A virtual environment is required on modern Linux distributions (Debian, Ubuntu, and others mark the system Python as externally managed under PEP 668, so a bare <code>pip install</code> is refused). The virtual environment is also the cleanest way to keep ZettelForge isolated from your system packages.</p>
+<p>The virtual environment keeps ZettelForge isolated from your system packages.
+It also avoids the externally managed Python restriction used by current Debian
+and Ubuntu releases.</p>
 <p>Confirm the install:</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import zettelforge; print(zettelforge.__version__)&quot;</span>
 </code></pre></div>
 <p>You see the installed version:</p>
-<div class="highlight"><pre><span></span><code>2.7.0
+<div class="highlight"><pre><span></span><code>2.8.0
 </code></pre></div>
-<h2 id="step-2-store-your-first-memories">Step 2: Store your first memories<a class="headerlink" href="#step-2-store-your-first-memories" title="Permanent link">&para;</a></h2>
+<h2 id="step-2-keep-this-run-offline">Step 2: Keep this run offline<a class="headerlink" href="#step-2-keep-this-run-offline" title="Permanent link">&para;</a></h2>
+<p>The base package enables optional LLM enrichment by default. Disable that slow
+path for this tutorial so ZettelForge does not try to contact an Ollama server:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_ENRICHMENT_ENABLED</span><span class="o">=</span><span class="nb">false</span>
+</code></pre></div>
+<p>Keep this shell open for the remaining steps.</p>
+<h2 id="step-3-store-and-recall-your-first-memories">Step 3: Store and recall your first memories<a class="headerlink" href="#step-3-store-and-recall-your-first-memories" title="Permanent link">&para;</a></h2>
 <p>The embedding model downloads automatically the first time you construct a <code>MemoryManager</code>. This is a one-time download; subsequent runs load it from cache.</p>
-<p>Create a file called <code>quickstart.py</code> and run it.</p>
+<p>Create a file called <code>quickstart.py</code> with the following content. The CTI facts
+and <code>example.com</code> references are synthetic tutorial data.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
 
 <span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
@@ -2534,7 +2547,6 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
     <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;https://example.com/apt28-ukraine-2026&quot;</span><span class="p">,</span>
     <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note 1: </span><span class="si">{</span><span class="n">note1</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> -- </span><span class="si">{</span><span class="n">status1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">note2</span><span class="p">,</span> <span class="n">status2</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
     <span class="s2">&quot;Lazarus Group conducted Operation DreamJob targeting defense &quot;</span>
@@ -2545,7 +2557,6 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
     <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;https://example.com/lazarus-dreamjob-2026&quot;</span><span class="p">,</span>
     <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note 2: </span><span class="si">{</span><span class="n">note2</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> -- </span><span class="si">{</span><span class="n">status2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="n">note3</span><span class="p">,</span> <span class="n">status3</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
     <span class="s2">&quot;APT28 was also observed using Cobalt Strike beacons for lateral &quot;</span>
@@ -2555,58 +2566,78 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
     <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;https://example.com/apt28-cobalt-strike&quot;</span><span class="p">,</span>
     <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note 3: </span><span class="si">{</span><span class="n">note3</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> -- </span><span class="si">{</span><span class="n">status3</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Stored: </span><span class="si">{</span><span class="n">status1</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">status2</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">status3</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Query recall:&quot;</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;What tools does APT28 use?&quot;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">source_ref</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Actor recall:&quot;</span><span class="p">)</span>
+<span class="n">apt28_notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">apt28_notes</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">source_ref</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">source_ref</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Output:</p>
-<div class="highlight"><pre><span></span><code>Note 1: note_20260615_190726_70bd -- created
-Note 2: note_20260615_190726_8dda -- created
-Note 3: note_20260615_190729_a650 -- created
+<h2 id="step-4-run-the-tutorial">Step 4: Run the tutorial<a class="headerlink" href="#step-4-run-the-tutorial" title="Permanent link">&para;</a></h2>
+<p>Run the file from the same shell:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>quickstart.py
 </code></pre></div>
-<p><code>remember()</code> returns a <code>(MemoryNote, status)</code> tuple. Your note IDs follow the pattern <code>note_&lt;timestamp&gt;_&lt;suffix&gt;</code> and will differ from the ones above. The <code>created</code> status confirms each note was embedded, written to storage, and entity-indexed (actors, tools, CVEs, and campaigns) on the fast write path.</p>
+<p>The verified run produced this standard output:</p>
+<div class="highlight"><pre><span></span><code>Stored: created, created, created
+
+Query recall:
+- https://example.com/apt28-cobalt-strike
+- https://example.com/apt28-ukraine-2026
+- https://example.com/lazarus-dreamjob-2026
+
+Actor recall:
+- https://example.com/apt28-cobalt-strike
+- https://example.com/apt28-ukraine-2026
+</code></pre></div>
+<p><code>remember()</code> returns a <code>(MemoryNote, status)</code> tuple. The three <code>created</code>
+statuses confirm that the write path accepted each note. <code>recall()</code> blends
+vector and graph retrieval; the verified query ranks both APT28 notes before
+the unrelated Lazarus note. <code>recall_actor()</code> performs a direct entity-index
+lookup and returns the two notes indexed under the canonical actor name.</p>
+<p>On the verified 2.8.0 build, startup also writes warnings to standard error for
+unset optional TypeDB credentials and the current FastEmbed model revision.
+Those warnings do not stop the SQLite tutorial.</p>
 <div class="admonition note">
 <p class="admonition-title">Why the fast path matters</p>
-<p><code>remember()</code> returns as soon as the note is embedded, stored, and heuristically entity-indexed. Deeper LLM enrichment (causal triple extraction, note evolution) runs in a background worker and is optional, so storing intelligence never blocks on an LLM call. This is why the core of ZettelForge works fully offline.</p>
+<p>This tutorial disables optional LLM enrichment, but the core write path
+still embeds the note, writes it to SQLite and LanceDB, extracts heuristic
+entities, and updates heuristic graph edges. LLM causal extraction, richer
+entity extraction, and note evolution stay outside this success path.</p>
 </div>
-<h2 id="step-3-recall-by-query">Step 3: Recall by query<a class="headerlink" href="#step-3-recall-by-query" title="Permanent link">&para;</a></h2>
-<p>Ask a natural-language question. <code>recall()</code> classifies your intent, then blends vector similarity with knowledge-graph traversal and returns the most relevant notes.</p>
-<div class="highlight"><pre><span></span><code><span class="n">results</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;What tools does APT28 use?&quot;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">110</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Output:</p>
-<div class="highlight"><pre><span></span><code>[note_20260615_190729_a650] APT28 was also observed using Cobalt Strike beacons for lateral movement after initial X-Agent deployment. The...
-[note_20260615_190726_70bd] APT28 (Fancy Bear) deployed a modified X-Agent implant against Ukrainian government networks in March 2026. Th...
-[note_20260615_190726_8dda] Lazarus Group conducted Operation DreamJob targeting defense contractors in South Korea and Japan during Q1 20...
-</code></pre></div>
-<p>The two APT28 notes rank above the Lazarus note because graph retrieval boosts notes that share entities with your query. The Cobalt Strike note leads because it sits closest to "tools" in both the vector space and the entity graph.</p>
-<h2 id="step-4-recall-by-actor-name">Step 4: Recall by actor name<a class="headerlink" href="#step-4-recall-by-actor-name" title="Permanent link">&para;</a></h2>
-<p>When you already know the actor, skip the query and look it up directly. <code>recall_actor()</code> reads the entity index instead of running a vector search.</p>
-<div class="highlight"><pre><span></span><code><span class="n">apt28_notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">apt28_notes</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">110</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Output:</p>
-<div class="highlight"><pre><span></span><code>[note_20260615_190726_70bd] APT28 (Fancy Bear) deployed a modified X-Agent implant against Ukrainian government networks in March 2026. Th...
-[note_20260615_190729_a650] APT28 was also observed using Cobalt Strike beacons for lateral movement after initial X-Agent deployment. The...
-</code></pre></div>
-<p>Both APT28 notes come back. <code>recall_cve()</code> and <code>recall_tool()</code> work the same way for CVEs and tools.</p>
 <div class="admonition note">
-<p class="admonition-title">Alias resolution needs the LLM enrichment path</p>
-<p>Looking up a canonical name (<code>APT28</code>, case-insensitive) resolves from the offline entity index. Resolving an alias to its canonical actor (for example <code>Fancy Bear</code> to <code>APT28</code>, or a name the seeded index does not yet hold such as <code>Lazarus Group</code>) relies on the background LLM enrichment path. To get full alias resolution, configure an LLM provider in <code>config.yaml</code>. See the <a href="../../reference/configuration/">Configuration reference</a>.</p>
+<p class="admonition-title">Current offline lookup boundary</p>
+<p>Use canonical actor labels such as <code>APT28</code> for this tutorial. In the
+verified offline run, <code>recall_cve("CVE-2025-21298")</code> returned its note, but
+<code>recall_actor("Fancy Bear")</code>, <code>recall_actor("Lazarus Group")</code>, and
+<code>recall_tool("Cobalt Strike")</code> returned no matches. Configure and verify LLM
+enrichment before relying on alias or richer tool-name lookup. See the
+<a href="../../reference/configuration/">Configuration reference</a>.</p>
 </div>
 <h2 id="what-you-built">What you built<a class="headerlink" href="#what-you-built" title="Permanent link">&para;</a></h2>
 <p>You now have a working ZettelForge instance with:</p>
 <ul>
 <li><strong>Three stored notes</strong> about APT28 and Lazarus Group activity, embedded and persisted to a local SQLite database and LanceDB vector index</li>
-<li><strong>Entity index entries</strong> for actors, tools (X-Agent, Cobalt Strike), CVEs (CVE-2025-21298), and campaigns (Operation DreamJob)</li>
-<li><strong>Blended retrieval</strong> that combines vector similarity with knowledge-graph traversal so related intelligence surfaces together</li>
+<li><strong>Entity index entries</strong> for the canonical APT28 actor, the CVE, and several
+  other heuristically extracted entities</li>
+<li><strong>Blended retrieval</strong> that combines vector similarity with graph traversal
+  and ranks both APT28 notes first for the tutorial query</li>
 </ul>
-<p>All of it runs on your own hardware with no external service.</p>
+<p>The tutorial data lives under <code>~/.amem</code> by default in <code>zettelforge.db</code> and the
+<code>vectordb/</code> directory. The verified run completed the core flow without an
+external service.</p>
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Synthesize answers from memory.</strong> <code>mm.synthesize(query, format="direct_answer")</code> retrieves relevant notes and asks an LLM to fuse them into a single answer with source attribution. It returns a dictionary shaped <code>{"synthesis": {"answer", "confidence", "sources"}, "metadata": {...}, "sources": [...], "query", "format"}</code>. Synthesis is the one step that requires a configured LLM provider: without one, <code>synthesize()</code> returns a well-formed response with an empty answer and <code>confidence</code> of <code>0.0</code>. Set <code>llm.provider</code> and any required key in <code>config.yaml</code>, then call it. The extended <code>synthesized_brief</code>, <code>timeline_analysis</code>, and <code>relationship_map</code> formats are not part of the open-source core and fall back to <code>direct_answer</code>.</li>
+<li><strong>Synthesize answers from memory.</strong> Configure an LLM before you depend on a
+  model-generated answer. In the no-provider verification run,
+  <code>mm.synthesize(query, format="direct_answer")</code> returned a structured fallback
+  with <code>confidence</code> set to <code>0.0</code>, not a model-generated synthesis. See the
+  <a href="../../reference/configuration/">Configuration reference</a>.</li>
 <li><a href="../02-first-cti-report/">Ingest your first CTI report</a>: chunk and store a long-form threat report with <code>remember_report()</code>.</li>
 <li><a href="../../reference/memory-manager-api/">Memory Manager API reference</a>: every public method, argument, and return shape.</li>
 <li><a href="../../explanation/architecture/">Why the hybrid TypeDB plus LanceDB architecture</a>: the design rationale behind blended retrieval.</li>

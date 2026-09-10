@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Public API surface of the ZettelForge MemoryManager class - write, recall, knowledge-graph, and synthesis methods with verified signatures and return shapes.">
+        <meta name="description" content="Verified ZettelForge MemoryManager signatures, return shapes, and current feature boundaries.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1396,10 +1396,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#getting-an-instance" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting an instance
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get-an-instance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get an instance
       
     </span>
   </a>
@@ -1491,10 +1502,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#entity-lookups" class="md-nav__link">
+  <a href="#direct-entity-lookups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entity lookups
+        Direct entity lookups
       
     </span>
   </a>
@@ -2655,10 +2666,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#getting-an-instance" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting an instance
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get-an-instance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get an instance
       
     </span>
   </a>
@@ -2750,10 +2772,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#entity-lookups" class="md-nav__link">
+  <a href="#direct-entity-lookups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entity lookups
+        Direct entity lookups
       
     </span>
   </a>
@@ -2991,50 +3013,37 @@
 
 
 <h1 id="memory-manager-api-reference">Memory Manager API reference<a class="headerlink" href="#memory-manager-api-reference" title="Permanent link">&para;</a></h1>
-<p><code>MemoryManager</code> is the main programmatic interface to ZettelForge memory. It owns
-note creation, recall, the knowledge graph, and synthesis. This page documents the
-public methods, their verified signatures, and return shapes.</p>
-<p>Signatures on this page are taken from source (<code>src/zettelforge/memory_manager.py</code>,
-ZettelForge 2.7.0). Return-value examples that depend on a live LLM are marked; see
-<a href="#feature-state">feature state</a>.</p>
-<h2 id="getting-an-instance">Getting an instance<a class="headerlink" href="#getting-an-instance" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span><span class="p">,</span> <span class="n">get_memory_manager</span>
+<p><code>MemoryManager</code> is the main Python interface to ZettelForge memory. Use it to
+store notes, retrieve context, inspect relationships, and synthesize answers.
+This page gives you the public signatures and the behavior observed in
+ZettelForge 2.8.0.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>Install ZettelForge 2.8.0 on Python 3.10 or later. Review the
+<a href="../configuration/">configuration reference</a> before you enable LLM-backed
+enrichment or synthesis.</p>
+<p>The signatures below come from the official <code>v2.8.0</code> source tag. The runtime
+examples were exercised against a fresh, isolated SQLite and LanceDB store.</p>
+<h2 id="get-an-instance">Get an instance<a class="headerlink" href="#get-an-instance" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
 
-<span class="c1"># Explicit instance (tests, custom data paths)</span>
 <span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
-
-<span class="c1"># Process-wide singleton (the usual path)</span>
-<span class="n">mm</span> <span class="o">=</span> <span class="n">get_memory_manager</span><span class="p">()</span>
 </code></pre></div>
-<p><code>MemoryManager()</code> initializes the SQLite storage backend, the LanceDB vector index,
-and a background enrichment worker thread. The worker drains on process exit, so
-short-lived scripts call <a href="#flush"><code>flush()</code></a> before they return when they need
-LLM enrichment to finish.</p>
 <div class="highlight"><pre><span></span><code><span class="n">MemoryManager</span><span class="p">(</span><span class="n">jsonl_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">lance_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Argument</th>
-<th>Default</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>jsonl_path</code></td>
-<td><code>None</code></td>
-<td>Override the JSONL data path. The data directory is derived from its parent.</td>
-</tr>
-<tr>
-<td><code>lance_path</code></td>
-<td><code>None</code></td>
-<td>Override the LanceDB index path.</td>
-</tr>
-</tbody>
-</table>
+<ul>
+<li><code>jsonl_path</code> defaults to <code>None</code>. This compatibility path selects the data
+  directory through its parent and is passed to the vector-store adapter.</li>
+<li><code>lance_path</code> defaults to <code>None</code> and overrides the LanceDB index path.</li>
+</ul>
+<p>Call <code>get_memory_manager()</code> when you want the process-wide singleton instead
+of an explicit instance. Construction initializes SQLite, LanceDB access, and
+the background enrichment worker.</p>
+<p>Background enrichment dispatch is enabled by default. Set
+<code>ZETTELFORGE_ENRICHMENT_ENABLED=false</code> before import when you need a
+deterministic offline write path. Disabling dispatch does not disable regex
+entity extraction or direct storage.</p>
 <h2 id="write-api">Write API<a class="headerlink" href="#write-api" title="Permanent link">&para;</a></h2>
-<h3 id="remember">remember<a class="headerlink" href="#remember" title="Permanent link">&para;</a></h3>
+<h3 id="remember"><code>remember</code><a class="headerlink" href="#remember" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">remember</span><span class="p">(</span>
     <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">source_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;conversation&quot;</span><span class="p">,</span>
@@ -3042,26 +3051,23 @@ LLM enrichment to finish.</p>
     <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;general&quot;</span><span class="p">,</span>
     <span class="n">evolve</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">sync</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">tlp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
 </code></pre></div>
-<p>Create one memory note from <code>content</code>. Uses a dual-stream write path: the fast path
-(embedding, storage, vector index, entity index, heuristic graph edges) returns
-quickly, and LLM causal-triple extraction is deferred to the background worker.</p>
-<p>Set <code>evolve=True</code> to run the two-phase fact pipeline (extract facts, then decide
-ADD / UPDATE / DELETE / NOOP against existing notes). Set <code>sync=True</code> to run causal
-extraction inline instead of in the background.</p>
-<p>Returns <code>(note, status)</code> where <code>status</code> is one of <code>"created"</code>, <code>"updated"</code>,
-<code>"corrected"</code>, or <code>"noop"</code>.</p>
+<p>Creates one memory note. The direct path constructs an embedding, writes the
+note, updates entity mappings and graph edges, and returns <code>(note, status)</code>.
+<code>status</code> is <code>"created"</code>, <code>"updated"</code>, <code>"corrected"</code>, or <code>"noop"</code>.</p>
+<p>When background enrichment is enabled, <code>sync=False</code> queues causal extraction
+and <code>sync=True</code> runs it inline. Set <code>evolve=True</code> to run fact extraction and
+the ADD / UPDATE / DELETE / NOOP decision path before direct storage.</p>
 <div class="highlight"><pre><span></span><code><span class="n">note</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
-    <span class="s2">&quot;APT28 used X-Agent against the target network.&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;APT28 used Mimikatz against the target network.&quot;</span><span class="p">,</span>
     <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;threat_report&quot;</span><span class="p">,</span>
+    <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;sample-report&quot;</span><span class="p">,</span>
     <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
-    <span class="n">tlp</span><span class="o">=</span><span class="s2">&quot;amber&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<h3 id="remember_chunked">remember_chunked<a class="headerlink" href="#remember_chunked" title="Permanent link">&para;</a></h3>
+<p>The ZettelForge 2.8.0 public signature does not accept per-call TLP arguments.</p>
+<h3 id="remember_chunked"><code>remember_chunked</code><a class="headerlink" href="#remember_chunked" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">remember_chunked</span><span class="p">(</span>
     <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">source_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;conversation&quot;</span><span class="p">,</span>
@@ -3069,13 +3075,12 @@ extraction inline instead of in the background.</p>
     <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;general&quot;</span><span class="p">,</span>
     <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span>
     <span class="n">sync</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">tlp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">]</span>
 </code></pre></div>
-<p>Split long content on sentence boundaries and store each chunk as its own note.
-Content at or under <code>chunk_size</code> is stored as a single note. Chunked notes carry an
-ordinal <code>"{source_ref}#c{i}"</code> suffix so provenance survives the split.</p>
-<h3 id="remember_with_extraction">remember_with_extraction<a class="headerlink" href="#remember_with_extraction" title="Permanent link">&para;</a></h3>
+<p>Splits long content on sentence boundaries and stores each chunk through
+<code>remember()</code>. Content at or below <code>chunk_size</code> becomes one note. Longer input
+gets source references such as <code>report#c0</code>, <code>report#c1</code>, and <code>report#c2</code>.</p>
+<h3 id="remember_with_extraction"><code>remember_with_extraction</code><a class="headerlink" href="#remember_with_extraction" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">remember_with_extraction</span><span class="p">(</span>
     <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">source_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;conversation&quot;</span><span class="p">,</span>
@@ -3084,15 +3089,15 @@ ordinal <code>"{source_ref}#c{i}"</code> suffix so provenance survives the split
     <span class="n">context</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="n">min_importance</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
     <span class="n">max_facts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
-    <span class="n">tlp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">MemoryNote</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
 </code></pre></div>
-<p>Two-phase pipeline: an LLM distills <code>content</code> into scored candidate facts, then each
-fact is compared to existing notes and an operation is chosen. Facts below
-<code>min_importance</code> are skipped; at most <code>max_facts</code> are extracted. Returns a list of
-<code>(MemoryNote | None, status)</code> tuples, where <code>status</code> is one of <code>"added"</code>,
-<code>"updated"</code>, <code>"corrected"</code>, <code>"noop"</code>.</p>
-<h3 id="remember_report">remember_report<a class="headerlink" href="#remember_report" title="Permanent link">&para;</a></h3>
+<p>Uses an LLM to extract scored facts, then compares each retained fact with
+existing notes and applies an operation. Facts below <code>min_importance</code> are
+discarded, and <code>max_facts</code> limits extraction. Each result is <code>(note, status)</code>;
+the status is <code>"added"</code>, <code>"updated"</code>, <code>"corrected"</code>, or <code>"noop"</code>.</p>
+<p>The method rejects explicit prompt-injection patterns in <code>content</code> and
+<code>context</code> with <code>PromptInjectionError</code> before it calls the model.</p>
+<h3 id="remember_report"><code>remember_report</code><a class="headerlink" href="#remember_report" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">remember_report</span><span class="p">(</span>
     <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">source_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -3103,18 +3108,19 @@ fact is compared to existing notes and an operation is chosen. Facts below
     <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">MemoryNote</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
 </code></pre></div>
-<p>Ingest a news or threat report. Chunks long content, runs two-phase extraction on
-each chunk, and stores <code>published_date</code> (ISO 8601) as temporal metadata. Returns the
-combined list of <code>(MemoryNote | None, status)</code> tuples across all chunks.</p>
+<p>Chunks a report and sends each chunk through <code>remember_with_extraction()</code>.
+When present, <code>published_date</code> is added to the extraction context as
+<code>Published: &lt;date&gt;</code>. The source reference for each chunk uses the form
+<code>&lt;source_url&gt;:chunk:&lt;index&gt;</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">LLM prerequisite</p>
-<p><code>remember_report</code> and <code>remember_with_extraction</code> depend on a configured LLM
-provider for their extraction phase. With no LLM available they return zero
-results. Configure <code>llm</code> in <code>config.yaml</code> (see the
-<a href="../configuration/">configuration reference</a>) before using report ingestion.</p>
+<p><code>remember_with_extraction()</code> and <code>remember_report()</code> require a reachable,
+configured LLM for fact output. With a deliberately unreachable provider,
+both returned an empty list. <code>remember(evolve=True)</code> fell through to direct
+storage and returned <code>"created"</code> when extraction produced no facts.</p>
 </div>
 <h2 id="recall-api">Recall API<a class="headerlink" href="#recall-api" title="Permanent link">&para;</a></h2>
-<h3 id="recall">recall<a class="headerlink" href="#recall" title="Permanent link">&para;</a></h3>
+<h3 id="recall"><code>recall</code><a class="headerlink" href="#recall" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">recall</span><span class="p">(</span>
     <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -3124,84 +3130,97 @@ results. Configure <code>llm</code> in <code>config.yaml</code> (see the
     <span class="n">include_expired</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">caller</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">max_tlp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">tlp_override_reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">]</span>
 </code></pre></div>
-<p>Retrieve memories relevant to <code>query</code> using blended vector and graph retrieval with
-cross-encoder reranking. An intent classifier sets the strategy weights per query.</p>
-<p>If <code>governance.limits.recall_timeout_seconds</code> is greater than zero, the retrieval
-pipeline is bounded by that wall-clock timeout; exceeding it logs a warning and
-returns an empty list. This is a defense-in-depth control against deep graph
-traversal denial of service.</p>
-<h3 id="entity-lookups">Entity lookups<a class="headerlink" href="#entity-lookups" title="Permanent link">&para;</a></h3>
-<p>These bypass the scoring pipeline for a direct index lookup.</p>
+<p>Retrieves notes with blended vector, entity, and graph search. The intent
+classifier selects retrieval weights. When cross-encoder reranking is enabled,
+ZettelForge reranks only the configured head of the candidate list and keeps
+the tail in blended order.</p>
+<p><code>caller</code> records telemetry attribution. <code>actor</code> is its compatibility alias;
+<code>caller</code> wins when both are supplied. Superseded and expired notes are excluded
+by default.</p>
+<p>If <code>governance.limits.recall_timeout_seconds</code> is greater than zero, a timeout
+logs a warning and returns an empty list. Explicit prompt-injection patterns in
+<code>query</code> raise <code>PromptInjectionError</code> before retrieval.</p>
+<p>The ZettelForge 2.8.0 public signature has no per-call TLP filter or override.</p>
+<h3 id="direct-entity-lookups">Direct entity lookups<a class="headerlink" href="#direct-entity-lookups" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">recall_entity</span><span class="p">(</span><span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">]</span>
 <span class="n">recall_cve</span><span class="p">(</span><span class="n">cve_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">]</span>
 <span class="n">recall_actor</span><span class="p">(</span><span class="n">actor_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">]</span>
 <span class="n">recall_technique</span><span class="p">(</span><span class="n">technique_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">]</span>
 <span class="n">recall_tool</span><span class="p">(</span><span class="n">tool_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">MemoryNote</span><span class="p">]</span>
 </code></pre></div>
-<p><code>recall_entity</code> accepts these <code>entity_type</code> values: <code>cve</code>, <code>actor</code>, <code>threat_actor</code>,
-<code>intrusion_set</code>, <code>tool</code>, <code>campaign</code>, <code>person</code>, <code>location</code>, <code>organization</code>, <code>event</code>,
-<code>activity</code>, <code>temporal</code>.</p>
+<p>These methods bypass the blended scoring pipeline and read entity mappings
+directly.</p>
 <ul>
-<li><code>recall_cve</code> normalizes the id to upper case.</li>
-<li><code>recall_actor</code> searches <code>actor</code>, <code>threat_actor</code>, and <code>intrusion_set</code> and
-  deduplicates. APT/UNC/FIN-style designations are usually stored as
-  <code>intrusion_set</code>; older stores may still use <code>actor</code>.</li>
-<li><code>recall_technique</code> looks up MITRE ATT&amp;CK technique ids (for example <code>T1059</code>) under
-  the <code>attack_pattern</code> entity type.</li>
+<li><code>recall_cve()</code> normalizes the identifier to uppercase.</li>
+<li><code>recall_actor()</code> checks <code>actor</code>, <code>threat_actor</code>, and <code>intrusion_set</code>, then
+  removes duplicate notes.</li>
+<li><code>recall_technique()</code> checks the <code>attack_pattern</code> type.</li>
+<li><code>recall_tool()</code> normalizes the tool name to lowercase.</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Alias resolution needs the LLM enrichment path</p>
-<p>Direct entity lookups match canonical values already in the index. Resolving an
-alias to its canonical actor (for example <code>"Fancy Bear"</code> to <code>APT28</code>) depends on
-the LLM enrichment path; without it, only exact stored values return notes.</p>
-</div>
-<h3 id="get_context">get_context<a class="headerlink" href="#get_context" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">get_context</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">token_budget</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<p>The built-in entity index tracks <code>activity</code>, <code>actor</code>, <code>attack_pattern</code>,
+<code>campaign</code>, <code>cve</code>, <code>domain</code>, <code>email</code>, <code>event</code>, <code>intrusion_set</code>, <code>ipv4</code>,
+<code>location</code>, <code>md5</code>, <code>organization</code>, <code>person</code>, <code>sha1</code>, <code>sha256</code>, <code>temporal</code>,
+<code>tool</code>, and <code>url</code>. External loaders can add other type strings because
+<code>recall_entity()</code> does not validate the type.</p>
+<p>Direct lookup resolves only mappings already in the index. Alias enrichment
+depends on the LLM enrichment path.</p>
+<h3 id="get_context"><code>get_context</code><a class="headerlink" href="#get_context" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">get_context</span><span class="p">(</span>
+    <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">domain</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="n">token_budget</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4000</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
-<p>Return a formatted memory context string suitable for injecting into an agent
-prompt. <code>token_budget</code> caps the size of the returned context.</p>
+<p>Returns formatted memory context for an agent prompt. Explicit
+prompt-injection patterns in <code>query</code> raise <code>PromptInjectionError</code>.</p>
 <h2 id="statistics-and-lifecycle">Statistics and lifecycle<a class="headerlink" href="#statistics-and-lifecycle" title="Permanent link">&para;</a></h2>
-<h3 id="get_stats">get_stats<a class="headerlink" href="#get_stats" title="Permanent link">&para;</a></h3>
+<h3 id="get_stats"><code>get_stats</code><a class="headerlink" href="#get_stats" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">get_stats</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span>
 </code></pre></div>
-<p>Return memory-system statistics. The dict includes the running counters
-<code>notes_created</code>, <code>retrievals</code>, <code>entity_index_hits</code>, <code>consolidations_triggered</code>, the
-<code>llm_ner_*</code> observability counters, <code>enrichment_failures</code>, and <code>evolution_failures</code>,
-plus <code>total_notes</code>, <code>entity_index</code> (the entity-index sub-stats), and
-<code>enrichment_degraded</code>.</p>
-<p><code>enrichment_degraded</code> flips to <code>True</code> after the first background enrichment failure.
-Watch it: an unset LLM API key makes every background enrichment call fail silently,
-which leaves causal extraction, NER, and evolution inactive while <code>remember()</code> still
-reports success.</p>
-<h3 id="flush">flush<a class="headerlink" href="#flush" title="Permanent link">&para;</a></h3>
+<p>Returns the current counters plus store and entity-index totals. ZettelForge
+2.8.0 returns these top-level keys:</p>
+<ul>
+<li><code>notes_created</code>, <code>retrievals</code>, <code>entity_index_hits</code>, and
+  <code>consolidations_triggered</code></li>
+<li><code>llm_ner_success</code>, <code>llm_ner_failure</code>, <code>llm_ner_no_new</code>,
+  <code>llm_ner_total_new_entities</code>, and <code>llm_ner_total_duration_ms</code></li>
+<li><code>total_notes</code> and <code>entity_index</code></li>
+</ul>
+<p>These are process counters, not durable historical metrics.</p>
+<h3 id="flush"><code>flush</code><a class="headerlink" href="#flush" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">flush</span><span class="p">(</span><span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </code></pre></div>
-<p>Block until queued and in-flight enrichment jobs complete. Returns <code>True</code> when all
-jobs are done, or <code>False</code> if <code>timeout</code> is supplied and expires first. Call this in
-short-lived scripts that need background enrichment to finish before exit.</p>
-<h3 id="evolve_note">evolve_note<a class="headerlink" href="#evolve_note" title="Permanent link">&para;</a></h3>
+<p>Waits for queued and in-flight enrichment jobs. It returns <code>True</code> when all jobs
+finish. It returns <code>False</code> when a supplied timeout expires first.</p>
+<h3 id="evolve_note"><code>evolve_note</code><a class="headerlink" href="#evolve_note" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">evolve_note</span><span class="p">(</span><span class="n">note_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sync</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span>
 </code></pre></div>
-<p>Trigger neighbor evolution around an existing note (manual or MCP invocation).
-Returns an evolution report dict when <code>sync=True</code>; returns <code>None</code> when the job is
-queued to the background worker or when <code>note_id</code> is not found.</p>
-<h3 id="mark_note_superseded">mark_note_superseded<a class="headerlink" href="#mark_note_superseded" title="Permanent link">&para;</a></h3>
+<p>Runs neighbor evolution for an existing note. With <code>sync=True</code>, it returns the
+evolution report. With <code>sync=False</code>, it queues the job and returns <code>None</code>. A
+missing <code>note_id</code> also returns <code>None</code> and logs a warning.</p>
+<h3 id="mark_note_superseded"><code>mark_note_superseded</code><a class="headerlink" href="#mark_note_superseded" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">mark_note_superseded</span><span class="p">(</span><span class="n">note_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">superseded_by_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span>
 </code></pre></div>
-<p>Mark one note as superseded by another and link them. Returns <code>False</code> if either id
-does not resolve to a stored note.</p>
-<h3 id="snapshot">snapshot<a class="headerlink" href="#snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">snapshot</span><span class="p">(</span><span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tlp_override_reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span>
+<p>Links the old and new notes, removes the old note from entity mappings, and
+writes a <code>SUPERSEDES</code> temporal edge. It returns <code>False</code> when either identifier
+does not resolve.</p>
+<h3 id="snapshot"><code>snapshot</code><a class="headerlink" href="#snapshot" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">snapshot</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span>
 </code></pre></div>
-<p>Export a JSONL snapshot of memory and return its path. If the snapshot contains
-AMBER or RED notes, the export raises <code>TlpSharingError</code> unless you supply an audited
-<code>tlp_override_reason</code>, which is recorded in the audit log.</p>
+<p>Creates a storage snapshot under the configured data directory.</p>
+<div class="admonition warning">
+<p class="admonition-title">In progress in ZettelForge 2.8.0</p>
+<p>The observed SQLite snapshot was created as
+<code>snapshots/zettelforge_&lt;timestamp&gt;.db</code>, but <code>snapshot()</code> returned a
+<code>snapshots/notes_&lt;timestamp&gt;.jsonl</code> path that did not exist. Inspect the
+<code>snapshots</code> directory for the <code>.db</code> file instead of trusting the returned
+path. The 2.8.0 signature accepts no arguments.</p>
+</div>
 <h2 id="knowledge-graph-api">Knowledge graph API<a class="headerlink" href="#knowledge-graph-api" title="Permanent link">&para;</a></h2>
-<h3 id="ingest_relationship">ingest_relationship<a class="headerlink" href="#ingest_relationship" title="Permanent link">&para;</a></h3>
+<h3 id="ingest_relationship"><code>ingest_relationship</code><a class="headerlink" href="#ingest_relationship" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">ingest_relationship</span><span class="p">(</span>
     <span class="n">from_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">from_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -3211,11 +3230,10 @@ AMBER or RED notes, the export raises <code>TlpSharingError</code> unless you su
     <span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
-<p>Write a STIX relationship edge directly into the knowledge graph without creating a
-memory note. Intended for sync clients. The edge is deduplicated by
-<code>(from_type, from_value, to_type, to_value, relationship)</code>; re-ingesting the same
-triple is idempotent.</p>
-<h3 id="provenance_chain">provenance_chain<a class="headerlink" href="#provenance_chain" title="Permanent link">&para;</a></h3>
+<p>Writes a relationship without creating a note. The SQLite edge identity uses
+the source node, target node, relationship, and note identifier. Repeating the
+same direct relationship produced one matching edge in the isolated store.</p>
+<h3 id="provenance_chain"><code>provenance_chain</code><a class="headerlink" href="#provenance_chain" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">provenance_chain</span><span class="p">(</span>
     <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -3223,26 +3241,42 @@ triple is idempotent.</p>
     <span class="n">direction</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;forward&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
 </code></pre></div>
-<p>Trace a causal provenance chain from an entity. <code>direction="forward"</code> follows
-outgoing causal edges (what does X cause or enable?); <code>direction="backward"</code> follows
-incoming causal edges (why did X happen?). Any other value raises <code>ValueError</code>.</p>
-<p>Returns a list of steps, each shaped:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="s2">&quot;from_entity&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;relationship&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;to_entity&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;edge_type&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;note_id&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">}</span>
+<p>Returns causal steps from the canonical entity. <code>direction="forward"</code> follows
+outgoing edges; <code>direction="backward"</code> follows incoming edges. Any other value
+raises <code>ValueError</code>.</p>
+<p>Each step has this shape:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="s2">&quot;from_entity&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+    <span class="s2">&quot;relationship&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+    <span class="s2">&quot;to_entity&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+    <span class="s2">&quot;edge_type&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+    <span class="s2">&quot;note_id&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+<span class="p">}</span>
 </code></pre></div>
-<h3 id="get_entity_relationships">get_entity_relationships<a class="headerlink" href="#get_entity_relationships" title="Permanent link">&para;</a></h3>
+<h3 id="get_entity_relationships"><code>get_entity_relationships</code><a class="headerlink" href="#get_entity_relationships" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">get_entity_relationships</span><span class="p">(</span><span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
 </code></pre></div>
-<p>Return the direct knowledge-graph neighbors of an entity. The entity value is
-alias-resolved to its canonical form before lookup.</p>
-<h3 id="traverse_graph">traverse_graph<a class="headerlink" href="#traverse_graph" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">traverse_graph</span><span class="p">(</span><span class="n">start_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+<p>Alias-resolves the entity value and returns its direct graph neighbors. Each
+observed result contained <code>node</code>, <code>relationship</code>, <code>edge_properties</code>, and
+<code>note_id</code>.</p>
+<h3 id="traverse_graph"><code>traverse_graph</code><a class="headerlink" href="#traverse_graph" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">traverse_graph</span><span class="p">(</span>
+    <span class="n">start_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">start_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">max_depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
 </code></pre></div>
-<p>Traverse relationships outward from a starting entity. In the open-source
-distribution, <code>max_depth</code> is capped at 2; requesting a larger depth is clamped to 2
-and logged. Deeper multi-hop graph traversal is available in
-<a href="../../#two-products-one-core">ThreatRecall.ai</a>, the hosted SaaS.</p>
+<p>Traverses outward from the canonical start entity. ZettelForge clamps requests
+above depth 2 to depth 2 and logs the clamp.</p>
+<div class="admonition warning">
+<p class="admonition-title">Return annotation mismatch</p>
+<p>The source annotation says <code>list[dict]</code>, but the observed value was a list
+of paths. Each path was a list of step dictionaries with <code>from_type</code>,
+<code>from_value</code>, <code>relationship</code>, <code>to_type</code>, and <code>to_value</code>. Treat the runtime
+value as <code>list[list[dict]]</code> until the implementation or annotation is fixed.</p>
+</div>
 <h2 id="synthesis-api">Synthesis API<a class="headerlink" href="#synthesis-api" title="Permanent link">&para;</a></h2>
-<h3 id="synthesize">synthesize<a class="headerlink" href="#synthesize" title="Permanent link">&para;</a></h3>
+<h3 id="synthesize"><code>synthesize</code><a class="headerlink" href="#synthesize" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">synthesize</span><span class="p">(</span>
     <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;direct_answer&quot;</span><span class="p">,</span>
@@ -3250,48 +3284,69 @@ and logged. Deeper multi-hop graph traversal is available in
     <span class="n">tier_filter</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">caller</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">actor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">max_tlp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">tlp_override_reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
 </code></pre></div>
-<p>Synthesize an answer from retrieved memories (retrieval-augmented answer). <code>k</code> sets
-how many notes are pulled for context; <code>tier_filter</code> restricts by epistemic tier (for
-example <code>["A", "B"]</code>).</p>
-<p><code>format="direct_answer"</code> is the open-source format. The extended formats
-<code>"synthesized_brief"</code>, <code>"timeline_analysis"</code>, and <code>"relationship_map"</code> are
-<a href="../../#two-products-one-core">ThreatRecall.ai</a> SaaS capabilities; when requested on the open-source
-distribution they fall back to <code>"direct_answer"</code> and the fallback is logged.</p>
-<p>The return dict carries the synthesis result, its metadata, and the source notes:</p>
+<p>Retrieves notes and asks the configured LLM for an answer. <code>k</code> limits the
+retrieved notes. A missing <code>tier_filter</code> becomes <code>['A', 'B', 'C']</code>. <code>caller</code>
+records telemetry attribution, and <code>actor</code> is its compatibility alias.</p>
+<p>The verified format is <code>"direct_answer"</code>. Requests for <code>"synthesized_brief"</code>,
+<code>"timeline_analysis"</code>, or <code>"relationship_map"</code> are logged and fall back to
+<code>"direct_answer"</code>. No current ThreatRecall.ai public
+synthesis surface was verified for the other formats, so they remain in
+progress rather than documented as available SaaS behavior.</p>
+<p>Explicit prompt-injection patterns in <code>query</code> or retrieved context raise
+<code>PromptInjectionError</code>. The public signature has no per-call TLP filter or
+override.</p>
+<p>The returned dictionary has this shape:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-  <span class="s2">&quot;synthesis&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;sources&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
-  <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s2">&quot;query_id&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;model_used&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;tokens_used&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;latency_ms&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
-    <span class="s2">&quot;confidence_threshold&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;sources_count&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;tier_filter&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
-    <span class="s2">&quot;max_tlp&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;tlp_filter&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;tlp_override&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
-  <span class="p">},</span>
+    <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+    <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;direct_answer&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;synthesis&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;answer&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;sources&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">...</span><span class="p">]},</span>
+    <span class="s2">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;query_id&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+        <span class="s2">&quot;model_used&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+        <span class="s2">&quot;tokens_used&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+        <span class="s2">&quot;latency_ms&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+        <span class="s2">&quot;confidence_threshold&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+        <span class="s2">&quot;sources_count&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+        <span class="s2">&quot;tier_filter&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;sources&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;note_id&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+            <span class="s2">&quot;relevance_score&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+            <span class="s2">&quot;quote&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+            <span class="s2">&quot;tier&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
 <span class="p">}</span>
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">LLM prerequisite</p>
-<p><code>synthesize</code> needs a configured LLM provider. With none available it returns a
-well-formed dict whose answer is <code>"No specific answer found"</code> and whose
-confidence is <code>0.0</code>.</p>
-</div>
-<h3 id="validate_synthesis">validate_synthesis<a class="headerlink" href="#validate_synthesis" title="Permanent link">&para;</a></h3>
+<p>With a deliberately unreachable provider, the method still returned the full
+wrapper, a <code>direct_answer</code> fallback with confidence <code>0.0</code>, and the retrieved
+source records. It preserved the wrapper shape, but validation returned
+<code>False</code> because confidence was below the configured threshold.</p>
+<h3 id="validate_synthesis"><code>validate_synthesis</code><a class="headerlink" href="#validate_synthesis" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">validate_synthesis</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
 </code></pre></div>
-<p>Validate a synthesis response for quality. Returns <code>(is_valid, errors)</code>.</p>
-<h3 id="check_synthesis_quality">check_synthesis_quality<a class="headerlink" href="#check_synthesis_quality" title="Permanent link">&para;</a></h3>
+<p>Returns <code>(is_valid, errors)</code> after checking a synthesis response.</p>
+<h3 id="check_synthesis_quality"><code>check_synthesis_quality</code><a class="headerlink" href="#check_synthesis_quality" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">check_synthesis_quality</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span>
 </code></pre></div>
-<p>Compute a quality score for a synthesis response. Returns quality metrics including a
-<code>score</code> from 0 to 1 and a letter grade.</p>
+<p>Returns a score from 0 to 1, a quality label, and component scores. The
+no-provider fallback scored <code>0.48</code> and <code>NEEDS_WORK</code> in the isolated run.</p>
 <h2 id="feature-state">Feature state<a class="headerlink" href="#feature-state" title="Permanent link">&para;</a></h2>
-<p>This page is marked <code>in_progress</code>. Every method signature and return shape here is
-verified against ZettelForge 2.7.0 source. The runnable examples that depend on a
-live LLM (report ingestion, alias resolution, <code>synthesize</code>) are documented from
-source behavior and their offline fallbacks; exact representative output captured
-from a running instance with an LLM provider configured is pending a follow-up run.</p>
+<p>This page remains <code>in_progress</code> for three precise reasons:</p>
+<ol>
+<li>A real LLM response was not observed, so extracted facts, alias enrichment,
+   causal extraction, and generated synthesis content remain unverified.</li>
+<li><code>snapshot()</code> creates a SQLite file but returns a nonexistent JSONL path.</li>
+<li><code>traverse_graph()</code> returns nested path lists while its public annotation
+   says <code>list[dict]</code>.</li>
+</ol>
+<p>All public signatures, direct write and recall paths, entity lookup, graph
+ingest and traversal, prompt-injection rejection, no-provider fallbacks,
+synthesis validation, statistics, and <code>flush()</code> were verified on 2026-08-16
+against the official ZettelForge 2.8.0 source tag.</p>
 
 
 

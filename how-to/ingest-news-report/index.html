@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -29,7 +29,7 @@
     
     
       
-        <title>Ingest a threat report - ZettelForge Documentation</title>
+        <title>Ingest a news report - ZettelForge Documentation</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ingest-a-threat-report" class="md-skip">
+        <a href="#ingest-a-news-report" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Ingest a threat report
+              Ingest a news report
             
           </span>
         </div>
@@ -679,7 +679,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -697,7 +697,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -734,93 +734,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#1-prepare-the-report" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-prepare-report-content" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Prepare report content
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-ingest-with-remember_report" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Ingest with remember_report()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-inspect-extraction-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Inspect extraction results
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-verify-entities-were-extracted-and-graphed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Verify entities were extracted and graphed
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-query-the-ingested-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Query the ingested data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-adjust-extraction-sensitivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Adjust extraction sensitivity
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
+        1. Prepare the report
       
     </span>
   </a>
@@ -828,10 +745,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#2-ingest-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM quick reference
+        2. Ingest it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-confirm-that-facts-were-stored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Confirm that facts were stored
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-check-the-entity-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Check the entity relationships
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-remember_report-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What remember_report() does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameters-in-zettelforge-280" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters in ZettelForge 2.8.0
       
     </span>
   </a>
@@ -2466,93 +2427,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#1-prepare-the-report" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-prepare-report-content" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Prepare report content
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-ingest-with-remember_report" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Ingest with remember_report()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-inspect-extraction-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Inspect extraction results
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-verify-entities-were-extracted-and-graphed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Verify entities were extracted and graphed
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-query-the-ingested-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Query the ingested data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-adjust-extraction-sensitivity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Adjust extraction sensitivity
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Parameters
+        1. Prepare the report
       
     </span>
   </a>
@@ -2560,10 +2438,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#2-ingest-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM quick reference
+        2. Ingest it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-confirm-that-facts-were-stored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Confirm that facts were stored
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-check-the-entity-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Check the entity relationships
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-remember_report-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What remember_report() does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parameters-in-zettelforge-280" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters in ZettelForge 2.8.0
       
     </span>
   </a>
@@ -2590,199 +2512,168 @@
   
 
 
-<h1 id="ingest-a-threat-report">Ingest a threat report<a class="headerlink" href="#ingest-a-threat-report" title="Permanent link">&para;</a></h1>
-<p>Ingest threat reports of any length using <code>remember_report()</code>. ZettelForge chunks content on sentence boundaries, runs the two-phase extraction pipeline on each chunk, deduplicates against existing notes, and stores the publication date as temporal metadata so you can query by time later.</p>
+<h1 id="ingest-a-news-report">Ingest a news report<a class="headerlink" href="#ingest-a-news-report" title="Permanent link">&para;</a></h1>
+<p>Use <code>MemoryManager.remember_report()</code> to turn a report into individual facts that
+ZettelForge can retrieve by entity or meaning. ZettelForge 2.8.0 splits long input,
+asks your configured LLM to extract facts, stores each accepted fact as a note, and
+records a source reference for every stored note.</p>
+<div class="admonition warning">
+<p class="admonition-title">Provider failure in ZettelForge 2.8.0</p>
+<p>An unreachable LLM provider can make <code>remember_report()</code> return an empty list
+without storing the original report. Always check the returned list before you
+treat an ingest as successful.</p>
+</div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge installed: <code>pip install zettelforge</code></li>
-<li>A configured LLM provider. The two-phase extraction pipeline (Phase 1 fact extraction, Phase 2 update decision) requires an active LLM. Without one, <code>remember_report()</code> returns an empty list. See <a href="../../tutorials/01-quickstart/">Quickstart</a> to configure your provider.</li>
+<li>You use ZettelForge 2.8.0.</li>
+<li>You completed the <a href="../../tutorials/01-quickstart/">Quickstart</a> and verified that
+  your LLM provider responds.</li>
+<li>You have a report that you are authorized to store.</li>
 </ul>
-<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<h3 id="1-prepare-report-content">1. Prepare report content<a class="headerlink" href="#1-prepare-report-content" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">report_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">Volt Typhoon Campaign Analysis — March 2026</span>
+<p>The example below uses synthetic training data. It makes no real-world attribution
+or current threat-intelligence claim.</p>
+<h2 id="1-prepare-the-report">1. Prepare the report<a class="headerlink" href="#1-prepare-the-report" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">report_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Synthetic training report — 20 March 2026</span>
 
-<span class="s2">Executive Summary: Volt Typhoon (Bronze Silhouette) continued targeting</span>
-<span class="s2">U.S. critical infrastructure in Q1 2026, focusing on water treatment</span>
-<span class="s2">facilities and energy grid operators in the Pacific Northwest.</span>
-
-<span class="s2">Initial access leveraged living-off-the-land binaries (LOLBins) and</span>
-<span class="s2">compromised SOHO routers as operational relay nodes. No custom malware</span>
-<span class="s2">was deployed; the group relied exclusively on built-in Windows tools</span>
-<span class="s2">including PowerShell, certutil, and netsh for lateral movement.</span>
-
-<span class="s2">The campaign exploited CVE-2024-3094 in xz-utils on exposed Linux</span>
-<span class="s2">jump hosts to establish footholds in hybrid environments. CISA issued</span>
-<span class="s2">advisory AA26-091A on March 15, 2026.</span>
-
-<span class="s2">Attribution confidence: HIGH (NSA/CISA joint assessment).</span>
-<span class="s2">Linked infrastructure overlaps with previous Volt Typhoon campaigns</span>
-<span class="s2">tracked since May 2023.</span>
+<span class="s2">Volt Typhoon used Cobalt Strike during a controlled exercise involving</span>
+<span class="s2">CVE-2024-3094. This report contains fictional training data, not a real-world</span>
+<span class="s2">attribution or current threat-intelligence assessment.</span>
 <span class="s2">&quot;&quot;&quot;</span>
 </code></pre></div>
-<h3 id="2-ingest-with-remember_report">2. Ingest with <code>remember_report()</code><a class="headerlink" href="#2-ingest-with-remember_report" title="Permanent link">&para;</a></h3>
+<p>Keep the full report in one string. <code>remember_report()</code> handles the chunking.</p>
+<h2 id="2-ingest-it">2. Ingest it<a class="headerlink" href="#2-ingest-it" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
 
 <span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
 
 <span class="n">results</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember_report</span><span class="p">(</span>
     <span class="n">content</span><span class="o">=</span><span class="n">report_content</span><span class="p">,</span>
-    <span class="n">source_url</span><span class="o">=</span><span class="s2">&quot;https://example.com/volt-typhoon-q1-2026&quot;</span><span class="p">,</span>
+    <span class="n">source_url</span><span class="o">=</span><span class="s2">&quot;https://example.com/synthetic-training-report&quot;</span><span class="p">,</span>
     <span class="n">published_date</span><span class="o">=</span><span class="s2">&quot;2026-03-20&quot;</span><span class="p">,</span>
     <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+</code></pre></div>
+<p><code>published_date</code> becomes extraction context; it is not a separate field on the
+stored note. <code>source_url</code> becomes the base of each note's provenance string.</p>
+<h2 id="3-confirm-that-facts-were-stored">3. Confirm that facts were stored<a class="headerlink" href="#3-confirm-that-facts-were-stored" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="ow">not</span> <span class="n">results</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No facts were stored; check the LLM provider logs&quot;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total facts processed: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Facts processed: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">note</span><span class="p">,</span> <span class="n">status</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">note</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">note</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">source_ref</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Content under 3000 characters (the default <code>chunk_size</code>) is processed as a single chunk. Longer reports are split on <code>.</code> sentence boundaries; each chunk runs independently through the extraction pipeline.</p>
-<h3 id="3-inspect-extraction-results">3. Inspect extraction results<a class="headerlink" href="#3-inspect-extraction-results" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">added</span>   <span class="o">=</span> <span class="p">[(</span><span class="n">n</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;added&quot;</span><span class="p">]</span>
-<span class="n">updated</span> <span class="o">=</span> <span class="p">[(</span><span class="n">n</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;updated&quot;</span><span class="p">]</span>
-<span class="n">noops</span>   <span class="o">=</span> <span class="p">[(</span><span class="n">n</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">results</span> <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;noop&quot;</span><span class="p">]</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Added: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">added</span><span class="p">)</span><span class="si">}</span><span class="s2">, Updated: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span><span class="si">}</span><span class="s2">, No-op: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">noops</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p>The controlled ZettelForge 2.8.0 verification run produced:</p>
+<div class="highlight"><pre><span></span><code>Facts processed: 1
+added | https://example.com/synthetic-training-report:chunk:0:extraction:0 | Volt Typhoon used Cobalt Strike during a controlled exercise involving CVE-2024-3094.
 </code></pre></div>
+<p>Your fact count and wording depend on the configured model. The status tells you
+what ZettelForge did with each extracted fact:</p>
 <table>
 <thead>
 <tr>
 <th>Status</th>
-<th>Meaning</th>
+<th>Result</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>added</code></td>
-<td>New fact stored as a new note</td>
+<td>Stored a new note.</td>
 </tr>
 <tr>
 <td><code>updated</code></td>
-<td>Existing note updated with new information</td>
+<td>Stored the new fact and superseded a similar note.</td>
 </tr>
 <tr>
 <td><code>corrected</code></td>
-<td>Existing note corrected (factual conflict resolved)</td>
+<td>Stored a correction and superseded a conflicting note.</td>
 </tr>
 <tr>
 <td><code>noop</code></td>
-<td>Fact already known; no action taken</td>
+<td>Stored nothing because the fact was already represented.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="4-verify-entities-were-extracted-and-graphed">4. Verify entities were extracted and graphed<a class="headerlink" href="#4-verify-entities-were-extracted-and-graphed" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">relationships</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">get_entity_relationships</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;volt typhoon&quot;</span><span class="p">)</span>
+<p>The empty-result check matters because an unreachable provider produced zero facts
+and zero stored notes in the same v2.8.0 verification run.</p>
+<h2 id="4-check-the-entity-relationships">4. Check the entity relationships<a class="headerlink" href="#4-check-the-entity-relationships" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">relationships</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">get_entity_relationships</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;volt-typhoon&quot;</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">rel</span> <span class="ow">in</span> <span class="n">relationships</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">][</span><span class="s1">&#39;entity_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">rel</span><span class="p">[</span><span class="s1">&#39;node&#39;</span><span class="p">][</span><span class="s1">&#39;entity_value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">relationship</span> <span class="ow">in</span> <span class="n">relationships</span><span class="p">:</span>
+    <span class="n">node</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;entity_type&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;note&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">relationship</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;entity_type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;entity_value&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 </code></pre></div>
-<p><code>get_entity_relationships()</code> returns <code>list[dict]</code>. Each dict has:</p>
-<ul>
-<li><code>rel['relationship']</code> — edge type (e.g. <code>"uses"</code>, <code>"targets"</code>)</li>
-<li><code>rel['node']['entity_type']</code> — type of the related entity</li>
-<li><code>rel['node']['entity_value']</code> — value of the related entity</li>
-<li><code>rel['edge_properties']</code> — additional edge metadata</li>
-<li><code>rel['note_id']</code> — source note that created this edge</li>
-</ul>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>"Volt Typhoon" matches entity type <code>actor</code> via the heuristic regex in <code>entity_indexer.py</code>. APT-numbered groups (APT28, UNC1234) use type <code>intrusion_set</code>.</p>
-</div>
-<h3 id="5-query-the-ingested-data">5. Query the ingested data<a class="headerlink" href="#5-query-the-ingested-data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Semantic recall</span>
-<span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span>
-    <span class="s2">&quot;What infrastructure does Volt Typhoon target?&quot;</span><span class="p">,</span>
-    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
-    <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">notes</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">120</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p>The verification run produced these heuristic relationships:</p>
+<div class="highlight"><pre><span></span><code>USES_TOOL -&gt; tool:cobalt-strike
+EXPLOITS_CVE -&gt; cve:cve-2024-3094
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># Synthesized answer (OSS: direct_answer format)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
-    <span class="s2">&quot;Summarize Volt Typhoon activity in Q1 2026&quot;</span><span class="p">,</span>
-    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;direct_answer&quot;</span><span class="p">,</span>
-    <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;synthesis&quot;</span><span class="p">][</span><span class="s2">&quot;answer&quot;</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confidence: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;synthesis&#39;</span><span class="p">][</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p>These edges show that the same extracted sentence mentions the actor, tool, and
+CVE. They prove co-occurrence in the stored fact; they do not independently prove
+the real-world attribution.</p>
+<h2 id="what-remember_report-does">What <code>remember_report()</code> does<a class="headerlink" href="#what-remember_report-does" title="Permanent link">&para;</a></h2>
+<p>For input longer than <code>chunk_size</code>, ZettelForge replaces newlines with spaces and
+packs text at period-space boundaries. It runs the extraction and update pipeline
+once per chunk. Each accepted fact receives a provenance suffix in this form:</p>
+<div class="highlight"><pre><span></span><code>&lt;source_url&gt;:chunk:&lt;chunk-number&gt;:extraction:&lt;fact-number&gt;
 </code></pre></div>
-<div class="admonition info">
-<p class="admonition-title">Extended synthesis formats</p>
-<p><code>synthesized_brief</code>, <code>timeline_analysis</code>, and <code>relationship_map</code> require ThreatRecall.ai SaaS. Without it, ZettelForge silently falls back to <code>direct_answer</code>. Use <code>format="direct_answer"</code> in OSS scripts to be explicit about what you will receive.</p>
-</div>
-<h3 id="6-adjust-extraction-sensitivity">6. Adjust extraction sensitivity<a class="headerlink" href="#6-adjust-extraction-sensitivity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">results</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember_report</span><span class="p">(</span>
-    <span class="n">content</span><span class="o">=</span><span class="n">report_content</span><span class="p">,</span>
-    <span class="n">source_url</span><span class="o">=</span><span class="s2">&quot;https://example.com/report&quot;</span><span class="p">,</span>
-    <span class="n">published_date</span><span class="o">=</span><span class="s2">&quot;2026-03-20&quot;</span><span class="p">,</span>
-    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
-    <span class="n">min_importance</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>   <span class="c1"># Lower threshold — keep more facts</span>
-    <span class="n">max_facts</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>       <span class="c1"># Facts per chunk (default)</span>
-    <span class="n">chunk_size</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>    <span class="c1"># Smaller chunks for denser reports</span>
-<span class="p">)</span>
-</code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">LLM cost per chunk</p>
-<p>Each chunk makes LLM calls for both extraction (Phase 1) and update decisions (Phase 2). A 15,000-character report with <code>chunk_size=3000</code> produces 5 chunks, each with up to <code>max_facts</code> LLM calls. Budget roughly 2 seconds per fact with the default in-process GGUF model.</p>
-</div>
-<h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h2>
+<p>The update phase compares each extracted fact with similar notes. It adds a new
+note when no safe similar note exists; otherwise, the LLM chooses <code>added</code>,
+<code>updated</code>, <code>corrected</code>, or <code>noop</code> behavior.</p>
+<h2 id="parameters-in-zettelforge-280">Parameters in ZettelForge 2.8.0<a class="headerlink" href="#parameters-in-zettelforge-280" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Parameter</th>
 <th>Default</th>
-<th>Description</th>
+<th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>content</code></td>
 <td>required</td>
-<td>Full report text (any length)</td>
+<td>Full report text.</td>
 </tr>
 <tr>
 <td><code>source_url</code></td>
 <td><code>""</code></td>
-<td>Source URL; stored as provenance per chunk (<code>source_url:chunk:N</code>)</td>
+<td>Provenance base; an empty value becomes <code>report</code>.</td>
 </tr>
 <tr>
 <td><code>published_date</code></td>
 <td><code>""</code></td>
-<td>ISO 8601 date; passed to the extraction LLM as temporal context</td>
+<td>Extraction context in the form <code>Published: &lt;value&gt;</code>.</td>
 </tr>
 <tr>
 <td><code>domain</code></td>
 <td><code>"cti"</code></td>
-<td>Memory domain for retrieval scoping</td>
+<td>Retrieval scope for the stored notes.</td>
 </tr>
 <tr>
 <td><code>min_importance</code></td>
 <td><code>3</code></td>
-<td>Discard extracted facts below this importance score (1–10)</td>
+<td>Drops extracted facts below this score.</td>
 </tr>
 <tr>
 <td><code>max_facts</code></td>
 <td><code>10</code></td>
-<td>Maximum facts to extract per chunk</td>
+<td>Caps extracted facts per chunk.</td>
 </tr>
 <tr>
 <td><code>chunk_size</code></td>
 <td><code>3000</code></td>
-<td>Maximum characters per chunk before splitting</td>
+<td>Sets the character target before splitting into chunks.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="llm-quick-reference">LLM quick reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
-<p><strong>Task</strong>: Ingest a long-form threat report with chunking, extraction, and deduplication.</p>
-<p><strong>Primary method</strong>: <code>mm.remember_report(content, source_url="...", published_date="...", domain="cti")</code> returns <code>list[tuple[MemoryNote | None, str]]</code>.</p>
-<p><strong>Chunking</strong>: Content exceeding <code>chunk_size</code> chars is split on <code>.</code> (period-space) boundaries. Each chunk runs independently through <code>remember_with_extraction()</code>.</p>
-<p><strong>Two-phase pipeline per chunk</strong>: Phase 1 (LLM) extracts salient facts scored by importance. Phase 2 (LLM) compares each fact to existing notes and returns ADD/UPDATE/DELETE/NOOP.</p>
-<p><strong>KG access</strong>: <code>get_entity_relationships(entity_type, entity_value)</code> returns <code>list[dict]</code>; each dict has <code>node</code> (entity_type, entity_value), <code>relationship</code>, <code>edge_properties</code>, <code>note_id</code>.</p>
-<p><strong>Synthesis (OSS)</strong>: <code>mm.synthesize(query, format="direct_answer")</code> returns <code>result["synthesis"]["answer"]</code>, <code>result["synthesis"]["confidence"]</code>, <code>result["synthesis"]["sources"]</code>. Extended formats require ThreatRecall.ai SaaS.</p>
+<p>Start with the defaults. Lowering <code>min_importance</code> stores more model-selected
+facts, while reducing <code>chunk_size</code> increases the number of extraction calls.</p>
 
 
 

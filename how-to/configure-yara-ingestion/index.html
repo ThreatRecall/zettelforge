@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="How to import YARA detection rules into ZettelForge as structured memory notes with entity relations, CCCS metadata validation, and automatic idempotency.">
+        <meta name="description" content="Preview and import YARA rules into ZettelForge as memory notes with detection-graph relations.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1042,10 +1042,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-1-verify-your-rule-file" class="md-nav__link">
+  <a href="#1-preview-a-rule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Verify your rule file
+        1. Preview a rule
       
     </span>
   </a>
@@ -1053,10 +1053,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-2-choose-a-validation-tier" class="md-nav__link">
+  <a href="#2-ingest-the-directory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Choose a validation tier
+        2. Ingest the directory
       
     </span>
   </a>
@@ -1064,65 +1064,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3-ingest-a-single-file" class="md-nav__link">
+  <a href="#3-verify-ingestion-from-python" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Ingest a single file
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-4-ingest-a-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Ingest a directory
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-5-ingest-from-python" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5: Ingest from Python
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-6-validate-metadata-programmatically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 6: Validate metadata programmatically
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-zettelforge-assigns-rule-ids" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How ZettelForge assigns rule IDs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-entity-relations-are-created" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How entity relations are created
+        3. Verify ingestion from Python
       
     </span>
   </a>
@@ -2471,10 +2416,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-1-verify-your-rule-file" class="md-nav__link">
+  <a href="#1-preview-a-rule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 1: Verify your rule file
+        1. Preview a rule
       
     </span>
   </a>
@@ -2482,10 +2427,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-2-choose-a-validation-tier" class="md-nav__link">
+  <a href="#2-ingest-the-directory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 2: Choose a validation tier
+        2. Ingest the directory
       
     </span>
   </a>
@@ -2493,65 +2438,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3-ingest-a-single-file" class="md-nav__link">
+  <a href="#3-verify-ingestion-from-python" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Step 3: Ingest a single file
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-4-ingest-a-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Ingest a directory
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-5-ingest-from-python" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5: Ingest from Python
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-6-validate-metadata-programmatically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 6: Validate metadata programmatically
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-zettelforge-assigns-rule-ids" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How ZettelForge assigns rule IDs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-entity-relations-are-created" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How entity relations are created
+        3. Verify ingestion from Python
       
     </span>
   </a>
@@ -2601,171 +2491,92 @@
 
 
 <h1 id="configure-yara-rule-ingestion">Configure YARA rule ingestion<a class="headerlink" href="#configure-yara-rule-ingestion" title="Permanent link">&para;</a></h1>
-<p>ZettelForge parses YARA files through a plyara-backed pipeline that validates metadata against the CCCS schema, extracts entity relations (ATT&amp;CK techniques, CVE references, threat actor tags), and stores each rule as an idempotent <code>MemoryNote</code>. You ingest rules with one CLI command or one Python function call.</p>
+<p>Use this guide to preview and import <code>.yar</code> and <code>.yara</code> files into ZettelForge. The ingest path stores one memory note per rule, records detection relations in the knowledge graph, and skips an unchanged rule when you import it again.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge 2.7.0 or newer installed (<code>pip install zettelforge</code>)</li>
-<li>A configured ZettelForge instance (see <a href="../../tutorials/01-quickstart/">Quickstart</a>)</li>
-<li>Embedding model available (downloads automatically on first use — see <a href="../../reference/configuration/">Configuration reference</a>)</li>
-<li>No LLM provider required: the rule explainer is not invoked during YARA ingestion in v2.7.0</li>
+<li>ZettelForge 2.8.0 installed and configured. Start with the <a href="../../tutorials/01-quickstart/">Quickstart</a> if you do not have a working instance.</li>
+<li>One or more YARA files in a directory such as <code>rules/</code>.</li>
+<li>Write access to the directory you use for <code>AMEM_DATA_DIR</code>.</li>
 </ul>
-<h2 id="step-1-verify-your-rule-file">Step 1: Verify your rule file<a class="headerlink" href="#step-1-verify-your-rule-file" title="Permanent link">&para;</a></h2>
-<p>Preview what ZettelForge will extract from a <code>.yar</code> or <code>.yara</code> file before writing anything to storage:</p>
-<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>zettelforge.yara.ingest<span class="w"> </span>rules/SILENT_BANKER_LOADER.yar<span class="w"> </span>--dry-run
+<p>The commands below use ZettelForge's bundled <code>technique_loader.yar</code> fixture. Replace that path with your own rule file.</p>
+<h2 id="1-preview-a-rule">1. Preview a rule<a class="headerlink" href="#1-preview-a-rule" title="Permanent link">&para;</a></h2>
+<p>Parse and validate the rule without writing to memory:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>zettelforge.yara.cli<span class="w"> </span>rules/technique_loader.yar<span class="w"> </span>--dry-run
 </code></pre></div>
-<p>Output:</p>
-<div class="highlight"><pre><span></span><code>[warn] SILENT_BANKER_LOADER  (SILENT_BANKER_LOADER.yar)  relations=2  mitre=T1218
+<p>Observed output:</p>
+<div class="highlight"><pre><span></span><code>[warn] MemoryModule  (technique_loader.yar)  relations=2  mitre=T1218
     warn: missing required CCCS field: id
     warn: missing required CCCS field: fingerprint
-    warn: missing required CCCS field: version
     warn: missing required CCCS field: modified
-    warn: missing required CCCS field: status
-    warn: missing required CCCS field: sharing
-    warn: missing required CCCS field: source
-    warn: missing required CCCS field: author
 </code></pre></div>
-<p>The <code>[warn]</code> prefix means the rule is accepted under the default <code>warn</code> tier — it ingests despite missing CCCS fields. The warnings tell you exactly which fields to add for full CCCS compliance. <code>relations=2</code> shows two entity links will be created for this rule.</p>
-<p>For machine-readable output, add <code>--json</code>:</p>
-<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>zettelforge.yara.ingest<span class="w"> </span>rules/SILENT_BANKER_LOADER.yar<span class="w"> </span>--dry-run<span class="w"> </span>--json
+<p>The default <code>warn</code> tier accepts a parseable rule and reports missing or invalid CCCS metadata. Use <code>--tier strict</code> when missing required CCCS fields must reject the rule, or <code>--tier non_cccs</code> when you intentionally import standard YARA without CCCS validation.</p>
+<p>The preview reports two relations for this fixture: one ATT&amp;CK technique relation for <code>T1218</code> and one YARA technique tag. The <a href="../../reference/yara-schema-reference/">YARA schema reference</a> defines the full relation mapping and CCCS fields.</p>
+<div class="admonition warning">
+<p class="admonition-title">CLI dry-run symlink refusal is in progress</p>
+<p>ZettelForge 2.8.0 live ingestion refuses symlinked rule files, but the CLI directory dry-run path follows matching symlinks. Preview only directories you trust. For untrusted directory trees, use <code>ingest_rules_dir()</code> as shown below; it skips symlinks and files that resolve outside the selected root.</p>
+</div>
+<h2 id="2-ingest-the-directory">2. Ingest the directory<a class="headerlink" href="#2-ingest-the-directory" title="Permanent link">&para;</a></h2>
+<p>Disable optional enrichment for a deterministic rule import, then ingest every <code>.yar</code> and <code>.yara</code> file under <code>rules/</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">AMEM_DATA_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$PWD</span><span class="s2">/.zettelforge-data&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="nv">ZETTELFORGE_ENRICHMENT_ENABLED</span><span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+python3<span class="w"> </span>-m<span class="w"> </span>zettelforge.yara.cli<span class="w"> </span>rules/
 </code></pre></div>
-<p>Output:</p>
-<div class="highlight"><pre><span></span><code><span class="p">[{</span><span class="nt">&quot;file&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rules/SILENT_BANKER_LOADER.yar&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;rule_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SILENT_BANKER_LOADER&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;rule_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;yara_c58e88dbff0e9299&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;cccs_tier&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;warn&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TECHNIQUE&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;n_relations&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;mitre_att&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;T1218&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;warnings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;missing required CCCS field: id&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;missing required CCCS field: fingerprint&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="s2">&quot;missing required CCCS field: version&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;missing required CCCS field: modified&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="s2">&quot;missing required CCCS field: status&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;missing required CCCS field: sharing&quot;</span><span class="p">,</span>
-<span class="w">               </span><span class="s2">&quot;missing required CCCS field: source&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;missing required CCCS field: author&quot;</span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;errors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]}]</span>
+<p>Observed output for a directory containing the fixture:</p>
+<div class="highlight"><pre><span></span><code>ingested=1 skipped=0 errors=0
 </code></pre></div>
-<h2 id="step-2-choose-a-validation-tier">Step 2: Choose a validation tier<a class="headerlink" href="#step-2-choose-a-validation-tier" title="Permanent link">&para;</a></h2>
-<p>The <code>--tier</code> flag controls how strictly the CCCS schema is enforced:</p>
-<table>
-<thead>
-<tr>
-<th>Tier</th>
-<th>Behavior</th>
-<th>Use when</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>warn</code> (default)</td>
-<td>Accepts all parseable rules; emits warnings for missing CCCS fields</td>
-<td>Ingesting third-party or community rules</td>
-</tr>
-<tr>
-<td><code>strict</code></td>
-<td>Rejects rules with any missing required CCCS field; note is not created</td>
-<td>Your internal rules must meet the CCCS standard</td>
-</tr>
-<tr>
-<td><code>non_cccs</code></td>
-<td>Skips metadata validation entirely; accepts any parseable rule</td>
-<td>Generic YARA files with no CCCS metadata</td>
-</tr>
-</tbody>
-</table>
-<p>The 10 required CCCS fields are: <code>id</code>, <code>fingerprint</code>, <code>version</code>, <code>modified</code>, <code>status</code>, <code>sharing</code>, <code>source</code>, <code>author</code>, <code>description</code>, and <code>category</code>.</p>
-<h2 id="step-3-ingest-a-single-file">Step 3: Ingest a single file<a class="headerlink" href="#step-3-ingest-a-single-file" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>zettelforge.yara.ingest<span class="w"> </span>rules/SILENT_BANKER_LOADER.yar
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># Enforce CCCS compliance — rejects rules missing required fields</span>
-python3<span class="w"> </span>-m<span class="w"> </span>zettelforge.yara.ingest<span class="w"> </span>rules/SILENT_BANKER_LOADER.yar<span class="w"> </span>--tier<span class="w"> </span>strict
-</code></pre></div>
-<p>Exit codes:</p>
-<ul>
-<li><code>0</code> — all rules ingested successfully</li>
-<li><code>1</code> — one or more rules rejected (strict tier) or parse errors</li>
-</ul>
-<h2 id="step-4-ingest-a-directory">Step 4: Ingest a directory<a class="headerlink" href="#step-4-ingest-a-directory" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>zettelforge.yara.ingest<span class="w"> </span>./rules/
-</code></pre></div>
-<p>The command walks <code>./rules/</code> recursively for <code>*.yar</code> and <code>*.yara</code> files. Symlinks and files outside the root path are skipped for security. Files larger than 1 MB are rejected with a parse error.</p>
-<h2 id="step-5-ingest-from-python">Step 5: Ingest from Python<a class="headerlink" href="#step-5-ingest-from-python" title="Permanent link">&para;</a></h2>
-<p>Use <code>ingest_rule</code> for a single rule or <code>ingest_rules_dir</code> for a directory:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
+<p>The YARA CLI does not call the rule explainer. Disabling enrichment keeps the surrounding <code>MemoryManager</code> write path offline and prevents background LLM work during this import. Vector embedding still runs when ZettelForge stores the note.</p>
+<h2 id="3-verify-ingestion-from-python">3. Verify ingestion from Python<a class="headerlink" href="#3-verify-ingestion-from-python" title="Permanent link">&para;</a></h2>
+<p>Use the Python API when you need the stored note, extracted relations, bulk controls, or the directory safety boundary in your own automation:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara</span><span class="w"> </span><span class="kn">import</span> <span class="n">ingest_rule</span><span class="p">,</span> <span class="n">ingest_rules_dir</span>
 
 <span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
 
-<span class="c1"># Ingest a single rule file</span>
-<span class="n">note</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="s2">&quot;rules/SILENT_BANKER_LOADER.yar&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">note</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created note: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Relations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">relations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">note</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span>
+    <span class="s2">&quot;rules/technique_loader.yar&quot;</span><span class="p">,</span>
+    <span class="n">mm</span><span class="p">,</span>
+    <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">,</span>
+    <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">second</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span>
+    <span class="s2">&quot;rules/technique_loader.yar&quot;</span><span class="p">,</span>
+    <span class="n">mm</span><span class="p">,</span>
+    <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">,</span>
+    <span class="n">sync</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="c1"># Ingest a directory</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">ingest_rules_dir</span><span class="p">(</span><span class="s2">&quot;./rules/&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;strict&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ingested: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;ingested&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, Skipped: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;skipped&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;errors&quot;</span><span class="p">]:</span>
-    <span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;errors&quot;</span><span class="p">]:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;created=</span><span class="si">{</span><span class="n">note</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;relations=</span><span class="si">{</span><span class="nb">sorted</span><span class="p">({</span><span class="n">relation</span><span class="p">[</span><span class="s1">&#39;rel&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">relation</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">relations</span><span class="p">})</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;idempotent=</span><span class="si">{</span><span class="n">second</span><span class="o">.</span><span class="n">id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">ingest_rules_dir</span><span class="p">(</span>
+    <span class="s2">&quot;rules&quot;</span><span class="p">,</span>
+    <span class="n">mm</span><span class="p">,</span>
+    <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">,</span>
+    <span class="n">bulk</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">flush_timeout</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ingested=</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;ingested&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> skipped=</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;skipped&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;errors=</span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p><code>ingest_rule</code> returns <code>(None, [])</code> when <code>tier="strict"</code> and the rule fails CCCS validation. <code>ingest_rules_dir</code> always returns a dict with <code>ingested</code>, <code>skipped</code>, and <code>errors</code> keys.</p>
-<p>Ingest is idempotent. Running the same file twice produces the same note ID — the second call finds the existing note by <code>source_ref</code> and returns it without writing a duplicate.</p>
-<h2 id="step-6-validate-metadata-programmatically">Step 6: Validate metadata programmatically<a class="headerlink" href="#step-6-validate-metadata-programmatically" title="Permanent link">&para;</a></h2>
-<p>To check a rule's metadata before ingesting, import from the submodule:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.cccs_metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">REQUIRED_FIELDS</span><span class="p">,</span> <span class="n">validate_metadata</span>
-
-<span class="c1"># Check which fields your rule metadata has</span>
-<span class="n">rule_meta</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="s2">&quot;TECHNIQUE&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Detects PE injection&quot;</span><span class="p">}</span>
-<span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">REQUIRED_FIELDS</span> <span class="k">if</span> <span class="n">f</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rule_meta</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing CCCS fields: </span><span class="si">{</span><span class="n">missing</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Validate against a specific tier</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">validate_metadata</span><span class="p">(</span><span class="n">rule_meta</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;strict&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Accepted: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">accepted</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Errors: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">errors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p>Observed output after the CLI and Python API use separate empty data directories:</p>
+<div class="highlight"><pre><span></span><code>created=True
+relations=[&#39;detects&#39;, &#39;tagged_with&#39;]
+idempotent=True
+ingested=0 skipped=1
+errors=[]
 </code></pre></div>
-<p><code>REQUIRED_FIELDS</code> is not exported from the top-level <code>zettelforge.yara</code> package. Import it from <code>zettelforge.yara.cccs_metadata</code>.</p>
-<h2 id="how-zettelforge-assigns-rule-ids">How ZettelForge assigns rule IDs<a class="headerlink" href="#how-zettelforge-assigns-rule-ids" title="Permanent link">&para;</a></h2>
-<p>A rule gets its ID from the CCCS <code>id</code> field when present. Without it, ZettelForge generates <code>yara_{content_hash[:16]}</code> — a 16-character prefix of the rule's content SHA-256. The generated ID is stable across re-ingests as long as the rule body does not change.</p>
-<p>The <code>source_ref</code> stored on each note follows the pattern <code>yara:{rule_id}:{content_sha256[:12]}</code>. This is what the idempotency check queries before writing a new note.</p>
-<h2 id="how-entity-relations-are-created">How entity relations are created<a class="headerlink" href="#how-entity-relations-are-created" title="Permanent link">&para;</a></h2>
-<p>ZettelForge extracts relations from YARA tags and metadata:</p>
-<table>
-<thead>
-<tr>
-<th>Relation type</th>
-<th>Triggered by</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>detects → AttackPattern</code></td>
-<td><code>mitre_att</code> metadata key or <code>attack.T####</code> tag</td>
-<td><code>T1218</code></td>
-</tr>
-<tr>
-<td><code>tagged_with → YaraTag</code></td>
-<td>Any YARA tag matching category tokens</td>
-<td><code>loader:memorymodule</code></td>
-</tr>
-<tr>
-<td><code>attributed_to → ThreatActor</code></td>
-<td><code>actor</code> metadata key</td>
-<td><code>APT28</code></td>
-</tr>
-<tr>
-<td><code>references_cve → Vulnerability</code></td>
-<td><code>cve_YYYY_NNNNN</code> tag</td>
-<td><code>cve_2024_1234</code></td>
-</tr>
-</tbody>
-</table>
-<p>All entity relations use <code>edge_type='detection'</code> and <code>source='yara_ingest'</code>.</p>
+<p>The second single-file call returns the existing note because the rule ID and content hash produce the same <code>source_ref</code>. The directory call then counts that unchanged rule as skipped. Bulk mode defers per-rule enrichment and calls <code>MemoryManager.flush()</code> once after the directory pass.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<p><strong>Parse error on a large file.</strong> Rule files over 1 MB are rejected. Split multi-rule collections into smaller files.</p>
-<p><strong><code>ImportError: cannot import name 'REQUIRED_FIELDS' from 'zettelforge.yara'</code>.</strong> Import from the submodule: <code>from zettelforge.yara.cccs_metadata import REQUIRED_FIELDS</code>.</p>
-<p><strong><code>ValueError</code> on <code>mm=None</code>.</strong> <code>ingest_rule</code> and <code>ingest_rules_dir</code> require a <code>MemoryManager</code> instance. Pass one explicitly.</p>
-<p><strong>Strict tier rejects all rules.</strong> Run <code>--tier warn --dry-run</code> first to see which CCCS fields are missing. Add them to your rule metadata, then switch back to <code>strict</code>.</p>
+<p><strong>The preview prints <code>[warn]</code>.</strong> The rule is accepted under the default tier. Add the named CCCS fields before you switch to <code>--tier strict</code>.</p>
+<p><strong>A strict preview exits with status 1.</strong> At least one rule failed CCCS validation or parsing. Fix the reported fields, or choose <code>warn</code> or <code>non_cccs</code> deliberately.</p>
+<p><strong>The import prints a FastEmbed model-update warning.</strong> Check the final summary. <code>ingested=1 skipped=0 errors=0</code> confirms that the write completed in this verification run.</p>
+<p><strong>A rule file is rejected before parsing.</strong> ZettelForge limits each YARA file to 1,048,576 bytes. Split a larger collection into smaller files.</p>
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../use-detection-rules/">Use detection rules</a> — query and recall ingested rules</li>
-<li><a href="../configure-sigma-ingestion/">Configure Sigma ingestion</a> — Sigma rule pipeline</li>
-<li><a href="../../reference/yara-schema-reference/">YARA schema reference</a> — full <code>YaraRule</code> entity schema and CCCS field definitions</li>
+<li><a href="../use-detection-rules/">Use detection rules</a></li>
+<li><a href="../configure-sigma-ingestion/">Configure Sigma ingestion</a></li>
+<li><a href="../../reference/yara-schema-reference/">YARA schema reference</a></li>
 </ul>
 
 

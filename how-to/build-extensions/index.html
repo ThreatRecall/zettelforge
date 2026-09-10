@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1238,15 +1238,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#part-1-build-a-custom-llm-provider" class="md-nav__link">
+  <a href="#build-a-custom-llm-provider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 1: Build a custom LLM provider
+        Build a custom LLM provider
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Part 1: Build a custom LLM provider">
+    <nav class="md-nav" aria-label="Build a custom LLM provider">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2444,15 +2444,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#part-1-build-a-custom-llm-provider" class="md-nav__link">
+  <a href="#build-a-custom-llm-provider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Part 1: Build a custom LLM provider
+        Build a custom LLM provider
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Part 1: Build a custom LLM provider">
+    <nav class="md-nav" aria-label="Build a custom LLM provider">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2551,26 +2551,33 @@
 path today is the LLM provider registry. Use this guide to package a provider,
 register it through Python entry points, and test it without changing
 ZettelForge's source.</p>
+<p>This guide is verified against ZettelForge 2.8.0.</p>
 <p>You use this path when you want ZettelForge to call your own local model,
 OpenAI-compatible gateway, hosted inference service, or lab backend through the
 same <code>generate()</code> path that built-in providers use.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge installed: <code>pip install zettelforge</code></li>
+<li>ZettelForge 2.8.0 installed; follow the <a href="../../tutorials/01-quickstart/">Quickstart</a></li>
 <li>Python 3.10+</li>
 </ul>
 <hr />
-<h2 id="part-1-build-a-custom-llm-provider">Part 1: Build a custom LLM provider<a class="headerlink" href="#part-1-build-a-custom-llm-provider" title="Permanent link">&para;</a></h2>
+<h2 id="build-a-custom-llm-provider">Build a custom LLM provider<a class="headerlink" href="#build-a-custom-llm-provider" title="Permanent link">&para;</a></h2>
 <p>ZettelForge's LLM layer is pluggable. You can register a third-party provider that the core <code>generate()</code> function delegates to, without modifying ZettelForge's source.</p>
 <h3 id="how-the-provider-system-works">How the provider system works<a class="headerlink" href="#how-the-provider-system-works" title="Permanent link">&para;</a></h3>
-<p>At startup, <code>zettelforge.llm_providers</code> does two things:</p>
+<p>When Python imports <code>zettelforge.llm_providers</code>, the module does two things:</p>
 <ol>
-<li>Registers the built-in providers: <code>local</code> (llama-cpp-python), <code>ollama</code>, <code>mock</code>, and <code>litellm</code> (if installed).</li>
+<li>Registers the built-in provider names: <code>local</code> (llama-cpp-python or ONNX Runtime GenAI), <code>ollama</code>, <code>mock</code>, and <code>litellm</code>.</li>
 <li>Scans the <code>zettelforge.llm_providers</code> entry-point group and registers any additional providers found there.</li>
 </ol>
-<p>Load failures in the entry-point scan are logged at DEBUG and never crash startup.</p>
+<p>The <code>litellm</code> name is registered even when the optional LiteLLM SDK is absent.
+Calling that provider without the SDK raises an actionable <code>ImportError</code>; install
+it with <code>pip install "zettelforge[litellm]"</code> before use.</p>
+<p>Third-party load failures are logged at DEBUG and do not interrupt the import.
+Provider names are unique: a third-party entry point cannot replace a registered
+built-in provider.</p>
 <h3 id="step-1-implement-the-llmprovider-protocol">Step 1: Implement the <code>LLMProvider</code> protocol<a class="headerlink" href="#step-1-implement-the-llmprovider-protocol" title="Permanent link">&para;</a></h3>
-<p>Your class must implement <code>zettelforge.llm_providers.base.LLMProvider</code>, a <code>typing.Protocol</code>:</p>
+<p>Your class must satisfy <code>zettelforge.llm_providers.base.LLMProvider</code>, a
+<code>typing.Protocol</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.llm_providers.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMProviderConfigurationError</span>
 
 
@@ -2592,13 +2599,19 @@ same <code>generate()</code> path that built-in providers use.</p>
         <span class="k">return</span> <span class="s2">&quot;example response&quot;</span>
 </code></pre></div>
 <p><code>LLMProvider</code> uses duck typing — no inheritance required. The <code>name</code> attribute is the registry key users reference in config.</p>
-<p>For setup failures, raise <code>LLMProviderConfigurationError</code> rather than returning empty. This surfaces misconfiguration at startup instead of silently failing per call.</p>
+<p>For setup failures, raise <code>LLMProviderConfigurationError</code> rather than returning
+an empty string. The public <code>generate()</code> path propagates this error to the
+caller instead of hiding the invalid configuration.</p>
 <h3 id="step-2-package-and-register-the-entry-point">Step 2: Package and register the entry point<a class="headerlink" href="#step-2-package-and-register-the-entry-point" title="Permanent link">&para;</a></h3>
 <p>In your package's <code>pyproject.toml</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">[project.entry-points.</span><span class="s2">&quot;zettelforge.llm_providers&quot;</span><span class="k">]</span>
 <span class="n">myprovider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myprovider_package:MyProvider&quot;</span>
 </code></pre></div>
-<p>After <code>pip install</code> of your package, ZettelForge discovers and registers your provider at startup. Users select it by setting <code>llm.provider = "myprovider"</code> in <code>config.yaml</code>.</p>
+<p>After you install your package, ZettelForge discovers the entry point when it
+imports <code>zettelforge.llm_providers</code>. Select the provider in <code>config.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">llm</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">myprovider</span>
+</code></pre></div>
 <h3 id="step-3-handle-optional-sdk-dependencies">Step 3: Handle optional SDK dependencies<a class="headerlink" href="#step-3-handle-optional-sdk-dependencies" title="Permanent link">&para;</a></h3>
 <p>If your provider depends on an SDK that is not always installed, lazy-import it:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.llm_providers.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMProviderConfigurationError</span>

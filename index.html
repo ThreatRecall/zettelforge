@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence. Extract CVEs, threat actors, IOCs, and ATT&CK techniques from analyst notes, resolve aliases, and recall them in natural language or over MCP.">
+        <meta name="description" content="Install ZettelForge, store and retrieve cyber threat intelligence, or choose the managed ThreatRecall.ai service.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -464,10 +464,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation-map" class="md-nav__link">
+  <a href="#find-the-right-documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Documentation map
+        Find the right documentation
       
     </span>
   </a>
@@ -754,7 +754,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2398,10 +2398,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#documentation-map" class="md-nav__link">
+  <a href="#find-the-right-documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Documentation map
+        Find the right documentation
       
     </span>
   </a>
@@ -2440,44 +2440,44 @@
 
 
 <h1 id="zettelforge-documentation">ZettelForge documentation<a class="headerlink" href="#zettelforge-documentation" title="Permanent link">&para;</a></h1>
-<p>Your SOC's hardest-won context walks out the door when a senior analyst leaves. Two or three years of customer environments, prior investigations, actor TTPs, and false-positive patterns leave with them. ZettelForge keeps that context with the team.</p>
-<p>ZettelForge extracts CVEs, threat actors, IOCs, and ATT&amp;CK techniques from analyst notes and threat reports, resolves aliases (APT28 = Fancy Bear = STRONTIUM), and indexes vector-embedded notes for natural-language recall by analysts and by agents over MCP. It runs local-first with no external API keys required.</p>
+<p>ZettelForge is an open-source, self-hosted memory system for cyber threat intelligence. You store investigation notes, extract CTI entities such as CVEs, actor names, tools, indicators, and ATT&amp;CK techniques, and retrieve the context later by asking a related question.</p>
+<p><strong>New here?</strong> Install ZettelForge, then follow the <a href="tutorials/01-quickstart/">Quickstart</a> to store and retrieve your first memory.</p>
 <h2 id="two-products-one-core">Two products, one core<a class="headerlink" href="#two-products-one-core" title="Permanent link">&para;</a></h2>
-<p>ZettelForge ships in two forms. This site documents the open-source core.</p>
+<p>There are two products:</p>
 <ul>
-<li><strong>ZettelForge (open source).</strong> The self-hosted Apache-2.0-licensed engine you install with <code>pip install zettelforge</code>. You run it on your own hardware, fully offline if you choose. Everything on this site applies to it.</li>
-<li><strong><a href="https://threatrecall.ai">ThreatRecall.ai</a> (hosted SaaS).</strong> The managed, multi-tenant service built on the ZettelForge core for SOC teams that want recall, a tenant-scoped knowledge graph, structured ingest, and STIX 2.1 export without running infrastructure. Plans run Individual Researcher ($49/mo), Pro ($199/mo), and Enterprise (contact sales).</li>
+<li><strong>ZettelForge.</strong> You run the MIT-licensed Python package on infrastructure you control. This documentation covers the open-source project.</li>
+<li><strong><a href="https://threatrecall.ai/">ThreatRecall.ai</a>.</strong> You use the managed SaaS instead of operating ZettelForge yourself. Review the current <a href="https://app.threatrecall.ai/pricing">ThreatRecall.ai pricing tiers</a> before you choose a plan.</li>
 </ul>
+<p>Choose ZettelForge when you want to operate the memory service and control its local data path. Choose ThreatRecall.ai when you want a hosted service with plan-based limits and features.</p>
 <h2 id="get-started">Get started<a class="headerlink" href="#get-started" title="Permanent link">&para;</a></h2>
-<p>Install the core and store your first memory in about five minutes.</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>zettelforge
+<p>ZettelForge 2.8.0 requires Python 3.10 or newer.</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">zettelforge</span><span class="o">==</span><span class="m">2</span>.8.0
 </code></pre></div>
-<p>Then follow the <a href="tutorials/01-quickstart/">Quickstart</a> to store, recall, and synthesize your first threat intelligence. Prefer a browser dashboard over the API? The <a href="how-to/use-web-interface/">web management interface</a> gives you search, knowledge-graph exploration, live logs, and bulk ingestion.</p>
-<h2 id="documentation-map">Documentation map<a class="headerlink" href="#documentation-map" title="Permanent link">&para;</a></h2>
-<p>This documentation follows the <a href="https://diataxis.fr/">Diataxis framework</a>, split into four quadrants.</p>
+<p>The core store-and-recall path runs without a hosted API key. Your first embedding-model use can download model assets. By default, LLM-generated synthesis connects to Ollama at <code>http://localhost:11434</code> with <code>qwen3.5:9b</code>.</p>
+<p>Continue with the <a href="tutorials/01-quickstart/">Quickstart</a>. If you prefer a browser workflow, follow <a href="how-to/use-web-interface/">Use the web interface</a>.</p>
+<h2 id="find-the-right-documentation">Find the right documentation<a class="headerlink" href="#find-the-right-documentation" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Tutorials (learning).</strong> Start here if you are new. <a href="tutorials/01-quickstart/">Quickstart</a> (5 min), then <a href="tutorials/02-first-cti-report/">Ingest your first CTI report</a> (10 min).</li>
-<li><strong>How-to guides (tasks).</strong> Recipes for specific goals, such as <a href="how-to/store-threat-actor/">Store a threat actor</a> with automatic entity extraction.</li>
-<li><strong>Reference (lookup).</strong> Exact specifications, including the full <a href="reference/configuration/">Configuration reference</a> and the <a href="reference/memory-manager-api/">Memory Manager API</a>.</li>
-<li><strong>Concepts (understanding).</strong> Design rationale, including <a href="explanation/architecture/">why the hybrid TypeDB plus LanceDB architecture</a>.</li>
+<li><strong>Learn the workflow:</strong> complete the <a href="tutorials/01-quickstart/">Quickstart</a>, then <a href="tutorials/02-first-cti-report/">ingest your first CTI report</a>.</li>
+<li><strong>Complete a task:</strong> follow a how-to such as <a href="how-to/store-threat-actor/">Store a threat actor</a> or <a href="how-to/set-up-mcp-server/">Set up the MCP server</a>.</li>
+<li><strong>Look up exact behavior:</strong> use the <a href="reference/configuration/">Configuration reference</a> or <a href="reference/memory-manager-api/">Memory Manager API</a>.</li>
+<li><strong>Understand the design:</strong> read the <a href="explanation/architecture/">Architecture</a> and <a href="explanation/two-phase-pipeline/">Two-phase pipeline</a> explanations.</li>
 </ul>
 <h2 id="at-a-glance">At a glance<a class="headerlink" href="#at-a-glance" title="Permanent link">&para;</a></h2>
-<p>Every value below is verified against the v2.7.0 source.</p>
 <table>
 <thead>
 <tr>
 <th>Property</th>
-<th>Value</th>
+<th>Verified value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Version</td>
-<td>2.7.0</td>
+<td>Current release</td>
+<td><a href="https://github.com/ThreatRecall/zettelforge/releases/tag/v2.8.0">2.8.0</a></td>
 </tr>
 <tr>
 <td>License</td>
-<td>Apache-2.0</td>
+<td>MIT</td>
 </tr>
 <tr>
 <td>Python</td>
@@ -2485,27 +2485,19 @@
 </tr>
 <tr>
 <td>Default storage</td>
-<td>SQLite plus LanceDB (vector index)</td>
+<td>SQLite with a LanceDB vector index</td>
 </tr>
 <tr>
-<td>Optional graph store</td>
-<td>TypeDB 3.x (Docker, port 1729)</td>
+<td>Default embeddings</td>
+<td>fastembed <code>nomic-ai/nomic-embed-text-v1.5-Q</code>, 768 dimensions</td>
 </tr>
 <tr>
-<td>Embeddings</td>
-<td>fastembed <code>nomic-embed-text-v1.5-Q</code>, 768-dim, in-process ONNX</td>
-</tr>
-<tr>
-<td>LLM generation</td>
-<td>Configurable. The v2.7.0 reference config selects Ollama at <code>http://localhost:11434</code>; the offline <code>local</code> provider defaults to <code>Qwen/Qwen2.5-3B-Instruct-GGUF</code> through llama-cpp-python.</td>
-</tr>
-<tr>
-<td>Other LLM providers</td>
-<td><code>local</code> (GGUF via llama-cpp-python, or ONNX via onnxruntime-genai) and <code>litellm</code> (100+ cloud backends)</td>
+<td>Default LLM</td>
+<td>Ollama at <code>http://localhost:11434</code>, model <code>qwen3.5:9b</code></td>
 </tr>
 </tbody>
 </table>
-<p>ZettelForge selects its LLM backend through <code>llm.provider</code> and <code>llm.model</code> in <code>config.yaml</code>. Use an Ollama tag you have pulled, switch to <code>local</code> for fully offline GGUF inference, or use <code>litellm</code> for OpenAI, Anthropic, Google, Groq, NVIDIA, and other hosted backends. See the <a href="reference/configuration/">Configuration reference</a> for every key, default, and environment override.</p>
+<p>This page describes ZettelForge 2.8.0. Use the <a href="https://github.com/ThreatRecall/zettelforge/releases">release history</a> when you maintain an older deployment.</p>
 
 
 

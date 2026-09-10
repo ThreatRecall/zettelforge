@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1171,6 +1171,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#upgrade-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1182,15 +1193,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#26x-270-memory-defense-osint-crewai" class="md-nav__link">
+  <a href="#27x-280-passive-osint-prompt-injection-guards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.6.x → 2.7.0 (memory defense + OSINT + CrewAI)
+        2.7.x → 2.8.0 (passive OSINT + prompt-injection guards)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.6.x → 2.7.0 (memory defense + OSINT + CrewAI)">
+    <nav class="md-nav" aria-label="2.7.x → 2.8.0 (passive OSINT + prompt-injection guards)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1216,6 +1227,56 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#operational-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#26x-270-memory-defense-osint-crewai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.x → 2.7.0 (memory defense + OSINT + CrewAI)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.6.x → 2.7.0 (memory defense + OSINT + CrewAI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#whats-new_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's new
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enable-memory-defense-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1227,7 +1288,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operational-impact" class="md-nav__link">
+  <a href="#operational-impact_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Operational impact
@@ -1277,7 +1338,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#whats-new_1" class="md-nav__link">
+  <a href="#whats-new_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         What's new
@@ -1288,7 +1349,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#steps_1" class="md-nav__link">
+  <a href="#steps_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Steps
@@ -1299,7 +1360,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operational-impact_1" class="md-nav__link">
+  <a href="#operational-impact_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Operational impact
@@ -1338,7 +1399,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operational-impact_2" class="md-nav__link">
+  <a href="#operational-impact_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Operational impact
@@ -1349,7 +1410,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#steps_2" class="md-nav__link">
+  <a href="#steps_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Steps
@@ -1377,7 +1438,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#steps_3" class="md-nav__link">
+  <a href="#steps_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Steps
@@ -1405,7 +1466,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#steps_4" class="md-nav__link">
+  <a href="#steps_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         Steps
@@ -2622,6 +2683,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#upgrade-matrix" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2633,15 +2705,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#26x-270-memory-defense-osint-crewai" class="md-nav__link">
+  <a href="#27x-280-passive-osint-prompt-injection-guards" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.6.x → 2.7.0 (memory defense + OSINT + CrewAI)
+        2.7.x → 2.8.0 (passive OSINT + prompt-injection guards)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="2.6.x → 2.7.0 (memory defense + OSINT + CrewAI)">
+    <nav class="md-nav" aria-label="2.7.x → 2.8.0 (passive OSINT + prompt-injection guards)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2667,6 +2739,56 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#operational-impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#26x-270-memory-defense-osint-crewai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.x → 2.7.0 (memory defense + OSINT + CrewAI)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.6.x → 2.7.0 (memory defense + OSINT + CrewAI)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#whats-new_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's new
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#enable-memory-defense-modes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2678,7 +2800,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operational-impact" class="md-nav__link">
+  <a href="#operational-impact_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Operational impact
@@ -2728,7 +2850,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#whats-new_1" class="md-nav__link">
+  <a href="#whats-new_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         What's new
@@ -2739,7 +2861,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#steps_1" class="md-nav__link">
+  <a href="#steps_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Steps
@@ -2750,7 +2872,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operational-impact_1" class="md-nav__link">
+  <a href="#operational-impact_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Operational impact
@@ -2789,7 +2911,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#operational-impact_2" class="md-nav__link">
+  <a href="#operational-impact_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Operational impact
@@ -2800,7 +2922,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#steps_2" class="md-nav__link">
+  <a href="#steps_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Steps
@@ -2828,7 +2950,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#steps_3" class="md-nav__link">
+  <a href="#steps_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Steps
@@ -2856,7 +2978,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#steps_4" class="md-nav__link">
+  <a href="#steps_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         Steps
@@ -2927,7 +3049,13 @@
 <h1 id="upgrade-zettelforge">Upgrade ZettelForge<a class="headerlink" href="#upgrade-zettelforge" title="Permanent link">&para;</a></h1>
 <p>Use this checklist whenever you move between minor releases. For the full
 list of changes per release see
-<a href="https://github.com/rolandpg/zettelforge/blob/master/CHANGELOG.md">CHANGELOG.md</a>.</p>
+<a href="https://github.com/rolandpg/zettelforge/blob/master/CHANGELOG.md">CHANGELOG.md</a>.
+The current PyPI release verified on 2026-09-09 is ZettelForge 2.8.0.</p>
+<h2 id="before-you-start">Before you start<a class="headerlink" href="#before-you-start" title="Permanent link">&para;</a></h2>
+<p>You need Python 3.10 or newer, <code>pip</code> in your active virtual environment, shell
+access to the ZettelForge host, and enough free space to copy the configured
+data directory. The examples use the default data directory, <code>~/.amem</code>. Replace
+that path if you set <code>storage.data_dir</code> to another location.</p>
 <h2 id="upgrade-matrix">Upgrade matrix<a class="headerlink" href="#upgrade-matrix" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2938,6 +3066,11 @@ list of changes per release see
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>2.7.x → 2.8.0</td>
+<td><code>pip install -U zettelforge</code> (read v2.8.0 notes below)</td>
+<td>No</td>
+</tr>
 <tr>
 <td>2.6.x → 2.7.0</td>
 <td><code>pip install -U zettelforge</code> (read v2.7.0 notes below)</td>
@@ -2976,9 +3109,69 @@ list of changes per release see
 </tbody>
 </table>
 <hr />
+<h2 id="27x-280-passive-osint-prompt-injection-guards">2.7.x → 2.8.0 (passive OSINT + prompt-injection guards)<a class="headerlink" href="#27x-280-passive-osint-prompt-injection-guards" title="Permanent link">&para;</a></h2>
+<p>This is a security and enrichment release. No data migration is required.</p>
+<h3 id="whats-new">What's new<a class="headerlink" href="#whats-new" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Prompt-injection and retrieval-poisoning guardrails</strong> (AGE-127). The
+  memory pipeline now treats stored memory, CTI text, query text, and retrieved
+  context as untrusted input at the remember, recall, synthesis, extraction,
+  indexing, note-construction, intent-classification, update, and evolution
+  boundaries.</li>
+<li><strong>Passive OSINT executor</strong> (RFC-016 Phase 1.5). Collector tuples are
+  validated before persistence, OSINT alias caching is scoped to each
+  <code>KnowledgeGraph</code> instance, and organization values are canonicalized to
+  reduce WHOIS/RDAP duplicates.</li>
+<li><strong>Live OSINT enrichers</strong> (AGE-120). WHOIS/DNS, username discovery,
+  breach lookup, and blockchain wallet transaction collectors are available
+  through the optional <code>osint</code> extra. They are opt-in, key-gated where a
+  provider requires credentials, fail closed, and are not triggered
+  automatically by <code>remember()</code>.</li>
+<li><strong>Enrichment job ledger foundation</strong> (RFC-018 Phase 0). The release adds
+  durable SQLite job metadata for enrichment queue state and regression tests
+  for the new ledger path.</li>
+<li><strong>Bulk detection-rule ingest hardening.</strong> Bulk Sigma/YARA ingest can defer
+  enrichment and drain once with <code>MemoryManager.flush()</code>. <code>flush()</code> now waits
+  for in-flight enrichment work as well as queued work.</li>
+</ul>
+<h3 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>Back up your data directory if you are on a production deployment:</p>
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>-a<span class="w"> </span>~/.amem<span class="w"> </span>~/.amem.pre-2.8
+</code></pre></div>
+</li>
+<li>
+<p>Upgrade the package:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span><span class="s1">&#39;zettelforge&gt;=2.8.0&#39;</span>
+</code></pre></div>
+</li>
+<li>
+<p>If you use passive OSINT collectors, refresh the optional extra:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span><span class="s1">&#39;zettelforge[osint]&#39;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Confirm the installed version:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from importlib.metadata import version; print(version(&#39;zettelforge&#39;))&quot;</span>
+</code></pre></div>
+</li>
+</ol>
+<h3 id="operational-impact">Operational impact<a class="headerlink" href="#operational-impact" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>No data migration.</strong> Existing SQLite, LanceDB, and JSONL-era migrated data
+  stay in place.</li>
+<li><strong>Passive OSINT remains explicit.</strong> Network collectors do not run during
+  ordinary <code>remember()</code> calls. Invoke the OSINT executor from your own workflow
+  and provide provider credentials for key-gated collectors.</li>
+<li><strong>Stored context is treated as untrusted evidence.</strong> Keep the guard wording
+  that ZettelForge adds around retrieved memory when you pass context to an
+  external LLM.</li>
+</ul>
+<hr />
 <h2 id="26x-270-memory-defense-osint-crewai">2.6.x → 2.7.0 (memory defense + OSINT + CrewAI)<a class="headerlink" href="#26x-270-memory-defense-osint-crewai" title="Permanent link">&para;</a></h2>
 <p>This is a security and OSINT release. No data migration is required.</p>
-<h3 id="whats-new">What's new<a class="headerlink" href="#whats-new" title="Permanent link">&para;</a></h3>
+<h3 id="whats-new_1">What's new<a class="headerlink" href="#whats-new_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><strong>Write-time memory anomaly defense</strong> (SEC-011 / MemSAD). A new
@@ -3004,7 +3197,7 @@ list of changes per release see
   backward-compatible — existing dashboards and tests are unaffected.</p>
 </li>
 </ul>
-<h3 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h3>
+<h3 id="steps_1">Steps<a class="headerlink" href="#steps_1" title="Permanent link">&para;</a></h3>
 <ol>
 <li>
 <p>Back up your data directory if you are on a production deployment:</p>
@@ -3069,7 +3262,7 @@ the gate short-circuits and all writes proceed.</p>
 </table>
 <p>See <a href="../../reference/governance-controls/">Governance Controls</a> for
 the full schema and scoring formula.</p>
-<h3 id="operational-impact">Operational impact<a class="headerlink" href="#operational-impact" title="Permanent link">&para;</a></h3>
+<h3 id="operational-impact_1">Operational impact<a class="headerlink" href="#operational-impact_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Audit mode (default): none.</strong> Anomalous writes are logged and proceed.</li>
 <li><strong>Block mode:</strong> writes flagged as anomalous return an error to the caller.
@@ -3107,17 +3300,18 @@ the full schema and scoring formula.</p>
 <p>No steps required. Upgrade with <code>pip install -U 'zettelforge&gt;=2.6.1'</code>.</p>
 <hr />
 <h2 id="25x-260-content-limits-config-driven-token-budgets">2.5.x → 2.6.0 (content limits + config-driven token budgets)<a class="headerlink" href="#25x-260-content-limits-config-driven-token-budgets" title="Permanent link">&para;</a></h2>
-<h3 id="whats-new_1">What's new<a class="headerlink" href="#whats-new_1" title="Permanent link">&para;</a></h3>
+<h3 id="whats-new_2">What's new<a class="headerlink" href="#whats-new_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Configurable content size limits</strong> (RFC-014). <code>governance.limits.max_content_length</code>
   (default 50 MB) prevents oversized content from exhausting memory or
   blocking the enrichment queue. Set to <code>0</code> to disable.
   Environment override: <code>ZETTELFORGE_LIMITS_MAX_CONTENT_LENGTH</code>.</li>
 <li><strong>Per-call-site <code>max_tokens</code> budgets moved to config.</strong> <code>LLMConfig</code> now
-  exposes <code>max_tokens_causal</code>, <code>max_tokens_synthesis</code>, <code>max_tokens_fact</code>,
-  <code>max_tokens_ner</code>, and <code>max_tokens_evolution</code>. Defaults match v2.5.2 values.</li>
+  exposes <code>max_tokens_causal</code>, <code>max_tokens_synthesis</code>,
+  <code>max_tokens_extraction</code>, <code>max_tokens_ner</code>, and <code>max_tokens_evolve</code>.
+  Defaults match v2.5.2 values.</li>
 </ul>
-<h3 id="steps_1">Steps<a class="headerlink" href="#steps_1" title="Permanent link">&para;</a></h3>
+<h3 id="steps_2">Steps<a class="headerlink" href="#steps_2" title="Permanent link">&para;</a></h3>
 <ol>
 <li><code>pip install -U 'zettelforge&gt;=2.6.0'</code></li>
 <li>Existing <code>config.yaml</code> overrides for <code>llm.timeout</code> continue to work.</li>
@@ -3126,13 +3320,13 @@ the full schema and scoring formula.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">llm</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">max_tokens_causal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12000</span><span class="w">     </span><span class="c1"># default 8000</span>
 <span class="w">  </span><span class="nt">max_tokens_synthesis</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4000</span><span class="w">   </span><span class="c1"># default 2500</span>
-<span class="w">  </span><span class="nt">max_tokens_fact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4000</span><span class="w">        </span><span class="c1"># default 2500</span>
+<span class="w">  </span><span class="nt">max_tokens_extraction</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4000</span><span class="w">  </span><span class="c1"># default 2500</span>
 </code></pre></div>
 <p>See <a href="../../explanation/llm-budgets-and-timeouts/">LLM Budgets and Timeouts</a>
 for the full table.</p>
 </li>
 </ol>
-<h3 id="operational-impact_1">Operational impact<a class="headerlink" href="#operational-impact_1" title="Permanent link">&para;</a></h3>
+<h3 id="operational-impact_2">Operational impact<a class="headerlink" href="#operational-impact_2" title="Permanent link">&para;</a></h3>
 <p><strong>None if you're on v2.5.2 defaults.</strong> Budget values are unchanged; they are
 now configurable instead of hardcoded. If you were on v2.5.0 or v2.5.1,
 include the v2.5.2 steps below in the same upgrade.</p>
@@ -3150,7 +3344,7 @@ causal-extraction, synthesis, and LLM-NER call — the per-call-site
   400 → 2500, LLM NER 300 → 2500, memory evolution 1024 → 2500.</li>
 <li><code>llm.timeout</code> default bumped from 60 s to 180 s.</li>
 </ul>
-<h3 id="operational-impact_2">Operational impact<a class="headerlink" href="#operational-impact_2" title="Permanent link">&para;</a></h3>
+<h3 id="operational-impact_3">Operational impact<a class="headerlink" href="#operational-impact_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Causal extraction now takes 60–140 s per call on a 9B-Q4_K_M reasoning
   model. <code>remember(sync=True)</code> blocks 1–3 minutes per note. The default
@@ -3159,7 +3353,7 @@ causal-extraction, synthesis, and LLM-NER call — the per-call-site
   log. See <a href="../../explanation/llm-budgets-and-timeouts/">LLM Budgets and Timeouts</a>
   if they persist.</li>
 </ul>
-<h3 id="steps_2">Steps<a class="headerlink" href="#steps_2" title="Permanent link">&para;</a></h3>
+<h3 id="steps_3">Steps<a class="headerlink" href="#steps_3" title="Permanent link">&para;</a></h3>
 <ol>
 <li><code>pip install -U 'zettelforge&gt;=2.5.2'</code></li>
 <li>If your <code>config.yaml</code> explicitly sets <code>llm.timeout: 60.0</code>, raise it to
@@ -3176,7 +3370,7 @@ causal-extraction, synthesis, and LLM-NER call — the per-call-site
 <li><strong>LiteLLM unified provider</strong> (RFC-012). <code>provider: litellm</code> routes to 100+
   LLM providers. Extra: <code>pip install zettelforge[litellm]</code>.</li>
 </ul>
-<h3 id="steps_3">Steps<a class="headerlink" href="#steps_3" title="Permanent link">&para;</a></h3>
+<h3 id="steps_4">Steps<a class="headerlink" href="#steps_4" title="Permanent link">&para;</a></h3>
 <ol>
 <li><code>pip install -U 'zettelforge&gt;=2.5.0'</code></li>
 <li>(Optional) Install new extras:
@@ -3192,7 +3386,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;
 <p>The default storage backend changed from JSONL files to SQLite. Notes, the
 knowledge graph, and the entity index now live in
 <code>&lt;data_dir&gt;/zettelforge.db</code> instead of loose JSONL files.</p>
-<h3 id="steps_4">Steps<a class="headerlink" href="#steps_4" title="Permanent link">&para;</a></h3>
+<h3 id="steps_5">Steps<a class="headerlink" href="#steps_5" title="Permanent link">&para;</a></h3>
 <ol>
 <li><code>pip install -U 'zettelforge&gt;=2.2.0'</code></li>
 <li>Back up your data directory:
@@ -3216,14 +3410,15 @@ knowledge graph, and the entity index now live in
 <p>All of ZettelForge's state lives in the configured data directory plus the
 installed package. To roll back:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># 1. Pin the previous version</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;zettelforge==2.6.2&#39;</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;zettelforge==2.7.0&#39;</span>
 
-<span class="c1"># 2. Restore the data directory backup</span>
-rm<span class="w"> </span>-rf<span class="w"> </span>~/.amem
-cp<span class="w"> </span>-a<span class="w"> </span>~/.amem.pre-2.7<span class="w"> </span>~/.amem
+<span class="c1"># 2. Preserve the post-upgrade data and restore your backup</span>
+mv<span class="w"> </span>~/.amem<span class="w"> </span>~/.amem.failed-2.8
+cp<span class="w"> </span>-a<span class="w"> </span>~/.amem.pre-2.8<span class="w"> </span>~/.amem
 </code></pre></div>
-<p>The SQLite database file (<code>zettelforge.db</code>) is harmless if left in place —
-older versions do not read it, and deleting it does not affect JSONL data.</p>
+<p>The package pin does not restore your data. Moving the post-upgrade directory
+aside keeps it recoverable while the backup restores the matching pre-upgrade
+state.</p>
 <hr />
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
 <ul>

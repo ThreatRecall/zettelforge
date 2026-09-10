@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Design record for ZettelForge's pluggable LLM provider architecture. Phase 1 shipped in v2.3.0; cloud provider coverage delivered via RFC-012 (LiteLLM).">
+        <meta name="description" content="Design record for ZettelForge's pluggable LLM provider boundary, shipped status, superseded phases, and remaining constraints in v2.8.0.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2161,6 +2161,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#decision-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision drivers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#proposal" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2172,77 +2183,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-shipped" class="md-nav__link">
+  <a href="#shipped-result" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What shipped
+        Shipped result
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="What shipped">
+    <nav class="md-nav" aria-label="Shipped result">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#phase-1-provider-infrastructure-v230" class="md-nav__link">
+  <a href="#failure-and-reload-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 1 — Provider infrastructure (v2.3.0)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#config-changes-phase-1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Config changes (Phase 1)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#env-var-overrides" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Env var overrides
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#third-party-provider-extension-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Third-party provider extension points
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fallback-behavior" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fallback behavior
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cloud-provider-coverage-rfc-012-supersedes-phases-23" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cloud provider coverage — RFC-012 (supersedes Phases 2–3)
+        Failure and reload behavior
       
     </span>
   </a>
@@ -2255,10 +2211,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-did-not-ship" class="md-nav__link">
+  <a href="#phase-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What did not ship
+        Phase status
       
     </span>
   </a>
@@ -2266,22 +2222,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#migration" class="md-nav__link">
+  <a href="#consequences" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Migration
+        Consequences
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Migration">
+    <nav class="md-nav" aria-label="Consequences">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#existing-users-with-default-config" class="md-nav__link">
+  <a href="#benefits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Existing users with default config
+        Benefits
       
     </span>
   </a>
@@ -2289,21 +2245,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#existing-users-with-provider-ollama-in-configyaml" class="md-nav__link">
+  <a href="#trade-offs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Existing users with provider: ollama in config.yaml
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#existing-env-var-users" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Existing env var users
+        Trade-offs
       
     </span>
   </a>
@@ -2323,6 +2268,56 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Alternatives considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#make-litellm-a-core-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Make LiteLLM a core dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-the-openai-sdk-as-the-universal-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the OpenAI SDK as the universal client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#require-an-abstract-base-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Require an abstract base class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-one-configuration-section-per-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create one configuration section per provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2540,6 +2535,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#decision-drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision drivers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#proposal" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2551,77 +2557,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-shipped" class="md-nav__link">
+  <a href="#shipped-result" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What shipped
+        Shipped result
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="What shipped">
+    <nav class="md-nav" aria-label="Shipped result">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#phase-1-provider-infrastructure-v230" class="md-nav__link">
+  <a href="#failure-and-reload-behavior" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Phase 1 — Provider infrastructure (v2.3.0)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#config-changes-phase-1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Config changes (Phase 1)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#env-var-overrides" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Env var overrides
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#third-party-provider-extension-points" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Third-party provider extension points
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fallback-behavior" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fallback behavior
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cloud-provider-coverage-rfc-012-supersedes-phases-23" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cloud provider coverage — RFC-012 (supersedes Phases 2–3)
+        Failure and reload behavior
       
     </span>
   </a>
@@ -2634,10 +2585,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-did-not-ship" class="md-nav__link">
+  <a href="#phase-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What did not ship
+        Phase status
       
     </span>
   </a>
@@ -2645,22 +2596,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#migration" class="md-nav__link">
+  <a href="#consequences" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Migration
+        Consequences
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Migration">
+    <nav class="md-nav" aria-label="Consequences">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#existing-users-with-default-config" class="md-nav__link">
+  <a href="#benefits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Existing users with default config
+        Benefits
       
     </span>
   </a>
@@ -2668,21 +2619,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#existing-users-with-provider-ollama-in-configyaml" class="md-nav__link">
+  <a href="#trade-offs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Existing users with provider: ollama in config.yaml
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#existing-env-var-users" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Existing env var users
+        Trade-offs
       
     </span>
   </a>
@@ -2702,6 +2642,56 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Alternatives considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#make-litellm-a-core-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Make LiteLLM a core dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-the-openai-sdk-as-the-universal-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the OpenAI SDK as the universal client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#require-an-abstract-base-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Require an abstract base class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-one-configuration-section-per-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create one configuration section per provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2737,6 +2727,8 @@
 
 
 <h1 id="rfc-002-universal-llm-provider-interface">RFC-002: Universal LLM Provider Interface<a class="headerlink" href="#rfc-002-universal-llm-provider-interface" title="Permanent link">&para;</a></h1>
+<p>RFC-002 separates ZettelForge's LLM-dependent workflows from specific model backends. The provider infrastructure shipped in v2.3.0 and remains present in v2.8.0. RFC-012 later replaced the proposed provider-specific cloud adapters with the optional LiteLLM provider; per-call provider selection did not ship.</p>
+<p>Use this design record to understand the decision and its consequences. For current setup instructions, use <a href="../../reference/configuration/">Configuration reference</a>. To add a provider, use <a href="../../how-to/build-extensions/">Build an extension</a>.</p>
 <table>
 <thead>
 <tr>
@@ -2751,321 +2743,152 @@
 </tr>
 <tr>
 <td><strong>Status</strong></td>
-<td>Accepted — partially implemented</td>
+<td>Accepted — provider infrastructure implemented; later phases superseded or unimplemented</td>
 </tr>
 <tr>
 <td><strong>Created</strong></td>
 <td>2026-04-16</td>
 </tr>
 <tr>
-<td><strong>Last updated</strong></td>
-<td>2026-07-08</td>
+<td><strong>Last verified</strong></td>
+<td>2026-08-08</td>
 </tr>
 <tr>
-<td><strong>ZettelForge version</strong></td>
-<td>v2.7.0</td>
+<td><strong>Verified release</strong></td>
+<td>ZettelForge v2.8.0</td>
 </tr>
 <tr>
 <td><strong>Related RFCs</strong></td>
-<td><a href="../RFC-001-conversational-entity-extractor/">RFC-001 Conversational Entity Extractor</a> (depends on <code>generate()</code> stability); <a href="../RFC-012-litellm-unified-provider/">RFC-012 LiteLLM Unified Provider</a> (supersedes Phases 2–3)</td>
+<td><a href="../RFC-001-conversational-entity-extractor/">RFC-001 Conversational Entity Extractor</a> · <a href="../RFC-012-litellm-unified-provider/">RFC-012 LiteLLM Unified Provider</a></td>
 </tr>
 </tbody>
 </table>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>ZettelForge started with two hardcoded LLM backends: <code>local</code> (llama-cpp-python in-process GGUF) and <code>ollama</code> (HTTP to localhost:11434). Both serve offline use well, but they create friction for three groups:</p>
+<p>ZettelForge originally selected between its local GGUF backend and Ollama inside one client module. That design tied extraction, classification, enrichment, and synthesis to backend-specific configuration and failure handling. Adding another backend required changes in the shared client path.</p>
+<p>The design needed to preserve the public generation call while giving each backend one implementation boundary. It also needed to keep the cloud-routing SDK optional so the core package remained usable without it.</p>
+<h2 id="decision-drivers">Decision drivers<a class="headerlink" href="#decision-drivers" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Solo analysts</strong> who have OpenAI or Anthropic API keys and want better synthesis quality than a 3B model provides.</li>
-<li><strong>Teams</strong> running ZettelForge on cloud infrastructure where LLM endpoints are already available.</li>
-<li><strong>Contributors</strong> who want to add a new backend without touching extraction and synthesis code.</li>
+<li>Keep LLM call sites independent of the selected backend.</li>
+<li>Preserve the existing public generation call.</li>
+<li>Keep the cloud-routing dependency optional.</li>
+<li>Let third-party packages add providers without changing ZettelForge source.</li>
+<li>Surface permanent configuration failures instead of hiding them behind fallback behavior.</li>
+<li>Preserve the existing local-to-Ollama recoverable fallback path.</li>
 </ul>
-<p>The original <code>llm_client.py</code> was 151 lines with hardcoded conditional logic. Every new provider added another branch, more config parsing, and harder tests.</p>
 <h2 id="proposal">Proposal<a class="headerlink" href="#proposal" title="Permanent link">&para;</a></h2>
-<p>Introduce a pluggable provider interface behind the existing <code>generate()</code> function. The public API stays identical. Internally, <code>generate()</code> resolves the configured provider name to an <code>LLMProvider</code> instance through a thread-safe registry and delegates.</p>
-<div class="highlight"><pre><span></span><code>generate()                          # Public API — unchanged
-  |
-  v
-ProviderRegistry.get(name)          # Returns configured LLMProvider instance
-  |
-  v
-LLMProvider.generate(...)           # Protocol method — each provider implements this
-  |
-  +--&gt; LocalProvider                # llama-cpp-python (built-in, default)
-  +--&gt; OllamaProvider               # Ollama HTTP API (built-in)
-  +--&gt; LiteLLMProvider              # 100+ cloud providers via LiteLLM (optional extra)
-  +--&gt; MockProvider                 # For testing (built-in)
-</code></pre></div>
-<p>The <code>LLMProvider</code> interface uses <code>typing.Protocol</code> (PEP 544) rather than an abstract base class. No forced inheritance is required — third-party providers need only duck-type compatibility. <code>runtime_checkable</code> enables <code>isinstance()</code> validation when callers want it.</p>
-<h2 id="what-shipped">What shipped<a class="headerlink" href="#what-shipped" title="Permanent link">&para;</a></h2>
-<h3 id="phase-1-provider-infrastructure-v230">Phase 1 — Provider infrastructure (v2.3.0)<a class="headerlink" href="#phase-1-provider-infrastructure-v230" title="Permanent link">&para;</a></h3>
-<p>Phase 1 shipped in commit <code>f67db7d</code>, merged and released in v2.3.0.</p>
-<p>The <code>llm_providers/</code> package provides the complete extension surface:</p>
+<p>Route generation through three layers:</p>
+<ol>
+<li>The public <code>zettelforge.llm_client.generate()</code> function reads the active configuration.</li>
+<li>A registry resolves a provider name to one cached provider instance.</li>
+<li>The provider implements the <code>LLMProvider</code> protocol and performs generation.</li>
+</ol>
+<p>The protocol uses <code>typing.Protocol</code> and carries the <code>runtime_checkable</code> marker. Callers can opt into <code>isinstance()</code> checks, but the registry does not validate protocol conformance during registration. A provider exposes a short <code>name</code> and a synchronous <code>generate()</code> method; it does not inherit from a ZettelForge base class.</p>
+<p>The registry owns registration, lookup, instance caching, and reset behavior. It protects registration and first-time construction with a lock. Unknown names and duplicate registrations raise <code>ValueError</code>.</p>
+<h2 id="shipped-result">Shipped result<a class="headerlink" href="#shipped-result" title="Permanent link">&para;</a></h2>
+<p>Phase 1 shipped in commit <code>f67db7d</code> and release v2.3.0. The same boundary is present in v2.8.0.</p>
 <table>
 <thead>
 <tr>
-<th>File</th>
-<th>Purpose</th>
+<th>Component</th>
+<th>Verified v2.8.0 behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>base.py</code></td>
-<td><code>LLMProvider</code> protocol; <code>LLMProviderConfigurationError</code></td>
+<td><code>llm_providers.base</code></td>
+<td>Defines the runtime-checkable <code>LLMProvider</code> protocol and <code>LLMProviderConfigurationError</code>.</td>
 </tr>
 <tr>
-<td><code>registry.py</code></td>
-<td>Thread-safe singleton registry (<code>register</code>, <code>get</code>, <code>reset</code>, <code>available</code>)</td>
+<td><code>llm_providers.registry</code></td>
+<td>Registers provider classes by name and creates one cached instance per provider name.</td>
 </tr>
 <tr>
-<td><code>local_provider.py</code></td>
-<td>llama-cpp-python in-process GGUF</td>
+<td>Built-in providers</td>
+<td>Registers <code>local</code>, <code>ollama</code>, and <code>mock</code> with the core package.</td>
 </tr>
 <tr>
-<td><code>ollama_provider.py</code></td>
-<td>Ollama HTTP API</td>
+<td>Optional LiteLLM provider</td>
+<td>Registers <code>litellm</code> only when its SDK imports successfully.</td>
 </tr>
 <tr>
-<td><code>mock_provider.py</code></td>
-<td>Deterministic test provider; records all calls</td>
+<td>Entry-point discovery</td>
+<td>Loads the <code>zettelforge.llm_providers</code> entry-point group during package import. A failed third-party load is logged at debug level and does not stop core startup.</td>
 </tr>
 <tr>
-<td><code>__init__.py</code></td>
-<td>Registers built-ins; discovers third-party providers via entry points</td>
+<td>Public LLM client</td>
+<td>Resolves the configured provider, delegates generation, applies fallback rules, and exposes <code>reload()</code> for configuration changes.</td>
 </tr>
 </tbody>
 </table>
-<p>You can list registered providers at runtime:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.llm_providers</span><span class="w"> </span><span class="kn">import</span> <span class="n">available</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">available</span><span class="p">())</span>
-<span class="c1"># [&#39;litellm&#39;, &#39;local&#39;, &#39;mock&#39;, &#39;ollama&#39;]  — litellm appears when installed</span>
-</code></pre></div>
-<p>The <code>LLMProvider</code> protocol:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">runtime_checkable</span>
-
-<span class="nd">@runtime_checkable</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">LLMProvider</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># e.g., &quot;local&quot;, &quot;ollama&quot;, &quot;litellm&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">max_tokens</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span>
-        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
-        <span class="n">system</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">json_mode</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate text from a prompt. Returns empty string on failure.&quot;&quot;&quot;</span>
-        <span class="o">...</span>
-</code></pre></div>
-<p><code>generate()</code> callers are unchanged. All seven call sites (<code>fact_extractor.py</code>, <code>memory_updater.py</code>, <code>synthesis_generator.py</code>, <code>intent_classifier.py</code>, <code>note_constructor.py</code>, <code>entity_indexer.py</code>, <code>memory_evolver.py</code>) route through the registry automatically.</p>
-<h3 id="config-changes-phase-1">Config changes (Phase 1)<a class="headerlink" href="#config-changes-phase-1" title="Permanent link">&para;</a></h3>
-<p><code>LLMConfig</code> in <code>config.py</code> expanded from the original two fields to:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Default</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>provider</code></td>
-<td><code>"ollama"</code></td>
-<td>Built-in providers: <code>local</code>, <code>ollama</code>, <code>mock</code>, <code>litellm</code></td>
-</tr>
-<tr>
-<td><code>model</code></td>
-<td><code>"qwen3.5:9b"</code></td>
-<td>Meaning depends on provider</td>
-</tr>
-<tr>
-<td><code>url</code></td>
-<td><code>""</code></td>
-<td>Provider base URL (Ollama, OpenAI-compat)</td>
-</tr>
-<tr>
-<td><code>api_key</code></td>
-<td><code>""</code></td>
-<td>Supports <code>${ENV_VAR}</code> references — never commit raw keys</td>
-</tr>
-<tr>
-<td><code>temperature</code></td>
-<td><code>0.1</code></td>
-<td>Generation temperature</td>
-</tr>
-<tr>
-<td><code>timeout</code></td>
-<td><code>180.0</code></td>
-<td>Seconds; bumped from 60 in v2.5.2 for reasoning models</td>
-</tr>
-<tr>
-<td><code>max_retries</code></td>
-<td><code>2</code></td>
-<td>Retries on transient failure</td>
-</tr>
-<tr>
-<td><code>fallback</code></td>
-<td><code>""</code></td>
-<td>Empty preserves implicit <code>local → ollama</code> fallback</td>
-</tr>
-<tr>
-<td><code>reasoning_model</code></td>
-<td><code>False</code></td>
-<td>Enables scaling floors for reasoning-optimized models</td>
-</tr>
-</tbody>
-</table>
-<p>Current docs note: <code>qwen3.5:9b</code> is the verified v2.7.0 source default in
-<code>config.py</code>, not a verified working Ollama tag. Set <code>llm.model</code> or
-<code>ZETTELFORGE_LLM_MODEL</code> to a model your provider can load. The Ollama provider's
-own fallback default is <code>qwen2.5:3b</code> only when no model is passed to it.</p>
-<p><code>api_key</code> supports <code>${ENV_VAR}</code> syntax. Never put a raw key in a file you might commit to version control:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt-4o-mini</span>
-<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${OPENAI_API_KEY}</span>
-</code></pre></div>
-<p><code>LLMConfig.__repr__</code> redacts <code>api_key</code> so it never appears in logs or debug output.</p>
-<h3 id="env-var-overrides">Env var overrides<a class="headerlink" href="#env-var-overrides" title="Permanent link">&para;</a></h3>
-<p>All overrides are applied at startup as the highest-priority source:</p>
-<table>
-<thead>
-<tr>
-<th>Env var</th>
-<th>Config field</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ZETTELFORGE_LLM_PROVIDER</code></td>
-<td><code>llm.provider</code></td>
-</tr>
-<tr>
-<td><code>ZETTELFORGE_LLM_MODEL</code></td>
-<td><code>llm.model</code></td>
-</tr>
-<tr>
-<td><code>ZETTELFORGE_LLM_API_KEY</code></td>
-<td><code>llm.api_key</code></td>
-</tr>
-<tr>
-<td><code>ZETTELFORGE_LLM_TIMEOUT</code></td>
-<td><code>llm.timeout</code></td>
-</tr>
-<tr>
-<td><code>ZETTELFORGE_LLM_MAX_RETRIES</code></td>
-<td><code>llm.max_retries</code></td>
-</tr>
-<tr>
-<td><code>ZETTELFORGE_LLM_FALLBACK</code></td>
-<td><code>llm.fallback</code></td>
-</tr>
-<tr>
-<td><code>ZETTELFORGE_OLLAMA_MODEL</code></td>
-<td>Deprecated alias for <code>ZETTELFORGE_LLM_MODEL</code></td>
-</tr>
-</tbody>
-</table>
-<p><code>ZETTELFORGE_OLLAMA_MODEL</code> is deprecated. Use <code>ZETTELFORGE_LLM_MODEL</code>. The alias remains functional but emits a deprecation warning. It is scheduled for removal in v3.0.0.</p>
-<h3 id="third-party-provider-extension-points">Third-party provider extension points<a class="headerlink" href="#third-party-provider-extension-points" title="Permanent link">&para;</a></h3>
-<p>Third-party packages register providers via Python entry points — no ZettelForge source changes required:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># In a third-party package&#39;s pyproject.toml</span>
-<span class="k">[project.entry-points.</span><span class="s2">&quot;zettelforge.llm_providers&quot;</span><span class="k">]</span>
-<span class="n">my_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;my_package.provider:MyProvider&quot;</span>
-</code></pre></div>
-<p>ZettelForge discovers and loads these at import time via <code>importlib.metadata</code>. Load failures are logged at DEBUG level so a broken plugin never blocks startup.</p>
-<h3 id="fallback-behavior">Fallback behavior<a class="headerlink" href="#fallback-behavior" title="Permanent link">&para;</a></h3>
-<p>The implicit <code>local → ollama</code> fallback from before Phase 1 is preserved. Fallback is now explicit and configurable:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># In generate():</span>
-<span class="c1"># 1. Try primary provider.</span>
-<span class="c1"># 2. ConfigurationErrors (bad key, missing SDK) propagate immediately — not retryable.</span>
-<span class="c1"># 3. Transient errors try the fallback if configured.</span>
-<span class="c1"># 4. If no fallback, local → ollama implicit fallback applies.</span>
-<span class="c1"># 5. Total failure returns &quot;&quot;.</span>
-</code></pre></div>
-<h3 id="cloud-provider-coverage-rfc-012-supersedes-phases-23">Cloud provider coverage — RFC-012 (supersedes Phases 2–3)<a class="headerlink" href="#cloud-provider-coverage-rfc-012-supersedes-phases-23" title="Permanent link">&para;</a></h3>
-<p>RFC-002 Phases 2–3 proposed a custom <code>openai_compat</code> provider (httpx-based) and a native <code>AnthropicProvider</code>. These were not implemented as described. Instead, RFC-012 delivered a <code>LiteLLMProvider</code> that covers 100+ LLM providers through a single interface, including OpenAI, Anthropic, Google Vertex, AWS Bedrock, Azure OpenAI, Groq, Together AI, Fireworks, and any OpenAI-compatible endpoint.</p>
-<p>Install the optional extra:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>zettelforge<span class="o">[</span>litellm<span class="o">]</span>
-</code></pre></div>
-<p>Then configure:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># OpenAI</span>
-<span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt-4o-mini</span>
-<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${OPENAI_API_KEY}</span>
-
-<span class="c1"># Anthropic</span>
-<span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-sonnet-4-20250514</span>
-<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ANTHROPIC_API_KEY}</span>
-
-<span class="c1"># Azure OpenAI</span>
-<span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure/gpt-4o</span>
-<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${AZURE_OPENAI_KEY}</span>
-
-<span class="c1"># vLLM / any OpenAI-compatible server</span>
-<span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai/Qwen/Qwen2.5-72B-Instruct</span>
-<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://gpu-box:8000/v1</span>
-</code></pre></div>
-<p>LiteLLM routes to the correct provider SDK based on the model name prefix. See <a href="../RFC-012-litellm-unified-provider/">RFC-012</a> for full configuration and provider matrix.</p>
-<h2 id="what-did-not-ship">What did not ship<a class="headerlink" href="#what-did-not-ship" title="Permanent link">&para;</a></h2>
+<h3 id="failure-and-reload-behavior">Failure and reload behavior<a class="headerlink" href="#failure-and-reload-behavior" title="Permanent link">&para;</a></h3>
+<p>The public client treats missing SDKs, invalid provider names, and <code>LLMProviderConfigurationError</code> as configuration failures and raises them. It does not replace a permanent configuration problem with output from a different backend.</p>
+<p>For other provider exceptions, the client tries the configured fallback. When you leave the fallback empty and select <code>local</code>, it retains the historical <code>local</code> to <code>ollama</code> fallback. If both recoverable paths fail, generation returns an empty string.</p>
+<p>The registry caches constructed providers. After you change environment variables or configuration at runtime, <code>llm_client.reload()</code> clears cached configuration and provider instances. It preserves provider registrations.</p>
+<h2 id="phase-status">Phase status<a class="headerlink" href="#phase-status" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
 <th>Phase</th>
-<th>Scope</th>
-<th>Status</th>
+<th>Original scope</th>
+<th>Verified outcome</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Phase 1</td>
-<td>Provider infrastructure (<code>llm_providers/</code> package, registry, <code>local</code>/<code>ollama</code>/<code>mock</code> providers, expanded <code>LLMConfig</code>, env-ref resolution, entry-point discovery)</td>
-<td><strong>Shipped</strong> v2.3.0</td>
+<td>1</td>
+<td>Provider protocol, registry, built-ins, configuration plumbing, and extension discovery</td>
+<td>Shipped in v2.3.0; verified in v2.8.0</td>
 </tr>
 <tr>
-<td>Phase 2</td>
-<td><code>openai_compat</code> provider (httpx-based, covers OpenAI/vLLM/Groq etc.)</td>
-<td><strong>Superseded</strong> by RFC-012</td>
+<td>2</td>
+<td>Dedicated OpenAI-compatible provider</td>
+<td>Superseded by RFC-012</td>
 </tr>
 <tr>
-<td>Phase 3</td>
-<td><code>anthropic</code> native SDK provider</td>
-<td><strong>Superseded</strong> by RFC-012</td>
+<td>3</td>
+<td>Dedicated Anthropic provider</td>
+<td>Superseded by RFC-012</td>
 </tr>
 <tr>
-<td>Phase 4</td>
-<td>Full env-var documentation, per-extra env resolution, third-party entry-point guide</td>
-<td><strong>Partially shipped</strong> with Phase 1; docs complete as of this page</td>
+<td>4</td>
+<td>Provider configuration and third-party extension documentation</td>
+<td>Delivered through the current reference and extension guide</td>
 </tr>
 <tr>
-<td>Phase 5</td>
-<td>Per-call <code>provider=</code> override on <code>generate()</code>, Azure OpenAI dedicated provider</td>
-<td><strong>Planned</strong></td>
+<td>5</td>
+<td>Per-call provider override</td>
+<td>Not implemented in v2.8.0</td>
 </tr>
 </tbody>
 </table>
-<p>Phase 5 (<code>generate(prompt, provider="litellm")</code>) would allow per-call provider selection — useful for routing synthesis calls to a powerful model while using a fast model for classification. It is backward compatible (defaults to <code>None</code>, falls back to global config). Not yet implemented.</p>
-<h2 id="migration">Migration<a class="headerlink" href="#migration" title="Permanent link">&para;</a></h2>
-<h3 id="existing-users-with-default-config">Existing users with default config<a class="headerlink" href="#existing-users-with-default-config" title="Permanent link">&para;</a></h3>
-<p>No changes required. The registry wraps both <code>local</code> and <code>ollama</code> with identical behavior. The <code>local → ollama</code> implicit fallback is preserved.</p>
-<h3 id="existing-users-with-provider-ollama-in-configyaml">Existing users with <code>provider: ollama</code> in config.yaml<a class="headerlink" href="#existing-users-with-provider-ollama-in-configyaml" title="Permanent link">&para;</a></h3>
-<p>No changes required. <code>ollama</code> is a built-in provider with identical behavior.</p>
-<h3 id="existing-env-var-users">Existing env var users<a class="headerlink" href="#existing-env-var-users" title="Permanent link">&para;</a></h3>
-<p>All existing env vars continue to work. New env vars from Phase 1 are available immediately after upgrading to v2.3.0+.</p>
+<p>RFC-012 chose one optional <code>litellm</code> adapter instead of separate cloud-provider files. The v2.8.0 public <code>generate()</code> signature has no <code>provider</code> parameter. Each call resolves the process-wide configuration; <code>reload()</code> lets the process adopt a configuration change, but one call cannot select its own provider.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
+<h3 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Extraction, update, classification, enrichment, evolution, and synthesis code use one generation boundary.</li>
+<li>The core install does not require LiteLLM or a cloud-provider SDK.</li>
+<li>Tests use the deterministic <code>mock</code> provider without a model service.</li>
+<li>Third-party packages integrate through package metadata instead of modifying the repository.</li>
+<li>Configuration failures remain visible at the point of use.</li>
+</ul>
+<h3 id="trade-offs">Trade-offs<a class="headerlink" href="#trade-offs" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Provider instances are process-wide singletons by name, and constructor options after the first lookup are ignored until reset. You call <code>reload()</code> before expecting runtime configuration changes to take effect.</li>
+<li>Entry-point load failures appear only in debug logs, so plugin diagnostics require debug logging.</li>
+<li>The protocol is synchronous and has no streaming method.</li>
+<li>You cannot route individual calls to different providers through <code>generate()</code> in v2.8.0.</li>
+</ul>
 <h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<p><strong>LiteLLM as a core dependency (rejected for core, accepted as optional).</strong> LiteLLM provides a unified interface to 100+ providers but pulls in substantial transitive dependencies. Keeping it as <code>zettelforge[litellm]</code> avoids bloating the core install for offline users. RFC-012 confirms this tradeoff.</p>
-<p><strong>OpenAI SDK as universal client (rejected).</strong> The <code>openai</code> Python SDK covers OpenAI-compatible endpoints via <code>base_url</code> but adds a required dependency and doesn't cover Anthropic. RFC-012 LiteLLM achieves the same coverage without committing to the OpenAI SDK as a mandatory dependency.</p>
-<p><strong>Abstract base class instead of Protocol (rejected).</strong> Forces inheritance, inconsistent with the rest of the codebase, and unnecessary for a single-method interface.</p>
-<p><strong>Provider config as separate YAML sections (rejected).</strong> Proliferates top-level config sections. A single <code>llm:</code> section with a <code>provider:</code> discriminator is simpler and mirrors the existing <code>embedding:</code> pattern.</p>
+<h3 id="make-litellm-a-core-dependency">Make LiteLLM a core dependency<a class="headerlink" href="#make-litellm-a-core-dependency" title="Permanent link">&para;</a></h3>
+<p>Rejected for the core install. ZettelForge keeps LiteLLM behind the <code>litellm</code> optional dependency so offline and local-only users do not install its dependency tree.</p>
+<h3 id="use-the-openai-sdk-as-the-universal-client">Use the OpenAI SDK as the universal client<a class="headerlink" href="#use-the-openai-sdk-as-the-universal-client" title="Permanent link">&para;</a></h3>
+<p>Rejected. It would make one vendor SDK part of the core boundary and would not provide the same multi-provider coverage as the optional LiteLLM adapter.</p>
+<h3 id="require-an-abstract-base-class">Require an abstract base class<a class="headerlink" href="#require-an-abstract-base-class" title="Permanent link">&para;</a></h3>
+<p>Rejected. A runtime-checkable protocol provides the required interface without forcing third-party providers to inherit from a ZettelForge class.</p>
+<h3 id="create-one-configuration-section-per-provider">Create one configuration section per provider<a class="headerlink" href="#create-one-configuration-section-per-provider" title="Permanent link">&para;</a></h3>
+<p>Rejected. One <code>llm</code> section with a provider discriminator keeps provider selection in one place and avoids adding a top-level section for every adapter.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><strong>Accepted</strong> — 2026-04-16, Patrick Roland. Adversarial review completed with 3 blockers (all fixed), 7 warnings (6 addressed, Azure deferred), 5 nits (3 fixed). Open questions resolved: Azure deferred to RFC-012 LiteLLM, per-call provider override approved for Phase 5, streaming excluded, <code>Retry-After</code> support approved for Phase 2 (delivered via RFC-012 LiteLLM), <code>ZETTELFORGE_OLLAMA_MODEL</code> deprecated.</p>
+<p>Accepted on 2026-04-16. ZettelForge keeps the Phase 1 provider boundary. RFC-012 supersedes the dedicated cloud adapters proposed in Phases 2 and 3. Phase 5 remains unimplemented in v2.8.0 and is not current behavior.</p>
 
 
 

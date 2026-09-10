@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1165,15 +1165,26 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-a-passive-enrichment" class="md-nav__link">
+  <a href="#run-a-dry-run-smoke-test" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run a passive enrichment
+        Run a dry-run smoke test
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Run a passive enrichment">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-a-live-passive-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a live passive collector
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run a live passive collector">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2455,15 +2466,26 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-a-passive-enrichment" class="md-nav__link">
+  <a href="#run-a-dry-run-smoke-test" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run a passive enrichment
+        Run a dry-run smoke test
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Run a passive enrichment">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-a-live-passive-collector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a live passive collector
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run a live passive collector">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2547,59 +2569,104 @@
 
 
 <h1 id="passive-osint-enrichment">Passive OSINT enrichment<a class="headerlink" href="#passive-osint-enrichment" title="Permanent link">&para;</a></h1>
-<p>Use ZettelForge's OSINT executor to enrich seed entities — domains, IP addresses, ASNs, and IP blocks — with infrastructure intelligence gathered from passive sources. The executor runs registered collectors, validates each result against the ontology, canonicalizes entity values, and writes nodes and edges into the knowledge graph.</p>
+<p>Use ZettelForge's OSINT executor to run registered passive collectors for a single seed entity: a domain, IP address, ASN, or IP block. The executor canonicalizes the seed, invokes matching collectors, validates emitted tuples against the ontology, and writes verified nodes and edges into the knowledge graph when persistence is enabled.</p>
+<div class="admonition warning">
+<p class="admonition-title">Live collector output is in progress</p>
+<p>The executor, registry, canonicalization, validation, dry-run mode, and safety gates are verified in ZettelForge 2.7.0. Live network collectors are best-effort: a collector can return no tuples or record tuple validation errors without aborting the run. Inspect <code>error_count</code> and <code>errors</code> before you rely on a result.</p>
+</div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge installed and initialized.</li>
-<li>For DNS, WHOIS, and certificate transparency collectors, install the OSINT extra:</li>
+<li>ZettelForge 2.7.0 installed and initialized.</li>
+<li>For DNS, WHOIS, and certificate transparency collectors, install the OSINT extra with <code>pip install "zettelforge[osint]"</code>. The <code>[osint]</code> extra adds <code>dnspython</code>, <code>python-whois</code>, and <code>ipwhois</code>. The base package already includes <code>httpx</code>, so the BGP collector can run without this extra.</li>
+<li>Network egress for collectors that contact public services such as DNS resolvers, crt.sh, WHOIS, or BGPView.</li>
 </ul>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;zettelforge[osint]&quot;</span>
-</code></pre></div>
-<p>The <code>[osint]</code> extra adds <code>dnspython</code>, <code>python-whois</code>, and <code>ipwhois</code>. The base package already includes <code>httpx</code>, so the BGP collector works without it.</p>
 <h2 id="supported-seed-types">Supported seed types<a class="headerlink" href="#supported-seed-types" title="Permanent link">&para;</a></h2>
 <p>The executor accepts five seed types: <code>DomainName</code>, <code>IPv4Address</code>, <code>IPv6Address</code>, <code>ASNumber</code>, and <code>Netblock</code>. Seed type must match exactly — the executor raises <code>ValueError</code> for any other value.</p>
-<p>Collectors registered per seed type (Phase 1 / 1.5):</p>
+<p>Collectors registered per seed type:</p>
 <table>
 <thead>
 <tr>
 <th>Seed type</th>
-<th>Collectors run</th>
+<th>Registered collectors</th>
+<th>Current state</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>DomainName</code></td>
-<td><code>dns_collector</code>, <code>whois_collector</code>, <code>cert_collector</code>, <code>builtwith_collector</code>, <code>wappalyzer_collector</code></td>
+<td><code>cert_collector</code>, <code>dns_collector</code>, <code>whois_collector</code>, <code>builtwith_collector</code>, <code>wappalyzer_collector</code></td>
+<td>DNS, WHOIS, and cert collectors run passive lookups. BuiltWith and Wappalyzer are registered stubs and return empty results today.</td>
 </tr>
 <tr>
 <td><code>IPv4Address</code></td>
-<td><code>whois_collector</code>, <code>port_scanner</code> (active-gated; see <a href="#safety-controls">Safety controls</a>)</td>
+<td><code>port_scanner</code>, <code>whois_collector</code></td>
+<td>WHOIS runs passive lookup. <code>port_scanner</code> is active-gated and returns empty results unless scanning is explicitly enabled.</td>
 </tr>
 <tr>
 <td><code>IPv6Address</code></td>
-<td><code>whois_collector</code>, <code>port_scanner</code> (active-gated)</td>
+<td><code>port_scanner</code>, <code>whois_collector</code></td>
+<td>Same as IPv4.</td>
 </tr>
 <tr>
 <td><code>ASNumber</code></td>
 <td><code>bgp_collector</code></td>
+<td>Uses BGPView when reachable; returns empty results on HTTP, DNS, or parse failure.</td>
 </tr>
 <tr>
 <td><code>Netblock</code></td>
-<td>None registered yet — valid seed type but no collectors return results today</td>
+<td>None</td>
+<td>Valid seed type, but no collectors are registered today.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="run-a-passive-enrichment">Run a passive enrichment<a class="headerlink" href="#run-a-passive-enrichment" title="Permanent link">&para;</a></h2>
+<p>You can inspect the registry from Python:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">osint</span> <span class="k">as</span> <span class="n">_osint</span>  <span class="c1"># imports collector registrations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.osint</span><span class="w"> </span><span class="kn">import</span> <span class="n">SUPPORTED_SEED_TYPES</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.osint.transform_registry</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_transform_registry</span>
+
+<span class="n">registry</span> <span class="o">=</span> <span class="n">get_transform_registry</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">seed_type</span> <span class="ow">in</span> <span class="n">SUPPORTED_SEED_TYPES</span><span class="p">:</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">meta</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">meta</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">registry</span><span class="o">.</span><span class="n">find_by_input</span><span class="p">(</span><span class="n">seed_type</span><span class="p">)]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">seed_type</span><span class="p">,</span> <span class="n">names</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="run-a-dry-run-smoke-test">Run a dry-run smoke test<a class="headerlink" href="#run-a-dry-run-smoke-test" title="Permanent link">&para;</a></h2>
+<p>Run the executor with an empty collector allow-list when you want to verify canonicalization and result handling without network calls or knowledge-graph writes:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.osint</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_osint_collection</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">run_osint_collection</span><span class="p">(</span><span class="s2">&quot;DomainName&quot;</span><span class="p">,</span> <span class="s2">&quot;Example.COM.&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">canonical_input_value</span><span class="p">)</span>  <span class="c1"># example.com</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">collectors_run</span><span class="p">)</span>         <span class="c1"># [&#39;dns_collector&#39;, &#39;cert_collector&#39;, ...]</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">run_osint_collection</span><span class="p">(</span>
+    <span class="s2">&quot;ASNumber&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;AS15169&quot;</span><span class="p">,</span>
+    <span class="n">persist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">collector_names</span><span class="o">=</span><span class="p">[],</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">canonical_input_value</span><span class="p">)</span>  <span class="c1"># 15169</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">seed_node_id</span><span class="p">)</span>           <span class="c1"># None</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">collectors_run</span><span class="p">)</span>         <span class="c1"># []</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">persisted_count</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error_count</span><span class="p">)</span>
 </code></pre></div>
 <p>Input values are canonicalized before any KG writes: <code>"Example.COM."</code> becomes <code>"example.com"</code>, <code>"AS15169"</code> becomes <code>"15169"</code>. Alternate spellings of the same entity collapse onto the same KG node.</p>
-<p>The function also accepts a <code>collect_osint()</code> alias, which is identical — some integrations prefer the verb-first naming.</p>
+<p>The module also exposes <code>collect_osint()</code>, a compatibility wrapper that delegates to <code>run_osint_collection()</code>.</p>
+<h2 id="run-a-live-passive-collector">Run a live passive collector<a class="headerlink" href="#run-a-live-passive-collector" title="Permanent link">&para;</a></h2>
+<p>Use <code>persist=False</code> first so you can inspect collector output before writing to the knowledge graph:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">osint</span> <span class="k">as</span> <span class="n">_osint</span>  <span class="c1"># imports collector registrations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.osint</span><span class="w"> </span><span class="kn">import</span> <span class="n">run_osint_collection</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">run_osint_collection</span><span class="p">(</span>
+    <span class="s2">&quot;DomainName&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;example.com&quot;</span><span class="p">,</span>
+    <span class="n">persist</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">collector_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dns_collector&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">collectors_run</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">tuples_collected</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">error_count</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">collector_name</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+</code></pre></div>
+<p>Collector output depends on the current public records and on network reachability. Treat nonzero <code>error_count</code> as part of the result, not as an exception path; the executor continues with the remaining collectors.</p>
 <h3 id="result-shape">Result shape<a class="headerlink" href="#result-shape" title="Permanent link">&para;</a></h3>
 <p><code>run_osint_collection</code> returns an <code>OSINTCollectionResult</code> dataclass:</p>
 <table>
@@ -2642,6 +2709,11 @@
 <td>Total tuples emitted across all collectors</td>
 </tr>
 <tr>
+<td><code>persisted</code></td>
+<td><code>list[PersistedOSINTTuple]</code></td>
+<td>Validated tuples written to the KG</td>
+</tr>
+<tr>
 <td><code>persisted_count</code></td>
 <td><code>int</code></td>
 <td>Tuples actually written to the KG</td>
@@ -2670,33 +2742,22 @@
 </table>
 <p>A failing collector does not abort the run. Its error is captured in <code>result.errors</code> and execution continues with the remaining collectors.</p>
 <h2 id="dry-run-without-kg-writes">Dry-run without KG writes<a class="headerlink" href="#dry-run-without-kg-writes" title="Permanent link">&para;</a></h2>
-<p>Pass <code>persist=False</code> to run collectors and validate output without writing to the knowledge graph. Useful for testing new seeds or inspecting what a run will produce:</p>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">run_osint_collection</span><span class="p">(</span><span class="s2">&quot;ASNumber&quot;</span><span class="p">,</span> <span class="s2">&quot;AS15169&quot;</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="c1"># result.seed_node_id is None</span>
-<span class="c1"># result.persisted_count is 0</span>
-<span class="c1"># result.error_count shows any validation failures</span>
-</code></pre></div>
+<p>Pass <code>persist=False</code> to run collectors and validate output without writing to the knowledge graph. Use this mode for new seeds and for any collector that depends on public network data.</p>
 <h2 id="run-only-specific-collectors">Run only specific collectors<a class="headerlink" href="#run-only-specific-collectors" title="Permanent link">&para;</a></h2>
-<p>Use <code>collector_names</code> to restrict which collectors run for a given seed:</p>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">run_osint_collection</span><span class="p">(</span>
-    <span class="s2">&quot;DomainName&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;example.com&quot;</span><span class="p">,</span>
-    <span class="n">collector_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;dns_collector&quot;</span><span class="p">,</span> <span class="s2">&quot;cert_collector&quot;</span><span class="p">],</span>
-<span class="p">)</span>
-</code></pre></div>
+<p>Use <code>collector_names</code> to restrict which collectors run for a given seed. The live collector example above runs only <code>dns_collector</code>.</p>
 <p>Any name not in the registry is silently skipped — no error is raised for an unknown collector name.</p>
 <h2 id="safety-controls">Safety controls<a class="headerlink" href="#safety-controls" title="Permanent link">&para;</a></h2>
 <p>Active port scanning is off by default. Without an explicit opt-in, the port scanner collector returns an empty result and sends no packets:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_OSINT_ACTIVE_SCAN</span><span class="o">=</span><span class="m">1</span>
 </code></pre></div>
 <p>Set this variable only when you own the target network or have written authorization to scan it. Accepted values: <code>1</code>, <code>true</code>, <code>TRUE</code>, <code>yes</code>. Anything else (including an empty string) keeps scanning off.</p>
-<p>Even with the flag set, the port scanner requires <code>python-nmap</code> and the <code>nmap</code> binary. If either is missing, the collector returns an empty result and logs a warning — it never raises.</p>
+<p>Even with the flag set, the port scanner requires <code>python-nmap</code> and the <code>nmap</code> binary. If either is missing, the collector returns an empty result and logs a warning instead of raising.</p>
 <h2 id="what-gets-persisted">What gets persisted<a class="headerlink" href="#what-gets-persisted" title="Permanent link">&para;</a></h2>
 <p>The executor writes canonical entity values to the knowledge graph. Duplicate spellings collapse onto the same node. For example, <code>AS15169</code> and <code>15169</code> resolve to the same canonical ASN node (<code>15169</code>), and <code>Example.COM.</code> and <code>example.com</code> write to the same domain node.</p>
 <p>Each persisted tuple also writes a KG edge with an <code>osint: true</code> property and a <code>source</code> property set to the collector name, so you can later query which collector produced a given edge.</p>
 <div class="admonition note">
-<p class="admonition-title">Phase 2-5 collectors (in progress)</p>
-<p>Breach, social, and people enrichment collectors (HIBP, HaveIBeenPwned, Holehe, Hunter.io, and others) are registered in the transform registry but use seed types such as <code>EmailAddress</code>, <code>Alias</code>, and <code>Hashtag</code> that are not yet in <code>SUPPORTED_SEED_TYPES</code>. Passing those types raises <code>ValueError</code> today. Support for those seed types is in progress.</p>
+<p class="admonition-title">Additional enrichment is in progress</p>
+<p>Breach, social, and people enrichment collectors use seed types such as <code>EmailAddress</code>, <code>Alias</code>, and <code>Hashtag</code> that are not in <code>SUPPORTED_SEED_TYPES</code> today. Passing those types raises <code>ValueError</code>. Support for those seed types is in progress.</p>
 </div>
 
 

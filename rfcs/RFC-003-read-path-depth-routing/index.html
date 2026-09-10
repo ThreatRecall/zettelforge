@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2295,10 +2295,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#blockers-unresolved-as-of-this-writing" class="md-nav__link">
+  <a href="#open-review-findings-after-the-2026-07-27-re-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Blockers (unresolved as of this writing)
+        Open review findings after the 2026-07-27 re-audit
       
     </span>
   </a>
@@ -2624,10 +2624,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#blockers-unresolved-as-of-this-writing" class="md-nav__link">
+  <a href="#open-review-findings-after-the-2026-07-27-re-audit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Blockers (unresolved as of this writing)
+        Open review findings after the 2026-07-27 re-audit
       
     </span>
   </a>
@@ -2715,7 +2715,7 @@
 </tr>
 <tr>
 <td><strong>Last updated</strong></td>
-<td>2026-04-16</td>
+<td>2026-07-27</td>
 </tr>
 <tr>
 <td><strong>ZettelForge version</strong></td>
@@ -2729,17 +2729,17 @@
 </table>
 <div class="admonition warning">
 <p class="admonition-title">Not implemented</p>
-<p>RFC-003 is a design proposal. As of v2.7.0, none of the proposed modules (<code>quality_gate.py</code>, <code>query_profile.py</code>, <code>query_markers.py</code>, <code>retrieval/</code>) exist in the codebase and <code>config.default.yaml</code> has no <code>recall.depth_routing</code> section. The current <code>recall()</code> runs the uniform System 1 pipeline on every query. This page documents the proposal and its review status.</p>
+<p>RFC-003 is a design proposal. Re-verified on 2026-07-27 against ZettelForge v2.7.0: none of the proposed modules (<code>quality_gate.py</code>, <code>query_profile.py</code>, <code>query_markers.py</code>, <code>retrieval/</code>) exist in the codebase and <code>config.default.yaml</code> has no <code>recall.depth_routing</code> section. The current <code>recall()</code> runs the uniform System 1 pipeline on every query. This page documents the proposal and its review status.</p>
 </div>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p><code>recall()</code> applies the same retrieval pipeline to every query regardless of complexity. Measured on a DGX Spark ARM64 with a ~4,450-note store:</p>
+<p><code>recall()</code> applies the same retrieval pipeline to every query regardless of complexity. The v2.7.0 benchmark report records these historical baseline numbers from a DGX Spark ARM64 run:</p>
 <ul>
 <li>CTI single-entity lookups: <strong>p50 111 ms, p95 ~200 ms, ~75% accuracy</strong></li>
 <li>LOCOMO multi-hop long-horizon: <strong>p50 1,240 ms, p95 2,282 ms</strong></li>
 <li>Intent classification (keyword path): <strong>&lt; 1 ms</strong></li>
 </ul>
 <p>Two failure modes follow from these numbers.</p>
-<p><strong>Low-complexity queries overpay.</strong> A query like <code>CVE-2024-1234</code> triggers the full pipeline — intent classification, entity extraction, vector retrieval over 4,450 notes, graph traversal at depth 2, entity-augmented pull, and cross-encoder reranking — when a single entity-index lookup would answer it. The 111 ms p50 is inflated by phases that contribute no signal for this query class.</p>
+<p><strong>Low-complexity queries overpay.</strong> A query like <code>CVE-2024-1234</code> triggers the full pipeline — intent classification, entity extraction, vector retrieval, graph traversal at depth 2, entity-augmented pull, and cross-encoder reranking — when a single entity-index lookup would answer it. The historical CTI p50 is inflated by phases that contribute no signal for this query class.</p>
 <p><strong>High-complexity queries hit a ceiling.</strong> Multi-hop CTI attribution (for example, <em>"which threat actor used CVE-2024-3400 in campaigns that targeted healthcare between Q3 2024 and Q1 2025?"</em>) requires crossing 3+ entity boundaries with temporal constraints. The current top-k blend (default k=10) with depth-2 graph traversal cannot guarantee coverage of the full causal chain. Notes that are individually low-similarity but collectively form the answer are dropped before reranking. This explains the 25% accuracy gap on CTI and the long-tail p95 on LOCOMO.</p>
 <p>The 5-way intent classifier already identifies these query classes but only weights traversal policy, not depth.</p>
 <h2 id="proposal">Proposal<a class="headerlink" href="#proposal" title="Permanent link">&para;</a></h2>
@@ -2748,7 +2748,7 @@
 <li><strong>System 1</strong> — the current blended-retrieval pipeline (fast, unchanged)</li>
 <li><strong>System 2</strong> — a new exhaustive-scan path with pre-filtering and temporal-chunk scoring</li>
 </ul>
-<p>The gate is deterministic, LLM-free on the fast path, and uses heuristic signals from the already-computed intent classification and entity extraction plus one additional cheap probe (vector top-1 score). A D-Mem (arXiv:2603.18631) finding grounds the sizing: routing roughly 3% of queries to System 2 recovers 96.7% of full-deliberation accuracy while preserving System 1 latency for the other 97%.</p>
+<p>The gate is deterministic, LLM-free on the fast path, and uses heuristic signals from the already-computed intent classification and entity extraction plus one additional cheap probe (vector top-1 score). A D-Mem (arXiv:2603.18631) finding grounds the approach: its multi-dimensional quality gate recovers 96.7% of full-deliberation performance while reducing computational cost.</p>
 <h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>recall(query, ...)
   │
@@ -2905,18 +2905,18 @@ List[MemoryNote] (deduped, capped at k)
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_entity_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">etype</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">evalue</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
 </code></pre></div>
-<p>All three are SQLite queries on existing indexes. No schema migrations required.</p>
+<p>The proposal intends these to be SQLite read queries over existing note, KG, and entity indexes. The revised RFC still needs to prove the exact query plans before keeping the "no schema migrations required" claim.</p>
 <h2 id="adversarial-review">Adversarial review<a class="headerlink" href="#adversarial-review" title="Permanent link">&para;</a></h2>
 <p>An adversarial review completed on 2026-04-16 returned <strong>REQUEST CHANGES</strong> with 4 blockers and 13 warnings.</p>
-<h3 id="blockers-unresolved-as-of-this-writing">Blockers (unresolved as of this writing)<a class="headerlink" href="#blockers-unresolved-as-of-this-writing" title="Permanent link">&para;</a></h3>
+<h3 id="open-review-findings-after-the-2026-07-27-re-audit">Open review findings after the 2026-07-27 re-audit<a class="headerlink" href="#open-review-findings-after-the-2026-07-27-re-audit" title="Permanent link">&para;</a></h3>
 <p><strong>B1. Motivating example misroutes to System 1.</strong> The query <em>"which threat actor used CVE-2024-3400 in campaigns targeting healthcare between Q3 2024 and Q1 2025?"</em> scores 0.40 under the proposed weights — below the 0.70 threshold. The pattern <code>\bused by .+ (?:to|in|for|against)\b</code> does not match <code>"used CVE"</code>. The query that RFC-003 was designed to fix routes to the path it already fails on.</p>
-<p><strong>B2. <code>meta["top_vector_score"]</code> does not exist.</strong> The upgrade path reads this key but <code>VectorRetriever.retrieve()</code> currently returns <code>List[MemoryNote]</code>. Delivering the upgrade check requires a <code>VectorRetriever</code> signature change, which the RFC presents as a "verbatim lift" with no side effects.</p>
-<p><strong>B3. System 2 will bust the 800 ms budget if LLM NER is used.</strong> The candidate filter runs entity extraction across 200–500 notes. If <code>extract_all()</code> calls the LLM NER path (the current default in <code>recall()</code>), that is 50–200 ms per note — well above the total budget. The RFC does not pin <code>use_llm=False</code> for candidate-note extraction.</p>
-<p><strong>B4. Two of three storage primitives require indexes that are not stated to exist.</strong> <code>iterate_notes_in_range</code> assumes an index on <code>created_at</code>; <code>get_entity_degree</code> assumes an incidence-count index. Without these indexes, Phase 2 regresses under a full-scan fallback.</p>
+<p><strong>B2. <code>meta["top_vector_score"]</code> does not exist.</strong> The upgrade path reads this key, but no current API exposes that metadata object. <code>VectorRetriever.retrieve()</code> can return <code>(MemoryNote, score)</code> tuples when called with <code>return_scores=True</code>; the revised RFC still needs to define where the top score is carried into the post-System-1 upgrade check.</p>
+<p><strong>B3. System 2 will bust the 800 ms budget if LLM NER is used.</strong> Current <code>recall()</code> query extraction calls <code>extract_all()</code> with its default <code>use_llm=False</code>, so the shipped read path is regex-only. The proposed System 2 candidate filter still needs to pin candidate-note extraction to regex-only behavior so future implementation does not call the LLM NER path across 200–500 notes.</p>
+<p><strong>B4. The storage contract is still underspecified.</strong> SQLite now has indexes on <code>notes.created_at</code>, KG edge endpoints, and entity lookup columns, but the three proposed <code>StorageBackend</code> methods do not exist. The revised RFC needs to specify exact queries and any incidence-count index required for <code>get_entity_degree()</code>.</p>
 <h3 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h3>
-<p><strong>Status</strong>: Draft — changes requested. Implementation deferred pending a revised RFC that resolves the blockers above. See the adversarial review document for the full list of warnings and recommended fixes.</p>
+<p><strong>Status</strong>: Draft — changes requested. Implementation remains deferred pending a revised RFC that resolves the findings above. See the adversarial review document for the full list of warnings and recommended fixes.</p>
 <h2 id="migration">Migration<a class="headerlink" href="#migration" title="Permanent link">&para;</a></h2>
-<p>No migration needed. This RFC has not shipped. <code>recall()</code> behavior in v2.7.0 is unchanged from v2.6.x. When the implementation lands, the gate ships disabled by default (<code>enabled: false</code>); existing deployments require no config changes to preserve current behavior.</p>
+<p>No migration is needed today because this RFC has not shipped. The verified v2.7.0 <code>recall()</code> path remains the uniform blended retrieval path. When the implementation lands, the gate ships disabled by default (<code>enabled: false</code>); existing deployments require no config changes to preserve current behavior.</p>
 <h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

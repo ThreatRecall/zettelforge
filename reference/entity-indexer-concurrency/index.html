@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="Verified locking, persistence, and concurrent-read limits for zettelforge.entity_indexer.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1732,10 +1732,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#index-structure" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Index structure
+        Prerequisites
       
     </span>
   </a>
@@ -1743,10 +1743,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#concurrency-guarantees" class="md-nav__link">
+  <a href="#in-memory-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Concurrency guarantees
+        In-memory structure
       
     </span>
   </a>
@@ -1754,33 +1754,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#locking-flow" class="md-nav__link">
+  <a href="#thread-safety-contract" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Locking flow
+        Thread-safety contract
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#atomicity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Atomicity
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Atomicity">
+    <nav class="md-nav" aria-label="Thread-safety contract">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#in-process" class="md-nav__link">
+  <a href="#why-the-lock-is-reentrant" class="md-nav__link">
     <span class="md-ellipsis">
       
-        In-process
+        Why the lock is reentrant
       
     </span>
   </a>
@@ -1788,10 +1777,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#file-write" class="md-nav__link">
+  <a href="#what-a-saved-snapshot-means" class="md-nav__link">
     <span class="md-ellipsis">
       
-        File write
+        What a saved snapshot means
       
     </span>
   </a>
@@ -1804,10 +1793,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#background-flush-timer" class="md-nav__link">
+  <a href="#background-flush-lifecycle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Background flush timer
+        Background flush lifecycle
       
     </span>
   </a>
@@ -1815,77 +1804,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#19-type-invariant" class="md-nav__link">
+  <a href="#file-persistence-contract" class="md-nav__link">
     <span class="md-ellipsis">
       
-        19-type invariant
+        File persistence contract
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#entityextractor-thread-safety" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EntityExtractor thread safety
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#false-positive-hash-filtering" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        False-positive hash filtering
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#entity-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entity types
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Entity types">
+    <nav class="md-nav" aria-label="File persistence contract">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cti-entities-regex-fast-path" class="md-nav__link">
+  <a href="#cross-process-limit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CTI entities (regex fast-path)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ioc-stix-cyber-observables-regex-fast-path" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IOC / STIX Cyber Observables (regex fast-path)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#conversational-entities-llm-ner-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conversational entities (LLM NER, optional)
+        Cross-process limit
       
     </span>
   </a>
@@ -1898,15 +1832,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#public-api-summary" class="md-nav__link">
+  <a href="#public-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Public API summary
+        Public API
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Public API summary">
+    <nav class="md-nav" aria-label="Public API">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1920,69 +1854,19 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#entityextractor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EntityExtractor
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#regression-tests" class="md-nav__link">
+  <a href="#verification-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Regression tests
+        Verification boundary
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Regression tests">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#warning-4-atomic-save" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Warning 4: atomic save
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#warning-5-19-type-invariant" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Warning 5: 19-type invariant
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#warning-6-thread-safe-save-concurrent-add" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Warning 6: thread-safe save + concurrent add
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2594,10 +2478,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#index-structure" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Index structure
+        Prerequisites
       
     </span>
   </a>
@@ -2605,10 +2489,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#concurrency-guarantees" class="md-nav__link">
+  <a href="#in-memory-structure" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Concurrency guarantees
+        In-memory structure
       
     </span>
   </a>
@@ -2616,33 +2500,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#locking-flow" class="md-nav__link">
+  <a href="#thread-safety-contract" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Locking flow
+        Thread-safety contract
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#atomicity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Atomicity
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Atomicity">
+    <nav class="md-nav" aria-label="Thread-safety contract">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#in-process" class="md-nav__link">
+  <a href="#why-the-lock-is-reentrant" class="md-nav__link">
     <span class="md-ellipsis">
       
-        In-process
+        Why the lock is reentrant
       
     </span>
   </a>
@@ -2650,10 +2523,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#file-write" class="md-nav__link">
+  <a href="#what-a-saved-snapshot-means" class="md-nav__link">
     <span class="md-ellipsis">
       
-        File write
+        What a saved snapshot means
       
     </span>
   </a>
@@ -2666,10 +2539,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#background-flush-timer" class="md-nav__link">
+  <a href="#background-flush-lifecycle" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Background flush timer
+        Background flush lifecycle
       
     </span>
   </a>
@@ -2677,77 +2550,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#19-type-invariant" class="md-nav__link">
+  <a href="#file-persistence-contract" class="md-nav__link">
     <span class="md-ellipsis">
       
-        19-type invariant
+        File persistence contract
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#entityextractor-thread-safety" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EntityExtractor thread safety
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#false-positive-hash-filtering" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        False-positive hash filtering
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#entity-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entity types
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Entity types">
+    <nav class="md-nav" aria-label="File persistence contract">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cti-entities-regex-fast-path" class="md-nav__link">
+  <a href="#cross-process-limit" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CTI entities (regex fast-path)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ioc-stix-cyber-observables-regex-fast-path" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        IOC / STIX Cyber Observables (regex fast-path)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#conversational-entities-llm-ner-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Conversational entities (LLM NER, optional)
+        Cross-process limit
       
     </span>
   </a>
@@ -2760,15 +2578,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#public-api-summary" class="md-nav__link">
+  <a href="#public-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Public API summary
+        Public API
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Public API summary">
+    <nav class="md-nav" aria-label="Public API">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2782,69 +2600,19 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#entityextractor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        EntityExtractor
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#regression-tests" class="md-nav__link">
+  <a href="#verification-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Regression tests
+        Verification boundary
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Regression tests">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#warning-4-atomic-save" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Warning 4: atomic save
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#warning-5-19-type-invariant" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Warning 5: 19-type invariant
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#warning-6-thread-safe-save-concurrent-add" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Warning 6: thread-safe save + concurrent add
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2869,513 +2637,242 @@
 
 
 <h1 id="entity-indexer-concurrency">Entity indexer concurrency<a class="headerlink" href="#entity-indexer-concurrency" title="Permanent link">&para;</a></h1>
+<p>Use this reference when multiple threads or processes can access
+<code>zettelforge.entity_indexer.EntityIndexer</code>. ZettelForge 2.8.0 serializes
+in-process mutations and creates atomic file snapshots. Concurrent lookup safety
+is still <strong>in progress</strong>: <code>search_entities()</code> and <code>stats()</code> can fail while another
+thread mutates the index.</p>
 <p>Module: <code>zettelforge.entity_indexer</code><br />
-ZettelForge 2.7.0</p>
-<p>The <code>EntityIndexer</code> maintains an in-memory index mapping entity values to note IDs, persisted as a JSON file on disk. It is thread-safe for concurrent reads and writes. This page documents the locking model, atomicity guarantees, and the regression history (RFC-001 Warnings 4, 5, and 6) that drove the current implementation.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.entity_indexer</span><span class="w"> </span><span class="kn">import</span> <span class="n">EntityIndexer</span><span class="p">,</span> <span class="n">EntityExtractor</span>
+Verified release: ZettelForge 2.8.0</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Install ZettelForge 2.8.0 on Python 3.10 or newer. Start with the
+  <a href="../../tutorials/01-quickstart/">Quickstart</a> if you do not have a working
+  installation.</li>
+<li>Treat one <code>EntityIndexer</code> instance as shared mutable state when threads use it.</li>
+<li>Coordinate separate processes outside ZettelForge. Its file lock does not
+  serialize processes that write the same index path.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Concurrent lookup safety is in progress</p>
+<p>Do not call <code>search_entities()</code>, <code>stats()</code>, or <code>build()</code> at the same time as
+a mutation. A release-tree stress check reproduced <code>RuntimeError: dictionary
+changed size during iteration</code> in both lookup methods. <code>get_note_ids()</code> is
+also unlocked and does not promise a stable snapshot.</p>
+</div>
+<h2 id="in-memory-structure">In-memory structure<a class="headerlink" href="#in-memory-structure" title="Permanent link">&para;</a></h2>
+<p>The index maps an entity type to normalized entity values and then to note IDs:</p>
+<div class="highlight"><pre><span></span><code>entity_type -&gt; entity_value -&gt; set[note_id]
 </code></pre></div>
-<hr />
-<h2 id="index-structure">Index structure<a class="headerlink" href="#index-structure" title="Permanent link">&para;</a></h2>
-<p>The index is a three-level dict, serialized to <code>entity_index.json</code> in the ZettelForge data directory:</p>
-<div class="highlight"><pre><span></span><code>entity_type  →  entity_value  →  set[note_id]
-</code></pre></div>
-<p>Example after indexing a note about APT28 using Cobalt Strike:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="s2">&quot;actor&quot;</span><span class="p">:</span>  <span class="p">{</span><span class="s2">&quot;apt28&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;note_abc123&quot;</span><span class="p">}},</span>
-    <span class="s2">&quot;tool&quot;</span><span class="p">:</span>   <span class="p">{</span><span class="s2">&quot;cobalt-strike&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;note_abc123&quot;</span><span class="p">}},</span>
-    <span class="s2">&quot;cve&quot;</span><span class="p">:</span>    <span class="p">{},</span>
-    <span class="c1"># ... 16 more entity-type buckets (all 19 ENTITY_TYPES present)</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>All 19 entity-type buckets are present from <code>__init__</code> onward, even when empty. See <a href="#19-type-invariant">19-type invariant</a>.</p>
-<hr />
-<h2 id="concurrency-guarantees">Concurrency guarantees<a class="headerlink" href="#concurrency-guarantees" title="Permanent link">&para;</a></h2>
-<p>All mutations and persistence operations are serialized through a single <code>threading.RLock</code> (<code>_flush_lock</code>). Read-only lookup methods are not locked and rely on the CPython GIL for safety.</p>
+<p>Construction creates the 19 built-in type buckets. <code>remove_note()</code> preserves
+those buckets when their last value disappears. <code>add_note()</code> also accepts a new
+type key, so the key set can grow beyond the 19 built-in types during the
+instance lifetime. <code>build()</code> resets the index to the built-in buckets before it
+rebuilds the contents.</p>
+<h2 id="thread-safety-contract">Thread-safety contract<a class="headerlink" href="#thread-safety-contract" title="Permanent link">&para;</a></h2>
+<p><code>EntityIndexer</code> uses one <code>threading.RLock</code>, stored as <code>_flush_lock</code>, for mutation,
+snapshot creation, loading, timer coordination, and dirty-state transitions.</p>
 <table>
 <thead>
 <tr>
 <th>Operation</th>
-<th>Locked</th>
-<th>Notes</th>
+<th>Locking in 2.8.0</th>
+<th>Concurrent-use contract</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>add_note(note_id, entities)</code></td>
-<td>Yes (RLock)</td>
-<td>Full mutation + schedules flush</td>
-</tr>
-<tr>
-<td><code>remove_note(note_id)</code></td>
-<td>Yes (RLock)</td>
-<td>Full mutation + schedules flush</td>
+<td><code>load()</code></td>
+<td>Holds <code>_flush_lock</code> while it reads and replaces known buckets</td>
+<td>Serialized with locked mutations on the same instance</td>
 </tr>
 <tr>
 <td><code>save()</code></td>
-<td>Yes (RLock + <code>fcntl.flock</code>)</td>
-<td>Snapshot under RLock; atomic rename</td>
+<td>Copies the index under <code>_flush_lock</code>; writes the copy after releasing it</td>
+<td>Produces a stable point-in-time snapshot</td>
 </tr>
 <tr>
-<td><code>load()</code></td>
-<td>Yes (RLock)</td>
-<td>Called once in <code>__init__</code></td>
+<td><code>add_note()</code></td>
+<td>Holds <code>_flush_lock</code> for the complete mutation</td>
+<td>Serialized with <code>load()</code>, <code>save()</code> snapshots, <code>remove_note()</code>, and flushes</td>
+</tr>
+<tr>
+<td><code>remove_note()</code></td>
+<td>Holds <code>_flush_lock</code> for the complete mutation</td>
+<td>Serialized with <code>load()</code>, <code>save()</code> snapshots, <code>add_note()</code>, and flushes</td>
+</tr>
+<tr>
+<td><code>_schedule_flush()</code></td>
+<td>Holds <code>_flush_lock</code> while it inspects and creates the timer</td>
+<td>Starts at most one live timer per instance</td>
 </tr>
 <tr>
 <td><code>_flush_sync()</code></td>
-<td>Yes (RLock)</td>
-<td>Dirty-check + save + clear as one atomic block</td>
+<td>Holds <code>_flush_lock</code> across dirty check, <code>save()</code>, and dirty clear</td>
+<td>Serializes a scheduled flush with mutations</td>
 </tr>
 <tr>
-<td><code>get_note_ids(entity_type, entity_value)</code></td>
-<td>No</td>
-<td>Read-only; safe under CPython GIL</td>
+<td><code>get_note_ids()</code></td>
+<td>Unlocked</td>
+<td>No stable-snapshot guarantee during mutation</td>
 </tr>
 <tr>
-<td><code>search_entities(query, limit)</code></td>
-<td>No</td>
-<td>Read-only; safe under CPython GIL</td>
+<td><code>search_entities()</code></td>
+<td>Unlocked</td>
+<td>Unsafe during mutation; reproduced <code>RuntimeError</code></td>
 </tr>
 <tr>
 <td><code>stats()</code></td>
-<td>No</td>
-<td>Read-only dict comprehension; safe under CPython GIL</td>
+<td>Unlocked</td>
+<td>Unsafe during mutation; reproduced <code>RuntimeError</code></td>
 </tr>
 <tr>
 <td><code>build()</code></td>
-<td>No</td>
-<td>Sequential rebuild; not concurrent-safe</td>
+<td>Does not lock the rebuild as one operation</td>
+<td>Run only with exclusive access to the instance</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Why RLock and not Lock?</strong><br />
-<code>add_note()</code> and <code>remove_note()</code> call <code>_schedule_flush()</code> while already holding <code>_flush_lock</code>. <code>_schedule_flush()</code> also acquires <code>_flush_lock</code> to check timer state. A plain <code>threading.Lock</code> would deadlock on this re-entrance. <code>RLock</code> allows the same thread to re-acquire it.</p>
-<p><strong>Cross-process safety</strong><br />
-File writes use <code>fcntl.flock(LOCK_EX)</code> on the temp file to prevent two processes from clobbering each other's serialized index. The final write uses <code>os.replace()</code>, which is atomic on POSIX.</p>
-<hr />
-<h2 id="locking-flow">Locking flow<a class="headerlink" href="#locking-flow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>add_note() / remove_note()
-  │
-  ├─ acquire _flush_lock (RLock)
-  │    mutate self.index
-  │    set self._dirty = True
-  └─ release _flush_lock
-       │
-       └─ _schedule_flush()
-            acquire _flush_lock (re-entrant, no deadlock)
-              start Timer(5.0, _flush_sync) if not already running
-            release _flush_lock
-
-_flush_sync()  ← called by Timer or atexit
-  │
-  ├─ acquire _flush_lock
-  │    if self._dirty:
-  │      self.save()    ← snapshot + atomic rename
-  │      self._dirty = False
-  └─ release _flush_lock
-
-save()
-  │
-  ├─ acquire _flush_lock
-  │    snapshot: {k: {kk: list(vv) for ...} for ...}
-  └─ release _flush_lock
-       │
-       ├─ tempfile.mkstemp(prefix=&quot;.entity_index.&quot;, dir=...)
-       ├─ fcntl.flock(fd, LOCK_EX)
-       │    json.dump(data, f)
-       │    os.fsync(f.fileno())
-       │    fcntl.flock(fd, LOCK_UN)
-       └─ os.replace(tmp_path, index_path)   ← atomic on POSIX
-</code></pre></div>
-<hr />
-<h2 id="atomicity">Atomicity<a class="headerlink" href="#atomicity" title="Permanent link">&para;</a></h2>
-<h3 id="in-process">In-process<a class="headerlink" href="#in-process" title="Permanent link">&para;</a></h3>
-<p>The dict comprehension in <code>save()</code> runs inside <code>_flush_lock</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flush_lock</span><span class="p">:</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="n">kk</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">vv</span><span class="p">)</span> <span class="k">for</span> <span class="n">kk</span><span class="p">,</span> <span class="n">vv</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-</code></pre></div>
-<p>A concurrent <code>add_note()</code> blocks on the same lock and cannot modify <code>self.index</code> while this snapshot is in progress.</p>
-<h3 id="file-write">File write<a class="headerlink" href="#file-write" title="Permanent link">&para;</a></h3>
-<p><code>save()</code> uses write-to-temp then atomic rename:</p>
+<h3 id="why-the-lock-is-reentrant">Why the lock is reentrant<a class="headerlink" href="#why-the-lock-is-reentrant" title="Permanent link">&para;</a></h3>
+<p><code>_flush_sync()</code> acquires <code>_flush_lock</code> and calls <code>save()</code>. <code>save()</code> acquires the
+same lock to create its snapshot. A non-reentrant <code>threading.Lock</code> would deadlock
+on that nested acquisition; <code>threading.RLock</code> lets the flush thread acquire the
+same lock again.</p>
+<h3 id="what-a-saved-snapshot-means">What a saved snapshot means<a class="headerlink" href="#what-a-saved-snapshot-means" title="Permanent link">&para;</a></h3>
+<p><code>save()</code> copies every mapping while it holds <code>_flush_lock</code>. A concurrent
+<code>add_note()</code> or <code>remove_note()</code> cannot change the index during that copy. The
+method then releases the lock and writes the captured copy, so the file
+represents one complete point in time rather than every mutation that finishes
+before the disk write returns.</p>
+<p>The background flush preserves later mutations: they set <code>_dirty</code> and schedule
+another flush when no live timer exists.</p>
+<h2 id="background-flush-lifecycle">Background flush lifecycle<a class="headerlink" href="#background-flush-lifecycle" title="Permanent link">&para;</a></h2>
+<p><code>add_note()</code> and <code>remove_note()</code> mark the index dirty, then schedule a five-second
+daemon timer when no timer is alive. Mutations that arrive before that timer
+fires join the same batch. The timer calls <code>_flush_sync()</code>, which saves under the
+reentrant lock and clears <code>_dirty</code> after the save succeeds.</p>
+<p>The constructor also registers <code>_flush_sync()</code> with <code>atexit</code> for a final flush
+on normal interpreter shutdown. A daemon timer does not keep a process alive.</p>
+<p><code>build()</code> cancels a live timer, saves synchronously, and clears <code>_dirty</code> before
+it returns. The rebuild itself lacks an operation-wide lock, so give <code>build()</code>
+exclusive access to the instance.</p>
+<h2 id="file-persistence-contract">File persistence contract<a class="headerlink" href="#file-persistence-contract" title="Permanent link">&para;</a></h2>
+<p><code>save()</code> follows this sequence:</p>
 <ol>
-<li><code>tempfile.mkstemp(prefix=".entity_index.", suffix=".json.tmp", dir=...)</code> — temp file in the same directory as <code>index_path</code>, so the rename stays on one filesystem.</li>
-<li><code>fcntl.flock(fd, LOCK_EX)</code> on the temp file fd.</li>
-<li><code>json.dump(data, f)</code> then <code>os.fsync(f.fileno())</code>.</li>
-<li><code>fcntl.flock(fd, LOCK_UN)</code>.</li>
-<li><code>os.replace(tmp_path, index_path)</code> — atomic rename on POSIX.</li>
+<li>Create a stable in-memory copy under <code>_flush_lock</code>.</li>
+<li>Create a temporary file in the target directory.</li>
+<li>Lock that temporary file with <code>fcntl.flock(LOCK_EX)</code>.</li>
+<li>Write JSON, flush it, and call <code>os.fsync()</code> on the file.</li>
+<li>Unlock the temporary file and replace the target with <code>os.replace()</code>.</li>
 </ol>
-<p><strong>Crash between steps 3 and 5:</strong> <code>index_path</code> is untouched. The temp file is an orphan harmless to subsequent loads.</p>
-<p><strong>Prior behavior (RFC-001 Warning 4):</strong> the old <code>save()</code> opened <code>index_path</code> directly in <code>"w"</code> mode, which truncates the file before acquiring <code>flock</code>. A crash mid-write left <code>index_path</code> empty or partial. The current implementation never touches <code>index_path</code> directly.</p>
-<p>If <code>json.dump</code> raises an exception, the temp file is deleted (<code>os.unlink</code>) and the exception propagates. No partial data is left on disk.</p>
-<hr />
-<h2 id="background-flush-timer">Background flush timer<a class="headerlink" href="#background-flush-timer" title="Permanent link">&para;</a></h2>
-<p>The indexer batches writes to avoid thrashing disk during burst indexing:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_schedule_flush</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flush_lock</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flush_timer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flush_timer</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_flush_timer</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flush_sync</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_flush_timer</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_flush_timer</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</code></pre></div>
-<ul>
-<li>Debounce window: <strong>5 seconds</strong> after the last mutation.</li>
-<li>The timer is a daemon thread; it does not block process exit.</li>
-<li><code>atexit.register(self._flush_sync)</code> ensures a final flush on clean shutdown even when the timer has not fired.</li>
-<li><code>build()</code> cancels any pending timer and calls <code>save()</code> synchronously before returning, so an index rebuild is always fully persisted when <code>build()</code> returns.</li>
-</ul>
-<hr />
-<h2 id="19-type-invariant">19-type invariant<a class="headerlink" href="#19-type-invariant" title="Permanent link">&para;</a></h2>
-<p>The constructor initializes all 19 entity-type buckets as empty dicts:</p>
-<div class="highlight"><pre><span></span><code><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">etype</span><span class="p">:</span> <span class="p">{}</span> <span class="k">for</span> <span class="n">etype</span> <span class="ow">in</span> <span class="n">EntityExtractor</span><span class="o">.</span><span class="n">ENTITY_TYPES</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>The invariant: <code>set(self.index.keys()) == set(EntityExtractor.ENTITY_TYPES)</code> holds for the lifetime of the object.</p>
-<p><strong>RFC-001 Warning 5:</strong> the previous <code>remove_note()</code> deleted the entity-type key when its value dict emptied. <code>add_note()</code> relied on the invariant to detect unknown entity types (<code>entity_type not in self.index</code>). Deleting the key broke that check and allowed ghost types to appear in later writes.</p>
-<p><strong>Current behavior:</strong> <code>remove_note()</code> prunes empty per-value sets but preserves the parent bucket:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">remove_note</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">note_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flush_lock</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">entity_type</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-            <span class="k">for</span> <span class="n">entity_value</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">entity_type</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">entity_type</span><span class="p">][</span><span class="n">entity_value</span><span class="p">]</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">note_id</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">entity_type</span><span class="p">][</span><span class="n">entity_value</span><span class="p">]:</span>
-                    <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">entity_type</span><span class="p">][</span><span class="n">entity_value</span><span class="p">]</span>   <span class="c1"># prune value set</span>
-            <span class="c1"># parent entity_type dict is NOT deleted even if empty</span>
-</code></pre></div>
-<hr />
-<h2 id="entityextractor-thread-safety">EntityExtractor thread safety<a class="headerlink" href="#entityextractor-thread-safety" title="Permanent link">&para;</a></h2>
-<p><code>EntityExtractor</code> is stateless. Every method takes <code>text</code> as input and returns a new dict. It holds no mutable instance state.</p>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Thread-safe</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>extract_regex(text)</code></td>
-<td>Yes</td>
-<td>Pure regex, no side effects</td>
-</tr>
-<tr>
-<td><code>extract_llm(text)</code></td>
-<td>Yes</td>
-<td>Calls LLM client; no shared state beyond the call</td>
-</tr>
-<tr>
-<td><code>extract_all(text, use_llm)</code></td>
-<td>Yes</td>
-<td>Orchestrates the above</td>
-</tr>
-</tbody>
-</table>
-<p>A single <code>EntityExtractor</code> instance is safe to share across threads without locking.</p>
-<hr />
-<h2 id="false-positive-hash-filtering">False-positive hash filtering<a class="headerlink" href="#false-positive-hash-filtering" title="Permanent link">&para;</a></h2>
-<p><code>_filter_false_positive_hashes</code> removes MD5/SHA1/SHA256 candidates that appear in code or VCS contexts. It is a deterministic, single-threaded operation with no concurrency implications.</p>
-<p>Strategy: for each line of the input text, if the line matches <code>_CODE_CONTEXT_PATTERN</code>, every hex string (32-64 chars) on that line is excluded from results. Patterns covered:</p>
-<ul>
-<li>Variable assignment: <code>var = "hexstring"</code></li>
-<li>Git log lines: <code>commit</code>, <code>merge</code>, <code>tree</code>, <code>parent</code>, <code>Author:</code></li>
-<li>Code fences: <code>```</code></li>
-<li>Function definitions: <code>def func_name</code></li>
-<li>Function calls with hash arguments</li>
-</ul>
-<hr />
-<h2 id="entity-types">Entity types<a class="headerlink" href="#entity-types" title="Permanent link">&para;</a></h2>
-<p>The 19 recognized types in three categories:</p>
-<h3 id="cti-entities-regex-fast-path">CTI entities (regex fast-path)<a class="headerlink" href="#cti-entities-regex-fast-path" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Example</th>
-<th>Pattern notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>cve</code></td>
-<td><code>CVE-2024-3094</code></td>
-<td><code>CVE-\d{4}-\d{4,}</code> case-insensitive</td>
-</tr>
-<tr>
-<td><code>intrusion_set</code></td>
-<td><code>APT28</code>, <code>UNC2452</code>, <code>TA505</code></td>
-<td>Prefixes: apt/unc/ta/fin/temp</td>
-</tr>
-<tr>
-<td><code>actor</code></td>
-<td><code>lazarus</code>, <code>sandworm</code>, <code>volt-typhoon</code></td>
-<td>Named match list</td>
-</tr>
-<tr>
-<td><code>tool</code></td>
-<td><code>cobalt-strike</code>, <code>mimikatz</code>, <code>bloodhound</code></td>
-<td>Named match list</td>
-</tr>
-<tr>
-<td><code>campaign</code></td>
-<td><code>operation-midnight</code></td>
-<td><code>operation \w+</code></td>
-</tr>
-<tr>
-<td><code>attack_pattern</code></td>
-<td><code>T1059</code>, <code>T1059.001</code></td>
-<td><code>T\d{4}(\.\d{3})?</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="ioc-stix-cyber-observables-regex-fast-path">IOC / STIX Cyber Observables (regex fast-path)<a class="headerlink" href="#ioc-stix-cyber-observables-regex-fast-path" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Example</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ipv4</code></td>
-<td><code>192.168.1.1</code></td>
-</tr>
-<tr>
-<td><code>domain</code></td>
-<td><code>evil.example.com</code></td>
-</tr>
-<tr>
-<td><code>url</code></td>
-<td><code>https://malware.example/payload</code></td>
-</tr>
-<tr>
-<td><code>md5</code></td>
-<td><code>d41d8cd98f00b204e9800998ecf8427e</code></td>
-</tr>
-<tr>
-<td><code>sha1</code></td>
-<td><code>a9993e364706816aba3e25717850c26c9cd0d89d</code></td>
-</tr>
-<tr>
-<td><code>sha256</code></td>
-<td><code>e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</code></td>
-</tr>
-<tr>
-<td><code>email</code></td>
-<td><code>analyst@example.com</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="conversational-entities-llm-ner-optional">Conversational entities (LLM NER, optional)<a class="headerlink" href="#conversational-entities-llm-ner-optional" title="Permanent link">&para;</a></h3>
-<p>Active when <code>extract_all(text, use_llm=True)</code>. Person names are also extracted from dialogue format (<code>Name: text</code>) via regex even without LLM.</p>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>person</code></td>
-<td>Named individuals</td>
-</tr>
-<tr>
-<td><code>location</code></td>
-<td>Cities, regions, countries</td>
-</tr>
-<tr>
-<td><code>organization</code></td>
-<td>Company, agency, or group names</td>
-</tr>
-<tr>
-<td><code>event</code></td>
-<td>Named events</td>
-</tr>
-<tr>
-<td><code>activity</code></td>
-<td>Named activities</td>
-</tr>
-<tr>
-<td><code>temporal</code></td>
-<td>Time expressions</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="public-api-summary">Public API summary<a class="headerlink" href="#public-api-summary" title="Permanent link">&para;</a></h2>
-<h3 id="entityindexer">EntityIndexer<a class="headerlink" href="#entityindexer" title="Permanent link">&para;</a></h3>
+<p>On POSIX, the final replace gives readers atomic target-file visibility: they
+open the old complete file or the new complete file, not a partially written
+target. If serialization fails, <code>save()</code> deletes the temporary file and raises
+the exception.</p>
+<h3 id="cross-process-limit">Cross-process limit<a class="headerlink" href="#cross-process-limit" title="Permanent link">&para;</a></h3>
+<p>Each writer creates and locks its own temporary file. Those locks do not
+serialize independent processes. When two processes save the same target path,
+each can complete its own snapshot and the last successful <code>os.replace()</code> wins.
+Use an external process lock when more than one process can write the same
+<code>entity_index.json</code>.</p>
+<h2 id="public-api">Public API<a class="headerlink" href="#public-api" title="Permanent link">&para;</a></h2>
+<h3 id="entityindexer"><code>EntityIndexer</code><a class="headerlink" href="#entityindexer" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Method</th>
 <th>Signature</th>
-<th>Thread-safe</th>
+<th>Result</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>__init__</code></td>
-<td><code>(index_path: str | None = None)</code></td>
-<td>No (constructor)</td>
+<td>Constructor</td>
+<td><code>EntityIndexer(index_path: str \| None = None)</code></td>
+<td>Loads the default or supplied JSON index path</td>
 </tr>
 <tr>
 <td><code>load</code></td>
 <td><code>() -&gt; bool</code></td>
-<td>No (called once)</td>
+<td><code>True</code> after a successful load; <code>False</code> when the path is absent or loading fails</td>
 </tr>
 <tr>
 <td><code>save</code></td>
 <td><code>() -&gt; None</code></td>
-<td>Yes</td>
+<td>Writes one atomic snapshot or raises the write error</td>
 </tr>
 <tr>
 <td><code>add_note</code></td>
 <td><code>(note_id: str, entities: dict[str, list[str]]) -&gt; None</code></td>
-<td>Yes</td>
+<td>Adds normalized values and schedules a flush</td>
 </tr>
 <tr>
 <td><code>remove_note</code></td>
 <td><code>(note_id: str) -&gt; None</code></td>
-<td>Yes</td>
+<td>Removes the note ID, prunes empty values, and schedules a flush</td>
 </tr>
 <tr>
 <td><code>get_note_ids</code></td>
 <td><code>(entity_type: str, entity_value: str) -&gt; list[str]</code></td>
-<td>Yes (GIL)</td>
+<td>Returns matching note IDs or an empty list</td>
 </tr>
 <tr>
 <td><code>search_entities</code></td>
 <td><code>(query: str, limit: int = 10) -&gt; dict[str, list[str]]</code></td>
-<td>Yes (GIL)</td>
+<td>Returns case-insensitive prefix matches, limited per type</td>
 </tr>
 <tr>
 <td><code>stats</code></td>
 <td><code>() -&gt; dict</code></td>
-<td>Yes (GIL)</td>
+<td>Returns unique-entity and note-mapping counts per type</td>
 </tr>
 <tr>
 <td><code>build</code></td>
 <td><code>() -&gt; dict</code></td>
-<td>No (sequential)</td>
+<td>Rebuilds from stored notes and returns count plus statistics</td>
 </tr>
 </tbody>
 </table>
-<p><code>search_entities</code> returns a dict mapping entity types to lists of entity values that start with <code>query</code> (case-insensitive prefix match, up to <code>limit</code> results per type).</p>
-<p><code>stats</code> returns per-type counts:
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="s2">&quot;actor&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;unique_entities&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;total_mappings&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
-    <span class="s2">&quot;cve&quot;</span><span class="p">:</span>   <span class="p">{</span><span class="s2">&quot;unique_entities&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;total_mappings&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
-    <span class="o">...</span>
-<span class="p">}</span>
-</code></pre></div></p>
-<h3 id="entityextractor">EntityExtractor<a class="headerlink" href="#entityextractor" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>Method</th>
-<th>Signature</th>
-<th>LLM required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>extract_regex</code></td>
-<td><code>(text: str) -&gt; dict[str, list[str]]</code></td>
-<td>No</td>
-</tr>
-<tr>
-<td><code>extract_llm</code></td>
-<td><code>(text: str) -&gt; dict[str, list[str]]</code></td>
-<td>Yes</td>
-</tr>
-<tr>
-<td><code>extract_all</code></td>
-<td><code>(text: str, use_llm: bool = False) -&gt; dict[str, list[str]]</code></td>
-<td>Optional</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="regression-tests">Regression tests<a class="headerlink" href="#regression-tests" title="Permanent link">&para;</a></h2>
-<p><code>tests/test_entity_indexer_races.py</code> — 8 tests covering RFC-001 Warnings 4, 5, and 6.
-All 8 passed on ZettelForge 2.7.0 (run time: 0.09s).</p>
-<h3 id="warning-4-atomic-save">Warning 4: atomic save<a class="headerlink" href="#warning-4-atomic-save" title="Permanent link">&para;</a></h3>
-<p>Verifies that <code>save()</code> uses a temp-then-rename pattern and leaves no orphan files on success or on serialization failure:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_save_uses_atomic_rename_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indexer</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
-    <span class="n">observed_replaces</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">real_replace</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">replace</span>
+<p>The following executed example shows the result shapes. It uses a temporary
+index and an explicit <code>save()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">TemporaryDirectory</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_spy</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">):</span>
-        <span class="n">observed_replaces</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">src</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">dst</span><span class="p">)))</span>
-        <span class="k">return</span> <span class="n">real_replace</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.entity_indexer</span><span class="w"> </span><span class="kn">import</span> <span class="n">EntityIndexer</span>
 
-    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;zettelforge.entity_indexer.os.replace&quot;</span><span class="p">,</span> <span class="n">_spy</span><span class="p">)</span>
-    <span class="n">indexer</span><span class="o">.</span><span class="n">add_note</span><span class="p">(</span><span class="s2">&quot;note_a&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;actor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;APT28&quot;</span><span class="p">]})</span>
+<span class="k">with</span> <span class="n">TemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="n">directory</span><span class="p">:</span>
+    <span class="n">index_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;entity_index.json&quot;</span>
+    <span class="n">indexer</span> <span class="o">=</span> <span class="n">EntityIndexer</span><span class="p">(</span><span class="n">index_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">index_path</span><span class="p">))</span>
+    <span class="n">indexer</span><span class="o">.</span><span class="n">add_note</span><span class="p">(</span>
+        <span class="s2">&quot;note-1&quot;</span><span class="p">,</span>
+        <span class="p">{</span><span class="s2">&quot;actor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;APT28&quot;</span><span class="p">],</span> <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Cobalt Strike&quot;</span><span class="p">]},</span>
+    <span class="p">)</span>
     <span class="n">indexer</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-    <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">indexer</span><span class="o">.</span><span class="n">index_path</span><span class="p">)</span> <span class="o">==</span> <span class="n">dst</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">dst</span> <span class="ow">in</span> <span class="n">observed_replaces</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_save_cleans_up_temp_file_on_serialize_failure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indexer</span><span class="p">,</span> <span class="n">tmp_path</span><span class="p">,</span> <span class="n">monkeypatch</span><span class="p">):</span>
-    <span class="n">indexer</span><span class="o">.</span><span class="n">add_note</span><span class="p">(</span><span class="s2">&quot;note_a&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;actor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;APT28&quot;</span><span class="p">]})</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_boom</span><span class="p">(</span><span class="o">*</span><span class="n">_args</span><span class="p">,</span> <span class="o">**</span><span class="n">_kwargs</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;simulated FS error&quot;</span><span class="p">)</span>
-
-    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">&quot;zettelforge.entity_indexer.json.dump&quot;</span><span class="p">,</span> <span class="n">_boom</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
-        <span class="n">indexer</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-
-    <span class="n">leftovers</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">tmp_path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.entity_index.&quot;</span><span class="p">)]</span>
-    <span class="k">assert</span> <span class="n">leftovers</span> <span class="o">==</span> <span class="p">[]</span>
+    <span class="k">assert</span> <span class="n">indexer</span><span class="o">.</span><span class="n">get_note_ids</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;apt28&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;note-1&quot;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">indexer</span><span class="o">.</span><span class="n">search_entities</span><span class="p">(</span><span class="s2">&quot;cobalt&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span>
+        <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;cobalt strike&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">indexer</span><span class="o">.</span><span class="n">stats</span><span class="p">()[</span><span class="s2">&quot;actor&quot;</span><span class="p">])</span>
 </code></pre></div>
-<h3 id="warning-5-19-type-invariant">Warning 5: 19-type invariant<a class="headerlink" href="#warning-5-19-type-invariant" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_remove_note_preserves_empty_type_bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indexer</span><span class="p">):</span>
-    <span class="n">indexer</span><span class="o">.</span><span class="n">add_note</span><span class="p">(</span><span class="s2">&quot;note_a&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;actor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;APT28&quot;</span><span class="p">],</span> <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Cobalt Strike&quot;</span><span class="p">]})</span>
-    <span class="n">indexer</span><span class="o">.</span><span class="n">remove_note</span><span class="p">(</span><span class="s2">&quot;note_a&quot;</span><span class="p">)</span>
-
-    <span class="k">assert</span> <span class="s2">&quot;actor&quot;</span> <span class="ow">in</span> <span class="n">indexer</span><span class="o">.</span><span class="n">index</span>          <span class="c1"># bucket preserved</span>
-    <span class="k">assert</span> <span class="n">indexer</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="s2">&quot;actor&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">{}</span>      <span class="c1"># empty but present</span>
-    <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">indexer</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="n">EntityExtractor</span><span class="o">.</span><span class="n">ENTITY_TYPES</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_remove_note_prunes_empty_per_value_sets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indexer</span><span class="p">):</span>
-    <span class="n">indexer</span><span class="o">.</span><span class="n">add_note</span><span class="p">(</span><span class="s2">&quot;note_a&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;actor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;APT28&quot;</span><span class="p">]})</span>
-    <span class="n">indexer</span><span class="o">.</span><span class="n">remove_note</span><span class="p">(</span><span class="s2">&quot;note_a&quot;</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="s2">&quot;apt28&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">indexer</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="s2">&quot;actor&quot;</span><span class="p">]</span>   <span class="c1"># per-value set pruned</span>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code>{&#39;unique_entities&#39;: 1, &#39;total_mappings&#39;: 1}
 </code></pre></div>
-<h3 id="warning-6-thread-safe-save-concurrent-add">Warning 6: thread-safe save + concurrent add<a class="headerlink" href="#warning-6-thread-safe-save-concurrent-add" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_save_during_concurrent_add_does_not_raise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indexer</span><span class="p">):</span>
-    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">stop</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">writer</span><span class="p">():</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="n">stop</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">:</span>
-            <span class="n">indexer</span><span class="o">.</span><span class="n">add_note</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;note_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;actor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;APT</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">5</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span> <span class="s2">&quot;tool&quot;</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;tool</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">7</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]})</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">saver</span><span class="p">():</span>
-        <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="n">stop</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">:</span>
-            <span class="n">indexer</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
-            <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="n">t1</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">writer</span><span class="p">)</span>
-    <span class="n">t2</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">saver</span><span class="p">)</span>
-    <span class="n">t1</span><span class="o">.</span><span class="n">start</span><span class="p">();</span> <span class="n">t2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-    <span class="n">t1</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">);</span> <span class="n">t2</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-    <span class="n">stop</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
-
-    <span class="k">assert</span> <span class="n">errors</span> <span class="o">==</span> <span class="p">[]</span>
-    <span class="k">assert</span> <span class="s2">&quot;actor&quot;</span> <span class="ow">in</span> <span class="n">indexer</span><span class="o">.</span><span class="n">index</span>
-    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">indexer</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-</code></pre></div>
+<h2 id="verification-boundary">Verification boundary<a class="headerlink" href="#verification-boundary" title="Permanent link">&para;</a></h2>
+<p>The ZettelForge 2.8.0 release passed 35 focused entity-indexer and conversational-
+entity tests during this audit. A separate bounded stress check reproduced the
+two concurrent lookup failures described above. The official regression suite
+covers atomic save, temporary-file cleanup, built-in bucket preservation, and
+concurrent save-plus-add behavior; it does not assert concurrent-read safety.</p>
 
 
 
 
 
 
+
+  
+  
 
 
 

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Design record for LiteLLM routing to 100+ LLM providers via a single provider name. Phase 1 shipped in v2.5.0.">
+        <meta name="description" content="Design record for ZettelForge's optional LiteLLM generation adapter, its implemented scope, and its remaining limits in v2.8.0.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#rfc-012-litellm-unified-provider-for-llm-routing" class="md-skip">
+        <a href="#rfc-012-litellm-unified-provider" class="md-skip">
           Skip to content
         </a>
       
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2236,14 +2236,69 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Proposal">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shipped-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shipped design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Shipped design">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#who-benefits" class="md-nav__link">
+  <a href="#provider-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Who benefits
+        Provider boundary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registration-and-dependency-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registration and dependency loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaults-have-two-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defaults have two layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failure-and-fallback-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure and fallback behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extra-does-not-reach-litellm-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extra does not reach LiteLLM completion
       
     </span>
   </a>
@@ -2256,22 +2311,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#design" class="md-nav__link">
+  <a href="#consequences" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Design
+        Consequences
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Design">
+    <nav class="md-nav" aria-label="Consequences">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
+  <a href="#benefits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Architecture
+        Benefits
       
     </span>
   </a>
@@ -2279,87 +2334,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#provider-implementation" class="md-nav__link">
+  <a href="#trade-offs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Provider implementation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#registry-registration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Registry registration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#api-key-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API key strategy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#config-schema" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Config schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-configurations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example configurations
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#file-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        File changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#migration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Migration
+        Trade-offs
       
     </span>
   </a>
@@ -2380,16 +2358,44 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
+    <nav class="md-nav" aria-label="Alternatives considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maintain-one-adapter-per-hosted-provider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Open questions
+        Maintain one adapter per hosted provider
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#make-litellm-a-core-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Make LiteLLM a core dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replace-model-based-routing-with-provider-specific-configuration-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace model-based routing with provider-specific configuration fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2570,14 +2576,69 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Proposal">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shipped-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shipped design
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Shipped design">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#who-benefits" class="md-nav__link">
+  <a href="#provider-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Who benefits
+        Provider boundary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registration-and-dependency-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registration and dependency loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#defaults-have-two-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Defaults have two layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failure-and-fallback-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure and fallback behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extra-does-not-reach-litellm-completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        extra does not reach LiteLLM completion
       
     </span>
   </a>
@@ -2590,22 +2651,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#design" class="md-nav__link">
+  <a href="#consequences" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Design
+        Consequences
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Design">
+    <nav class="md-nav" aria-label="Consequences">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
+  <a href="#benefits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Architecture
+        Benefits
       
     </span>
   </a>
@@ -2613,87 +2674,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#provider-implementation" class="md-nav__link">
+  <a href="#trade-offs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Provider implementation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#registry-registration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Registry registration
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#api-key-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API key strategy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#config-schema" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Config schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Installation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#example-configurations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example configurations
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#file-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        File changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#migration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Migration
+        Trade-offs
       
     </span>
   </a>
@@ -2714,16 +2698,44 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#open-questions" class="md-nav__link">
+    <nav class="md-nav" aria-label="Alternatives considered">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maintain-one-adapter-per-hosted-provider" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Open questions
+        Maintain one adapter per hosted provider
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#make-litellm-a-core-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Make LiteLLM a core dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replace-model-based-routing-with-provider-specific-configuration-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace model-based routing with provider-specific configuration fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2758,7 +2770,9 @@
   
 
 
-<h1 id="rfc-012-litellm-unified-provider-for-llm-routing">RFC-012: LiteLLM Unified Provider for LLM Routing<a class="headerlink" href="#rfc-012-litellm-unified-provider-for-llm-routing" title="Permanent link">&para;</a></h1>
+<h1 id="rfc-012-litellm-unified-provider">RFC-012: LiteLLM Unified Provider<a class="headerlink" href="#rfc-012-litellm-unified-provider" title="Permanent link">&para;</a></h1>
+<p>RFC-012 records why ZettelForge uses one optional LiteLLM adapter for cloud-hosted generation instead of maintaining a separate adapter for every model provider. Phase 1 shipped in v2.5.0 and remains implemented in v2.8.0. The upstream RFC still records its formal decision as pending.</p>
+<p>Use this design record to understand the architecture and its consequences. For current keys, defaults, and provider examples, use the <a href="../../reference/configuration/">Configuration reference</a>.</p>
 <table>
 <thead>
 <tr>
@@ -2773,26 +2787,26 @@
 </tr>
 <tr>
 <td><strong>Status</strong></td>
-<td>Draft — Phase 1 implemented</td>
+<td>Implemented — Phase 1; formal RFC decision pending</td>
 </tr>
 <tr>
 <td><strong>Created</strong></td>
 <td>2026-04-25</td>
 </tr>
 <tr>
-<td><strong>Last updated</strong></td>
-<td>2026-04-25</td>
+<td><strong>Last verified</strong></td>
+<td>2026-08-14</td>
 </tr>
 <tr>
-<td><strong>ZettelForge version</strong></td>
-<td>v2.7.0</td>
+<td><strong>Verified release</strong></td>
+<td>ZettelForge v2.8.0</td>
 </tr>
 <tr>
-<td><strong>Related RFCs</strong></td>
-<td><a href="../RFC-002-universal-llm-provider/">RFC-002 Universal LLM Provider Interface</a> (this supersedes Phases 2–3); <a href="https://docs.threatrecall.ai/rfcs/RFC-011-local-llm-backend/">RFC-011 Local LLM Backend Selection</a></td>
+<td><strong>Related RFC</strong></td>
+<td><a href="../RFC-002-universal-llm-provider/">RFC-002 Universal LLM Provider Interface</a></td>
 </tr>
 <tr>
-<td><strong>Related tickets</strong></td>
+<td><strong>Related ticket</strong></td>
 <td>ZF-012</td>
 </tr>
 </tbody>
@@ -2801,292 +2815,113 @@
 <table>
 <thead>
 <tr>
-<th>Phase</th>
-<th>Description</th>
-<th>Status</th>
+<th>Scope</th>
+<th>Verified v2.8.0 state</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Phase 1</td>
-<td>LiteLLMProvider class + registry registration + <code>litellm</code> extra</td>
-<td>Shipped in v2.5.0 (2026-04-25)</td>
+<td>LiteLLM provider class and registry entry</td>
+<td>Implemented; first shipped in v2.5.0</td>
 </tr>
 <tr>
-<td>Phase 2</td>
-<td>Per-call <code>model=</code> override via <code>generate(extra=...)</code></td>
-<td>Not shipped — depends on RFC-002 Phase 5</td>
+<td>Optional <code>litellm</code> dependency extra</td>
+<td>Implemented with a lower bound of <code>litellm&gt;=1.60.0</code></td>
+</tr>
+<tr>
+<td>Per-call provider or model override</td>
+<td>Not implemented; the public generation function has no <code>provider</code> or <code>model</code> parameter</td>
+</tr>
+<tr>
+<td>Provider-specific <code>llm.extra</code> passthrough</td>
+<td>Not implemented; the client passes the values to the constructor, where this provider ignores unrecognized keyword arguments</td>
+</tr>
+<tr>
+<td>Embeddings through LiteLLM</td>
+<td>Outside this RFC; ZettelForge uses its embedding provider path instead</td>
 </tr>
 </tbody>
 </table>
-<p>The formal decision field in this RFC remains pending, but Phase 1 shipped during the v2.5.0 compliance release. Use <code>provider: litellm</code> in your <code>config.yaml</code> today.</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>ZettelForge needs one registered provider file per LLM backend. RFC-002 proposed <code>openai_compat</code> (Phase 2) and <code>anthropic</code> (Phase 3) as separate provider files, but neither shipped: each requires dedicated auth handling, retry logic, streaming, and tests against a different SDK.</p>
-<p>This approach does not scale. A user on AWS Bedrock, Google Vertex, Azure OpenAI, Groq, or any of 100+ available providers cannot use ZettelForge with those backends until a dedicated provider ships.</p>
+<p>RFC-002 introduced a provider boundary so extraction, classification, enrichment, and synthesis use one generation function. Dedicated adapters for every hosted model service would duplicate authentication, request conversion, retry behavior, and dependency management.</p>
+<p>The design needed to add hosted-model routing without making LiteLLM a dependency of the core ZettelForge installation. It also needed to preserve the existing synchronous generation contract used by the rest of the codebase.</p>
 <h2 id="proposal">Proposal<a class="headerlink" href="#proposal" title="Permanent link">&para;</a></h2>
-<p>Add <code>litellm</code> as a first-class provider name in the registry. One provider file routes to every supported backend via <code>litellm.completion()</code>. Users set <code>provider: litellm</code> in their config and a model name — LiteLLM resolves the correct backend from the model name prefix.</p>
-<h3 id="who-benefits">Who benefits<a class="headerlink" href="#who-benefits" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Any user of a non-Ollama, non-local backend (OpenAI, Anthropic, Groq, Together AI, etc.).</li>
-<li>Users who switch providers frequently — model name is the only config change.</li>
-<li>Azure OpenAI, Bedrock, and Vertex users — complex auth is handled by LiteLLM automatically.</li>
-<li>The project — no need to ship and maintain <code>openai_compat</code>, <code>anthropic</code>, <code>azure_openai</code>, or <code>bedrock</code> provider files.</li>
-</ul>
-<h2 id="design">Design<a class="headerlink" href="#design" title="Permanent link">&para;</a></h2>
-<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
-<p>LiteLLM is a new top-level provider alongside <code>local</code>, <code>ollama</code>, and <code>mock</code>. It satisfies the same <code>LLMProvider</code> protocol as every other provider. No changes to <code>generate()</code>, the registry interface, or any of the seven callers.</p>
-<p>Model name prefix routing:</p>
+<p>Add <code>litellm</code> as a provider name beside <code>local</code>, <code>ollama</code>, and <code>mock</code>. The adapter converts the ZettelForge generation call into a <code>litellm.completion()</code> call. LiteLLM then selects its backend from the configured model identifier.</p>
+<p>Keep the SDK in the optional <code>zettelforge[litellm]</code> dependency group. A local-only ZettelForge installation does not install LiteLLM.</p>
+<h2 id="shipped-design">Shipped design<a class="headerlink" href="#shipped-design" title="Permanent link">&para;</a></h2>
+<h3 id="provider-boundary">Provider boundary<a class="headerlink" href="#provider-boundary" title="Permanent link">&para;</a></h3>
+<p><code>LiteLLMProvider</code> implements the same <code>generate()</code> shape as the other ZettelForge providers. It builds a chat message list and passes the configured model, token limit, temperature, timeout, and retry count to <code>litellm.completion()</code>.</p>
+<p>The adapter adds <code>api_key</code> only when you configure a non-empty key. In JSON mode, it adds <code>response_format={"type": "json_object"}</code>. It strips surrounding whitespace from the returned message content.</p>
+<p>The adapter also sets LiteLLM's <code>suppress_debug_info</code> flag during the completion call and restores the previous value afterward, including when the call raises an exception. This keeps the change scoped to ZettelForge's call.</p>
+<h3 id="registration-and-dependency-loading">Registration and dependency loading<a class="headerlink" href="#registration-and-dependency-loading" title="Permanent link">&para;</a></h3>
+<p>ZettelForge imports the provider module and registers the name <code>litellm</code> during provider initialization. The provider module imports the LiteLLM SDK only when generation starts.</p>
+<p>This lazy import has an important consequence: <code>available()</code> includes <code>litellm</code> even when the SDK is absent. A missing SDK raises an actionable <code>ImportError</code> when generation starts. Treat the registry list as a list of known provider names, not an installation check.</p>
+<h3 id="defaults-have-two-layers">Defaults have two layers<a class="headerlink" href="#defaults-have-two-layers" title="Permanent link">&para;</a></h3>
+<p>The provider class uses these constructor fallbacks when a caller supplies no values:</p>
 <table>
 <thead>
 <tr>
-<th>Model name</th>
-<th>Routes to</th>
+<th>Constructor value</th>
+<th>Class fallback</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>gpt-4o</code>, <code>gpt-4o-mini</code></td>
-<td>OpenAI</td>
+<td>Model</td>
+<td><code>gpt-4o-mini</code></td>
 </tr>
 <tr>
-<td><code>claude-sonnet-4-20250514</code></td>
-<td>Anthropic</td>
+<td>API key</td>
+<td>empty string</td>
 </tr>
 <tr>
-<td><code>gemini/gemini-2.0-flash</code></td>
-<td>Google Gemini</td>
+<td>Timeout</td>
+<td><code>60.0</code> seconds</td>
 </tr>
 <tr>
-<td><code>groq/llama-3.3-70b-versatile</code></td>
-<td>Groq</td>
-</tr>
-<tr>
-<td><code>together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo</code></td>
-<td>Together AI</td>
-</tr>
-<tr>
-<td><code>bedrock/anthropic.claude-3-sonnet-20240229-v1:0</code></td>
-<td>AWS Bedrock</td>
-</tr>
-<tr>
-<td><code>vertex_ai/claude-3-sonnet@20240229</code></td>
-<td>Google Vertex AI</td>
-</tr>
-<tr>
-<td><code>openrouter/anthropic/claude-3.5-sonnet</code></td>
-<td>OpenRouter</td>
-</tr>
-</tbody>
-</table>
-<h3 id="provider-implementation">Provider implementation<a class="headerlink" href="#provider-implementation" title="Permanent link">&para;</a></h3>
-<p>Shipped as <code>src/zettelforge/llm_providers/litellm_provider.py</code>. Key properties verified from source:</p>
-<ul>
-<li><code>LiteLLMProvider.name = "litellm"</code></li>
-<li>Default model: <code>gpt-4o-mini</code> (when no model is configured)</li>
-<li>Retry: delegated to LiteLLM via <code>num_retries</code> kwarg — no manual retry loop</li>
-<li><code>json_mode=True</code>: passes <code>response_format={"type": "json_object"}</code> — works for OpenAI and most OpenAI-compatible endpoints; LiteLLM silently drops it for providers that do not support it</li>
-<li><strong>stderr banner suppression</strong>: after v2.5.0, the provider scopes <code>litellm.suppress_debug_info=True</code> around each <code>litellm.completion()</code> call and restores the prior value in a <code>finally</code> block. This suppresses LiteLLM's "Provider List" banner that would otherwise appear on stderr approximately 40 times per <code>recall()</code> call when LLM NER is active. The suppression is scoped to one call so it does not affect other code in the same process that uses LiteLLM directly.</li>
-</ul>
-<p>Constructor parameters:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>model</code></td>
-<td><code>str</code></td>
-<td><code>"gpt-4o-mini"</code></td>
-<td>Model name. LiteLLM routes based on prefix.</td>
-</tr>
-<tr>
-<td><code>api_key</code></td>
-<td><code>str</code></td>
-<td><code>""</code></td>
-<td>API key. Accepts <code>${ENV_VAR}</code> references. Leave empty to use standard env vars.</td>
-</tr>
-<tr>
-<td><code>timeout</code></td>
-<td><code>float</code></td>
-<td><code>60.0</code></td>
-<td>Request timeout in seconds.</td>
-</tr>
-<tr>
-<td><code>max_retries</code></td>
-<td><code>int</code></td>
+<td>Retry count</td>
 <td><code>2</code></td>
-<td>Retries on transient failure (delegated to LiteLLM).</td>
 </tr>
 </tbody>
 </table>
-<h3 id="registry-registration">Registry registration<a class="headerlink" href="#registry-registration" title="Permanent link">&para;</a></h3>
-<p><code>__init__.py</code> registers <code>"litellm"</code> conditionally:</p>
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.llm_providers.litellm_provider</span><span class="w"> </span><span class="kn">import</span> <span class="n">LiteLLMProvider</span>
-    <span class="n">register</span><span class="p">(</span><span class="s2">&quot;litellm&quot;</span><span class="p">,</span> <span class="n">LiteLLMProvider</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="k">pass</span>  <span class="c1"># litellm package not installed</span>
-</code></pre></div>
-<p>The base package never imports <code>litellm</code> unless the SDK is present.</p>
-<h3 id="api-key-strategy">API key strategy<a class="headerlink" href="#api-key-strategy" title="Permanent link">&para;</a></h3>
-<p>Three approaches, all supported:</p>
-<ol>
-<li>
-<p><strong>Config-level key</strong> — <code>api_key: ${OPENAI_API_KEY}</code> in <code>config.yaml</code>. The config loader resolves the <code>${ENV_VAR}</code> reference before the provider sees it. Preferred for single-provider setups.</p>
-</li>
-<li>
-<p><strong>Environment-level key</strong> — Set <code>OPENAI_API_KEY</code>, <code>ANTHROPIC_API_KEY</code>, <code>GROQ_API_KEY</code>, etc. in the environment. LiteLLM reads these automatically when <code>api_key</code> is empty. Preferred for multi-provider setups.</p>
-</li>
-<li>
-<p><strong>Per-model env vars</strong> — When using multiple providers, set the relevant env var for each and switch models in config.</p>
-</li>
-</ol>
-<h3 id="config-schema">Config schema<a class="headerlink" href="#config-schema" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt-4o</span><span class="w">                       </span><span class="c1"># LiteLLM routes to correct provider</span>
-<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${OPENAI_API_KEY}</span><span class="w">          </span><span class="c1"># optional — env vars also work</span>
-<span class="w">  </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
-<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60.0</span>
-<span class="w">  </span><span class="nt">max_retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-</code></pre></div>
-<p>No changes to <code>LLMConfig</code>. The existing fields (<code>provider</code>, <code>model</code>, <code>api_key</code>, <code>temperature</code>, <code>timeout</code>, <code>max_retries</code>, <code>fallback</code>, <code>extra</code>) are sufficient.</p>
-<h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>zettelforge<span class="o">[</span>litellm<span class="o">]</span>
-</code></pre></div>
-<p>Requires <code>litellm&gt;=1.60.0</code>. The base <code>pip install zettelforge</code> never pulls in LiteLLM.</p>
-<h3 id="example-configurations">Example configurations<a class="headerlink" href="#example-configurations" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># OpenAI</span>
-<span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt-4o</span>
-<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${OPENAI_API_KEY}</span>
-
-<span class="c1"># Anthropic</span>
-<span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">claude-sonnet-4-20250514</span>
-<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${ANTHROPIC_API_KEY}</span>
-
-<span class="c1"># Groq (fast inference)</span>
-<span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">groq/llama-3.3-70b-versatile</span>
-<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${GROQ_API_KEY}</span>
-
-<span class="c1"># Google Gemini</span>
-<span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gemini/gemini-2.0-flash</span>
-<span class="w">  </span><span class="c1"># GOOGLE_API_KEY in env, or api_key: ${GOOGLE_API_KEY}</span>
-
-<span class="c1"># AWS Bedrock</span>
-<span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bedrock/anthropic.claude-3-sonnet-20240229-v1:0</span>
-<span class="w">  </span><span class="c1"># AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY in env</span>
-
-<span class="c1"># Google Vertex AI</span>
-<span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vertex_ai/claude-3-sonnet@20240229</span>
-<span class="w">  </span><span class="c1"># GOOGLE_APPLICATION_CREDENTIALS in env</span>
-
-<span class="c1"># OpenRouter</span>
-<span class="nt">llm</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">litellm</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openrouter/anthropic/claude-3.5-sonnet</span>
-<span class="w">  </span><span class="nt">api_key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${OPENROUTER_API_KEY}</span>
-</code></pre></div>
-<h3 id="file-changes">File changes<a class="headerlink" href="#file-changes" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Change</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>src/zettelforge/llm_providers/litellm_provider.py</code></td>
-<td>Created — <code>LiteLLMProvider</code> class</td>
-</tr>
-<tr>
-<td><code>src/zettelforge/llm_providers/__init__.py</code></td>
-<td>Registers <code>"litellm"</code> conditionally</td>
-</tr>
-<tr>
-<td><code>pyproject.toml</code></td>
-<td>Adds <code>litellm = ["litellm&gt;=1.60.0"]</code> optional extra</td>
-</tr>
-<tr>
-<td><code>config.default.yaml</code></td>
-<td>Documents <code>provider: litellm</code> with examples</td>
-</tr>
-<tr>
-<td><code>tests/test_llm_providers.py</code></td>
-<td>16 unit tests for <code>LiteLLMProvider</code> (all pass)</td>
-</tr>
-</tbody>
-</table>
-<p>No changes to <code>config.py</code>, <code>llm_client.py</code>, or <code>local_provider.py</code>.</p>
-<h3 id="migration">Migration<a class="headerlink" href="#migration" title="Permanent link">&para;</a></h3>
-<p><strong>New users:</strong> <code>pip install zettelforge[litellm]</code>, then set <code>provider: litellm</code> and your model name in <code>config.yaml</code>.</p>
-<p><strong>Existing local/Ollama users:</strong> No change required. LiteLLM is an additional provider.</p>
-<p><strong>Fallback policy:</strong> LiteLLM does not have an implicit fallback to <code>local</code> or <code>ollama</code>. If a LiteLLM call fails (missing API key, network error), the error surfaces to the caller. Configure an explicit <code>fallback: ollama</code> in <code>LLMConfig</code> if you want a fallback.</p>
-<p><strong>Rollback:</strong> Set <code>provider: ollama</code> or <code>provider: local</code> in config.</p>
+<p>Normal application calls load the shared <code>llm</code> configuration first. ZettelForge v2.8.0 defines <code>qwen3.5:9b</code> as the shared model default and <code>180.0</code> seconds as the shared timeout, then passes those values to the selected provider. Selecting <code>provider: litellm</code> without choosing a compatible model therefore does not activate the provider class's <code>gpt-4o-mini</code> fallback.</p>
+<h3 id="failure-and-fallback-behavior">Failure and fallback behavior<a class="headerlink" href="#failure-and-fallback-behavior" title="Permanent link">&para;</a></h3>
+<p>The adapter logs a failed completion and re-raises the exception. The public ZettelForge client then applies these rules:</p>
+<ul>
+<li>A missing SDK or provider configuration error reaches the caller. ZettelForge does not hide it with a fallback.</li>
+<li>Another completion exception invokes the explicitly configured fallback provider.</li>
+<li>Without an explicit fallback, a failed LiteLLM completion returns an empty string from the public generation function.</li>
+<li>The historical implicit fallback applies only from <code>local</code> to <code>ollama</code>; it does not add LiteLLM to that chain.</li>
+</ul>
+<h3 id="extra-does-not-reach-litellm-completion"><code>extra</code> does not reach LiteLLM completion<a class="headerlink" href="#extra-does-not-reach-litellm-completion" title="Permanent link">&para;</a></h3>
+<p>The shared client merges <code>llm.extra</code> into provider constructor arguments. <code>LiteLLMProvider</code> accepts unrecognized constructor arguments for registry compatibility and discards them. Values such as <code>drop_params</code> therefore do not reach <code>litellm.completion()</code> in v2.8.0.</p>
+<p>Adding provider-specific completion arguments requires a source change or a future explicit passthrough design. Do not treat <code>llm.extra</code> as a LiteLLM request-parameter channel in this release.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
+<h3 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">&para;</a></h3>
+<ul>
+<li>ZettelForge keeps one generation boundary while LiteLLM owns backend-specific request routing.</li>
+<li>Local and Ollama users avoid the optional cloud-routing dependency.</li>
+<li>Existing generation call sites require no LiteLLM-specific branches.</li>
+<li>The adapter preserves the shared logging and fallback boundary.</li>
+</ul>
+<h3 id="trade-offs">Trade-offs<a class="headerlink" href="#trade-offs" title="Permanent link">&para;</a></h3>
+<ul>
+<li>LiteLLM compatibility and model naming remain upstream concerns.</li>
+<li>The registry name does not prove the optional SDK is installed.</li>
+<li>You select one process-wide provider and model configuration; individual calls cannot choose another model.</li>
+<li>Provider-specific LiteLLM completion options cannot travel through <code>llm.extra</code> in v2.8.0.</li>
+<li>The interface is synchronous and does not expose streaming through this provider boundary.</li>
+</ul>
 <h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<p><strong>Alternative 1 — Ship <code>openai_compat</code> + <code>anthropic</code> + <code>bedrock</code> + <code>vertex</code> separately.</strong> Rejected: requires 4+ provider files with separate test suites; each has different auth; 90+ other providers remain unsupported.</p>
-<p><strong>Alternative 2 — LiteLLM as a core dependency.</strong> Rejected: LiteLLM pulls ~20 transitive dependencies (openai, anthropic, boto3, google-cloud-aiplatform, httpx, etc.); many ZettelForge users never touch cloud providers.</p>
-<p><strong>Alternative 3 — Replace <code>openai_compat</code> and <code>anthropic</code> with LiteLLM.</strong> Rejected: backward compatibility concern; LiteLLM is heavier than a single-SDK provider.</p>
-<p><strong>Alternative 4 — Per-provider <code>extra</code> fields instead of model name routing.</strong> Rejected: LiteLLM's model-name prefix routing is the standard pattern; adds config complexity for no benefit.</p>
-<h2 id="open-questions">Open questions<a class="headerlink" href="#open-questions" title="Permanent link">&para;</a></h2>
-<ol>
-<li>
-<p><strong>Implicit fallback?</strong> LiteLLM should not fall back implicitly to <code>local</code> or <code>ollama</code> — failing is the right behavior when a cloud API key is misconfigured. Explicit <code>fallback: ollama</code> remains available.</p>
-</li>
-<li>
-<p><strong><code>drop_params</code> / other LiteLLM kwargs via <code>extra</code>?</strong> Supported today: <code>extra: { drop_params: true }</code> passes through to <code>litellm.completion()</code>.</p>
-</li>
-<li>
-<p><strong>Embedding support?</strong> LiteLLM supports <code>litellm.embedding()</code>. This RFC covers generation only. Follow-up if users request it.</p>
-</li>
-<li>
-<p><strong>Adding LiteLLM to the <code>local → ollama</code> fallback chain?</strong> No. LiteLLM is an external API provider, not a local inference backend.</p>
-</li>
-</ol>
+<h3 id="maintain-one-adapter-per-hosted-provider">Maintain one adapter per hosted provider<a class="headerlink" href="#maintain-one-adapter-per-hosted-provider" title="Permanent link">&para;</a></h3>
+<p>Rejected. Separate OpenAI-compatible, Anthropic, Bedrock, and Vertex adapters would multiply authentication paths, dependencies, and tests inside ZettelForge.</p>
+<h3 id="make-litellm-a-core-dependency">Make LiteLLM a core dependency<a class="headerlink" href="#make-litellm-a-core-dependency" title="Permanent link">&para;</a></h3>
+<p>Rejected. The optional dependency keeps the core and local-only installation smaller and avoids installing a cloud-routing SDK for readers who do not use it.</p>
+<h3 id="replace-model-based-routing-with-provider-specific-configuration-fields">Replace model-based routing with provider-specific configuration fields<a class="headerlink" href="#replace-model-based-routing-with-provider-specific-configuration-fields" title="Permanent link">&para;</a></h3>
+<p>Rejected for Phase 1. The implemented adapter sends one model identifier to LiteLLM and leaves backend selection inside that SDK.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Decision</strong></td>
-<td>Pending formal review — Phase 1 implemented</td>
-</tr>
-<tr>
-<td><strong>Date</strong></td>
-<td>Pending</td>
-</tr>
-<tr>
-<td><strong>Decision maker</strong></td>
-<td>Pending</td>
-</tr>
-<tr>
-<td><strong>Rationale</strong></td>
-<td>Pending</td>
-</tr>
-</tbody>
-</table>
+<p>The formal decision remains pending in the v2.8.0 upstream RFC. The shipped code implements the Phase 1 direction: ZettelForge keeps LiteLLM optional, registers one adapter, and routes generation through the shared provider boundary.</p>
+<p>That implementation does not constitute approval of the unshipped scope. Per-call model selection, LiteLLM-specific <code>extra</code> passthrough, and embedding support remain outside the implemented decision.</p>
 
 
 

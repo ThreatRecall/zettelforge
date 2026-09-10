@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Complete reference for every key in ZettelForge's config.yaml, with defaults, valid values, and environment variable overrides.">
+        <meta name="description" content="Reference for ZettelForge's verified public configuration keys, defaults, valid values, and environment variable overrides.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1473,6 +1473,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#enrichment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        enrichment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#extraction" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1593,6 +1604,17 @@
     <span class="md-ellipsis">
       
         logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        telemetry
       
     </span>
   </a>
@@ -2698,6 +2720,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#enrichment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        enrichment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#extraction" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2825,6 +2858,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        telemetry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#web" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2867,19 +2911,27 @@
 
 
 <h1 id="configuration-reference">Configuration reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h1>
-<p>ZettelForge reads its configuration from <code>config.yaml</code> in your working or project directory. You do not need to create this file for storage, embeddings, and recall on the default SQLite backend. Set the LLM provider and model explicitly before you run LLM-dependent features such as extraction and synthesis.</p>
+<p>Use this page to configure ZettelForge 2.8.0. ZettelForge reads <code>config.yaml</code> or <code>config.yml</code> from your working directory or the source checkout. You do not need a file for the default SQLite store. Before you use this reference, complete the <a href="../../tutorials/01-quickstart/">Quickstart</a> and confirm that ZettelForge imports successfully.</p>
 <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>config.default.yaml<span class="w"> </span>config.yaml
 <span class="nv">$EDITOR</span><span class="w"> </span>config.yaml
 </code></pre></div>
-<p><code>config.yaml</code> is listed in <code>.gitignore</code> — safe to put credentials there without committing them.</p>
+<p>The source checkout ignores <code>config.yaml</code>, but environment variables remain the safer place for credentials. Check your own repository rules before you store secrets in a file.</p>
 <h2 id="resolution-order">Resolution order<a class="headerlink" href="#resolution-order" title="Permanent link">&para;</a></h2>
 <p>ZettelForge resolves each setting from these sources, highest priority first:</p>
 <ol>
 <li>Environment variables (<code>ZETTELFORGE_*</code>, <code>TYPEDB_*</code>, <code>AMEM_*</code>)</li>
-<li><code>config.yaml</code> in the working directory or project root</li>
+<li><code>config.yaml</code> or <code>config.yml</code> in the working directory</li>
+<li><code>config.yaml</code> or <code>config.yml</code> in the project root</li>
 <li><code>config.default.yaml</code> in the project root</li>
 <li>Hardcoded defaults in <code>src/zettelforge/config.py</code></li>
 </ol>
+<div class="admonition warning">
+<p class="admonition-title">Configuration wiring is in progress</p>
+<p>The 2.8.0 parser accepts every field listed below, but some fields are not
+connected to their runtime consumers. Each affected section says exactly
+what the running base release uses. A parsed value is not proof that a
+feature is active.</p>
+</div>
 <h2 id="quick-reference">Quick reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2910,6 +2962,10 @@
 <td>Background named-entity recognition</td>
 </tr>
 <tr>
+<td><code>enrichment</code></td>
+<td>Master switch for background enrichment dispatch</td>
+</tr>
+<tr>
 <td><code>extraction</code></td>
 <td>Two-phase fact extraction pipeline</td>
 </tr>
@@ -2938,6 +2994,10 @@
 <td>Log level and verbosity</td>
 </tr>
 <tr>
+<td><code>telemetry</code></td>
+<td>Environment-only operational telemetry location and debug flag</td>
+</tr>
+<tr>
 <td><code>web</code></td>
 <td>Web management interface</td>
 </tr>
@@ -2962,7 +3022,7 @@
 <tr>
 <td><code>data_dir</code></td>
 <td><code>~/.amem</code></td>
-<td>Root data directory. Expand <code>~</code> resolves to the current user's home directory.</td>
+<td>Root data directory. The web API reads this field. The library storage path currently reads <code>AMEM_DATA_DIR</code> directly, so a YAML-only change does not move library data.</td>
 </tr>
 </tbody>
 </table>
@@ -2983,11 +3043,11 @@
 <tbody>
 <tr>
 <td><code>sqlite</code></td>
-<td>SQLite plus LanceDB. Default. Zero-dependency, no external services, ACID-safe. Runs fully offline.</td>
+<td>SQLite plus LanceDB. Default. Requires no external database service.</td>
 </tr>
 <tr>
 <td><code>typedb</code></td>
-<td>TypeDB 3.x STIX knowledge graph. Requires a running TypeDB container and an additional extension beyond the default pip install.</td>
+<td>Parsed, but backend selection is in progress. The 2.8.0 base storage factory still creates SQLite.</td>
 </tr>
 </tbody>
 </table>
@@ -2995,10 +3055,10 @@
 <p><strong>Environment variable:</strong> <code>ZETTELFORGE_BACKEND</code></p>
 <div class="highlight"><pre><span></span><code><span class="nt">backend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sqlite</span>
 </code></pre></div>
-<p>For most users the SQLite backend is the right choice. If you need the TypeDB graph backend, see your extension's documentation. <a href="https://threatrecall.ai">ThreatRecall.ai</a> provides a hosted multi-tenant knowledge graph without running TypeDB yourself.</p>
+<p>Use SQLite in the 2.8.0 base release. The storage factory reads <code>ZETTELFORGE_BACKEND</code>, but it still returns SQLite for every value; YAML <code>backend</code> is not connected to that factory. TypeDB selection is in progress.</p>
 <hr />
 <h2 id="typedb"><code>typedb</code><a class="headerlink" href="#typedb" title="Permanent link">&para;</a></h2>
-<p>TypeDB connection settings. Only used when <code>backend: typedb</code>.</p>
+<p>TypeDB connection settings. ZettelForge parses these values and resolves the credential references, but the 2.8.0 base storage factory does not create a TypeDB backend. Runtime use is in progress.</p>
 <table>
 <thead>
 <tr>
@@ -3059,26 +3119,31 @@
 <tr>
 <td><code>provider</code></td>
 <td><code>fastembed</code></td>
-<td><code>fastembed</code> (in-process ONNX) or <code>ollama</code> (HTTP server).</td>
+<td>Parsed from YAML. The embedding runtime currently reads <code>ZETTELFORGE_EMBEDDING_PROVIDER</code> or this hardcoded default.</td>
 </tr>
 <tr>
 <td><code>url</code></td>
 <td><code>http://127.0.0.1:11434</code></td>
-<td>Ollama server URL. Used only when <code>provider: ollama</code>.</td>
+<td>Parsed from YAML. The embedding runtime currently reads <code>AMEM_EMBEDDING_URL</code> or this hardcoded default.</td>
 </tr>
 <tr>
 <td><code>model</code></td>
 <td><code>nomic-ai/nomic-embed-text-v1.5-Q</code></td>
-<td>Embedding model name.</td>
+<td>Parsed from YAML. The embedding runtime currently reads <code>AMEM_EMBEDDING_MODEL</code> or this hardcoded default.</td>
 </tr>
 <tr>
 <td><code>dimensions</code></td>
 <td><code>768</code></td>
 <td>Output dimension. Must match the model's actual output. Changing the model requires updating this field and running <code>rebuild_index.py</code> to re-embed all notes.</td>
 </tr>
+<tr>
+<td><code>threads</code></td>
+<td><code>8</code></td>
+<td>ONNX intra-op thread count for in-process embeddings. Set <code>0</code> to use the ONNX Runtime default.</td>
+</tr>
 </tbody>
 </table>
-<p><strong>Environment variables:</strong> <code>ZETTELFORGE_EMBEDDING_PROVIDER</code>, <code>AMEM_EMBEDDING_URL</code>, <code>AMEM_EMBEDDING_MODEL</code></p>
+<p><strong>Environment variables:</strong> <code>ZETTELFORGE_EMBEDDING_PROVIDER</code>, <code>AMEM_EMBEDDING_URL</code>, <code>AMEM_EMBEDDING_MODEL</code>, <code>ZETTELFORGE_EMBEDDING_DIM</code></p>
 <p>Common model dimensions:</p>
 <table>
 <thead>
@@ -3110,14 +3175,16 @@
 <span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fastembed</span>
 <span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nomic-ai/nomic-embed-text-v1.5-Q</span>
 <span class="w">  </span><span class="nt">dimensions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">768</span>
+<span class="w">  </span><span class="nt">threads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Dimension mismatch</p>
-<p>If you change the embedding model, update <code>dimensions</code> to match and run <code>rebuild_index.py</code>. Mismatched dimensions cause empty search results without a clear error.</p>
+<p>If you change the embedding model, update <code>dimensions</code> to match and rebuild the index. The runtime logs <code>embedding_dimension_mismatch</code> and skips the incompatible vector.</p>
 </div>
 <hr />
 <h2 id="llm"><code>llm</code><a class="headerlink" href="#llm" title="Permanent link">&para;</a></h2>
 <p>Language model for fact extraction, intent classification, causal triple extraction, and RAG synthesis.</p>
+<p>The table lists the source fallback defaults in the v2.8.0 release.</p>
 <table>
 <thead>
 <tr>
@@ -3135,7 +3202,7 @@
 <tr>
 <td><code>model</code></td>
 <td><code>qwen3.5:9b</code></td>
-<td>Source default in v2.7.0. This value is unresolved upstream; set it explicitly to a model your provider can load, such as an installed Ollama tag or a local HuggingFace model ID.</td>
+<td>Model identifier passed to the selected provider. This is a published Ollama tag; ZettelForge does not install it for you.</td>
 </tr>
 <tr>
 <td><code>url</code></td>
@@ -3150,7 +3217,7 @@
 <tr>
 <td><code>temperature</code></td>
 <td><code>0.1</code></td>
-<td>Sampling temperature (0.0–1.0). Lower values are more deterministic.</td>
+<td>Parsed, but current task call sites pass their own temperatures. Changing this field does not override those calls. Runtime wiring is in progress.</td>
 </tr>
 <tr>
 <td><code>timeout</code></td>
@@ -3205,7 +3272,7 @@
 <tr>
 <td><code>reasoning_model</code></td>
 <td><code>false</code></td>
-<td>Set <code>true</code> when using a reasoning-optimized model (e.g. QwQ, DeepSeek-R1). Adjusts prompt framing to account for extended chain-of-thought output.</td>
+<td>Set <code>true</code> when using a reasoning-optimized model. ZettelForge then raises the timeout and task-specific token limits to known-good floors.</td>
 </tr>
 <tr>
 <td><code>extra</code></td>
@@ -3215,15 +3282,18 @@
 </tbody>
 </table>
 <p><strong>Environment variables:</strong> <code>ZETTELFORGE_LLM_PROVIDER</code>, <code>ZETTELFORGE_LLM_MODEL</code>, <code>ZETTELFORGE_LLM_URL</code>, <code>ZETTELFORGE_LLM_API_KEY</code>, <code>ZETTELFORGE_LLM_TIMEOUT</code>, <code>ZETTELFORGE_LLM_MAX_RETRIES</code>, <code>ZETTELFORGE_LLM_FALLBACK</code>, <code>ZETTELFORGE_LLM_LOCAL_BACKEND</code>, <code>ZETTELFORGE_LLM_MAX_TOKENS</code>, <code>ZETTELFORGE_LLM_MAX_TOKENS_CAUSAL</code>, <code>ZETTELFORGE_LLM_MAX_TOKENS_SYNTHESIS</code>, <code>ZETTELFORGE_LLM_MAX_TOKENS_EXTRACTION</code>, <code>ZETTELFORGE_LLM_MAX_TOKENS_NER</code>, <code>ZETTELFORGE_LLM_MAX_TOKENS_EVOLVE</code>, <code>ZETTELFORGE_LLM_REASONING_MODEL</code></p>
-<div class="admonition warning">
-<p class="admonition-title">Set the LLM model explicitly</p>
-<p>The v2.7.0 source still contains <code>qwen3.5:9b</code> in <code>LLMConfig</code> and <code>config.default.yaml</code>. This docs set has not verified that string as a working Ollama tag. Use <code>ZETTELFORGE_LLM_MODEL</code> or <code>llm.model</code> to name a model available in your environment. The Ollama provider code falls back to <code>qwen2.5:3b</code> only when no model is passed to that provider, but the shared configuration currently passes the source default.</p>
+<div class="admonition note">
+<p class="admonition-title">Install the default model</p>
+<p>The v2.8.0 source and <code>config.default.yaml</code> select the published Ollama tag
+<a href="https://ollama.com/library/qwen3.5:9b"><code>qwen3.5:9b</code></a>. Install that tag in
+Ollama or set <code>ZETTELFORGE_LLM_MODEL</code> or <code>llm.model</code> to a model your chosen
+provider can load.</p>
 </div>
 <h3 id="provider-examples">Provider examples<a class="headerlink" href="#provider-examples" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Ollama on localhost with an explicit installed model</span>
 <span class="nt">llm</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ollama</span>
-<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qwen2.5:3b</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qwen3.5:9b</span>
 <span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:11434</span>
 
 <span class="c1"># In-process GGUF — fully offline (requires zettelforge[local])</span>
@@ -3255,7 +3325,7 @@
 </code></pre></div>
 <hr />
 <h2 id="llm_ner"><code>llm_ner</code><a class="headerlink" href="#llm_ner" title="Permanent link">&para;</a></h2>
-<p>Background named-entity recognition. Runs after every <code>remember()</code> call to extract persons, locations, organizations, events, activities, and temporal entities using the configured LLM. Regex extraction always runs regardless of this setting.</p>
+<p>Background named-entity recognition. When enrichment is enabled, ZettelForge dispatches it after <code>remember()</code> to extract persons, locations, organizations, events, activities, and temporal entities with the configured LLM. Regex extraction runs independently.</p>
 <table>
 <thead>
 <tr>
@@ -3274,8 +3344,31 @@
 </table>
 <p><strong>Environment variable:</strong> <code>ZETTELFORGE_LLM_NER_ENABLED</code></p>
 <hr />
+<h2 id="enrichment"><code>enrichment</code><a class="headerlink" href="#enrichment" title="Permanent link">&para;</a></h2>
+<p>Background enrichment dispatch controls causal extraction, LLM NER, and memory evolution jobs after writes. YAML and the environment variable both control the runtime gate.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td><code>true</code></td>
+<td>Set <code>false</code> to skip background enrichment jobs. Use this for deterministic tests and offline ingestion when LLM calls are unavailable.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Environment variable:</strong> <code>ZETTELFORGE_ENRICHMENT_ENABLED</code></p>
+<div class="highlight"><pre><span></span><code><span class="nt">enrichment</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</code></pre></div>
+<hr />
 <h2 id="extraction"><code>extraction</code><a class="headerlink" href="#extraction" title="Permanent link">&para;</a></h2>
-<p>Controls the two-phase <code>remember_with_extraction()</code> pipeline. Phase 1 extracts salient facts with importance scores. Phase 2 compares each fact to existing notes and decides ADD, UPDATE, DELETE, or NOOP.</p>
+<p>These values are parser defaults only in 2.8.0. <code>remember_with_extraction()</code> uses its <code>max_facts</code> and <code>min_importance</code> arguments instead of this section. YAML wiring is in progress. Phase 1 extracts salient facts with importance scores; phase 2 compares each fact to existing notes and decides ADD, UPDATE, DELETE, or NOOP.</p>
 <table>
 <thead>
 <tr>
@@ -3316,22 +3409,22 @@
 <tr>
 <td><code>default_k</code></td>
 <td><code>10</code></td>
-<td>Number of results returned per query.</td>
+<td>Parsed, but <code>recall()</code> currently uses its own <code>k=10</code> argument default.</td>
 </tr>
 <tr>
 <td><code>similarity_threshold</code></td>
 <td><code>0.25</code></td>
-<td>Minimum cosine similarity score (0.0–1.0) to include a result.</td>
+<td>Parsed; the current recall path does not read this field.</td>
 </tr>
 <tr>
 <td><code>entity_boost</code></td>
 <td><code>2.5</code></td>
-<td>Multiplicative score boost per overlapping named entity between the query and a note.</td>
+<td>Parsed; the current recall path does not read this field.</td>
 </tr>
 <tr>
 <td><code>max_graph_depth</code></td>
 <td><code>2</code></td>
-<td>Maximum hops to traverse in the knowledge graph during entity augmentation.</td>
+<td>Parsed; the current recall path does not read this field.</td>
 </tr>
 <tr>
 <td><code>rerank_enabled</code></td>
@@ -3348,12 +3441,27 @@
 <td><code>256</code></td>
 <td>Number of characters from each candidate document given to the reranker.</td>
 </tr>
+<tr>
+<td><code>rerank_model</code></td>
+<td><code>Xenova/ms-marco-MiniLM-L-6-v2</code></td>
+<td>Cross-encoder model used for reranking.</td>
+</tr>
+<tr>
+<td><code>entity_max_fanout</code></td>
+<td><code>25</code></td>
+<td>Drop query entities whose graph fan-out exceeds this many notes. Set <code>0</code> to keep all resolved entities.</td>
+</tr>
+<tr>
+<td><code>rerank_threads</code></td>
+<td><code>8</code></td>
+<td>ONNX intra-op thread count for cross-encoder reranking. Set <code>0</code> to use the ONNX Runtime default.</td>
+</tr>
 </tbody>
 </table>
 <p><strong>Environment variable:</strong> <code>ZETTELFORGE_RERANK_ENABLED</code></p>
 <hr />
 <h2 id="synthesis"><code>synthesis</code><a class="headerlink" href="#synthesis" title="Permanent link">&para;</a></h2>
-<p>Controls how <code>synthesize()</code> generates answers from retrieved memories.</p>
+<p>ZettelForge parses this section, but <code>synthesize()</code> does not consume these three defaults in 2.8.0. Pass <code>format</code> and <code>tier_filter</code> to <code>synthesize()</code> directly. Runtime wiring for this section is in progress.</p>
 <table>
 <thead>
 <tr>
@@ -3366,27 +3474,29 @@
 <tr>
 <td><code>max_context_tokens</code></td>
 <td><code>3000</code></td>
-<td>Maximum tokens of retrieved context passed to the LLM for answer generation.</td>
+<td>Parser default. The shared generator uses its constructor default and does not read this field.</td>
 </tr>
 <tr>
 <td><code>default_format</code></td>
 <td><code>direct_answer</code></td>
-<td>Output format when none is specified. Options: <code>direct_answer</code>, <code>synthesized_brief</code>, <code>timeline_analysis</code>, <code>relationship_map</code>.</td>
+<td>Parser default. <code>MemoryManager.synthesize()</code> independently defaults to <code>direct_answer</code>.</td>
 </tr>
 <tr>
 <td><code>tier_filter</code></td>
 <td><code>["A", "B"]</code></td>
-<td>Which epistemic tiers to include. A = authoritative, B = operational, C = support/speculative.</td>
+<td>Parser default. With no method argument, the current generator includes A, B, and C.</td>
 </tr>
 </tbody>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Format availability</p>
-<p><code>direct_answer</code> is available in all configurations. <code>synthesized_brief</code>, <code>timeline_analysis</code>, and <code>relationship_map</code> are available on <a href="https://threatrecall.ai">ThreatRecall.ai</a> (hosted SaaS). The OSS build falls back to <code>direct_answer</code> if an unavailable format is requested.</p>
+<p><code>direct_answer</code> runs in the ZettelForge base release. Requests for
+<code>synthesized_brief</code>, <code>timeline_analysis</code>, or <code>relationship_map</code> fall back
+to <code>direct_answer</code>; native extended formats are in progress.</p>
 </div>
 <hr />
 <h2 id="governance"><code>governance</code><a class="headerlink" href="#governance" title="Permanent link">&para;</a></h2>
-<p>Validation rules applied before <code>remember()</code> and <code>recall()</code> operations.</p>
+<p>Nested PII, limit, and memory-defense settings are applied before or during operations. The top-level fields below are parsed but are not consulted by the 2.8.0 <code>MemoryManager</code>; their runtime wiring is in progress.</p>
 <h3 id="top-level-keys">Top-level keys<a class="headerlink" href="#top-level-keys" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3400,12 +3510,12 @@
 <tr>
 <td><code>enabled</code></td>
 <td><code>true</code></td>
-<td>Master governance switch. Set <code>false</code> to skip all validation (testing only).</td>
+<td>Parsed; the current manager does not use this as a master switch.</td>
 </tr>
 <tr>
 <td><code>min_content_length</code></td>
 <td><code>1</code></td>
-<td>Minimum content length in characters for a <code>remember()</code> call to proceed.</td>
+<td>Parsed; the current manager does not enforce this field.</td>
 </tr>
 </tbody>
 </table>
@@ -3568,7 +3678,7 @@
 </table>
 <hr />
 <h2 id="cache"><code>cache</code><a class="headerlink" href="#cache" title="Permanent link">&para;</a></h2>
-<p>In-memory cache for TypeDB query results. Reduces round-trips for frequently accessed entities and relationships. Has no effect when <code>backend: sqlite</code>.</p>
+<p>In-memory LRU and TTL cache for computed embeddings. It is active with the default SQLite and LanceDB path.</p>
 <table>
 <thead>
 <tr>
@@ -3604,23 +3714,78 @@
 <tr>
 <td><code>level</code></td>
 <td><code>INFO</code></td>
-<td>Log level: <code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, <code>ERROR</code>.</td>
+<td>Active log level: <code>DEBUG</code>, <code>INFO</code>, <code>WARNING</code>, or <code>ERROR</code>.</td>
 </tr>
 <tr>
 <td><code>log_intents</code></td>
 <td><code>true</code></td>
-<td>Log classified query intents (useful for tuning intent routing).</td>
+<td>Parsed but not consumed.</td>
 </tr>
 <tr>
 <td><code>log_causal</code></td>
 <td><code>true</code></td>
-<td>Log causal triple extraction events.</td>
+<td>Parsed but not consumed.</td>
+</tr>
+<tr>
+<td><code>log_file</code></td>
+<td><code>""</code></td>
+<td>Parsed but not consumed; runtime writes under <code>&lt;AMEM_DATA_DIR&gt;/logs</code>.</td>
+</tr>
+<tr>
+<td><code>audit_log_file</code></td>
+<td><code>""</code></td>
+<td>Parsed but not consumed; runtime writes under <code>&lt;AMEM_DATA_DIR&gt;/logs</code>.</td>
+</tr>
+<tr>
+<td><code>log_to_stdout</code></td>
+<td><code>true</code></td>
+<td>Parsed but not consumed; runtime emits warnings and errors to standard error.</td>
+</tr>
+<tr>
+<td><code>max_bytes</code></td>
+<td><code>10485760</code></td>
+<td>Parsed but not consumed; the same value is currently hardcoded by logging setup.</td>
+</tr>
+<tr>
+<td><code>backup_count</code></td>
+<td><code>9</code></td>
+<td>Parsed but not consumed; the same value is currently hardcoded by logging setup.</td>
+</tr>
+<tr>
+<td><code>audit_backup_count</code></td>
+<td><code>52</code></td>
+<td>Parsed but not consumed; the same value is currently hardcoded by logging setup.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Environment variable:</strong> <code>ZETTELFORGE_LOG_LEVEL</code></p>
+<hr />
+<h2 id="telemetry"><code>telemetry</code><a class="headerlink" href="#telemetry" title="Permanent link">&para;</a></h2>
+<p>Operational telemetry writes recall and synthesis events for quality monitoring. In the verified checkout, telemetry path and debug controls are environment-only; a YAML <code>telemetry:</code> section is not applied by the config loader.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ZETTELFORGE_TELEMETRY_DIR</code></td>
+<td><code>~/.amem/telemetry</code></td>
+<td>Directory for telemetry JSONL files.</td>
+</tr>
+<tr>
+<td><code>ZETTELFORGE_TELEMETRY_DEBUG</code></td>
+<td><code>false</code></td>
+<td>Parsed into the config object, but the telemetry runtime does not consume it in 2.8.0.</td>
 </tr>
 </tbody>
 </table>
 <hr />
 <h2 id="web"><code>web</code><a class="headerlink" href="#web" title="Permanent link">&para;</a></h2>
-<p>Web management interface — a single-page application served at <code>GET /</code>. Provides note search, knowledge-graph exploration, live logs, and bulk ingestion.</p>
+<p>These fields are parsed, but the 2.8.0 <code>web/app.py</code> launcher does not read them. Start the web app with its <code>--host</code> and <code>--port</code> arguments. The launcher defaults to <code>127.0.0.1:8088</code> and requires <code>ZETTELFORGE_WEB_API_KEY</code> before binding to all interfaces. YAML and environment wiring for this section is in progress.</p>
 <table>
 <thead>
 <tr>
@@ -3633,24 +3798,29 @@
 <tr>
 <td><code>enabled</code></td>
 <td><code>true</code></td>
-<td>Enable the web UI. Set <code>false</code> for library-only use.</td>
+<td>Parser default; the launcher does not read it.</td>
 </tr>
 <tr>
 <td><code>host</code></td>
 <td><code>0.0.0.0</code></td>
-<td>Address to bind. Use <code>127.0.0.1</code> to restrict to localhost.</td>
+<td>Parser default; the launcher independently defaults to <code>127.0.0.1</code>.</td>
 </tr>
 <tr>
 <td><code>port</code></td>
 <td><code>8088</code></td>
-<td>Port to serve on.</td>
+<td>Parser default; pass <code>--port</code> to the launcher.</td>
+</tr>
+<tr>
+<td><code>ui_dir</code></td>
+<td><code>""</code></td>
+<td>Parser default; the launcher serves its packaged <code>web/ui</code> directory.</td>
 </tr>
 </tbody>
 </table>
 <p><strong>Environment variables:</strong> <code>ZETTELFORGE_WEB_ENABLED</code>, <code>ZETTELFORGE_WEB_PORT</code>, <code>ZETTELFORGE_WEB_UI_DIR</code></p>
 <hr />
 <h2 id="opencti"><code>opencti</code><a class="headerlink" href="#opencti" title="Permanent link">&para;</a></h2>
-<p>Connection settings for OpenCTI integration. Automatic sync is in progress; these keys are parsed and available for future use. See <a href="../../how-to/configure-opencti/">Configure OpenCTI</a> for current integration guidance.</p>
+<p>Connection settings reserved for OpenCTI integration. The parser accepts these keys, but the 2.8.0 base release does not consume them for sync. Automatic sync is in progress. See <a href="../../how-to/configure-opencti/">Configure OpenCTI</a> for the current manual exchange path.</p>
 <table>
 <thead>
 <tr>
@@ -3668,12 +3838,12 @@
 <tr>
 <td><code>token</code></td>
 <td><code>""</code></td>
-<td>OpenCTI API token. Use <code>${OPENCTI_TOKEN}</code> to pull from the environment.</td>
+<td>Parsed token value. Use the <code>OPENCTI_TOKEN</code> environment variable; <code>${OPENCTI_TOKEN}</code> interpolation is not implemented for this YAML field.</td>
 </tr>
 <tr>
 <td><code>sync_interval</code></td>
 <td><code>0</code></td>
-<td>Polling interval in seconds. <code>0</code> disables automatic sync.</td>
+<td>Parsed polling interval in seconds. No scheduler consumes it in the base release.</td>
 </tr>
 </tbody>
 </table>

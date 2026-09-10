@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Ingest Sigma detection rules into ZettelForge memory with automatic entity extraction, tag resolution, and knowledge graph population.">
+        <meta name="description" content="Validate and ingest Sigma rules into ZettelForge memory, with typed knowledge graph edges for log sources, ATT&CK tags, CVEs, and related rules.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configure-sigma-rule-ingestion" class="md-skip">
+        <a href="#configure-sigma-ingestion" class="md-skip">
           Skip to content
         </a>
       
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1014,104 +1014,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#validate-a-rule-set" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        Validate a rule set
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-use-the-cli-quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Use the CLI (quick start)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-use-the-python-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Use the Python API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-parse-without-persisting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Parse without persisting
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-accept-multiple-input-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Accept multiple input types
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-validate-against-the-sigma-schema" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Validate against the Sigma schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-understand-idempotency" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Understand idempotency
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-cli-flags-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. CLI flags reference
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#ingest-the-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM quick reference
+        Ingest the rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-the-python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the Python API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-zettelforge-writes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What ZettelForge writes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
       
     </span>
   </a>
@@ -2466,104 +2427,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#validate-a-rule-set" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        Validate a rule set
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-use-the-cli-quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Use the CLI (quick start)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-use-the-python-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Use the Python API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-parse-without-persisting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Parse without persisting
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-accept-multiple-input-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Accept multiple input types
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-validate-against-the-sigma-schema" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Validate against the Sigma schema
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-understand-idempotency" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Understand idempotency
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-cli-flags-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. CLI flags reference
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#llm-quick-reference" class="md-nav__link">
+  <a href="#ingest-the-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        LLM quick reference
+        Ingest the rules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-the-python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use the Python API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-zettelforge-writes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What ZettelForge writes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-limits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current limits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
       
     </span>
   </a>
@@ -2590,143 +2512,158 @@
   
 
 
-<h1 id="configure-sigma-rule-ingestion">Configure Sigma rule ingestion<a class="headerlink" href="#configure-sigma-rule-ingestion" title="Permanent link">&para;</a></h1>
-<p>Ingest Sigma detection rules (SigmaHQ format) into ZettelForge memory. Each rule is parsed, validated against the vendored SigmaHQ JSON schema, mapped to a <code>SigmaRule</code> entity with typed knowledge graph relations, and persisted as a memory note.</p>
+<h1 id="configure-sigma-ingestion">Configure Sigma ingestion<a class="headerlink" href="#configure-sigma-ingestion" title="Permanent link">&para;</a></h1>
+<p>Use this guide when you have Sigma rules and want ZettelForge to store them as
+memory notes and graph them as detection-rule entities.</p>
+<p>File-based Sigma ingestion in ZettelForge 2.8.0 parses YAML, validates each
+file against the vendored SigmaHQ schemas, maps the rule to a <code>SigmaRule</code>,
+persists a memory note, and writes detection-rule knowledge graph edges. It does
+not call the detection-rule explainer during ingest; call the explainer
+separately after the rule is stored.</p>
+<div class="admonition warning">
+<p class="admonition-title">CLI symlink refusal is in progress</p>
+<p>The 2.8.0 CLI follows matching <code>.yml</code> and <code>.yaml</code> symlinks during directory
+traversal. Run CLI ingestion only on rule directories you trust. Use the
+Python <code>ingest_rules_dir()</code> path when you need matching symlinks rejected.</p>
+</div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge installed (<code>pip install zettelforge</code>)</li>
-<li>Sigma rule files in <code>.yml</code> or <code>.yaml</code> format (SigmaHQ specification V2.0.0)</li>
-<li>Embedding model available (downloaded automatically on first use; the LLM explainer is not part of the ingestion pipeline in v1)</li>
+<li>ZettelForge 2.8.0 installed. Start with the
+  <a href="../../tutorials/01-quickstart/">Quickstart</a> if you have not installed it yet.</li>
+<li>A directory of Sigma <code>.yml</code> or <code>.yaml</code> rules.</li>
+<li>A configured ZettelForge data directory for live ingest. For a disposable
+  trial, set <code>AMEM_DATA_DIR</code> to an empty temporary directory.</li>
 </ul>
-<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<h3 id="1-use-the-cli-quick-start">1. Use the CLI (quick start)<a class="headerlink" href="#1-use-the-cli-quick-start" title="Permanent link">&para;</a></h3>
-<p>Dry-run a directory to validate rules before ingesting:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>zettelforge.sigma.ingest<span class="w"> </span>/path/to/sigma/rules/<span class="w"> </span>--dry-run
+<h2 id="validate-a-rule-set">Validate a rule set<a class="headerlink" href="#validate-a-rule-set" title="Permanent link">&para;</a></h2>
+<p>Dry-run mode is the safest first step. It parses, validates, and maps matching
+rules, but it does not write memory notes or graph edges.
+The commands below assume <code>SIGMA_RULE_DIR</code> points to your Sigma rule directory.</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>zettelforge.sigma.ingest<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SIGMA_RULE_DIR</span><span class="s2">&quot;</span><span class="w"> </span>--dry-run
 </code></pre></div>
-<p>Output shows each parsed rule with its id, rule type, tag count, and relation count:</p>
-<div class="highlight"><pre><span></span><code>OK  /path/to/sigma/rules/proc_creation_win_whoami.yml  id=sigma_a1b2c3d4e5f67890  type=detection  tags=3  edges=6
-OK  /path/to/sigma/rules/susp_ps_execution.yml  id=55043c5f-3c72-4fb6-aa22-70b6f7e98d4a  type=detection  tags=5  edges=9
+<p>Successful output lists each rule, its resolved ID, rule type, tag count, and
+edge count:</p>
+<div class="highlight"><pre><span></span><code>OK  rules/cloud_example.yml  id=929a690e-bef0-4204-a928-ef5e620d6fcb  type=detection  tags=0  edges=2
+OK  rules/tagged_example.yml  id=7e3d88a2-bfaa-4f52-9e0b-2bbbdd0d4ea1  type=detection  tags=5  edges=11
 
 Dry-run summary: 2/2 parsed, 0 failed.
 </code></pre></div>
-<p>Live ingestion into a MemoryManager:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>zettelforge.sigma.ingest<span class="w"> </span>/path/to/sigma/rules/<span class="w"> </span>--domain<span class="w"> </span>detection
+<p>The command exits non-zero when any file fails. Fix <code>FAIL</code> lines before you run
+live ingest.</p>
+<h2 id="ingest-the-rules">Ingest the rules<a class="headerlink" href="#ingest-the-rules" title="Permanent link">&para;</a></h2>
+<p>After dry-run succeeds, ingest the same directory into the <code>detection</code> memory
+domain:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>zettelforge.sigma.ingest<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SIGMA_RULE_DIR</span><span class="s2">&quot;</span><span class="w"> </span>--domain<span class="w"> </span>detection
 </code></pre></div>
-<h3 id="2-use-the-python-api">2. Use the Python API<a class="headerlink" href="#2-use-the-python-api" title="Permanent link">&para;</a></h3>
+<p>Live ingest creates one memory note for each new rule body and persists the
+emitted knowledge graph edges through the active storage backend. The ingest path
+is idempotent by <code>source_ref</code>: re-ingesting an unchanged rule returns the
+existing note instead of creating a duplicate. The content-hash suffix lets a
+changed body become a new note without losing the upstream rule identifier.
+Sigma source references use this format:</p>
+<div class="highlight"><pre><span></span><code>sigma:&lt;rule_id&gt;:&lt;content_sha256[:12]&gt;
+</code></pre></div>
+<h2 id="use-the-python-api">Use the Python API<a class="headerlink" href="#use-the-python-api" title="Permanent link">&para;</a></h2>
+<p>Use the Python API when you need to validate rules before writing, override the
+memory domain, or defer enrichment for a large import.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">ingest_rule</span><span class="p">,</span> <span class="n">ingest_rules_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">ingest_rule</span><span class="p">,</span> <span class="n">ingest_rules_dir</span><span class="p">,</span> <span class="n">parse_file</span><span class="p">,</span> <span class="n">validate</span>
 
 <span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
 
-<span class="c1"># Ingest a single file</span>
-<span class="n">note</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span>
-    <span class="s2">&quot;/path/to/rule.yml&quot;</span><span class="p">,</span>
-    <span class="n">mm</span><span class="p">,</span>
-    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;detection&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ingested: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">, relations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">relations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">rule</span> <span class="o">=</span> <span class="n">parse_file</span><span class="p">(</span><span class="s2">&quot;rules/cloud_example.yml&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">SystemExit</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">errors</span><span class="p">)</span>
 
-<span class="c1"># Ingest a directory (walks recursively)</span>
+<span class="n">note</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">mm</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;detection&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">({</span><span class="n">rel</span><span class="p">[</span><span class="s2">&quot;rel&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">rel</span> <span class="ow">in</span> <span class="n">relations</span><span class="p">}))</span>
+
 <span class="n">ingested</span><span class="p">,</span> <span class="n">skipped</span> <span class="o">=</span> <span class="n">ingest_rules_dir</span><span class="p">(</span>
-    <span class="s2">&quot;/path/to/sigma/rules/&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;rules&quot;</span><span class="p">,</span>
     <span class="n">mm</span><span class="p">,</span>
     <span class="n">glob</span><span class="o">=</span><span class="s2">&quot;**/*.yml&quot;</span><span class="p">,</span>
-    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;detection&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ingested: </span><span class="si">{</span><span class="n">ingested</span><span class="si">}</span><span class="s2">, skipped: </span><span class="si">{</span><span class="n">skipped</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>For high-volume batch ingestion, use <code>bulk=True</code> to disable per-rule sync and call <code>mm.flush()</code> once at the end:</p>
-<div class="highlight"><pre><span></span><code><span class="n">ingested</span><span class="p">,</span> <span class="n">skipped</span> <span class="o">=</span> <span class="n">ingest_rules_dir</span><span class="p">(</span>
-    <span class="s2">&quot;/path/to/sigma/rules/&quot;</span><span class="p">,</span>
-    <span class="n">mm</span><span class="p">,</span>
     <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;detection&quot;</span><span class="p">,</span>
     <span class="n">bulk</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">flush_timeout</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ingested=</span><span class="si">{</span><span class="n">ingested</span><span class="si">}</span><span class="s2"> skipped=</span><span class="si">{</span><span class="n">skipped</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="3-parse-without-persisting">3. Parse without persisting<a class="headerlink" href="#3-parse-without-persisting" title="Permanent link">&para;</a></h3>
-<p>For validation pipelines or custom workflows, parse rules without memory storage:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_file</span><span class="p">,</span> <span class="n">parse_yaml</span><span class="p">,</span> <span class="n">from_rule_dict</span>
-
-<span class="c1"># Parse from file</span>
-<span class="n">rule_dict</span> <span class="o">=</span> <span class="n">parse_file</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">)</span>
-
-<span class="c1"># Parse from YAML string</span>
-<span class="n">yaml_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">title: Suspicious Whoami Execution</span>
-<span class="s2">logsource:</span>
-<span class="s2">  category: process_creation</span>
-<span class="s2">  product: windows</span>
-<span class="s2">detection:</span>
-<span class="s2">  selection:</span>
-<span class="s2">    Image|endswith: &#39;</span><span class="se">\\</span><span class="s2">whoami.exe&#39;</span>
-<span class="s2">  condition: selection</span>
-<span class="s2">&quot;&quot;&quot;</span>
-<span class="n">rule_dict</span> <span class="o">=</span> <span class="n">parse_yaml</span><span class="p">(</span><span class="n">yaml_text</span><span class="p">)</span>
-
-<span class="c1"># Map to entity and KG relations</span>
-<span class="n">entity</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">from_rule_dict</span><span class="p">(</span><span class="n">rule_dict</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rule: </span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Logsource: product=</span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">logsource_product</span><span class="si">}</span><span class="s2">, category=</span><span class="si">{</span><span class="n">entity</span><span class="o">.</span><span class="n">logsource_category</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Relation types: </span><span class="si">{</span><span class="nb">set</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;rel&#39;</span><span class="p">]</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">relations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="4-accept-multiple-input-types">4. Accept multiple input types<a class="headerlink" href="#4-accept-multiple-input-types" title="Permanent link">&para;</a></h3>
-<p><code>ingest_rule()</code> accepts a parsed dict, raw YAML string, or <code>Path</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Dict (pre-parsed)</span>
-<span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="n">rule_dict</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
-
-<span class="c1"># YAML string</span>
-<span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="n">yaml_text</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
-
-<span class="c1"># Path object</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">),</span> <span class="n">mm</span><span class="p">)</span>
-
-<span class="c1"># File path as string (auto-detected if it looks like a path)</span>
-<span class="n">note</span><span class="p">,</span> <span class="n">rels</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="5-validate-against-the-sigma-schema">5. Validate against the Sigma schema<a class="headerlink" href="#5-validate-against-the-sigma-schema" title="Permanent link">&para;</a></h3>
-<p>Run standalone validation without entity mapping:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.sigma</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate</span><span class="p">,</span> <span class="n">parse_yaml</span><span class="p">,</span> <span class="n">SigmaValidationError</span>
-
-<span class="n">rule</span> <span class="o">=</span> <span class="n">parse_yaml</span><span class="p">(</span><span class="n">yaml_text</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">validate</span><span class="p">(</span><span class="n">rule</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">valid</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">errors</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Validation error: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="6-understand-idempotency">6. Understand idempotency<a class="headerlink" href="#6-understand-idempotency" title="Permanent link">&para;</a></h3>
-<p>Re-ingesting an unchanged rule returns the original note. The <code>source_ref</code> follows the pattern <code>sigma:&lt;rule_id&gt;:&lt;content_sha256_prefix&gt;</code> and is checked before any write:</p>
-<div class="highlight"><pre><span></span><code><span class="n">first</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
-<span class="n">second</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">ingest_rule</span><span class="p">(</span><span class="s2">&quot;rule.yml&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">first</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">second</span><span class="o">.</span><span class="n">id</span>  <span class="c1"># same note, no duplicate</span>
-</code></pre></div>
-<h3 id="7-cli-flags-reference">7. CLI flags reference<a class="headerlink" href="#7-cli-flags-reference" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>usage: python -m zettelforge.sigma.ingest [-h] [--domain DOMAIN] [--dry-run] [--glob GLOB] path
-
-positional arguments:
-  path              Sigma rule file or directory
-
-options:
-  --domain DOMAIN   Memory domain for ingested notes (default: detection)
-  --dry-run         Parse + validate + map without persisting to memory
-  --glob GLOB       Glob used when path is a directory (default: **/*.yml)
-</code></pre></div>
-<h2 id="llm-quick-reference">LLM quick reference<a class="headerlink" href="#llm-quick-reference" title="Permanent link">&para;</a></h2>
-<p><strong>Task</strong>: Ingest Sigma rules into ZettelForge memory with automatic knowledge graph population.</p>
-<p><strong>Primary CLI</strong>: <code>python -m zettelforge.sigma.ingest &lt;path&gt;</code> with optional <code>--dry-run</code>, <code>--domain</code>, <code>--glob</code>.</p>
-<p><strong>Primary Python API</strong>: <code>ingest_rule(source, mm, domain="detection")</code> returns <code>(MemoryNote, relations_list)</code>. Accepts dict, string, or Path. <code>ingest_rules_dir(path, mm)</code> walks a directory tree and returns <code>(ingested_count, skipped_count)</code>.</p>
-<p><strong>Pipeline</strong>: Input -&gt; <code>parse_file()</code> or <code>parse_yaml()</code> (YAML load + JSON-schema validation against vendored SigmaHQ schemas) -&gt; <code>from_rule_dict()</code> (map to <code>SigmaRule</code> entity + relations) -&gt; <code>mm.remember()</code> (persist as memory note) -&gt; KG edge persistence.</p>
-<p><strong>Validation</strong>: <code>validate(rule_dict)</code> returns <code>ValidationResult(valid, errors)</code>. Two error types: <code>SigmaParseError</code> (bad YAML or I/O) and <code>SigmaValidationError</code> (schema violation). Both bubble through <code>ingest_rule()</code>.</p>
-<p><strong>Schema dispatch</strong>: Detection rules validate against <code>sigma-detection-rule-schema.json</code> (SigmaHQ V2.0.0, 2024-08-08). Rules with a <code>correlation:</code> key use the correlation schema. Rules with a <code>filter:</code> key use the filters schema. Required fields for detection rules: <code>title</code>, <code>logsource</code>, <code>detection</code>.</p>
-<p><strong>Tag resolution</strong>: Sigma tags (<code>attack.t1059</code>, <code>cve.2021-44228</code>) upgrade to typed KG edges (<code>detects</code> -&gt; <code>AttackPattern</code>, <code>references_cve</code> -&gt; <code>Vulnerability</code>, <code>attributed_to</code> -&gt; <code>IntrusionSet</code>/<code>Malware</code>). Raw <code>tagged_with</code> -&gt; <code>SigmaTag</code> edges are always preserved alongside upgrade edges. <code>tlp.*</code> and <code>detection.*</code> tags are metadata-only (no upgrade).</p>
-<p><strong>Logsource edges</strong>: Every populated logsource facet (product, service, category) generates an <code>applies_to</code> -&gt; <code>LogSource</code> edge with the facet type and value in properties.</p>
-<p><strong>Related rule edges</strong>: The <code>related:</code> block maps to <code>superseded_by</code> (type: <code>obsolete</code>) or <code>related_to</code> (all other types).</p>
-<p><strong>Idempotency</strong>: Source ref pattern <code>sigma:&lt;rule_id&gt;:&lt;content_sha256[:12]&gt;</code>. A store lookup precedes every write. Unchanged rules return the original note.</p>
-<p><strong>LLM explainer</strong>: Not wired into the ingestion pipeline in v1. Calling <code>explain()</code> directly is rate-limited by <code>ZETTELFORGE_EXPLAIN_RPM</code> (default 60 calls/minute). Auto-enrichment via the async worker queue is planned for v1.1.</p>
-<p><strong>Bulk ingestion</strong>: Use <code>ingest_rules_dir(..., bulk=True, flush_timeout=60.0)</code> for large rule sets. Per-rule enrichment sync is disabled; <code>mm.flush()</code> runs once at the end.</p>
-<p><strong>Security</strong>: File size capped at 1 MB. Symlinks are never followed during directory walk. Paths that resolve outside the rules root are skipped.</p>
-<p><strong>Edge tagging</strong>: All KG edges emitted during ingest carry <code>edge_type: detection</code> and <code>source: sigma_ingest</code> properties for downstream filtering.</p>
+<p><code>ingest_rule()</code> accepts a parsed <code>dict</code>, raw YAML text, a <code>Path</code>, or a string
+path. <code>ingest_rules_dir()</code> walks recursively, skips invalid files, refuses
+matching symlinks, and accepts both <code>.yml</code> and <code>.yaml</code> files. A parsed <code>dict</code>
+bypasses schema validation inside <code>ingest_rule()</code>, so keep the explicit
+<code>validate()</code> gate shown above.</p>
+<h2 id="what-zettelforge-writes">What ZettelForge writes<a class="headerlink" href="#what-zettelforge-writes" title="Permanent link">&para;</a></h2>
+<p>Each ingested Sigma rule becomes a <code>MemoryNote</code> with <code>source_type="sigma_rule"</code>.
+The note content contains the normalized YAML plus a one-line summary with the
+title, level, status, and logsource facets.</p>
+<p>The graph edge set depends on the rule fields:</p>
+<table>
+<thead>
+<tr>
+<th>Rule input</th>
+<th>Edge written</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>logsource.product</code>, <code>logsource.service</code>, <code>logsource.category</code></td>
+<td><code>applies_to -&gt; LogSource</code></td>
+</tr>
+<tr>
+<td>Any raw Sigma tag</td>
+<td><code>tagged_with -&gt; SigmaTag</code></td>
+</tr>
+<tr>
+<td><code>attack.t*</code> tag</td>
+<td><code>detects -&gt; AttackPattern</code></td>
+</tr>
+<tr>
+<td><code>cve.*</code> tag</td>
+<td><code>references_cve -&gt; Vulnerability</code></td>
+</tr>
+<tr>
+<td><code>attack.g*</code> or <code>attack.s*</code> tag</td>
+<td><code>attributed_to -&gt; IntrusionSet</code> or <code>Malware</code></td>
+</tr>
+<tr>
+<td><code>related[].type: obsolete</code></td>
+<td><code>superseded_by -&gt; SigmaRule</code></td>
+</tr>
+<tr>
+<td>Other <code>related[]</code> entries</td>
+<td><code>related_to -&gt; SigmaRule</code></td>
+</tr>
+</tbody>
+</table>
+<p>Raw <code>tagged_with</code> edges are always preserved. When a tag also resolves to a
+typed entity, ZettelForge writes both the raw provenance edge and the typed edge.</p>
+<h2 id="current-limits">Current limits<a class="headerlink" href="#current-limits" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A single Sigma file is capped at 1 MB.</li>
+<li>CLI directory traversal follows matching symlinks in 2.8.0. Symlink refusal
+  is in progress for the CLI; use <code>ingest_rules_dir()</code> for the enforced path.</li>
+<li><code>ingest_rules_dir()</code> rejects matching symlinks and counts each as skipped.</li>
+<li>Dry-run mode validates and maps rules only; it does not prove the storage
+  backend can write.</li>
+<li>The detection-rule explainer is not auto-invoked on ingest in ZettelForge
+  2.8.0. See <a href="../use-detection-rules/">Use detection rules and the explainer</a>
+  when you want LLM-generated explanations.</li>
+<li>ZettelForge 2.8.0 emits a Python <code>RuntimeWarning</code> when invoked as
+  <code>python3 -m zettelforge.sigma.ingest</code> because the package imports the module
+  before <code>runpy</code> executes it. Treat <code>OK</code>/<code>FAIL</code> lines and the process exit code
+  as the ingest result.</li>
+</ul>
+<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../reference/sigma-schema-reference/">Sigma schema reference</a>: exact parser,
+  entity, relation, and CLI contracts</li>
+<li><a href="../../reference/detection-rules-schema/">Detection rules schema</a>: shared
+  <code>DetectionRule</code>, <code>SigmaRule</code>, and graph edge shapes</li>
+<li><a href="../use-detection-rules/">Use detection rules and the explainer</a>: generate an
+  explanation after ingest</li>
+</ul>
 
 
 

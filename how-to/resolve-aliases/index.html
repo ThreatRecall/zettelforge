@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Use AliasResolver to map aliases (Fancy Bear, Pawn Storm) to canonical names (apt28) for consistent entity indexing in ZettelForge.">
+        <meta name="description" content="Use AliasResolver to map aliases (Fancy Bear, Pawn Storm) to canonical names (apt28) for consistent entity lookups in ZettelForge.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -774,10 +774,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-understand-where-alias-resolution-happens" class="md-nav__link">
+  <a href="#1-understand-what-the-extractor-detects-before-alias-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Understand where alias resolution happens
+        1. Understand what the extractor detects before alias resolution
       
     </span>
   </a>
@@ -785,10 +785,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-use-aliasresolver-directly" class="md-nav__link">
+  <a href="#2-use-canonical-values-with-direct-lookups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Use AliasResolver directly
+        2. Use canonical values with direct lookups
       
     </span>
   </a>
@@ -796,10 +796,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-add-custom-aliases-via-entity_aliasesjson" class="md-nav__link">
+  <a href="#3-use-aliasresolver-directly" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Add custom aliases via entity_aliases.json
+        3. Use AliasResolver directly
       
     </span>
   </a>
@@ -807,10 +807,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-typedb-alias-resolution-optional" class="md-nav__link">
+  <a href="#4-add-custom-aliases-with-entity_aliasesjson" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. TypeDB alias resolution (optional)
+        4. Add custom aliases with entity_aliases.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-check-the-typedb-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Check the TypeDB path
       
     </span>
   </a>
@@ -2445,10 +2456,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-understand-where-alias-resolution-happens" class="md-nav__link">
+  <a href="#1-understand-what-the-extractor-detects-before-alias-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Understand where alias resolution happens
+        1. Understand what the extractor detects before alias resolution
       
     </span>
   </a>
@@ -2456,10 +2467,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-use-aliasresolver-directly" class="md-nav__link">
+  <a href="#2-use-canonical-values-with-direct-lookups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Use AliasResolver directly
+        2. Use canonical values with direct lookups
       
     </span>
   </a>
@@ -2467,10 +2478,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-add-custom-aliases-via-entity_aliasesjson" class="md-nav__link">
+  <a href="#3-use-aliasresolver-directly" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Add custom aliases via entity_aliases.json
+        3. Use AliasResolver directly
       
     </span>
   </a>
@@ -2478,10 +2489,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-typedb-alias-resolution-optional" class="md-nav__link">
+  <a href="#4-add-custom-aliases-with-entity_aliasesjson" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. TypeDB alias resolution (optional)
+        4. Add custom aliases with entity_aliases.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-check-the-typedb-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Check the TypeDB path
       
     </span>
   </a>
@@ -2525,97 +2547,111 @@
 
 
 <h1 id="resolve-threat-actor-aliases">Resolve threat actor aliases<a class="headerlink" href="#resolve-threat-actor-aliases" title="Permanent link">&para;</a></h1>
-<p>ZettelForge normalizes entity names before indexing. When you call <code>remember()</code>, every entity extracted from the text passes through <code>AliasResolver</code> first. That means a note mentioning "Fancy Bear" and a note mentioning "APT28" are both indexed under the canonical value <code>apt28</code> — so queries that use the canonical name find both.</p>
-<p><code>recall_actor()</code> and <code>recall_entity()</code> are direct index lookups. They search for the value you pass in, lowercased. They do not resolve aliases at query time. Use the canonical name in those calls, or use the full <code>recall()</code> method, which runs entity extraction and alias resolution on the query text.</p>
-<p>This guide covers how alias resolution works, how to use it directly, and how to extend it with your own mappings.</p>
+<p>ZettelForge separates entity detection from alias resolution.
+<code>AliasResolver</code> maps an entity string you already have, such as <code>actor: Fancy Bear</code>, to a canonical value such as <code>apt28</code>.
+<code>MemoryManager</code> calls the resolver after entity extraction, but the current regex extraction path does not detect every named alias.</p>
+<p>For direct lookups, use canonical values.
+<code>recall_actor()</code> lowercases your input and searches the <code>actor</code>, <code>threat_actor</code>, and <code>intrusion_set</code> index buckets.
+It does not call <code>AliasResolver</code> at query time.
+If you have an alias string, resolve it first, then pass the canonical value to <code>recall_actor()</code> or <code>recall_entity()</code>.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge installed: <code>pip install zettelforge</code></li>
+<li>ZettelForge 2.8.0 installed: <code>pip install zettelforge</code></li>
+<li>A local data directory. By default this is <code>~/.amem</code>; set <code>AMEM_DATA_DIR</code> to use a different directory.</li>
 </ul>
 <h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<h3 id="1-understand-where-alias-resolution-happens">1. Understand where alias resolution happens<a class="headerlink" href="#1-understand-where-alias-resolution-happens" title="Permanent link">&para;</a></h3>
-<p>Resolution happens at store time, inside <code>remember()</code>:</p>
-<div class="highlight"><pre><span></span><code>text -&gt; entity_extractor -&gt; [&quot;Fancy Bear&quot;] (type: actor)
-                         -&gt; resolver.resolve(&quot;actor&quot;, &quot;fancy bear&quot;)
-                         -&gt; &quot;apt28&quot;
-                         -&gt; indexed as (actor, apt28)
+<h3 id="1-understand-what-the-extractor-detects-before-alias-resolution">1. Understand what the extractor detects before alias resolution<a class="headerlink" href="#1-understand-what-the-extractor-detects-before-alias-resolution" title="Permanent link">&para;</a></h3>
+<p>Resolution happens only after extraction returns an entity value:</p>
+<div class="highlight"><pre><span></span><code>text -&gt; entity_extractor -&gt; extracted entity values
+                         -&gt; AliasResolver.resolve(entity_type, value)
+                         -&gt; entity index
 </code></pre></div>
-<p>At query time, <code>recall_actor()</code> does a direct index lookup:</p>
+<p>The verified v2.8.0 regex path detects canonical APT labels, not every human-readable actor alias:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.entity_indexer</span><span class="w"> </span><span class="kn">import</span> <span class="n">EntityIndexer</span>
+
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">EntityIndexer</span><span class="p">()</span><span class="o">.</span><span class="n">extractor</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">extractor</span><span class="o">.</span><span class="n">extract_all</span><span class="p">(</span><span class="s2">&quot;Fancy Bear uses Cobalt Strike.&quot;</span><span class="p">,</span> <span class="n">use_llm</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">&quot;actor&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">extractor</span><span class="o">.</span><span class="n">extract_all</span><span class="p">(</span><span class="s2">&quot;APT28 uses Cobalt Strike.&quot;</span><span class="p">,</span> <span class="n">use_llm</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">&quot;intrusion_set&quot;</span><span class="p">])</span>
+</code></pre></div>
+<p>Expected output:</p>
+<div class="highlight"><pre><span></span><code>[]
+[&#39;apt28&#39;]
+</code></pre></div>
+<p>That means a note that only says <code>Fancy Bear</code> does not get an <code>apt28</code> entity mapping through the regex-only store path.
+Write source text with the canonical identifier when you need deterministic graph lookup, for example <code>APT28 (Fancy Bear)</code>.
+Use <code>AliasResolver</code> directly when you receive an alias from another tool or user input.</p>
+<h3 id="2-use-canonical-values-with-direct-lookups">2. Use canonical values with direct lookups<a class="headerlink" href="#2-use-canonical-values-with-direct-lookups" title="Permanent link">&para;</a></h3>
+<p>At query time, <code>recall_actor()</code> does a direct index lookup across the actor-related entity buckets:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
 
 <span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
 
-<span class="c1"># Direct index lookup — use the canonical name</span>
+<span class="c1"># Direct index lookup: use the canonical name.</span>
 <span class="n">notes_apt28</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
-<span class="c1"># This searches for &quot;fancy bear&quot; in the index, not &quot;apt28&quot;</span>
-<span class="c1"># Returns empty unless notes were ingested with the exact alias present</span>
+<span class="c1"># This searches for &quot;fancy bear&quot; in the entity index.</span>
 <span class="n">notes_fancy</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="s2">&quot;Fancy Bear&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;APT28 (canonical):  </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">notes_apt28</span><span class="p">)</span><span class="si">}</span><span class="s2"> notes&quot;</span><span class="p">)</span>
-<span class="c1"># notes indexed at store time as &quot;apt28&quot;; querying &quot;fancy bear&quot; finds nothing</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fancy Bear (alias): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">notes_fancy</span><span class="p">)</span><span class="si">}</span><span class="s2"> notes&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>To query with natural language (where aliases are resolved before lookup), use <code>recall()</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># recall() extracts entities from the query string and resolves aliases</span>
-<span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;What tools has Fancy Bear used?&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span><span class="si">}</span><span class="s2"> notes via full recall&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="2-use-aliasresolver-directly">2. Use AliasResolver directly<a class="headerlink" href="#2-use-aliasresolver-directly" title="Permanent link">&para;</a></h3>
-<p><code>AliasResolver</code> is available standalone for debugging or pre-processing entity names before passing them to <code>recall_entity()</code>:</p>
+<p><code>recall()</code> performs vector retrieval and graph augmentation.
+It resolves query entities only when the extractor emits them, so do not rely on it to turn every alias phrase into a graph lookup.</p>
+<h3 id="3-use-aliasresolver-directly">3. Use <code>AliasResolver</code> directly<a class="headerlink" href="#3-use-aliasresolver-directly" title="Permanent link">&para;</a></h3>
+<p>Use <code>AliasResolver</code> for debugging, pre-processing, or any workflow where you already know the entity type:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.alias_resolver</span><span class="w"> </span><span class="kn">import</span> <span class="n">AliasResolver</span>
 
 <span class="n">resolver</span> <span class="o">=</span> <span class="n">AliasResolver</span><span class="p">()</span>
 
-<span class="c1"># Built-in actor aliases (verified live)</span>
+<span class="c1"># Built-in actor aliases</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Fancy Bear&quot;</span><span class="p">))</span>   <span class="c1"># apt28</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;fancy-bear&quot;</span><span class="p">))</span>   <span class="c1"># apt28</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;FANCY BEAR&quot;</span><span class="p">))</span>   <span class="c1"># apt28</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Pawn Storm&quot;</span><span class="p">))</span>   <span class="c1"># apt28</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Cozy Bear&quot;</span><span class="p">))</span>    <span class="c1"># apt29</span>
 
-<span class="c1"># Unknown entity — returns input lowercased (passthrough)</span>
+<span class="c1"># Unknown entity: returns the input lowercased.</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Volt Typhoon&quot;</span><span class="p">))</span> <span class="c1"># volt typhoon</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;APT28&quot;</span><span class="p">))</span>        <span class="c1"># apt28 (passthrough, already canonical)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;APT28&quot;</span><span class="p">))</span>        <span class="c1"># apt28</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;NewGroup42&quot;</span><span class="p">))</span>   <span class="c1"># newgroup42</span>
 </code></pre></div>
-<p>To use aliases safely with <code>recall_actor()</code>, resolve first:</p>
-<div class="highlight"><pre><span></span><code><span class="n">canonical</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Fancy Bear&quot;</span><span class="p">)</span>  <span class="c1"># &quot;apt28&quot;</span>
+<p>Resolve before a direct lookup:</p>
+<div class="highlight"><pre><span></span><code><span class="n">canonical</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Fancy Bear&quot;</span><span class="p">)</span>
 <span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="n">canonical</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Built-in aliases are intentionally minimal</p>
-<p>ZettelForge ships with six hardcoded entries covering only two actors:
-"fancy bear", "fancy-bear", "pawn storm", "pawn-storm" (all map to <code>apt28</code>) and
-"cozy bear", "cozy-bear" (both map to <code>apt29</code>). The <code>tool</code> type has no built-in
-aliases. All other mappings come from your local JSON file or TypeDB.</p>
+<p>ZettelForge ships with six hardcoded actor entries:
+<code>fancy bear</code>, <code>fancy-bear</code>, <code>pawn storm</code>, and <code>pawn-storm</code> map to <code>apt28</code>;
+<code>cozy bear</code> and <code>cozy-bear</code> map to <code>apt29</code>.
+The <code>tool</code> type has no built-in aliases.
+All other mappings come from your local JSON file or TypeDB.</p>
 </div>
-<p><strong>Input normalization rules (verified from source and live execution):</strong></p>
+<p><strong>Input normalization rules:</strong></p>
 <ul>
-<li>Lowercased before lookup: "FANCY BEAR" becomes "fancy bear"</li>
-<li>Hyphens replaced with spaces: "fancy-bear" becomes "fancy bear"</li>
-<li>Passthrough: if no match found, returns input lowercased</li>
+<li>The resolver lowercases lookup input before matching.</li>
+<li>The resolver replaces hyphens with spaces before the local dictionary lookup.</li>
+<li>Unknown values return as the original input lowercased.</li>
 </ul>
-<h3 id="3-add-custom-aliases-via-entity_aliasesjson">3. Add custom aliases via entity_aliases.json<a class="headerlink" href="#3-add-custom-aliases-via-entity_aliasesjson" title="Permanent link">&para;</a></h3>
-<p>Create or update <code>~/.amem/entity_aliases.json</code> to add aliases for any groups or tools your threat intel sources reference by non-canonical names:</p>
+<h3 id="4-add-custom-aliases-with-entity_aliasesjson">4. Add custom aliases with <code>entity_aliases.json</code><a class="headerlink" href="#4-add-custom-aliases-with-entity_aliasesjson" title="Permanent link">&para;</a></h3>
+<p><code>AliasResolver</code> loads custom aliases from <code>entity_aliases.json</code> in the default data directory.
+Use <code>AMEM_DATA_DIR</code> to move this file; otherwise it lives at <code>~/.amem/entity_aliases.json</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_store</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_default_data_dir</span>
 
-<span class="n">alias_file</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.amem&quot;</span> <span class="o">/</span> <span class="s2">&quot;entity_aliases.json&quot;</span>
+<span class="n">alias_file</span> <span class="o">=</span> <span class="n">get_default_data_dir</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;entity_aliases.json&quot;</span>
 <span class="n">alias_file</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Load existing aliases if the file exists</span>
 <span class="n">aliases</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="k">if</span> <span class="n">alias_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
     <span class="n">aliases</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">alias_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
 
-<span class="c1"># Add actor aliases</span>
 <span class="n">aliases</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="p">{})</span>
 <span class="n">aliases</span><span class="p">[</span><span class="s2">&quot;actor&quot;</span><span class="p">][</span><span class="s2">&quot;charming kitten&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;apt35&quot;</span>
 <span class="n">aliases</span><span class="p">[</span><span class="s2">&quot;actor&quot;</span><span class="p">][</span><span class="s2">&quot;phosphorus&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;apt35&quot;</span>
 <span class="n">aliases</span><span class="p">[</span><span class="s2">&quot;actor&quot;</span><span class="p">][</span><span class="s2">&quot;bronze silhouette&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;volt typhoon&quot;</span>
 
-<span class="c1"># Add tool aliases</span>
 <span class="n">aliases</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="p">{})</span>
 <span class="n">aliases</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">][</span><span class="s2">&quot;sliver c2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;sliver&quot;</span>
 <span class="n">aliases</span><span class="p">[</span><span class="s2">&quot;tool&quot;</span><span class="p">][</span><span class="s2">&quot;cs beacon&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;cobalt strike&quot;</span>
@@ -2623,22 +2659,23 @@ aliases. All other mappings come from your local JSON file or TypeDB.</p>
 <span class="n">alias_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">aliases</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Written to </span><span class="si">{</span><span class="n">alias_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Verify (live-tested):</p>
-<div class="highlight"><pre><span></span><code><span class="n">resolver</span> <span class="o">=</span> <span class="n">AliasResolver</span><span class="p">()</span>  <span class="c1"># Reloads from file at __init__</span>
+<p>Reload and verify:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.alias_resolver</span><span class="w"> </span><span class="kn">import</span> <span class="n">AliasResolver</span>
+
+<span class="n">resolver</span> <span class="o">=</span> <span class="n">AliasResolver</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Charming Kitten&quot;</span><span class="p">))</span>    <span class="c1"># apt35</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Phosphorus&quot;</span><span class="p">))</span>          <span class="c1"># apt35</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Bronze Silhouette&quot;</span><span class="p">))</span>   <span class="c1"># volt typhoon</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;CS Beacon&quot;</span><span class="p">))</span>            <span class="c1"># cobalt strike</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Cozy Bear&quot;</span><span class="p">))</span>           <span class="c1"># apt29 (hardcoded still applies)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Phosphorus&quot;</span><span class="p">))</span>         <span class="c1"># apt35</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Bronze Silhouette&quot;</span><span class="p">))</span>  <span class="c1"># volt typhoon</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span> <span class="s2">&quot;CS Beacon&quot;</span><span class="p">))</span>           <span class="c1"># cobalt strike</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Cozy Bear&quot;</span><span class="p">))</span>          <span class="c1"># apt29</span>
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Reload after editing</p>
-<p>Changes to <code>entity_aliases.json</code> are picked up when a new <code>AliasResolver</code> instance is
-created. <code>MemoryManager</code> creates its resolver at <code>__init__</code>. To pick up new entries
-in a long-running process, create a new <code>MemoryManager</code> instance.</p>
+<p>A new <code>AliasResolver</code> instance loads changes from <code>entity_aliases.json</code>.
+<code>MemoryManager</code> creates its resolver at initialization, so create a new <code>MemoryManager</code> instance after editing aliases.</p>
 </div>
-<p><strong>JSON file schema:</strong></p>
+<p>Use this JSON shape:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;actor&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;alias phrase&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;canonical name&quot;</span>
@@ -2648,42 +2685,55 @@ in a long-running process, create a new <code>MemoryManager</code> instance.</p>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
-<p>All keys and values are stored and matched as lowercase. The JSON entries extend the hardcoded dict — they do not replace it. If the same key appears in both, the JSON file wins.</p>
-<h3 id="4-typedb-alias-resolution-optional">4. TypeDB alias resolution (optional)<a class="headerlink" href="#4-typedb-alias-resolution-optional" title="Permanent link">&para;</a></h3>
-<p><code>AliasResolver</code> queries TypeDB for <code>alias-of</code> relations before consulting the local dict. In the default OSS configuration (SQLite + LanceDB backend), TypeDB is not active and this path is skipped automatically.</p>
-<p>To inspect which resolution path is active:</p>
-<div class="highlight"><pre><span></span><code><span class="n">resolver</span> <span class="o">=</span> <span class="n">AliasResolver</span><span class="p">()</span>
+<p>Write alias keys in lowercase, space-separated form.
+The resolver normalizes the lookup input before matching, but it returns canonical values exactly as you store them.
+Use lowercase canonical values when you want them to match ZettelForge's entity index values.
+JSON entries extend the hardcoded dictionary.
+If the same normalized key appears in both, the JSON file wins.</p>
+<h3 id="5-check-the-typedb-path">5. Check the TypeDB path<a class="headerlink" href="#5-check-the-typedb-path" title="Permanent link">&para;</a></h3>
+<p><code>AliasResolver</code> tries TypeDB <code>alias-of</code> relations before it checks the local dictionary for <code>actor</code>, <code>tool</code>, and <code>malware</code> entities.
+In the default OSS configuration, storage uses SQLite plus LanceDB, so TypeDB is not active and this path returns <code>None</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.alias_resolver</span><span class="w"> </span><span class="kn">import</span> <span class="n">AliasResolver</span>
 
-<span class="c1"># _try_typedb_resolve returns None if TypeDB is not configured</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="n">_try_typedb_resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;fancy bear&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TypeDB result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>              <span class="c1"># None if TypeDB unavailable</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TypeDB available: </span><span class="si">{</span><span class="n">resolver</span><span class="o">.</span><span class="n">_typedb_available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># False after first failure</span>
-
-<span class="c1"># Full path (TypeDB first, then local dict)</span>
-<span class="n">canonical</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;fancy bear&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final result: </span><span class="si">{</span><span class="n">canonical</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>            <span class="c1"># apt28 (from local dict)</span>
-</code></pre></div>
-<p>If TypeDB is unreachable, <code>_typedb_available</code> is set to <code>False</code> for the lifetime of the instance and all subsequent lookups go directly to the local dict. No error is raised.</p>
-<p>TypeDB-backed alias management with production alias seeding is available in ThreatRecall.ai.</p>
-<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<p><strong>recall_actor() returns empty results for a group I know is in my store.</strong></p>
-<p><code>recall_actor()</code> is a direct index lookup. It passes your query value (lowercased) to the SQLite entity index without alias resolution. If you stored notes about APT28 that were ingested when text said "Fancy Bear", those notes are indexed as <code>apt28</code> (resolved at store time). Query with the canonical name:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Correct: use canonical name</span>
-<span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="c1"># Or resolve first, then query</span>
 <span class="n">resolver</span> <span class="o">=</span> <span class="n">AliasResolver</span><span class="p">()</span>
-<span class="n">canonical</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Fancy Bear&quot;</span><span class="p">)</span>  <span class="c1"># &quot;apt28&quot;</span>
-<span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="n">canonical</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
-<span class="c1"># Or use full recall() for natural language queries</span>
-<span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;What do we know about Fancy Bear?&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="n">_try_typedb_resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;fancy bear&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TypeDB result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;TypeDB available: </span><span class="si">{</span><span class="n">resolver</span><span class="o">.</span><span class="n">_typedb_available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">canonical</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;fancy bear&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final result: </span><span class="si">{</span><span class="n">canonical</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>An alias I added to entity_aliases.json is not resolving.</strong></p>
-<p>Confirm the alias key is in the correct entity type bucket (<code>"actor"</code>, <code>"tool"</code>). Confirm the JSON is valid (<code>python3 -m json.tool ~/.amem/entity_aliases.json</code>). Confirm the <code>AliasResolver</code> instance was constructed after the file was written.</p>
-<p><strong>I need aliases that work for both "actor" and "intrusion_set" entity types.</strong></p>
-<p>The hardcoded dict contains only the <code>"actor"</code> key. If your store has notes indexed under <code>"intrusion_set"</code> (the STIX-aligned type, used by default for APT/UNC/FIN groups), add the alias under both keys in your JSON file:</p>
+<p>Expected output when TypeDB is not configured:</p>
+<div class="highlight"><pre><span></span><code>TypeDB result: None
+TypeDB available: False
+Final result: apt28
+</code></pre></div>
+<p>If TypeDB is unreachable, <code>_typedb_available</code> becomes <code>False</code> for the lifetime of that resolver instance and later lookups go straight to the local dictionary.
+The resolver returns <code>None</code> instead of raising an exception to the caller.</p>
+<p>ThreatRecall.ai keeps its hosted aliases in tenant-scoped knowledge graph records and seed packs.
+Your local <code>entity_aliases.json</code> configures ZettelForge only; it does not configure ThreatRecall.ai.</p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<p><strong><code>recall_actor()</code> returns empty results for a group I know is in my store.</strong></p>
+<p><code>recall_actor()</code> does not resolve aliases.
+It looks for the value you pass, lowercased, in the <code>actor</code>, <code>threat_actor</code>, and <code>intrusion_set</code> entity indexes.
+Use the canonical name:</p>
+<div class="highlight"><pre><span></span><code><span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">resolver</span> <span class="o">=</span> <span class="n">AliasResolver</span><span class="p">()</span>
+<span class="n">canonical</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;Fancy Bear&quot;</span><span class="p">)</span>
+<span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="n">canonical</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
+<p>If the source text only contained an alias such as <code>Fancy Bear</code>, confirm that the note actually has an entity mapping.
+For deterministic graph lookup, include the canonical identifier in the stored text, for example <code>APT28 (Fancy Bear)</code>.</p>
+<p><strong>An alias I added to <code>entity_aliases.json</code> is not resolving.</strong></p>
+<p>Confirm the alias key is in the correct entity type bucket, such as <code>"actor"</code> or <code>"tool"</code>.
+Confirm the JSON is valid with <code>python3 -m json.tool "$AMEM_DATA_DIR/entity_aliases.json"</code>.
+Create a new <code>AliasResolver</code> or <code>MemoryManager</code> instance after writing the file.</p>
+<p><strong>I need aliases that work for both <code>actor</code> and <code>intrusion_set</code> entity types.</strong></p>
+<p>The hardcoded dictionary contains only the <code>"actor"</code> key.
+If your store uses the STIX-aligned <code>intrusion_set</code> type for APT, UNC, or FIN groups, add the alias under both keys in your JSON file:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;actor&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;fancy bear&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;apt28&quot;</span><span class="p">},</span>
 <span class="w">  </span><span class="nt">&quot;intrusion_set&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;fancy bear&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;apt28&quot;</span><span class="p">}</span>

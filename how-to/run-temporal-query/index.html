@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -790,104 +790,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#1-store-related-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        1. Store related notes
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-store-notes-at-different-points-in-time" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Store notes at different points in time
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-get-an-entitys-temporal-timeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Get an entity's temporal timeline
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-get-all-changes-since-a-timestamp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Get all changes since a timestamp
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-use-temporal-query-phrasing-with-recall" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Use temporal query phrasing with recall()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-synthesize-an-answer-about-temporal-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Synthesize an answer about temporal changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-check-the-supersession-status-of-a-specific-note" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Check the supersession status of a specific note
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-anchor-report-ingestion-to-a-publication-date" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Anchor report ingestion to a publication date
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#reference" class="md-nav__link">
+  <a href="#2-list-changes-after-a-timestamp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reference
+        2. List changes after a timestamp
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-inspect-the-note-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Inspect the note timeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-recall-current-and-historical-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Recall current and historical notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-generate-an-answer-from-the-recalled-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Generate an answer from the recalled history
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-api-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working API calls
       
     </span>
   </a>
@@ -2466,104 +2427,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#1-store-related-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
+        1. Store related notes
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-store-notes-at-different-points-in-time" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Store notes at different points in time
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-get-an-entitys-temporal-timeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Get an entity's temporal timeline
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-get-all-changes-since-a-timestamp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Get all changes since a timestamp
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-use-temporal-query-phrasing-with-recall" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Use temporal query phrasing with recall()
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-synthesize-an-answer-about-temporal-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Synthesize an answer about temporal changes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-check-the-supersession-status-of-a-specific-note" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Check the supersession status of a specific note
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-anchor-report-ingestion-to-a-publication-date" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Anchor report ingestion to a publication date
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#reference" class="md-nav__link">
+  <a href="#2-list-changes-after-a-timestamp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reference
+        2. List changes after a timestamp
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-inspect-the-note-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Inspect the note timeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-recall-current-and-historical-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Recall current and historical notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-generate-an-answer-from-the-recalled-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Generate an answer from the recalled history
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-api-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working API calls
       
     </span>
   </a>
@@ -2591,228 +2513,197 @@
 
 
 <h1 id="run-temporal-queries">Run temporal queries<a class="headerlink" href="#run-temporal-queries" title="Permanent link">&para;</a></h1>
-<p>Track how threat intelligence changes over time. ZettelForge stores a temporal graph index that records supersession events and date-stamped observations as SUPERSEDES and OCCURRED_ON edges. You can query this index directly, or phrase your <code>recall()</code> queries to trigger temporal retrieval.</p>
+<p>Use temporal queries to see how stored threat intelligence changes over time.
+ZettelForge 2.8.0 records automatic supersession as a <code>SUPERSEDES</code> edge from
+the newer note to the older note. You can list those changes, inspect one
+note's timeline, and choose whether recall returns current or historical notes.</p>
+<div class="admonition warning">
+<p class="admonition-title">In progress</p>
+<p>Automatic supersession creates note-to-note history, but it does not
+populate actor or other entity timelines. In the verified example below,
+<code>mm.store.get_entity_timeline("intrusion_set", "apt28")</code> returns <code>[]</code>.
+Native <code>timeline_analysis</code> synthesis is also in progress; ZettelForge
+2.8.0 falls back to <code>direct_answer</code> when you request that format.</p>
+</div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge installed and initialized (<code>pip install zettelforge</code>)</li>
-<li>At least some notes in the store (run <code>mm.remember()</code> first if the store is empty)</li>
+<li>You use ZettelForge 2.8.0.</li>
+<li>You completed the <a href="../../tutorials/01-quickstart/">Quickstart</a>.</li>
+<li>You use the SQLite backend, which is the default backend.</li>
+<li>You have two related notes in the same domain.</li>
 </ul>
-<p>No LLM provider is required for the graph-based steps (Steps 2 and 3). Steps 4 and 5 need a configured LLM; see <a href="../../reference/configuration/">Configuration</a>.</p>
-<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<h3 id="1-store-notes-at-different-points-in-time">1. Store notes at different points in time<a class="headerlink" href="#1-store-notes-at-different-points-in-time" title="Permanent link">&para;</a></h3>
+<p>The examples use a fictional APT28 scenario for training. They do not make a
+current threat-intelligence claim.</p>
+<p>Set these variables in the terminal where you run the examples:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_BACKEND</span><span class="o">=</span>sqlite
+<span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_ENRICHMENT_ENABLED</span><span class="o">=</span><span class="nb">false</span>
+</code></pre></div>
+<p>This keeps the task on the verified SQLite path and skips background LLM
+enrichment. Recall still uses the configured local embedding model.</p>
+<h2 id="1-store-related-notes">1. Store related notes<a class="headerlink" href="#1-store-related-notes" title="Permanent link">&para;</a></h2>
+<p>Store an older report, then store a newer report that shares the same actor and
+replaces part of the assessment.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
 
 <span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
 
-<span class="c1"># Earlier intelligence</span>
-<span class="n">note1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
+<span class="n">note1</span><span class="p">,</span> <span class="n">status1</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
     <span class="n">content</span><span class="o">=</span><span class="s2">&quot;APT28 used Cobalt Strike for C2 in January 2026 campaigns targeting EU governments.&quot;</span><span class="p">,</span>
     <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span>
     <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;vendor-report-jan-2026&quot;</span><span class="p">,</span>
     <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># Later intelligence about the same group and campaign</span>
-<span class="n">note2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
-    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;APT28 shifted to Sliver C2 framework in March 2026, replacing Cobalt Strike in EU operations.&quot;</span><span class="p">,</span>
+<span class="n">note2</span><span class="p">,</span> <span class="n">status2</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
+    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;APT28 shifted to Sliver C2 in March 2026, replacing Cobalt Strike in EU operations.&quot;</span><span class="p">,</span>
     <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span>
     <span class="n">source_ref</span><span class="o">=</span><span class="s2">&quot;vendor-report-mar-2026&quot;</span><span class="p">,</span>
     <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">status1</span><span class="p">,</span> <span class="n">status2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_note_by_id</span><span class="p">(</span><span class="n">note1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span> <span class="o">==</span> <span class="n">note2</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 </code></pre></div>
-<p>When <code>note2</code> shares entities with <code>note1</code> and the overlap score exceeds the supersession threshold, ZettelForge marks <code>note1.links.superseded_by = note2.id</code> and adds a <code>SUPERSEDES</code> edge to the knowledge graph. The supersession check is automatic; you do not configure it per call.</p>
-<h3 id="2-get-an-entitys-temporal-timeline">2. Get an entity's temporal timeline<a class="headerlink" href="#2-get-an-entitys-temporal-timeline" title="Permanent link">&para;</a></h3>
-<p><code>get_entity_timeline()</code> returns the sequence of temporal edges recorded for one entity node. The edges include <code>SUPERSEDES</code>, <code>TEMPORAL_BEFORE</code>, and <code>TEMPORAL_AFTER</code> relationships.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.knowledge_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_knowledge_graph</span>
-
-<span class="n">kg</span> <span class="o">=</span> <span class="n">get_knowledge_graph</span><span class="p">()</span>
-
-<span class="c1"># Use the correct entity type: APT-numbered groups are indexed as &#39;intrusion_set&#39;</span>
-<span class="n">timeline</span> <span class="o">=</span> <span class="n">kg</span><span class="o">.</span><span class="n">get_entity_timeline</span><span class="p">(</span>
-    <span class="n">entity_type</span><span class="o">=</span><span class="s2">&quot;intrusion_set&quot;</span><span class="p">,</span>
-    <span class="n">entity_value</span><span class="o">=</span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">timeline</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;edge&#39;</span><span class="p">][</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;to_entity&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p>The verified run prints:</p>
+<div class="highlight"><pre><span></span><code>created created
+True
 </code></pre></div>
-<p>Return shape — each item in the list:</p>
-<table>
-<thead>
-<tr>
-<th>Key</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>timestamp</code></td>
-<td>str</td>
-<td>ISO-8601 timestamp from the edge properties</td>
-</tr>
-<tr>
-<td><code>edge</code></td>
-<td>dict</td>
-<td>Full edge dict (relationship, from/to node IDs, properties)</td>
-</tr>
-<tr>
-<td><code>to_entity</code></td>
-<td>str</td>
-<td><code>"type:value"</code> string for the target node</td>
-</tr>
-</tbody>
-</table>
-<p>Returns <code>[]</code> if no entity node of that type and value exists in the graph, or if no temporal edges have been recorded for it.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Entity types follow the extractor's normalized values. APT-numbered groups (APT28, APT41) are stored as <code>intrusion_set</code>. Named tools are stored as <code>tool</code>. Use the types from <a href="../../reference/kg-edge-schema/">KG Edge Schema</a>.</p>
-</div>
-<h3 id="3-get-all-changes-since-a-timestamp">3. Get all changes since a timestamp<a class="headerlink" href="#3-get-all-changes-since-a-timestamp" title="Permanent link">&para;</a></h3>
-<p><code>get_changes_since()</code> scans the temporal index and returns every SUPERSEDES, TEMPORAL_BEFORE, and TEMPORAL_AFTER edge recorded on or after the given timestamp.</p>
-<div class="highlight"><pre><span></span><code><span class="n">changes</span> <span class="o">=</span> <span class="n">kg</span><span class="o">.</span><span class="n">get_changes_since</span><span class="p">(</span><span class="s2">&quot;2026-03-01T00:00:00&quot;</span><span class="p">)</span>
+<p>The second <code>remember()</code> call detects the shared actor, marks the older note as
+superseded, and creates the graph edge. You do not configure the supersession
+check per call.</p>
+<h2 id="2-list-changes-after-a-timestamp">2. List changes after a timestamp<a class="headerlink" href="#2-list-changes-after-a-timestamp" title="Permanent link">&para;</a></h2>
+<p>Query the active store that belongs to <code>mm</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">changes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_changes_since</span><span class="p">(</span><span class="s2">&quot;2000-01-01T00:00:00&quot;</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">change</span> <span class="ow">in</span> <span class="n">changes</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">] &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">] &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;from&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> --</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">--&gt; &quot;</span>
         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;to&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="p">)</span>
 </code></pre></div>
-<p>Return shape — each item:</p>
+<p>Each result contains these keys:</p>
 <table>
 <thead>
 <tr>
 <th>Key</th>
 <th>Type</th>
-<th>Description</th>
+<th>Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>timestamp</code></td>
-<td>str</td>
-<td>ISO-8601 timestamp from the edge</td>
+<td><code>str</code></td>
+<td>The edge's <code>created_at</code> value.</td>
 </tr>
 <tr>
 <td><code>from</code></td>
-<td>str</td>
-<td><code>"type:value"</code> for the source node</td>
+<td><code>str</code></td>
+<td>The source node as <code>"type:value"</code>.</td>
 </tr>
 <tr>
 <td><code>relationship</code></td>
-<td>str</td>
-<td><code>SUPERSEDES</code>, <code>TEMPORAL_BEFORE</code>, or <code>TEMPORAL_AFTER</code></td>
+<td><code>str</code></td>
+<td><code>SUPERSEDES</code> or a <code>TEMPORAL_*</code> relationship.</td>
 </tr>
 <tr>
 <td><code>to</code></td>
-<td>str</td>
-<td><code>"type:value"</code> for the target node</td>
+<td><code>str</code></td>
+<td>The target node as <code>"type:value"</code>.</td>
 </tr>
 </tbody>
 </table>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Pass full ISO-8601 timestamps (<code>2026-03-01T00:00:00</code>), not partial dates (<code>2026-03-01</code>). The comparison is a string lexicographic sort on the <code>created_at</code> column; partial dates sort correctly for midnight boundaries but can misorder intra-day edges on older SQLite deployments.</p>
-</div>
-<p>You can also access these methods through the store directly: <code>mm.store.get_changes_since("2026-03-01T00:00:00")</code> returns the same shape from the SQLite backend.</p>
-<h3 id="4-use-temporal-query-phrasing-with-recall">4. Use temporal query phrasing with <code>recall()</code><a class="headerlink" href="#4-use-temporal-query-phrasing-with-recall" title="Permanent link">&para;</a></h3>
-<p><code>recall()</code> detects temporal intent from your query wording and adjusts retrieval weights to favor notes containing matching date strings.</p>
-<div class="highlight"><pre><span></span><code><span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span>
+<p>The <code>SUPERSEDES</code> result points from <code>note2</code> to <code>note1</code>: the newer stored
+assertion replaces the older one. Pass consistently formatted ISO-8601 values
+because the SQLite query compares the stored timestamp text with your input.</p>
+<h2 id="3-inspect-the-note-timeline">3. Inspect the note timeline<a class="headerlink" href="#3-inspect-the-note-timeline" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">timeline</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_entity_timeline</span><span class="p">(</span><span class="s2">&quot;note&quot;</span><span class="p">,</span> <span class="n">note2</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">timeline</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;edge&#39;</span><span class="p">][</span><span class="s1">&#39;relationship&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;to_entity&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">entity_timeline</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_entity_timeline</span><span class="p">(</span><span class="s2">&quot;intrusion_set&quot;</span><span class="p">,</span> <span class="s2">&quot;apt28&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">entity_timeline</span><span class="p">)</span>
+</code></pre></div>
+<p>The note timeline contains one <code>SUPERSEDES</code> edge to the older note. The entity
+timeline prints <code>[]</code> in ZettelForge 2.8.0 because the automatic write path
+records replacement between stored assertions, not between actor nodes. This
+note-level model preserves which source assertion changed instead of rewriting
+the actor as if the earlier evidence never existed.</p>
+<h2 id="4-recall-current-and-historical-notes">4. Recall current and historical notes<a class="headerlink" href="#4-recall-current-and-historical-notes" title="Permanent link">&para;</a></h2>
+<p><code>recall()</code> hides superseded notes by default. Set <code>exclude_superseded=False</code>
+when you need the historical record.</p>
+<div class="highlight"><pre><span></span><code><span class="n">current_notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span>
     <span class="n">query</span><span class="o">=</span><span class="s2">&quot;How has APT28 tooling changed since January 2026?&quot;</span><span class="p">,</span>
     <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
     <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">notes</span><span class="p">:</span>
+<span class="n">history</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span>
+    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;How has APT28 tooling changed since January 2026?&quot;</span><span class="p">,</span>
+    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
+    <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">exclude_superseded</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current notes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">current_notes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">history</span><span class="p">:</span>
     <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;SUPERSEDED&quot;</span> <span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span> <span class="k">else</span> <span class="s2">&quot;CURRENT&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">created_at</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">72</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Queries containing words like <code>when</code>, <code>since</code>, <code>before</code>, <code>after</code>, <code>changed</code>, <code>history</code>, <code>timeline</code>, <code>recent</code>, <code>latest</code>, or <code>previously</code> trigger the temporal retrieval path (retriever weight 0.2, temporal weight 0.5, top_k 5 by default).</p>
-<p>By default, <code>recall()</code> hides superseded notes (<code>exclude_superseded=True</code>). Pass <code>exclude_superseded=False</code> to include historical versions alongside current ones — useful when reconstructing how an assessment evolved.</p>
-<p>If <code>dateparser</code> is installed, the retriever also extracts date strings from the query and boosts notes whose content contains those dates. Without <code>dateparser</code>, temporal intent still fires but no date-boost is applied.</p>
-<h3 id="5-synthesize-an-answer-about-temporal-changes">5. Synthesize an answer about temporal changes<a class="headerlink" href="#5-synthesize-an-answer-about-temporal-changes" title="Permanent link">&para;</a></h3>
-<p><code>synthesize()</code> retrieves notes and passes them to an LLM for a structured response.</p>
+<p>The verified run returns one current note and both notes in <code>history</code>. The
+phrases <code>changed</code> and <code>since</code> classify this query as temporal. See
+<a href="../../reference/retrieval-policies/">Retrieval policies</a> for the policy weights
+and the complete temporal keyword list.</p>
+<h2 id="5-generate-an-answer-from-the-recalled-history">5. Generate an answer from the recalled history<a class="headerlink" href="#5-generate-an-answer-from-the-recalled-history" title="Permanent link">&para;</a></h2>
+<p>Use the verified <code>direct_answer</code> format:</p>
 <div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
     <span class="n">query</span><span class="o">=</span><span class="s2">&quot;Timeline of APT28 tool changes in 2026&quot;</span><span class="p">,</span>
     <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;direct_answer&quot;</span><span class="p">,</span>
     <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
 <span class="p">)</span>
 
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;format&quot;</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;synthesis&quot;</span><span class="p">][</span><span class="s2">&quot;answer&quot;</span><span class="p">])</span>
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">ThreatRecall.ai SaaS</p>
-<p>The <code>format="timeline_analysis"</code> extended format is available on <a href="https://threatrecall.ai">ThreatRecall.ai</a>. In ZettelForge OSS, requesting <code>timeline_analysis</code> silently falls back to <code>direct_answer</code>. Use <code>format="direct_answer"</code> in OSS code so the behavior is explicit and the result key (<code>result["synthesis"]["answer"]</code>) is correct.</p>
-</div>
-<h3 id="6-check-the-supersession-status-of-a-specific-note">6. Check the supersession status of a specific note<a class="headerlink" href="#6-check-the-supersession-status-of-a-specific-note" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">note</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_note_by_id</span><span class="p">(</span><span class="n">note1</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> was superseded by </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">newer</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">get_note_by_id</span><span class="p">(</span><span class="n">note</span><span class="o">.</span><span class="n">links</span><span class="o">.</span><span class="n">superseded_by</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Newer content: </span><span class="si">{</span><span class="n">newer</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Note </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2"> is current (not superseded)&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="7-anchor-report-ingestion-to-a-publication-date">7. Anchor report ingestion to a publication date<a class="headerlink" href="#7-anchor-report-ingestion-to-a-publication-date" title="Permanent link">&para;</a></h3>
-<p>Pass <code>published_date</code> when ingesting reports to give the LLM extraction phase a temporal anchor. The date is included in the extraction context so the LLM can correctly associate facts with the right time period.</p>
-<div class="highlight"><pre><span></span><code><span class="n">results</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember_report</span><span class="p">(</span>
-    <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Lazarus Group deployed a new DTrack variant in February 2026 against South Korean targets...&quot;</span><span class="p">,</span>
-    <span class="n">source_url</span><span class="o">=</span><span class="s2">&quot;https://example.com/lazarus-feb-2026&quot;</span><span class="p">,</span>
-    <span class="n">published_date</span><span class="o">=</span><span class="s2">&quot;2026-02-15&quot;</span><span class="p">,</span>
-    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-<p><code>published_date</code> requires a configured LLM provider. Without one, <code>remember_report()</code> completes with 0 extracted operations (fact extraction is LLM-dependent).</p>
-<h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h2>
+<p>The first line prints <code>direct_answer</code>. The generated answer depends on your
+configured LLM provider. Check <code>result["synthesis"]["confidence"]</code> before you
+use the answer; the controlled run with the mock provider returned a
+zero-confidence fallback.</p>
+<p>Do not request <code>timeline_analysis</code> in ZettelForge 2.8.0. That request returns
+the <code>direct_answer</code> format instead of a timeline-shaped result.</p>
+<p>If you are creating the notes from a report, pass its publication date during
+ingest. Follow <a href="../ingest-news-report/">Ingest a news report</a> for the verified
+<code>remember_report(..., published_date=...)</code> workflow.</p>
+<h2 id="working-api-calls">Working API calls<a class="headerlink" href="#working-api-calls" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Concept</th>
+<th>Goal</th>
 <th>API</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Entity temporal history</td>
-<td><code>kg.get_entity_timeline(entity_type, entity_value)</code></td>
-</tr>
-<tr>
-<td>All changes since a time</td>
-<td><code>kg.get_changes_since(iso_timestamp)</code></td>
-</tr>
-<tr>
-<td>Same via store</td>
+<td>List store-backed temporal changes</td>
 <td><code>mm.store.get_changes_since(iso_timestamp)</code></td>
 </tr>
 <tr>
-<td>Temporal query retrieval</td>
-<td><code>mm.recall(query, ...)</code> with temporal keywords</td>
+<td>Inspect note supersession history</td>
+<td><code>mm.store.get_entity_timeline("note", note_id)</code></td>
 </tr>
 <tr>
-<td>Exclude superseded notes</td>
-<td><code>mm.recall(..., exclude_superseded=True)</code> (default)</td>
-</tr>
-<tr>
-<td>Include historical notes</td>
+<td>Include superseded notes in recall</td>
 <td><code>mm.recall(..., exclude_superseded=False)</code></td>
 </tr>
 <tr>
-<td>OSS synthesis</td>
-<td><code>mm.synthesize(query, format="direct_answer")</code></td>
+<td>Check whether a note is superseded</td>
+<td><code>note.links.superseded_by</code></td>
 </tr>
 <tr>
-<td>Extended synthesis</td>
-<td><code>mm.synthesize(query, format="timeline_analysis")</code> — ThreatRecall.ai SaaS</td>
-</tr>
-<tr>
-<td>Supersession check</td>
-<td><code>note.links.superseded_by</code> — non-empty if note is outdated</td>
-</tr>
-<tr>
-<td>Temporal edge types</td>
-<td><code>SUPERSEDES</code>, <code>TEMPORAL_BEFORE</code>, <code>TEMPORAL_AFTER</code>, <code>OCCURRED_ON</code></td>
+<td>Generate an answer</td>
+<td><code>mm.synthesize(..., format="direct_answer")</code></td>
 </tr>
 </tbody>
 </table>

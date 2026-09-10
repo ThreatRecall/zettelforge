@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="List tools linked to an APT group and inspect the stored note that supports the relationship.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -29,7 +29,7 @@
     
     
       
-        <title>Query APT tool usage - ZettelForge Documentation</title>
+        <title>Query APT Tool Usage - ZettelForge Documentation</title>
       
     
     
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Query APT tool usage
+              Query APT Tool Usage
             
           </span>
         </div>
@@ -706,104 +706,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#1-create-a-memory-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-initialize-memorymanager" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Initialize MemoryManager
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-recall-notes-related-to-a-threat-actors-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Recall notes related to a threat actor's tools
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-synthesize-an-answer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Synthesize an answer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-traverse-the-graph-directly-no-llm-required" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Traverse the graph directly (no LLM required)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-get-single-hop-relationships-no-llm-required" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Get single-hop relationships (no LLM required)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-use-entity-specific-fast-lookups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Use entity-specific fast lookups
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-compare-tool-usage-across-actors-no-llm-required" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Compare tool usage across actors (no LLM required)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alias-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alias resolution
+        1. Create a memory manager
       
     </span>
   </a>
@@ -811,10 +717,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#when-you-do-not-need-an-llm" class="md-nav__link">
+  <a href="#2-list-the-tools-linked-to-apt28" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When you do not need an LLM
+        2. List the tools linked to APT28
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-inspect-the-supporting-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Inspect the supporting note
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpret-the-result-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpret the result correctly
       
     </span>
   </a>
@@ -844,7 +772,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2477,104 +2405,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#steps" class="md-nav__link">
+  <a href="#1-create-a-memory-manager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Steps
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-initialize-memorymanager" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. Initialize MemoryManager
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-recall-notes-related-to-a-threat-actors-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Recall notes related to a threat actor's tools
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-synthesize-an-answer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        3. Synthesize an answer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#4-traverse-the-graph-directly-no-llm-required" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        4. Traverse the graph directly (no LLM required)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-get-single-hop-relationships-no-llm-required" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Get single-hop relationships (no LLM required)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#6-use-entity-specific-fast-lookups" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Use entity-specific fast lookups
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-compare-tool-usage-across-actors-no-llm-required" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Compare tool usage across actors (no LLM required)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alias-resolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alias resolution
+        1. Create a memory manager
       
     </span>
   </a>
@@ -2582,10 +2416,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#when-you-do-not-need-an-llm" class="md-nav__link">
+  <a href="#2-list-the-tools-linked-to-apt28" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When you do not need an LLM
+        2. List the tools linked to APT28
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-inspect-the-supporting-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Inspect the supporting note
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interpret-the-result-correctly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interpret the result correctly
       
     </span>
   </a>
@@ -2613,162 +2469,94 @@
 
 
 <h1 id="query-what-tools-an-apt-group-uses">Query what tools an APT group uses<a class="headerlink" href="#query-what-tools-an-apt-group-uses" title="Permanent link">&para;</a></h1>
-<p>Retrieve tool-usage relationships for a threat actor using blended vector + graph retrieval, direct graph traversal, and entity-indexed lookups.</p>
+<p>Use the local knowledge graph to list tools linked to a threat actor, then inspect the
+stored note that supports the result. This workflow uses canonical entity values and does
+not require a generative LLM or TypeDB.</p>
+<div class="admonition note">
+<p class="admonition-title">Current feature state</p>
+<p>Canonical APT lookups such as <code>intrusion_set="apt28"</code> are verified. Direct alias
+shortcuts are in progress: <code>Fancy Bear</code> does not currently find an APT28 entity stored
+as <code>intrusion_set</code>. Use the normalized value <code>apt28</code> in this workflow.</p>
+</div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge installed and initialized (see <a href="../../tutorials/01-quickstart/">Quickstart</a>)</li>
-<li>CTI data already stored (see <a href="../store-threat-actor/">Store a threat actor</a>)</li>
-<li>An LLM provider configured if you use <code>recall()</code> or <code>synthesize()</code> (not required for graph traversal steps 4–5)</li>
+<li>Install ZettelForge 2.8.0 and confirm it imports. Start with the
+  <a href="../../tutorials/01-quickstart/">Quickstart</a> if you need a working installation.</li>
+<li>Complete <a href="../store-threat-actor/">Store threat intelligence about an actor</a>. The output
+  below assumes you stored that page's synthetic APT28 exercise.</li>
+<li>Run every snippet below in the same Python session.</li>
 </ul>
-<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<h3 id="1-initialize-memorymanager">1. Initialize MemoryManager<a class="headerlink" href="#1-initialize-memorymanager" title="Permanent link">&para;</a></h3>
+<h2 id="1-create-a-memory-manager">1. Create a memory manager<a class="headerlink" href="#1-create-a-memory-manager" title="Permanent link">&para;</a></h2>
+<p>Open Python from the same environment and data directory you used to store the note:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
 
 <span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
 </code></pre></div>
-<h3 id="2-recall-notes-related-to-a-threat-actors-tools">2. Recall notes related to a threat actor's tools<a class="headerlink" href="#2-recall-notes-related-to-a-threat-actors-tools" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span>
-    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;What tools does APT28 use?&quot;</span><span class="p">,</span>
-    <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span>
-    <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">notes</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">confidence</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">[:</span><span class="mi">120</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p><code>recall()</code> classifies the query intent internally. A relational query like "what tools does X use" increases the weight given to graph traversal in the blended retrieval pipeline, surfacing notes connected via <code>USES_TOOL</code> edges in addition to vector-similar content.</p>
-<p>Returns: <code>list[MemoryNote]</code>. Requires a configured LLM and embedding model.</p>
-<h3 id="3-synthesize-an-answer">3. Synthesize an answer<a class="headerlink" href="#3-synthesize-an-answer" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
-    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;What tools does APT28 use?&quot;</span><span class="p">,</span>
-    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;direct_answer&quot;</span><span class="p">,</span>
-    <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">&quot;synthesis&quot;</span><span class="p">][</span><span class="s2">&quot;answer&quot;</span><span class="p">])</span>
-
-<span class="k">for</span> <span class="n">source</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sources&quot;</span><span class="p">,</span> <span class="p">[]):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  source: </span><span class="si">{</span><span class="n">source</span><span class="p">[</span><span class="s1">&#39;note_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (confidence: </span><span class="si">{</span><span class="n">source</span><span class="p">[</span><span class="s1">&#39;confidence&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Use <code>format="direct_answer"</code> for a short factual response. Two other formats are available in ThreatRecall.ai (SaaS) but fall back silently to <code>direct_answer</code> in ZettelForge OSS:</p>
-<table>
-<thead>
-<tr>
-<th>Format</th>
-<th>Available in</th>
-<th>Output</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>direct_answer</code></td>
-<td>ZettelForge OSS + ThreatRecall.ai</td>
-<td>Short factual response</td>
-</tr>
-<tr>
-<td><code>synthesized_brief</code></td>
-<td>ThreatRecall.ai</td>
-<td>Paragraph summary with sourcing</td>
-</tr>
-<tr>
-<td><code>relationship_map</code></td>
-<td>ThreatRecall.ai</td>
-<td>Entity relationship summary</td>
-</tr>
-</tbody>
-</table>
-<p><code>synthesize()</code> requires a running LLM provider. If no LLM is configured, use steps 4–5 instead.</p>
-<h3 id="4-traverse-the-graph-directly-no-llm-required">4. Traverse the graph directly (no LLM required)<a class="headerlink" href="#4-traverse-the-graph-directly-no-llm-required" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">paths</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">traverse_graph</span><span class="p">(</span>
-    <span class="n">start_type</span><span class="o">=</span><span class="s2">&quot;intrusion_set&quot;</span><span class="p">,</span>
-    <span class="n">start_value</span><span class="o">=</span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span>
-    <span class="n">max_depth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="c1"># paths is a list of paths; each path is a list of steps</span>
-<span class="n">tools</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">step</span><span class="p">[</span><span class="s2">&quot;relationship&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;USES_TOOL&quot;</span><span class="p">:</span>
-            <span class="n">tools</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="s2">&quot;to_value&quot;</span><span class="p">])</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tools used by APT28: </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">tools</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Each step dict has keys: <code>from_type</code>, <code>from_value</code>, <code>relationship</code>, <code>to_type</code>, <code>to_value</code>.</p>
-<p>Use <code>start_type="intrusion_set"</code> for APT-numbered designations (APT28, UNC4899, FIN7). Use <code>start_type="actor"</code> for named actors that do not carry a numeric designation (Lazarus Group, Sandworm, Volt Typhoon). If unsure which type was stored, run both lookups and merge.</p>
-<p><code>traverse_graph()</code> is capped at <code>max_depth=2</code> in ZettelForge OSS.</p>
-<h3 id="5-get-single-hop-relationships-no-llm-required">5. Get single-hop relationships (no LLM required)<a class="headerlink" href="#5-get-single-hop-relationships-no-llm-required" title="Permanent link">&para;</a></h3>
+<h2 id="2-list-the-tools-linked-to-apt28">2. List the tools linked to APT28<a class="headerlink" href="#2-list-the-tools-linked-to-apt28" title="Permanent link">&para;</a></h2>
+<p>Query the normalized entity type and value, then keep only <code>USES_TOOL</code> relationships whose
+neighbor is a tool:</p>
 <div class="highlight"><pre><span></span><code><span class="n">relationships</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">get_entity_relationships</span><span class="p">(</span><span class="s2">&quot;intrusion_set&quot;</span><span class="p">,</span> <span class="s2">&quot;apt28&quot;</span><span class="p">)</span>
 
-<span class="n">tool_rels</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">relationships</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;relationship&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;USES_TOOL&quot;</span><span class="p">]</span>
-<span class="n">cve_rels</span>  <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">relationships</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;relationship&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;EXPLOITS_CVE&quot;</span><span class="p">]</span>
+<span class="n">tools</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="n">rel</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">][</span><span class="s2">&quot;entity_value&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">rel</span> <span class="ow">in</span> <span class="n">relationships</span>
+        <span class="k">if</span> <span class="n">rel</span><span class="p">[</span><span class="s2">&quot;relationship&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;USES_TOOL&quot;</span>
+        <span class="ow">and</span> <span class="n">rel</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">][</span><span class="s2">&quot;entity_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;tool&quot;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
 
-<span class="n">tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">][</span><span class="s2">&quot;entity_value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">tool_rels</span><span class="p">]</span>
-<span class="n">cves</span>  <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">][</span><span class="s2">&quot;entity_value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">cve_rels</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tools linked to APT28: </span><span class="si">{</span><span class="n">tools</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tools:      </span><span class="si">{</span><span class="n">tools</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CVEs:       </span><span class="si">{</span><span class="n">cves</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">tools</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+        <span class="s2">&quot;No tool relationships found. Complete the prerequisite exercise, &quot;</span>
+        <span class="s2">&quot;then query intrusion_set:apt28 from the same data directory.&quot;</span>
+    <span class="p">)</span>
 </code></pre></div>
-<p>Each item in the returned list has keys: <code>node</code> (with <code>entity_type</code>, <code>entity_value</code>), <code>relationship</code>, <code>edge_properties</code>, <code>note_id</code>.</p>
-<p>This is faster than <code>traverse_graph()</code> when you only need direct (depth-1) neighbors.</p>
-<h3 id="6-use-entity-specific-fast-lookups">6. Use entity-specific fast lookups<a class="headerlink" href="#6-use-entity-specific-fast-lookups" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># All notes mentioning APT28 (searches actor, threat_actor, intrusion_set types)</span>
-<span class="n">actor_notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="c1"># All notes mentioning Cobalt Strike</span>
-<span class="n">tool_notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_tool</span><span class="p">(</span><span class="s2">&quot;Cobalt Strike&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-
-<span class="c1"># Notes that mention both</span>
-<span class="n">actor_ids</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">actor_notes</span><span class="p">}</span>
-<span class="n">tool_ids</span>  <span class="o">=</span> <span class="p">{</span><span class="n">n</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">tool_notes</span><span class="p">}</span>
-<span class="n">overlap</span>   <span class="o">=</span> <span class="n">actor_ids</span> <span class="o">&amp;</span> <span class="n">tool_ids</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Notes mentioning both APT28 and Cobalt Strike: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">overlap</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<p>The synthetic prerequisite produces:</p>
+<div class="highlight"><pre><span></span><code>Tools linked to APT28: [&#39;cobalt-strike&#39;, &#39;mimikatz&#39;]
 </code></pre></div>
-<p><code>recall_actor()</code> searches <code>actor</code>, <code>threat_actor</code>, and <code>intrusion_set</code> entity types automatically, so it finds APT-numbered designations and named aliases alike.</p>
-<p><code>recall_actor()</code>, <code>recall_tool()</code>, and <code>recall_cve()</code> use the in-memory entity index for O(1) lookup. They bypass vector search entirely and are faster than <code>recall()</code> when you know the specific entity name.</p>
-<h3 id="7-compare-tool-usage-across-actors-no-llm-required">7. Compare tool usage across actors (no LLM required)<a class="headerlink" href="#7-compare-tool-usage-across-actors-no-llm-required" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="n">actors</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s2">&quot;intrusion_set&quot;</span><span class="p">,</span> <span class="s2">&quot;apt28&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span>         <span class="s2">&quot;lazarus group&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span>         <span class="s2">&quot;volt typhoon&quot;</span><span class="p">),</span>
-<span class="p">]</span>
+<p>The set removes duplicate edges before sorting the values. An empty list means the current
+store has no matching <code>USES_TOOL</code> neighbor for canonical <code>intrusion_set:apt28</code>; it does not
+prove the actor uses no tools.</p>
+<h2 id="3-inspect-the-supporting-note">3. Inspect the supporting note<a class="headerlink" href="#3-inspect-the-supporting-note" title="Permanent link">&para;</a></h2>
+<p>Cross-check the actor and the first returned tool through the entity index. Their shared
+note is the source context you review before treating the graph edge as attribution:</p>
+<div class="highlight"><pre><span></span><code><span class="n">actor_notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_actor</span><span class="p">(</span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">tool_notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall_tool</span><span class="p">(</span><span class="n">tools</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">entity_type</span><span class="p">,</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">:</span>
-    <span class="n">rels</span>  <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">get_entity_relationships</span><span class="p">(</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span>
-    <span class="n">tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;node&quot;</span><span class="p">][</span><span class="s2">&quot;entity_value&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rels</span> <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;relationship&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;USES_TOOL&quot;</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">actor</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">tools</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;(none stored)&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">matching_ids</span> <span class="o">=</span> <span class="p">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">actor_notes</span><span class="p">}</span> <span class="o">&amp;</span> <span class="p">{</span><span class="n">note</span><span class="o">.</span><span class="n">id</span> <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">tool_notes</span><span class="p">}</span>
+<span class="n">matching_notes</span> <span class="o">=</span> <span class="p">[</span><span class="n">note</span> <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">actor_notes</span> <span class="k">if</span> <span class="n">note</span><span class="o">.</span><span class="n">id</span> <span class="ow">in</span> <span class="n">matching_ids</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Supporting notes: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">matching_notes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">matching_notes</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">note</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">raw</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="alias-resolution">Alias resolution<a class="headerlink" href="#alias-resolution" title="Permanent link">&para;</a></h2>
-<p>All query methods (<code>recall()</code>, <code>recall_actor()</code>, <code>get_entity_relationships()</code>, <code>traverse_graph()</code>) resolve aliases automatically before lookup. The following aliases are built into ZettelForge OSS:</p>
-<table>
-<thead>
-<tr>
-<th>Alias</th>
-<th>Resolves to</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Fancy Bear, Fancy-Bear, Pawn Storm</td>
-<td>apt28</td>
-</tr>
-<tr>
-<td>Cozy Bear</td>
-<td>apt29</td>
-</tr>
-</tbody>
-</table>
-<p>Additional aliases from your connected MISP or OpenCTI instance are resolved dynamically in ThreatRecall.ai.</p>
-<h2 id="when-you-do-not-need-an-llm">When you do not need an LLM<a class="headerlink" href="#when-you-do-not-need-an-llm" title="Permanent link">&para;</a></h2>
-<p>Steps 4, 5, and 7 work with no LLM configured. They read directly from the SQLite knowledge graph built during the <code>remember()</code> / <code>remember_report()</code> ingestion phase and do not call any generative model.</p>
-<p>Steps 2 and 3 (<code>recall()</code>, <code>synthesize()</code>) require an embedding model and an LLM provider respectively.</p>
+<p>The exercise returns one shared note:</p>
+<div class="highlight"><pre><span></span><code>Supporting notes: 1
+Synthetic exercise: APT28 deployed Cobalt Strike and Mimikatz. The exercise associates both tools with CVE-2024-3094.
+</code></pre></div>
+<p><code>get_entity_relationships()</code> reads direct graph neighbors. <code>recall_actor()</code> and
+<code>recall_tool()</code> read exact canonical values from the entity index. None of these three
+calls performs vector retrieval or generates an answer with an LLM.</p>
+<h2 id="interpret-the-result-correctly">Interpret the result correctly<a class="headerlink" href="#interpret-the-result-correctly" title="Permanent link">&para;</a></h2>
+<p>ZettelForge's fast write path creates these graph edges from entities that occur in the
+same note. A <code>USES_TOOL</code> edge makes the relationship queryable; it does not independently
+prove real-world tool use. Review the note's source metadata and underlying report before
+you treat the result as attribution evidence.</p>
+<p>For complete method signatures and return shapes, use the
+<a href="../../reference/memory-manager-api/">Memory Manager API reference</a>. For multi-hop graph
+analysis, continue with <a href="../run-temporal-query/">Run temporal queries</a>.</p>
 
 
 
 
 
 
+
+  
+  
 
 
 

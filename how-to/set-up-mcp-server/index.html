@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2787,7 +2787,7 @@ args: [&quot;-m&quot;, &quot;zettelforge.mcp&quot;]
 </tr>
 <tr>
 <td><code>zettelforge_sync</code></td>
-<td>OpenCTI sync (ThreatRecall.ai SaaS only)</td>
+<td>Native OpenCTI sync placeholder; in progress</td>
 </tr>
 </tbody>
 </table>
@@ -2819,7 +2819,7 @@ args: [&quot;-m&quot;, &quot;zettelforge.mcp&quot;]
 <p><code>total_notes: 0</code> on a fresh install is correct — you haven't stored anything yet. See the <a href="../../tutorials/01-quickstart/">Quickstart</a> for how to populate your store.</p>
 <hr />
 <h2 id="configuration-options">Configuration options<a class="headerlink" href="#configuration-options" title="Permanent link">&para;</a></h2>
-<p>The server respects <code>ZETTELFORGE_DATA_DIR</code> and your <code>~/.amem/config.yaml</code> (or the path from <code>ZETTELFORGE_CONFIG</code>). No additional environment variables are required to start the MCP server. The server defaults to SQLite backend (<code>ZETTELFORGE_BACKEND=sqlite</code>).</p>
+<p>The server uses <code>AMEM_DATA_DIR</code> for the ZettelForge data directory. It also loads <code>config.yaml</code> or <code>config.yml</code> from the process working directory, then falls back to the packaged default config. No additional environment variables are required to start the MCP server. The server defaults to SQLite backend unless you set <code>ZETTELFORGE_BACKEND</code> first.</p>
 <p>To override data directory for a specific host config:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2827,7 +2827,7 @@ args: [&quot;-m&quot;, &quot;zettelforge.mcp&quot;]
 <span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python3&quot;</span><span class="p">,</span>
 <span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;-m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;zettelforge.mcp&quot;</span><span class="p">],</span>
 <span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;ZETTELFORGE_DATA_DIR&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/cti-memory&quot;</span>
+<span class="w">        </span><span class="nt">&quot;AMEM_DATA_DIR&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/data/cti-memory&quot;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
@@ -2835,7 +2835,7 @@ args: [&quot;-m&quot;, &quot;zettelforge.mcp&quot;]
 </code></pre></div>
 <hr />
 <h2 id="backward-compatible-entry-point">Backward-compatible entry point<a class="headerlink" href="#backward-compatible-entry-point" title="Permanent link">&para;</a></h2>
-<p>Existing <code>.mcp.json</code> configurations that reference <code>web/mcp_server.py</code> continue to work — it is a retained shim that calls the same <code>run_stdio()</code> function. New installations should use <code>python -m zettelforge.mcp</code>.</p>
+<p>Existing <code>.mcp.json</code> configurations that reference <code>web/mcp_server.py</code> continue to work — it is a retained shim that calls the same <code>run_stdio()</code> function. New installations use <code>python -m zettelforge.mcp</code>.</p>
 <hr />
 <h2 id="tlp-and-trust-boundaries">TLP and trust boundaries<a class="headerlink" href="#tlp-and-trust-boundaries" title="Permanent link">&para;</a></h2>
 <p><code>zettelforge_recall</code>, <code>zettelforge_synthesize</code>, and <code>zettelforge_entity</code> all accept an optional <code>actor</code> field (caller identity string) and <code>tlp_override_reason</code>. Without <code>actor</code>, the server treats the caller as unauthenticated and caps shared content at <code>TLP:GREEN</code>. AMBER and RED content requires both a valid <code>actor</code> and a <code>tlp_override_reason</code>.</p>
@@ -2843,8 +2843,8 @@ args: [&quot;-m&quot;, &quot;zettelforge.mcp&quot;]
 <p>See the <a href="../../reference/mcp-protocol/">MCP protocol reference</a> for full JSON-RPC request and response schemas and the complete TLP policy.</p>
 <hr />
 <h2 id="zettelforge_sync-and-opencti-threatrecallai-saas"><code>zettelforge_sync</code> and OpenCTI (ThreatRecall.ai SaaS)<a class="headerlink" href="#zettelforge_sync-and-opencti-threatrecallai-saas" title="Permanent link">&para;</a></h2>
-<p><code>zettelforge_sync</code> is listed in the tool schema and appears in <code>tools/list</code>. In the ZettelForge OSS release it returns a JSON-RPC error response indicating that sync requires the SaaS extension. The tool is present in the schema so MCP host configs do not need to change when connecting to ThreatRecall.ai.</p>
-<p>OpenCTI sync is a ThreatRecall.ai SaaS capability.</p>
+<p><code>zettelforge_sync</code> is listed in the tool schema and appears in <code>tools/list</code>. In the current ZettelForge OSS release it returns a JSON-RPC error response instead of syncing. The tool is present in the schema so MCP host configs do not need to change when native OpenCTI sync ships.</p>
+<p>Native OpenCTI pull/push sync is in progress. ThreatRecall.ai currently supports manual STIX 2.1 import and export workflows for OpenCTI, not automatic OpenCTI sync from this MCP tool.</p>
 <hr />
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>

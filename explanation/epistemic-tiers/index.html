@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="Understand what ZettelForge 2.8.0 records about source quality and confidence, how synthesis uses those fields, and which policy checks remain your responsibility.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1901,10 +1901,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#epistemic-tiers-a-b-c" class="md-nav__link">
+  <a href="#two-judgments-answer-two-questions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Epistemic tiers (A / B / C)
+        Two judgments answer two questions
       
     </span>
   </a>
@@ -1912,49 +1912,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confidence-scores-00-to-10" class="md-nav__link">
+  <a href="#ingestion-assigns-a-starting-tier-not-trust" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confidence scores (0.0 to 1.0)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Confidence scores (0.0 to 1.0)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#confidence-decay-on-evolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Confidence decay on evolution
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#flagging-for-human-review" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Flagging for human review
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-tiers-affect-synthesis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How tiers affect synthesis
+        Ingestion assigns a starting tier, not trust
       
     </span>
   </a>
@@ -1962,10 +1923,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-diamond-model-connection" class="md-nav__link">
+  <a href="#evolution-applies-one-confidence-cap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Diamond Model connection
+        Evolution applies one confidence cap
       
     </span>
   </a>
@@ -1973,10 +1934,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confidence-on-threatrecallai-saas" class="md-nav__link">
+  <a href="#synthesis-filters-by-tier-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confidence on ThreatRecall.ai SaaS
+        Synthesis filters by tier only
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-operational-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The operational model
       
     </span>
   </a>
@@ -2422,10 +2394,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#epistemic-tiers-a-b-c" class="md-nav__link">
+  <a href="#two-judgments-answer-two-questions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Epistemic tiers (A / B / C)
+        Two judgments answer two questions
       
     </span>
   </a>
@@ -2433,49 +2405,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confidence-scores-00-to-10" class="md-nav__link">
+  <a href="#ingestion-assigns-a-starting-tier-not-trust" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confidence scores (0.0 to 1.0)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Confidence scores (0.0 to 1.0)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#confidence-decay-on-evolution" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Confidence decay on evolution
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#flagging-for-human-review" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Flagging for human review
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-tiers-affect-synthesis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How tiers affect synthesis
+        Ingestion assigns a starting tier, not trust
       
     </span>
   </a>
@@ -2483,10 +2416,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-diamond-model-connection" class="md-nav__link">
+  <a href="#evolution-applies-one-confidence-cap" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The Diamond Model connection
+        Evolution applies one confidence cap
       
     </span>
   </a>
@@ -2494,10 +2427,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#confidence-on-threatrecallai-saas" class="md-nav__link">
+  <a href="#synthesis-filters-by-tier-only" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Confidence on ThreatRecall.ai SaaS
+        Synthesis filters by tier only
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-operational-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The operational model
       
     </span>
   </a>
@@ -2525,129 +2469,174 @@
 
 
 <h1 id="epistemic-tiers-and-confidence">Epistemic tiers and confidence<a class="headerlink" href="#epistemic-tiers-and-confidence" title="Permanent link">&para;</a></h1>
-<p>Not all intelligence is created equal. A verified CISA advisory carries more weight than an anonymous forum post, which carries more weight than an LLM's inference. ZettelForge tracks this difference through two complementary fields on every <code>MemoryNote</code>: an epistemic tier and a confidence score.</p>
-<h2 id="epistemic-tiers-a-b-c">Epistemic tiers (A / B / C)<a class="headerlink" href="#epistemic-tiers-a-b-c" title="Permanent link">&para;</a></h2>
-<p>Every note stored in ZettelForge carries a <code>tier</code> field in its metadata:</p>
+<p>ZettelForge 2.8.0 records two different judgments on every memory note: an
+editorial tier and a numeric confidence value. The tier can decide whether a
+note enters synthesis. Confidence records your assessment of the note, but it
+does not remove the note from synthesis by itself.</p>
+<p>Use these fields as policy inputs, not as proof that intelligence is true. The
+released model stores values that you assign; it does not validate the source
+or enforce the documented ranges.</p>
+<p><strong>Prerequisites:</strong> Read the <a href="../../reference/memory-manager-api/">Memory Manager API</a>
+for note operations and the <a href="../../reference/configuration/">Configuration reference</a>
+for the complete synthesis settings.</p>
+<h2 id="two-judgments-answer-two-questions">Two judgments answer two questions<a class="headerlink" href="#two-judgments-answer-two-questions" title="Permanent link">&para;</a></h2>
+<p>Tier and confidence are intentionally separate:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Tier</th>
-<th style="text-align: left;">Label</th>
-<th style="text-align: left;">Meaning</th>
-<th style="text-align: left;">Typical sources</th>
+<th>Field</th>
+<th>Released default</th>
+<th>Question it answers</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>A</strong></td>
-<td style="text-align: left;">Authoritative</td>
-<td style="text-align: left;">Verified intelligence from trusted sources</td>
-<td style="text-align: left;">CISA advisories, MITRE ATT&amp;CK, vendor-confirmed CVEs, court documents</td>
+<td><code>metadata.tier</code></td>
+<td><code>"B"</code> on a plain <code>Metadata</code> object</td>
+<td>What editorial role does this source play?</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>B</strong></td>
-<td style="text-align: left;">Operational</td>
-<td style="text-align: left;">Working knowledge with moderate confidence, useful for day-to-day analysis</td>
-<td style="text-align: left;">Threat reports from CrowdStrike/Mandiant, internal incident notes, peer-reviewed analysis</td>
+<td><code>metadata.confidence</code></td>
+<td><code>1.0</code></td>
+<td>How strongly do you assess this note?</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>C</strong></td>
-<td style="text-align: left;">Support</td>
-<td style="text-align: left;">Low-confidence, inferred, or speculative intelligence</td>
-<td style="text-align: left;">Analyst notes flagged for review, notes with high evolution counts</td>
+<td><code>metadata.stix_confidence</code></td>
+<td><code>-1</code></td>
+<td>What integer confidence did a STIX-oriented integration supply? <code>-1</code> means unset.</td>
 </tr>
 </tbody>
 </table>
-<p>The default value in <code>Metadata</code> is <code>"B"</code>. However, notes created through the <code>NoteConstructor.construct()</code> path — which <code>remember()</code> uses — are explicitly assigned <code>tier="A"</code> at ingestion time. You can change this afterward:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
-
-<span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
-<span class="n">note</span><span class="p">,</span> <span class="n">status</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">remember</span><span class="p">(</span>
-    <span class="s2">&quot;APT28 exploited CVE-2024-1234 in a campaign targeting NATO logistics.&quot;</span><span class="p">,</span>
-    <span class="n">source_type</span><span class="o">=</span><span class="s2">&quot;report&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="c1"># note.metadata.tier is &quot;A&quot; after construction</span>
-
-<span class="c1"># Downgrade if you have doubts about the source:</span>
-<span class="n">note</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tier</span> <span class="o">=</span> <span class="s2">&quot;B&quot;</span>
-<span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">rewrite_note</span><span class="p">(</span><span class="n">note</span><span class="p">)</span>
-
-<span class="c1"># Upgrade to authoritative after independent verification:</span>
-<span class="n">note</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">tier</span> <span class="o">=</span> <span class="s2">&quot;A&quot;</span>
-<span class="n">mm</span><span class="o">.</span><span class="n">store</span><span class="o">.</span><span class="n">rewrite_note</span><span class="p">(</span><span class="n">note</span><span class="p">)</span>
-</code></pre></div>
-<p>Tier is just a string — the system enforces no hard constraints beyond what you document for your team. The value is only meaningful in the context of your retrieval and synthesis calls.</p>
-<h2 id="confidence-scores-00-to-10">Confidence scores (0.0 to 1.0)<a class="headerlink" href="#confidence-scores-00-to-10" title="Permanent link">&para;</a></h2>
-<p>Every <code>MemoryNote</code> carries two confidence-related fields:</p>
+<p>ZettelForge defines three editorial tiers in its default configuration:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Field</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Meaning</th>
+<th>Tier</th>
+<th>Meaning</th>
+<th>Useful decision rule</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>metadata.confidence</code></td>
-<td style="text-align: left;"><code>float</code></td>
-<td style="text-align: left;"><code>1.0</code></td>
-<td style="text-align: left;">Note quality score. Decays on each evolution event. Drives <code>should_flag_for_review()</code>.</td>
+<td><code>A</code></td>
+<td>Authoritative: high-confidence, verified sources</td>
+<td>Reserve it for evidence your process has validated.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>metadata.stix_confidence</code></td>
-<td style="text-align: left;"><code>int</code></td>
-<td style="text-align: left;"><code>-1</code></td>
-<td style="text-align: left;">STIX 0–100 confidence scale. Stored in SQLite. <code>-1</code> means unset. Set explicitly when ingesting STIX-sourced intelligence.</td>
+<td><code>B</code></td>
+<td>Operational: working knowledge with moderate confidence</td>
+<td>Use it for intelligence that supports analysis but still needs corroboration.</td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td>Support: low-confidence, inferred, or speculative material</td>
+<td>Keep it available for investigation without treating it as established fact.</td>
 </tr>
 </tbody>
 </table>
-<p>Both fields live on the note, not on the knowledge graph edge. KG edges between entities do not carry a guaranteed confidence attribute in the OSS schema.</p>
-<h3 id="confidence-decay-on-evolution">Confidence decay on evolution<a class="headerlink" href="#confidence-decay-on-evolution" title="Permanent link">&para;</a></h3>
-<p>Every time a note is superseded or evolved, <code>increment_evolution()</code> fires:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">increment_evolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">evolved_by_note_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">evolution_count</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">evolved_by_note_id</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">evolved_by</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">evolved_by_note_id</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-    <span class="c1"># Confidence decay: evolved notes lose confidence</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">confidence</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">confidence</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">)</span>
-</code></pre></div>
-<p><code>confidence</code> is capped at 0.95 after the first evolution. It does not decay below that automatically — you manage further decay by calling <code>mm.remember(..., evolve=True)</code> repeatedly as new, conflicting intelligence arrives. A note that has been substantially revised many times naturally accumulates a lower confidence over time.</p>
-<h3 id="flagging-for-human-review">Flagging for human review<a class="headerlink" href="#flagging-for-human-review" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">should_flag_for_review</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">confidence</span> <span class="o">&lt;</span> <span class="mf">0.5</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">evolution_count</span> <span class="o">&gt;</span> <span class="mi">5</span>
-</code></pre></div>
-<p>A note is flagged when its confidence drops below 0.5 <strong>or</strong> when it has been evolved more than 5 times (at <code>evolution_count</code> of 6 or higher). The <code>memory_defense</code> layer checks this flag and surfaces the note in governance reports.</p>
-<h2 id="how-tiers-affect-synthesis">How tiers affect synthesis<a class="headerlink" href="#how-tiers-affect-synthesis" title="Permanent link">&para;</a></h2>
-<p>The <code>synthesize()</code> method accepts a <code>tier_filter</code> parameter. When you call <code>synthesize()</code> without specifying it, the synthesis generator uses all three tiers by default (<code>["A", "B", "C"]</code>):</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Default — all tiers contribute:</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;APT28 capabilities&quot;</span><span class="p">)</span>
-
-<span class="c1"># Operational quality and above only (excludes low-confidence notes):</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;APT28 capabilities&quot;</span><span class="p">,</span> <span class="n">tier_filter</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">])</span>
-
-<span class="c1"># Authoritative sources only:</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="s2">&quot;APT28 capabilities&quot;</span><span class="p">,</span> <span class="n">tier_filter</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">])</span>
-</code></pre></div>
-<p>The default <code>["A", "B", "C"]</code> means all notes contribute to synthesis regardless of tier unless you restrict it. If you need to exclude inferred or low-confidence notes from synthesis, pass <code>tier_filter=["A", "B"]</code> explicitly.</p>
-<div class="admonition note">
-<p class="admonition-title">Configuration note</p>
-<p><code>config.retrieval.tier_filter</code> (default <code>["A", "B"]</code>) is used by the CrewAI integration retriever, not by direct <code>mm.synthesize()</code> calls. If you rely on direct API calls, control tier filtering at the call site.</p>
+<p>The letter does not calculate the number, and the number does not promote the
+letter. ZettelForge also does not convert <code>metadata.confidence</code> to
+<code>metadata.stix_confidence</code>. This separation lets you describe provenance and
+certainty without collapsing them into one score.</p>
+<h2 id="ingestion-assigns-a-starting-tier-not-trust">Ingestion assigns a starting tier, not trust<a class="headerlink" href="#ingestion-assigns-a-starting-tier-not-trust" title="Permanent link">&para;</a></h2>
+<p>The model default and the direct ingestion path use different starting values.
+A standalone <code>Metadata</code> object starts at tier <code>B</code>. The <code>NoteConstructor</code> used by
+the ordinary <code>MemoryManager.remember()</code> path creates every note at tier <code>A</code>,
+regardless of <code>source_type</code>, <code>domain</code>, or text.</p>
+<p>That <code>A</code> is an implementation default, not an automatic source assessment.
+Review the source and rewrite the note metadata when the default does not match
+your evidence policy. SQLite persists later changes to both <code>tier</code> and
+<code>stix_confidence</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Tier and confidence validation is in progress</p>
+<p>ZettelForge 2.8.0 declares <code>tier</code> as a string, <code>confidence</code> as a float, and
+<code>stix_confidence</code> as an integer without range constraints. The released
+model accepts values such as tier <code>D</code>, confidence <code>1.5</code>, and STIX confidence
+<code>101</code>. Validate allowed tiers and numeric bounds in your ingestion layer
+before you store a note.</p>
 </div>
-<h2 id="the-diamond-model-connection">The Diamond Model connection<a class="headerlink" href="#the-diamond-model-connection" title="Permanent link">&para;</a></h2>
-<p>CTI practitioners will recognize this confidence model as complementary to the Diamond Model of Intrusion Analysis. Where the Diamond Model maps relationships between adversary, capability, infrastructure, and victim, ZettelForge's epistemic tiers address the meta-question: how much do you trust each piece of intelligence?</p>
-<p>A Diamond Model analysis might state "Adversary X uses Capability Y targeting Victim Z." In ZettelForge, this is stored as notes describing each relationship, each carrying an independent <code>confidence</code> score and <code>tier</code> classification. The adversary–capability note might be <code>tier="A"</code> with <code>confidence=0.9</code> (observed in multiple ISAC reports), while the adversary–victim attribution note might be <code>tier="B"</code> with <code>confidence=0.4</code> (single unconfirmed report). When you synthesize, those scores influence which sources contribute and with what weight.</p>
-<p>For analysts who need STIX-formatted confidence values, set <code>metadata.stix_confidence</code> (0–100) on notes that carry formal STIX provenance. The field is stored in SQLite alongside the float <code>confidence</code> and can be included in STIX export workflows.</p>
-<h2 id="confidence-on-threatrecallai-saas">Confidence on ThreatRecall.ai SaaS<a class="headerlink" href="#confidence-on-threatrecallai-saas" title="Permanent link">&para;</a></h2>
-<p>ThreatRecall.ai extends the confidence model with typed confidence attributes on knowledge graph relationships, enabling queries like "show me all relationships attributed to APT28 with confidence above 0.7." This is not part of the ZettelForge OSS schema, where confidence lives on notes. If your workflow needs per-relationship confidence at scale, see the ThreatRecall.ai documentation.</p>
+<h2 id="evolution-applies-one-confidence-cap">Evolution applies one confidence cap<a class="headerlink" href="#evolution-applies-one-confidence-cap" title="Permanent link">&para;</a></h2>
+<p>Calling <code>increment_evolution()</code> records a revision and sets confidence to the
+lower of its current value and <code>0.95</code>. A note at <code>1.0</code> therefore moves to
+<code>0.95</code> after its first evolution. A second call increases
+<code>evolution_count</code> but leaves that confidence at <code>0.95</code>; the method does not
+apply repeated decay.</p>
+<p>The built-in review predicate returns true when either condition holds:</p>
+<ul>
+<li><code>metadata.confidence</code> is below <code>0.5</code>.</li>
+<li><code>metadata.evolution_count</code> is greater than <code>5</code>.</li>
+</ul>
+<p>The boundaries are strict. Confidence <code>0.5</code> is not flagged by the confidence
+rule, and an evolution count of <code>5</code> is not flagged by the count rule.</p>
+<p>This mechanism is a review signal, not a calibrated probability model. If your
+workflow needs cumulative decay, corroboration weights, or conflict-aware
+scoring, calculate that policy outside <code>increment_evolution()</code> and persist the
+result explicitly.</p>
+<h2 id="synthesis-filters-by-tier-only">Synthesis filters by tier only<a class="headerlink" href="#synthesis-filters-by-tier-only" title="Permanent link">&para;</a></h2>
+<p>The synthesis generator retrieves notes, removes duplicate IDs, and then keeps
+notes whose <code>metadata.tier</code> appears in <code>tier_filter</code>. It does not compare
+<code>metadata.confidence</code> with the generator's <code>confidence_threshold</code>. A tier <code>B</code>
+note with confidence <code>0.1</code> still enters synthesis when <code>B</code> is allowed.</p>
+<p>Observed ZettelForge 2.8.0 behavior is:</p>
+<table>
+<thead>
+<tr>
+<th>Call behavior</th>
+<th>Tiers admitted</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Omit <code>tier_filter</code> in a direct <code>MemoryManager.synthesize()</code> call</td>
+<td><code>A</code>, <code>B</code>, and <code>C</code></td>
+</tr>
+<tr>
+<td>Pass <code>tier_filter=["A", "B"]</code></td>
+<td><code>A</code> and <code>B</code></td>
+</tr>
+<tr>
+<td>Pass <code>tier_filter=["A"]</code></td>
+<td><code>A</code></td>
+</tr>
+<tr>
+<td>Pass an empty list</td>
+<td><code>A</code>, <code>B</code>, and <code>C</code></td>
+</tr>
+</tbody>
+</table>
+<p>The last row follows from the generator treating an empty list like a missing
+value. Pass an explicit non-empty list when you want a restriction.</p>
+<div class="admonition warning">
+<p class="admonition-title">The configured synthesis default is not wired to direct calls</p>
+<p><code>config.default.yaml</code> and <code>SynthesisConfig</code> default to tiers <code>A</code> and <code>B</code>,
+but <code>MemoryManager.synthesize()</code> does not load that setting when
+<code>tier_filter</code> is omitted. The generator uses all three tiers instead. Pass
+the required filter at each direct call until config-to-runtime wiring is
+implemented.</p>
+</div>
+<h2 id="the-operational-model">The operational model<a class="headerlink" href="#the-operational-model" title="Permanent link">&para;</a></h2>
+<p>Treat the fields as a small policy vocabulary:</p>
+<ol>
+<li>Tier expresses the source's role in your editorial process.</li>
+<li>Confidence expresses your current assessment of the note.</li>
+<li>Evolution count tells you how often later notes revised it.</li>
+<li>Your calling application validates values and decides what requires review.</li>
+<li>Synthesis uses only the explicit tier allowlist.</li>
+</ol>
+<p>This division keeps ZettelForge flexible, but it leaves enforcement with you.
+The useful habit is simple: assign deliberately, validate before storage, and
+pass synthesis policy explicitly.</p>
+<p>This page describes the self-hosted ZettelForge model. ThreatRecall.ai is the
+separate hosted SaaS and is outside this page's scope.</p>
 
 
 
 
 
 
+
+  
+  
 
 
 

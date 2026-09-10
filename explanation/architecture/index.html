@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1817,10 +1817,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-problem-with-one-database" class="md-nav__link">
+  <a href="#one-note-serves-two-retrieval-needs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The problem with one database
+        One note serves two retrieval needs
       
     </span>
   </a>
@@ -1828,66 +1828,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sqlite-the-graph-and-note-layer" class="md-nav__link">
+  <a href="#sqlite-owns-the-record" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SQLite: the graph and note layer
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="SQLite: the graph and note layer">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#why-sqlite-specifically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why SQLite specifically
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lancedb-the-vector-layer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LanceDB: the vector layer
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="LanceDB: the vector layer">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#why-lancedb-specifically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why LanceDB specifically
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#local-embeddings-and-configurable-llm" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Local embeddings and configurable LLM
+        SQLite owns the record
       
     </span>
   </a>
@@ -1895,10 +1839,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#typedb-the-optional-graph-layer" class="md-nav__link">
+  <a href="#lancedb-owns-semantic-search" class="md-nav__link">
     <span class="md-ellipsis">
       
-        TypeDB: the optional graph layer
+        LanceDB owns semantic search
       
     </span>
   </a>
@@ -1906,60 +1850,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#intent-guided-blended-retrieval" class="md-nav__link">
+  <a href="#a-write-crosses-an-intentional-consistency-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Intent-guided blended retrieval
+        A write crosses an intentional consistency boundary
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Intent-guided blended retrieval">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-five-intents-and-their-traversal-policy-weights" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The five intents and their traversal policy weights
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-factual-queries-carry-a-non-zero-graph-weight" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why FACTUAL queries carry a non-zero graph weight
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-misclassification-degrades-rather-than-breaks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why misclassification degrades rather than breaks
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-cost-of-two-databases" class="md-nav__link">
+  <a href="#recall-blends-vector-and-graph-evidence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The cost of two databases
+        Recall blends vector and graph evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-trade-off-is-reasonable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this trade-off is reasonable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedb-product-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeDB product boundary
       
     </span>
   </a>
@@ -2489,10 +2416,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-problem-with-one-database" class="md-nav__link">
+  <a href="#one-note-serves-two-retrieval-needs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The problem with one database
+        One note serves two retrieval needs
       
     </span>
   </a>
@@ -2500,66 +2427,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sqlite-the-graph-and-note-layer" class="md-nav__link">
+  <a href="#sqlite-owns-the-record" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SQLite: the graph and note layer
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="SQLite: the graph and note layer">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#why-sqlite-specifically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why SQLite specifically
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#lancedb-the-vector-layer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        LanceDB: the vector layer
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="LanceDB: the vector layer">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#why-lancedb-specifically" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why LanceDB specifically
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#local-embeddings-and-configurable-llm" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Local embeddings and configurable LLM
+        SQLite owns the record
       
     </span>
   </a>
@@ -2567,10 +2438,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#typedb-the-optional-graph-layer" class="md-nav__link">
+  <a href="#lancedb-owns-semantic-search" class="md-nav__link">
     <span class="md-ellipsis">
       
-        TypeDB: the optional graph layer
+        LanceDB owns semantic search
       
     </span>
   </a>
@@ -2578,60 +2449,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#intent-guided-blended-retrieval" class="md-nav__link">
+  <a href="#a-write-crosses-an-intentional-consistency-boundary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Intent-guided blended retrieval
+        A write crosses an intentional consistency boundary
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Intent-guided blended retrieval">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#the-five-intents-and-their-traversal-policy-weights" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The five intents and their traversal policy weights
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-factual-queries-carry-a-non-zero-graph-weight" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why FACTUAL queries carry a non-zero graph weight
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#why-misclassification-degrades-rather-than-breaks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Why misclassification degrades rather than breaks
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-cost-of-two-databases" class="md-nav__link">
+  <a href="#recall-blends-vector-and-graph-evidence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The cost of two databases
+        Recall blends vector and graph evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-trade-off-is-reasonable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why this trade-off is reasonable
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typedb-product-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TypeDB product boundary
       
     </span>
   </a>
@@ -2659,209 +2513,98 @@
 
 
 <h1 id="why-sqlite-lancedb-not-one-or-the-other">Why SQLite + LanceDB (not one or the other)<a class="headerlink" href="#why-sqlite-lancedb-not-one-or-the-other" title="Permanent link">&para;</a></h1>
-<p>ZettelForge uses two storage engines where most systems use one. SQLite handles structured data (notes, knowledge graph, entity index) with ACID guarantees. LanceDB handles vector search. This is a deliberate architectural choice, not accidental complexity.</p>
-<p>You don't need to understand this page to use ZettelForge. Read it if you want to know why queries behave the way they do, or if you're evaluating whether this architecture fits your environment.</p>
-<p>Prerequisites: <a href="../../tutorials/01-quickstart/">Quickstart</a>, <a href="../../reference/configuration/">Configuration reference</a>.</p>
+<p>ZettelForge v2.8.0 uses SQLite as its primary store and LanceDB as its vector index. You get structured notes and relationships from SQLite, plus semantic search from LanceDB, without running a separate database server.</p>
+<p>Read this page when you want to understand the trade-off. You do not need it to complete the <a href="../../tutorials/01-quickstart/">Quickstart</a>. For exact settings, use the <a href="../../reference/configuration/">Configuration reference</a>.</p>
 <hr />
-<h2 id="the-problem-with-one-database">The problem with one database<a class="headerlink" href="#the-problem-with-one-database" title="Permanent link">&para;</a></h2>
-<p>CTI analysis operates on two fundamentally different data types:</p>
-<p><strong>Structured intelligence</strong> — entities with typed relationships, confidence scores, temporal validity, and traceable provenance. "APT28 uses Cobalt Strike" is a typed relationship between an <code>actor</code> and a <code>tool</code>, with a confidence score and a source note ID.</p>
-<p><strong>Unstructured context</strong> — raw text, analyst notes, news articles, conversation logs. "The ransomware encrypted all files on the domain controller using AES-256" is a passage that needs to be retrievable by semantic similarity. It doesn't decompose cleanly into typed entities.</p>
-<p>No single database handles both well:</p>
+<h2 id="one-note-serves-two-retrieval-needs">One note serves two retrieval needs<a class="headerlink" href="#one-note-serves-two-retrieval-needs" title="Permanent link">&para;</a></h2>
+<p>Threat-intelligence memory combines two kinds of evidence:</p>
+<ul>
+<li><strong>Structured evidence</strong> includes notes, entities, directed relationships, confidence, TLP markings, timestamps, and source-note provenance.</li>
+<li><strong>Semantic evidence</strong> includes passages that mean something similar even when they use different words.</li>
+</ul>
+<p>SQLite can store an embedding as data, but ordinary SQL indexes do not provide the vector-nearest-neighbor search that semantic recall needs. LanceDB can attach metadata to vectors, but ZettelForge needs stronger constraints and direct lookups for notes, graph edges, and entity-to-note mappings.</p>
+<p>ZettelForge therefore gives each engine one clear role:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Capability</th>
-<th style="text-align: left;">Graph DB alone</th>
-<th style="text-align: left;">Vector DB alone</th>
+<th style="text-align: left;">Engine</th>
+<th style="text-align: left;">Role in ZettelForge</th>
+<th style="text-align: left;">Why it fits</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">Typed relationships</td>
-<td style="text-align: left;">Strong</td>
-<td style="text-align: left;">None</td>
+<td style="text-align: left;">SQLite</td>
+<td style="text-align: left;">Primary record for notes, graph nodes and edges, entity mappings, and enrichment jobs</td>
+<td style="text-align: left;">Transactions, uniqueness constraints, indexed lookups, and embedded deployment</td>
 </tr>
 <tr>
-<td style="text-align: left;">Multi-hop traversal</td>
-<td style="text-align: left;">Strong</td>
-<td style="text-align: left;">None</td>
-</tr>
-<tr>
-<td style="text-align: left;">Semantic search</td>
-<td style="text-align: left;">None</td>
-<td style="text-align: left;">Strong</td>
-</tr>
-<tr>
-<td style="text-align: left;">Unstructured text</td>
-<td style="text-align: left;">Poor fit</td>
-<td style="text-align: left;">Natural fit</td>
-</tr>
-<tr>
-<td style="text-align: left;">Schema enforcement</td>
-<td style="text-align: left;">Strong</td>
-<td style="text-align: left;">None</td>
-</tr>
-<tr>
-<td style="text-align: left;">Temporal validity</td>
-<td style="text-align: left;">Via edge properties</td>
-<td style="text-align: left;">Via metadata only</td>
-</tr>
-<tr>
-<td style="text-align: left;">ACID writes</td>
-<td style="text-align: left;">Strong (SQLite)</td>
-<td style="text-align: left;">Append-only</td>
+<td style="text-align: left;">LanceDB</td>
+<td style="text-align: left;">Search index for note vectors, split into one table per domain</td>
+<td style="text-align: left;">Vector similarity search and embedded deployment</td>
 </tr>
 </tbody>
 </table>
-<p>ZettelForge assigns each capability to the engine that handles it well, then bridges the two through the entity index.</p>
-<hr />
-<h2 id="sqlite-the-graph-and-note-layer">SQLite: the graph and note layer<a class="headerlink" href="#sqlite-the-graph-and-note-layer" title="Permanent link">&para;</a></h2>
-<p>SQLite is the default primary store (configured via <code>storage.backend: sqlite</code> or <code>ZETTELFORGE_BACKEND=sqlite</code>). It holds three tables:</p>
-<p><strong><code>notes</code></strong> — every ingested document or analyst note. Full text, metadata, TLP marking, confidence, timestamps.</p>
-<p><strong><code>kg_nodes</code> and <code>kg_edges</code></strong> — the knowledge graph. Nodes store <code>(entity_type, entity_value)</code> pairs with a JSON properties blob. Edges store directed relationships between nodes, with <code>relationship</code>, <code>edge_type</code>, and a <code>note_id</code> back-reference to the note that produced the edge.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">-- kg_edges schema (src/zettelforge/sqlite_backend.py:95-110)</span>
-<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">kg_edges</span><span class="w"> </span><span class="p">(</span>
-<span class="w">    </span><span class="n">edge_id</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
-<span class="w">    </span><span class="n">from_node_id</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">to_node_id</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">relationship</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">    </span><span class="n">edge_type</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;heuristic&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="n">note_id</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span>
-<span class="w">    </span><span class="p">...</span>
-<span class="w">    </span><span class="k">UNIQUE</span><span class="p">(</span><span class="n">from_node_id</span><span class="p">,</span><span class="w"> </span><span class="n">to_node_id</span><span class="p">,</span><span class="w"> </span><span class="n">relationship</span><span class="p">,</span><span class="w"> </span><span class="n">note_id</span><span class="p">)</span>
-<span class="p">);</span>
-</code></pre></div>
-<p>The <code>note_id</code> column on <code>kg_edges</code> is the bridge. Every relationship in the KG traces back to the note that asserted it.</p>
-<p><strong><code>entity_index</code></strong> — a fast lookup from <code>(entity_type, entity_value)</code> to a set of <code>note_id</code> values. When a note is ingested, entity extraction runs and writes one row per entity detected. A query for "all notes mentioning APT28" hits this table in O(1), then retrieves note content from the <code>notes</code> table or LanceDB.</p>
-<h3 id="why-sqlite-specifically">Why SQLite specifically<a class="headerlink" href="#why-sqlite-specifically" title="Permanent link">&para;</a></h3>
-<p>SQLite was chosen for the graph layer for four reasons:</p>
+<p>The split is architectural, not a packaging distinction. ZettelForge remains one self-hosted open-source product.</p>
+<h2 id="sqlite-owns-the-record">SQLite owns the record<a class="headerlink" href="#sqlite-owns-the-record" title="Permanent link">&para;</a></h2>
+<p><code>MemoryManager</code> constructs a <code>SQLiteBackend</code> when it starts. The backend creates these core tables:</p>
+<ul>
+<li><code>notes</code> stores the full note, its embedding, metadata, links, and provenance.</li>
+<li><code>kg_nodes</code> and <code>kg_edges</code> store the directed knowledge graph. Each edge can carry the <code>note_id</code> that supports it.</li>
+<li><code>entity_index</code> maps an entity type and value to the notes that mention it.</li>
+<li><code>enrichment_jobs</code> records deferred enrichment work.</li>
+</ul>
+<p>SQLite enforces uniqueness for entity nodes, graph edges with the same provenance, and entity-to-note mappings. Those constraints prevent common duplicate-write problems without a separate graph service.</p>
+<p>The backend enables write-ahead logging (WAL). WAL lets readers continue while a writer commits, which suits a local application that may ingest in the background while you query it. ZettelForge also sets SQLite <code>synchronous=NORMAL</code>: application crashes preserve committed transactions, but an operating-system crash can lose the latest transaction. This is a durability trade-off, not full power-loss protection.</p>
+<h2 id="lancedb-owns-semantic-search">LanceDB owns semantic search<a class="headerlink" href="#lancedb-owns-semantic-search" title="Permanent link">&para;</a></h2>
+<p>ZettelForge creates a LanceDB table for each memory domain and writes a note ID, vector, and bounded search metadata into that table. During recall, LanceDB compares the query vector with stored note vectors. ZettelForge then resolves each matching ID back to the full note in SQLite.</p>
+<p>This makes LanceDB an index rather than the authoritative note store. The default fastembed provider generates 768-dimensional <code>nomic-ai/nomic-embed-text-v1.5-Q</code> embeddings in process. The storage design does not depend on the configured LLM provider; language-model extraction and synthesis sit above the persistence layer.</p>
+<p>Both engines run in the Python process. By default, SQLite writes <code>zettelforge.db</code> and LanceDB writes <code>vectordb/</code> under <code>~/.amem</code>; <code>AMEM_DATA_DIR</code> moves that shared parent directory.</p>
+<h2 id="a-write-crosses-an-intentional-consistency-boundary">A write crosses an intentional consistency boundary<a class="headerlink" href="#a-write-crosses-an-intentional-consistency-boundary" title="Permanent link">&para;</a></h2>
+<p>When you call <code>remember()</code>, ZettelForge performs the fast-path writes in sequence:</p>
 <ol>
-<li>
-<p><strong>Zero operational overhead.</strong> No server, no port, no daemon, no connection pool. The database is a single file on disk. This fits the offline-first design intent: a CTI analyst in a disconnected environment can run ZettelForge with no infrastructure beyond a Python environment.</p>
-</li>
-<li>
-<p><strong>ACID guarantees without configuration.</strong> SQLite's journal mode provides crash-safe writes. A note ingestion either completes fully (notes row + kg_edges rows + entity_index rows) or rolls back entirely. Partial writes that corrupt the KG are not possible.</p>
-</li>
-<li>
-<p><strong>Adequate scale for the target workload.</strong> ZettelForge's CTI memory model is bounded: an analyst typically accumulates thousands to tens of thousands of notes over a career, not billions of rows. SQLite is a practical fit for that range and avoids a graph database server in the default OSS install. TypeDB's advantages (inference rules, schema-level constraints) matter when you need stricter STIX ontology enforcement or larger multi-tenant graph operations.</p>
-</li>
-<li>
-<p><strong>WAL mode compatibility with LanceDB's columnar I/O.</strong> Both backends write to the same data directory (<code>~/.amem</code> by default). SQLite WAL mode and LanceDB's columnar append pattern do not conflict under concurrent ingest load.</p>
-</li>
+<li>It constructs the note and embedding.</li>
+<li>It commits the note to SQLite.</li>
+<li>It indexes the vector in LanceDB.</li>
+<li>It writes entity mappings and graph edges to SQLite.</li>
+<li>It queues slower enrichment work.</li>
 </ol>
-<hr />
-<h2 id="lancedb-the-vector-layer">LanceDB: the vector layer<a class="headerlink" href="#lancedb-the-vector-layer" title="Permanent link">&para;</a></h2>
-<p>LanceDB holds vector embeddings of every note — 768-dimensional dense vectors produced by the fastembed <code>nomic-ai/nomic-embed-text-v1.5-Q</code> model (ONNX, runs in-process, no server).</p>
-<p>When a query arrives, the <code>VectorRetriever</code> computes cosine similarity between the query embedding and the stored note vectors, returning the top-k closest matches. These are notes whose text is semantically close to the query, regardless of whether any structured entity in the KG explicitly links them to the query topic.</p>
-<h3 id="why-lancedb-specifically">Why LanceDB specifically<a class="headerlink" href="#why-lancedb-specifically" title="Permanent link">&para;</a></h3>
-<ul>
-<li><strong>Embedded deployment</strong> — no separate server process; runs in-process via the Python <code>lancedb</code> package.</li>
-<li><strong>Columnar storage</strong> — efficient for the append-heavy write pattern of note ingestion.</li>
-<li><strong>IVF_PQ indexing</strong> — accurate approximate nearest-neighbor search in the 768-dimensional embedding space.</li>
-<li><strong>Zero external infrastructure</strong> — <code>pip install lancedb</code> is the entire installation.</li>
-</ul>
-<hr />
-<h2 id="local-embeddings-and-configurable-llm">Local embeddings and configurable LLM<a class="headerlink" href="#local-embeddings-and-configurable-llm" title="Permanent link">&para;</a></h2>
-<p>ZettelForge v2.7.0 keeps embeddings local by default and routes language-model work through the configured LLM provider:</p>
-<p><strong>Embeddings</strong> — fastembed runs <code>nomic-ai/nomic-embed-text-v1.5-Q</code> as an in-process ONNX model (768-dim, downloads on first use). No embedding server is required in the default configuration.</p>
-<p><strong>LLM</strong> — the source configuration defaults to Ollama (<code>llm.provider: ollama</code>, <code>http://localhost:11434</code>) with a 180-second timeout. The shipped source default still contains an unresolved Ollama model tag, so set <code>llm.model</code> explicitly to a model installed on your host, such as <code>qwen2.5:3b</code>. If the configured provider is unavailable, fact extraction and synthesis degrade instead of crashing: entity extraction keeps regex-matched CTI entities, and <code>synthesize()</code> returns a direct-answer result with <code>confidence: 0.0</code>.</p>
-<p>You can substitute any supported provider (litellm, OpenAI, Anthropic, local llama-cpp-python) via <code>llm.provider</code> in <code>config.yaml</code>. See <a href="../../reference/configuration/#llm">Configuration</a>.</p>
-<hr />
-<h2 id="typedb-the-optional-graph-layer">TypeDB: the optional graph layer<a class="headerlink" href="#typedb-the-optional-graph-layer" title="Permanent link">&para;</a></h2>
-<p>TypeDB 3.x is supported as an alternative to SQLite for the graph layer. You activate it by setting <code>storage.backend: typedb</code> and running a TypeDB server on <code>localhost:1729</code> (configurable via <code>typedb.host</code> / <code>typedb.port</code>).</p>
-<p>TypeDB's advantages over SQLite for graph storage:</p>
-<ul>
-<li><strong>STIX 2.1 schema enforcement</strong> — TypeDB's type system enforces that every node and edge conforms to the STIX ontology at write time. SQLite's schema is permissive by comparison.</li>
-<li><strong>Transitive inference</strong> — TypeDB computes alias chains transitively without storing explicit edges. If "Fancy Bear" → aliases → "APT28" and "Strontium" → aliases → "APT28", a TypeDB query for Strontium's aliases returns Fancy Bear automatically.</li>
-<li><strong>Multi-hop queries via TypeQL</strong> — complex traversals that would require multiple SQLite queries can often be expressed as a single TypeQL query with inference enabled.</li>
-</ul>
-<p>TypeDB has operational costs that SQLite does not: it requires a running server (Docker or native install), does not support embedded deployment, and introduces a network hop on every KG write.</p>
-<div class="admonition note">
-<p class="admonition-title">ThreatRecall.ai SaaS</p>
-<p><a href="https://threatrecall.ai">ThreatRecall.ai</a> uses TypeDB for its tenant-scoped knowledge graphs, providing STIX 2.1 schema enforcement and transitive alias resolution at scale without the operational overhead of self-hosting a TypeDB cluster.</p>
+<p>These steps do not share one transaction. Each SQLite storage method commits independently, and LanceDB has its own write path. If LanceDB indexing fails after the first SQLite commit, the note remains in the primary store while semantic recall lacks that index entry. If a later graph write fails, the note can exist without every derived relationship.</p>
+<p>That boundary is the main cost of the design. Send writes through <code>MemoryManager.remember()</code> or <code>POST /api/remember</code> so ZettelForge can update both engines. Direct edits to either database bypass the coordination path.</p>
+<h2 id="recall-blends-vector-and-graph-evidence">Recall blends vector and graph evidence<a class="headerlink" href="#recall-blends-vector-and-graph-evidence" title="Permanent link">&para;</a></h2>
+<p>Recall does more than run a vector query. ZettelForge v2.8.0 follows this read path:</p>
+<ol>
+<li><code>IntentClassifier</code> classifies the query as factual, temporal, relational, causal, or exploratory.</li>
+<li><code>VectorRetriever</code> asks LanceDB for similar notes.</li>
+<li><code>GraphRetriever</code> traverses SQLite graph edges from entities found in the query.</li>
+<li><code>BlendedRetriever</code> min-max normalizes the vector and graph scores, applies the intent's vector and graph weights, and adds the two signals when both find the same note.</li>
+<li>Entity augmentation, causal traversal, filtering, and optional cross-encoder reranking refine the result.</li>
+</ol>
+<p>The intent policy changes emphasis. For example, a relational query gives graph evidence more weight than vector evidence, while an exploratory query does the reverse. A classification error changes that mix, so it can make an answer incomplete even when every retrieved note is valid.</p>
+<div class="admonition warning">
+<p class="admonition-title">Retrieval-policy integration is in progress</p>
+<p>The v2.8.0 policy map also defines numeric <code>entity_index</code> and <code>temporal</code> weights, but <code>BlendedRetriever</code> currently consumes only the <code>vector</code> and <code>graph</code> weights. Entity and temporal logic runs in separate stages instead of participating in the same weighted fusion. Treat the four-signal policy as an incomplete integration.</p>
 </div>
-<hr />
-<h2 id="intent-guided-blended-retrieval">Intent-guided blended retrieval<a class="headerlink" href="#intent-guided-blended-retrieval" title="Permanent link">&para;</a></h2>
-<p>The <code>BlendedRetriever</code> does not run all retrievers at fixed weights. It consults the <code>IntentClassifier</code> first, which classifies the query into one of five intents, then applies an intent-specific traversal policy.</p>
-<h3 id="the-five-intents-and-their-traversal-policy-weights">The five intents and their traversal policy weights<a class="headerlink" href="#the-five-intents-and-their-traversal-policy-weights" title="Permanent link">&para;</a></h3>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Intent</th>
-<th style="text-align: center;">vector</th>
-<th style="text-align: center;">entity_index</th>
-<th style="text-align: center;">graph</th>
-<th style="text-align: center;">temporal</th>
-<th style="text-align: center;">top_k</th>
-<th style="text-align: left;">Typical query</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>FACTUAL</code></td>
-<td style="text-align: center;">0.3</td>
-<td style="text-align: center;">0.7</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.0</td>
-<td style="text-align: center;">3</td>
-<td style="text-align: left;">"What CVE does APT28 exploit?"</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>TEMPORAL</code></td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.1</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.5</td>
-<td style="text-align: center;">5</td>
-<td style="text-align: left;">"What changed since last week?"</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>RELATIONAL</code></td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.5</td>
-<td style="text-align: center;">0.1</td>
-<td style="text-align: center;">10</td>
-<td style="text-align: left;">"What infrastructure does APT28 use?"</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>CAUSAL</code></td>
-<td style="text-align: center;">0.1</td>
-<td style="text-align: center;">0.1</td>
-<td style="text-align: center;">0.6</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">10</td>
-<td style="text-align: left;">"Why did the attacker pivot to the DC?"</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>EXPLORATORY</code></td>
-<td style="text-align: center;">0.5</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.2</td>
-<td style="text-align: center;">0.1</td>
-<td style="text-align: center;">10</td>
-<td style="text-align: left;">"Tell me about APT28"</td>
-</tr>
-</tbody>
-</table>
-<p>Source: <code>src/zettelforge/intent_classifier.py:191-236</code>.</p>
-<p>These weights are applied during score normalization: each retriever produces a set of <code>(note, raw_score)</code> pairs, the scores are min-max normalized within each retriever's result set, and then multiplied by the intent weight before accumulation into the final blended score.</p>
-<h3 id="why-factual-queries-carry-a-non-zero-graph-weight">Why FACTUAL queries carry a non-zero graph weight<a class="headerlink" href="#why-factual-queries-carry-a-non-zero-graph-weight" title="Permanent link">&para;</a></h3>
-<p>A zero graph weight for FACTUAL seems intuitive: if you want a specific fact, why traverse the graph? In practice, CTI factual queries frequently span a graph hop. "What CVE does APT28 exploit?" is factual in intent but requires an <code>(APT28) -[targets]-&gt; (CVE)</code> traversal. Setting <code>graph=0.2</code> allows graph results to supplement the entity index answer without dominating it.</p>
-<h3 id="why-misclassification-degrades-rather-than-breaks">Why misclassification degrades rather than breaks<a class="headerlink" href="#why-misclassification-degrades-rather-than-breaks" title="Permanent link">&para;</a></h3>
-<p>A misclassified query does not produce a wrong answer; it produces a degraded answer because the wrong traversal policy routes to the wrong combination of retrievers. A relational query misclassified as FACTUAL returns entity index results instead of graph traversal. The answer may be plausible but incomplete. Classification accuracy is therefore a retrieval quality gate, not a correctness gate.</p>
-<p>The classifier uses keyword matching first, with LLM fallback when keyword confidence is below threshold. See <a href="../../reference/retrieval-policies/">Retrieval policies</a> for keyword lists and the merge algorithm.</p>
-<hr />
-<h2 id="the-cost-of-two-databases">The cost of two databases<a class="headerlink" href="#the-cost-of-two-databases" title="Permanent link">&para;</a></h2>
-<p>The hybrid architecture adds operational complexity:</p>
+<h2 id="why-this-trade-off-is-reasonable">Why this trade-off is reasonable<a class="headerlink" href="#why-this-trade-off-is-reasonable" title="Permanent link">&para;</a></h2>
+<p>The hybrid design gives you three practical advantages:</p>
 <ul>
-<li>Two data stores to back up.</li>
-<li>The entity index must stay consistent with both the notes table and the LanceDB vectors. ZettelForge manages this within the <code>remember()</code> call; manual direct writes to either store bypass the consistency guarantees.</li>
-<li>Cache invalidation spans both systems.</li>
+<li><strong>Local operation.</strong> SQLite, LanceDB, and the default embedding provider run without database or embedding servers.</li>
+<li><strong>Traceable retrieval.</strong> Vector hits resolve to full SQLite notes, while graph edges retain source-note provenance.</li>
+<li><strong>Independent repair.</strong> The primary record and semantic index have separate responsibilities, so an index problem does not erase the stored note.</li>
 </ul>
-<p>ZettelForge mitigates the backup concern by collocating both stores in <code>~/.amem</code> by default. A single directory backup captures the complete state of both SQLite and LanceDB.</p>
-<p>The consistency concern is the real risk. All writes should go through <code>MemoryManager.remember()</code> or the web API (<code>POST /api/remember</code>), not direct database manipulation.</p>
+<p>You also accept three costs:</p>
+<ul>
+<li>You must keep two engines consistent.</li>
+<li>A complete backup must capture both <code>zettelforge.db</code> and <code>vectordb/</code> from a stable write state.</li>
+<li>Retrieval quality depends on entity extraction, intent classification, and vector indexing as well as the stored content.</li>
+</ul>
+<p>For a self-hosted memory system, this favors simple operation and evidence traceability over a single, more ambitious storage engine.</p>
+<h2 id="typedb-product-boundary">TypeDB product boundary<a class="headerlink" href="#typedb-product-boundary" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">TypeDB backend selection is in progress</p>
+<p>ZettelForge v2.8.0 exposes <code>backend</code> and <code>typedb</code> configuration fields, but <code>MemoryManager</code> uses the storage factory that returns <code>SQLiteBackend</code>. Selecting TypeDB does not replace the primary SQLite path in this release. Do not treat the TypeDB fields as a working ZettelForge backend switch.</p>
+</div>
+<p>ThreatRecall.ai is the separate SaaS product. This page describes ZettelForge's self-hosted storage path and does not imply that both products share the same deployment architecture.</p>
 
 
 

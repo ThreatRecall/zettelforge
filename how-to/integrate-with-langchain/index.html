@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2548,13 +2548,13 @@
 
 <h1 id="integrate-with-langchain">Integrate with LangChain<a class="headerlink" href="#integrate-with-langchain" title="Permanent link">&para;</a></h1>
 <p><code>ZettelForgeRetriever</code> wraps <code>MemoryManager.recall()</code> and converts ZettelForge
-<code>MemoryNote</code> objects into LangChain <code>Document</code> objects. Drop it into any
-LangChain RAG pipeline as a standard <code>BaseRetriever</code>.</p>
+<code>MemoryNote</code> objects into LangChain <code>Document</code> objects. Use it when a LangChain
+chain needs grounded CTI context from your ZettelForge memory store.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge installed: <code>pip install zettelforge</code></li>
-<li>LangChain core installed: <code>pip install langchain-core langchain-community</code></li>
+<li>ZettelForge installed with the LangChain extra: <code>pip install "zettelforge[langchain]"</code></li>
 <li>A populated ZettelForge store (use <code>mm.remember()</code> or <code>mm.remember_with_extraction()</code>)</li>
+<li>A LangChain chat model package when you replace the offline test model in step 4</li>
 </ul>
 <h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
 <h3 id="1-create-a-memorymanager-and-seed-it">1. Create a MemoryManager and seed it<a class="headerlink" href="#1-create-a-memorymanager-and-seed-it" title="Permanent link">&para;</a></h3>
@@ -2683,24 +2683,29 @@ LangChain RAG pipeline as a standard <code>BaseRetriever</code>.</p>
 </table>
 <h3 id="4-build-a-rag-chain-with-lcel">4. Build a RAG chain with LCEL<a class="headerlink" href="#4-build-a-rag-chain-with-lcel" title="Permanent link">&para;</a></h3>
 <div class="admonition note">
-<p class="admonition-title">Requires a configured LLM provider</p>
-<p>This step requires a running Ollama instance or another LLM provider.
-Run <code>ollama pull qwen2.5:3b</code> (the ZettelForge default local model)
-or substitute any model your Ollama instance has available.</p>
+<p class="admonition-title">Use a real LLM for production answers</p>
+<p>This example uses LangChain's <code>FakeListChatModel</code> so the wiring runs offline.
+Replace <code>llm</code> with your deployed LangChain chat model, such as <code>ChatOllama</code>
+from <code>langchain-ollama</code>, when an Ollama server and model are available.</p>
 </div>
 <p>Use LangChain Expression Language (LCEL) to wire the retriever into a
 question-answering chain:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOllama</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.language_models.fake_chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeListChatModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatPromptTemplate</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnablePassthrough</span>
 
-<span class="n">llm</span> <span class="o">=</span> <span class="n">ChatOllama</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;qwen2.5:3b&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">llm</span> <span class="o">=</span> <span class="n">FakeListChatModel</span><span class="p">(</span>
+    <span class="n">responses</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;APT28 uses spear-phishing emails with credential-harvesting links.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;The XZ Utils incident involved CVE-2024-3094.&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">)</span>
 
 <span class="n">prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">You are a CTI analyst reviewing intelligence from past investigations.</span>
 <span class="s2">Use the following context to answer the question.</span>
-<span class="s2">If you don&#39;t know the answer, say so — do not fabricate information.</span>
+<span class="s2">If you don&#39;t know the answer, say so; do not fabricate information.</span>
 
 <span class="s2">Context:</span>
 <span class="si">{context}</span>
@@ -2742,16 +2747,16 @@ and include it in the prompt:</p>
 <h2 id="under-the-hood">Under the hood<a class="headerlink" href="#under-the-hood" title="Permanent link">&para;</a></h2>
 <p><code>ZettelForgeRetriever._get_relevant_documents()</code> calls <code>MemoryManager.recall()</code>
 with your configured parameters. <code>recall()</code> runs the full blended retrieval
-pipeline — vector similarity search over LanceDB, knowledge graph expansion over
-SQLite, intent classification, and result reranking — then converts each
+pipeline: vector similarity search over LanceDB, knowledge graph expansion over
+SQLite, intent classification, and result reranking. The retriever then converts each
 <code>MemoryNote</code> into a <code>Document</code>.</p>
 <p>The retriever uses Pydantic <code>ConfigDict(arbitrary_types_allowed=True)</code> so
 <code>MemoryManager</code> is accepted as a field without schema errors.</p>
 <div class="admonition note">
 <p class="admonition-title">LangChain version compatibility</p>
-<p>These examples use LangChain 1.x (langchain-core 1.x, langchain-community 0.4+).
+<p>These examples use LangChain 1.x through <code>langchain-core</code>.
 The <code>RetrievalQA</code> and <code>ConversationalRetrievalChain</code> classes from older LangChain
-0.x are not available in LangChain 1.x. Use LCEL chains as shown above.</p>
+0.x patterns are not part of this path. Use LCEL chains as shown above.</p>
 </div>
 
 

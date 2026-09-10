@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tune-lancedb-vector-search" class="md-skip">
+        <a href="#configure-lancedb-vector-search" class="md-skip">
           Skip to content
         </a>
       
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -858,10 +858,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-configure-the-embedding-model" class="md-nav__link">
+  <a href="#1-confirm-the-active-embedding-defaults" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Configure the embedding model
+        1. Confirm the active embedding defaults
       
     </span>
   </a>
@@ -869,10 +869,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-verify-embedding-connectivity" class="md-nav__link">
+  <a href="#2-place-the-vector-index-with-amem_data_dir" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Verify embedding connectivity
+        2. Place the vector index with AMEM_DATA_DIR
       
     </span>
   </a>
@@ -880,10 +880,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-configure-retrieval-parameters" class="md-nav__link">
+  <a href="#3-tune-the-active-reranking-controls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Configure retrieval parameters
+        3. Tune the active reranking controls
       
     </span>
   </a>
@@ -891,10 +891,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-configure-cross-encoder-reranking" class="md-nav__link">
+  <a href="#4-treat-non-wired-retrieval-fields-as-in-progress" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Configure cross-encoder reranking
+        4. Treat non-wired retrieval fields as in progress
       
     </span>
   </a>
@@ -902,10 +902,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-tune-for-high-precision-fewer-more-relevant-results" class="md-nav__link">
+  <a href="#5-configure-lancedb-cleanup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Tune for high precision (fewer, more relevant results)
+        5. Configure LanceDB cleanup
       
     </span>
   </a>
@@ -913,43 +913,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-tune-for-high-recall-cast-a-wide-net" class="md-nav__link">
+  <a href="#6-treat-sqlite-native-vector-rebuilds-as-in-progress" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Tune for high recall (cast a wide net)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-configure-the-data-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Configure the data directory
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#8-configure-lancedb-maintenance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        8. Configure LanceDB maintenance
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#9-rebuild-the-index-after-configuration-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        9. Rebuild the index after configuration changes
+        6. Treat SQLite-native vector rebuilds as in progress
       
     </span>
   </a>
@@ -958,6 +925,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2489,10 +2467,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-configure-the-embedding-model" class="md-nav__link">
+  <a href="#1-confirm-the-active-embedding-defaults" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Configure the embedding model
+        1. Confirm the active embedding defaults
       
     </span>
   </a>
@@ -2500,10 +2478,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-verify-embedding-connectivity" class="md-nav__link">
+  <a href="#2-place-the-vector-index-with-amem_data_dir" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Verify embedding connectivity
+        2. Place the vector index with AMEM_DATA_DIR
       
     </span>
   </a>
@@ -2511,10 +2489,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-configure-retrieval-parameters" class="md-nav__link">
+  <a href="#3-tune-the-active-reranking-controls" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Configure retrieval parameters
+        3. Tune the active reranking controls
       
     </span>
   </a>
@@ -2522,10 +2500,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-configure-cross-encoder-reranking" class="md-nav__link">
+  <a href="#4-treat-non-wired-retrieval-fields-as-in-progress" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Configure cross-encoder reranking
+        4. Treat non-wired retrieval fields as in progress
       
     </span>
   </a>
@@ -2533,10 +2511,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-tune-for-high-precision-fewer-more-relevant-results" class="md-nav__link">
+  <a href="#5-configure-lancedb-cleanup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Tune for high precision (fewer, more relevant results)
+        5. Configure LanceDB cleanup
       
     </span>
   </a>
@@ -2544,43 +2522,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-tune-for-high-recall-cast-a-wide-net" class="md-nav__link">
+  <a href="#6-treat-sqlite-native-vector-rebuilds-as-in-progress" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6. Tune for high recall (cast a wide net)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#7-configure-the-data-directory" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Configure the data directory
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#8-configure-lancedb-maintenance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        8. Configure LanceDB maintenance
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#9-rebuild-the-index-after-configuration-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        9. Rebuild the index after configuration changes
+        6. Treat SQLite-native vector rebuilds as in progress
       
     </span>
   </a>
@@ -2589,6 +2534,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2612,124 +2568,70 @@
   
 
 
-<h1 id="tune-lancedb-vector-search">Tune LanceDB vector search<a class="headerlink" href="#tune-lancedb-vector-search" title="Permanent link">&para;</a></h1>
-<p>Configure embedding models, retrieval parameters, and maintenance settings for optimal CTI retrieval quality. Adjust similarity threshold, entity boost, and cross-encoder reranking to balance precision and recall for your workload.</p>
+<h1 id="configure-lancedb-vector-search">Configure LanceDB vector search<a class="headerlink" href="#configure-lancedb-vector-search" title="Permanent link">&para;</a></h1>
+<p>Use LanceDB settings when you need to verify the embedding model, move the local vector index, tune active reranking controls, or plan a safe embedding-model migration.</p>
+<p>As verified against the official ZettelForge 2.8.0 wheel and release source on August 22, 2026, the default self-hosted path stores structured data in SQLite and semantic vectors in LanceDB under <code>{data_dir}/vectordb</code>. A clean runtime test stored two CTI notes, created the <code>notes_cti</code> LanceDB table, and recalled both notes.</p>
+<div class="admonition warning">
+<p class="admonition-title">Retrieval tuning is partially in progress</p>
+<p><code>retrieval.rerank_*</code> and <code>retrieval.entity_max_fanout</code> are active runtime controls. <code>retrieval.default_k</code>, <code>retrieval.similarity_threshold</code>, <code>retrieval.entity_boost</code>, and <code>retrieval.max_graph_depth</code> load into config, but the verified <code>MemoryManager</code> path still uses method or constructor defaults for those values. Pass <code>k</code> directly to <code>recall()</code> today, and treat the other three fields as in progress until the runtime wiring lands.</p>
+</div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge installed (<code>pip install zettelforge</code>)</li>
-<li>Notes already stored to test retrieval against (see <a href="../store-threat-actor/">Store threat actor intelligence</a>)</li>
+<li>ZettelForge installed, or a local ZettelForge source checkout.</li>
+<li>A local data directory. By default this is <code>~/.amem</code>; set <code>AMEM_DATA_DIR</code> to use a different directory.</li>
+<li>Stored notes to test recall against. If you need a minimal note first, see <a href="../store-threat-actor/">Store a threat actor</a>.</li>
 </ul>
 <h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
-<h3 id="1-configure-the-embedding-model">1. Configure the embedding model<a class="headerlink" href="#1-configure-the-embedding-model" title="Permanent link">&para;</a></h3>
-<p>Edit <code>config.yaml</code>:</p>
+<h3 id="1-confirm-the-active-embedding-defaults">1. Confirm the active embedding defaults<a class="headerlink" href="#1-confirm-the-active-embedding-defaults" title="Permanent link">&para;</a></h3>
+<p>The default embedding provider is <code>fastembed</code>, using the in-process ONNX model <code>nomic-ai/nomic-embed-text-v1.5-Q</code> with <code>768</code> dimensions.</p>
 <div class="highlight"><pre><span></span><code><span class="nt">embedding</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fastembed</span>
 <span class="w">  </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nomic-ai/nomic-embed-text-v1.5-Q</span>
 <span class="w">  </span><span class="nt">dimensions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">768</span>
+<span class="w">  </span><span class="nt">threads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
 </code></pre></div>
-<p>Or set via environment variables:</p>
+<p>Environment variables override the provider, model, URL, and data directory:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_EMBEDDING_PROVIDER</span><span class="o">=</span>fastembed
 <span class="nb">export</span><span class="w"> </span><span class="nv">AMEM_EMBEDDING_MODEL</span><span class="o">=</span>nomic-ai/nomic-embed-text-v1.5-Q
+<span class="nb">export</span><span class="w"> </span><span class="nv">AMEM_EMBEDDING_URL</span><span class="o">=</span>http://127.0.0.1:11434
+<span class="nb">export</span><span class="w"> </span><span class="nv">AMEM_DATA_DIR</span><span class="o">=</span>/data/zettelforge
 </code></pre></div>
-<p>Supported configurations:</p>
-<table>
-<thead>
-<tr>
-<th>Provider</th>
-<th>Config value</th>
-<th>Model</th>
-<th>Dimensions</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>fastembed (default)</td>
-<td><code>fastembed</code></td>
-<td><code>nomic-ai/nomic-embed-text-v1.5-Q</code></td>
-<td>768</td>
-<td>In-process ONNX, ~130 MB, ~7 ms/embed</td>
-</tr>
-<tr>
-<td>Ollama (optional)</td>
-<td><code>ollama</code></td>
-<td><code>nomic-embed-text-v2-moe:latest</code></td>
-<td>768</td>
-<td>Requires Ollama running on <code>embedding.url</code></td>
-</tr>
-</tbody>
-</table>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Changing the embedding model after data has been indexed requires a full re-index. Existing vectors become incompatible with new model embeddings. Run <code>python scripts/rebuild_index.py</code> after changing models.</p>
-</div>
-<h3 id="2-verify-embedding-connectivity">2. Verify embedding connectivity<a class="headerlink" href="#2-verify-embedding-connectivity" title="Permanent link">&para;</a></h3>
+<p><code>AMEM_EMBEDDING_URL</code> is used when <code>embedding.provider</code> is <code>ollama</code>. The default <code>fastembed</code> provider runs locally and does not call an embedding server.</p>
+<p>Verify the embedding output before you rebuild or ingest production notes:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.vector_memory</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_embedding</span>
 
 <span class="n">vector</span> <span class="o">=</span> <span class="n">get_embedding</span><span class="p">(</span><span class="s2">&quot;APT28 uses Cobalt Strike for command and control&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Embedding dimensions: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;First 5 values: </span><span class="si">{</span><span class="n">vector</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Expected output:</p>
+<p>Verified output:</p>
 <div class="highlight"><pre><span></span><code>Embedding dimensions: 768
 </code></pre></div>
-<h3 id="3-configure-retrieval-parameters">3. Configure retrieval parameters<a class="headerlink" href="#3-configure-retrieval-parameters" title="Permanent link">&para;</a></h3>
-<p>Edit the <code>retrieval</code> section of <code>config.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">retrieval</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">default_k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
-<span class="w">  </span><span class="nt">similarity_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.25</span>
-<span class="w">  </span><span class="nt">entity_boost</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.5</span>
-<span class="w">  </span><span class="nt">max_graph_depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<p>Before you change <code>embedding.model</code> or <code>embedding.dimensions</code> on an existing store, read <a href="#6-treat-sqlite-native-vector-rebuilds-as-in-progress">Treat SQLite-native vector rebuilds as in progress</a>. Existing vectors are not comparable to vectors from a different model or dimensionality, and ZettelForge 2.8.0 does not ship a working rebuild path for its default SQLite store.</p>
+<h3 id="2-place-the-vector-index-with-amem_data_dir">2. Place the vector index with <code>AMEM_DATA_DIR</code><a class="headerlink" href="#2-place-the-vector-index-with-amem_data_dir" title="Permanent link">&para;</a></h3>
+<p>ZettelForge writes the LanceDB vector index under the active data directory:</p>
+<div class="highlight"><pre><span></span><code>{data_dir}/
+  zettelforge.db
+  vectordb/
 </code></pre></div>
-<p>Parameter reference:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Range</th>
-<th>Effect</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>default_k</code></td>
-<td>10</td>
-<td>1–100</td>
-<td>Maximum results returned per query</td>
-</tr>
-<tr>
-<td><code>similarity_threshold</code></td>
-<td>0.25</td>
-<td>0.0–1.0</td>
-<td>Minimum cosine similarity to include a result</td>
-</tr>
-<tr>
-<td><code>entity_boost</code></td>
-<td>2.5</td>
-<td>0.0–10.0</td>
-<td>Multiplicative boost per overlapping entity between query and note</td>
-</tr>
-<tr>
-<td><code>max_graph_depth</code></td>
-<td>2</td>
-<td>1–5</td>
-<td>Hops to traverse in knowledge graph during blended retrieval</td>
-</tr>
-</tbody>
-</table>
-<h3 id="4-configure-cross-encoder-reranking">4. Configure cross-encoder reranking<a class="headerlink" href="#4-configure-cross-encoder-reranking" title="Permanent link">&para;</a></h3>
-<p>ZettelForge applies a cross-encoder reranker after initial vector retrieval to improve ranking quality. Reranking is enabled by default and bounded to control CPU cost.</p>
+<p>The verified default is <code>~/.amem</code>. This override moves both SQLite and LanceDB data for the current process:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">AMEM_DATA_DIR</span><span class="o">=</span>/data/zettelforge
+</code></pre></div>
+<p>In a runtime smoke test with <code>AMEM_DATA_DIR</code> set to a temporary directory, ZettelForge created <code>zettelforge.db</code>, created <code>vectordb/</code>, created a <code>notes_cti</code> LanceDB table after storing a CTI note, and recalled that note through <code>MemoryManager.recall()</code>.</p>
+<h3 id="3-tune-the-active-reranking-controls">3. Tune the active reranking controls<a class="headerlink" href="#3-tune-the-active-reranking-controls" title="Permanent link">&para;</a></h3>
+<p>Cross-encoder reranking runs after the initial vector and graph retrieval blend. These fields are read by <code>MemoryManager.recall()</code> at runtime:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">retrieval</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">rerank_enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="w">  </span><span class="nt">rerank_max_candidates</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
 <span class="w">  </span><span class="nt">rerank_doc_chars</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">256</span>
 <span class="w">  </span><span class="nt">rerank_model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Xenova/ms-marco-MiniLM-L-6-v2</span>
+<span class="w">  </span><span class="nt">rerank_threads</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">  </span><span class="nt">entity_max_fanout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
 </code></pre></div>
+<p>Use these controls when recall returns the right candidate notes but the best note is not ranked first:</p>
 <table>
 <thead>
 <tr>
-<th>Parameter</th>
+<th>Key</th>
 <th>Default</th>
 <th>Effect</th>
 </tr>
@@ -2738,74 +2640,89 @@
 <tr>
 <td><code>rerank_enabled</code></td>
 <td><code>true</code></td>
-<td>Enable cross-encoder reranking pass</td>
+<td>Enables the cross-encoder pass. Set <code>false</code> to keep the blended order and avoid reranker inference cost.</td>
 </tr>
 <tr>
 <td><code>rerank_max_candidates</code></td>
-<td>8</td>
-<td>Maximum candidates the reranker scores</td>
+<td><code>8</code></td>
+<td>Limits how many head candidates the reranker scores.</td>
 </tr>
 <tr>
 <td><code>rerank_doc_chars</code></td>
-<td>256</td>
-<td>Characters of each note fed to the reranker</td>
+<td><code>256</code></td>
+<td>Limits how much note text is passed to the reranker.</td>
 </tr>
 <tr>
 <td><code>rerank_model</code></td>
 <td><code>Xenova/ms-marco-MiniLM-L-6-v2</code></td>
-<td>ONNX cross-encoder model</td>
+<td>Selects the cross-encoder model.</td>
+</tr>
+<tr>
+<td><code>rerank_threads</code></td>
+<td><code>8</code></td>
+<td>Sets ONNX threads for reranking. <code>0</code> uses the runtime default.</td>
+</tr>
+<tr>
+<td><code>entity_max_fanout</code></td>
+<td><code>25</code></td>
+<td>Drops query entities that map to too many notes before graph and entity augmentation.</td>
 </tr>
 </tbody>
 </table>
-<p>Raise <code>rerank_max_candidates</code> if relevant results are being ranked below noise. Lower it to reduce CPU time per query.</p>
-<h3 id="5-tune-for-high-precision-fewer-more-relevant-results">5. Tune for high precision (fewer, more relevant results)<a class="headerlink" href="#5-tune-for-high-precision-fewer-more-relevant-results" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nt">retrieval</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">default_k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">  </span><span class="nt">similarity_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.50</span>
-<span class="w">  </span><span class="nt">entity_boost</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.0</span>
-<span class="w">  </span><span class="nt">max_graph_depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<p>You can disable reranking for a process without editing <code>config.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_RERANK_ENABLED</span><span class="o">=</span><span class="nb">false</span>
 </code></pre></div>
+<h3 id="4-treat-non-wired-retrieval-fields-as-in-progress">4. Treat non-wired retrieval fields as in progress<a class="headerlink" href="#4-treat-non-wired-retrieval-fields-as-in-progress" title="Permanent link">&para;</a></h3>
+<p>These fields exist in <code>config.yaml</code> and load into <code>get_config().retrieval</code>, but the verified <code>MemoryManager</code> path does not fully consume customized values yet:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">retrieval</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">default_k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span>
+<span class="w">  </span><span class="nt">similarity_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.25</span>
+<span class="w">  </span><span class="nt">entity_boost</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.5</span>
+<span class="w">  </span><span class="nt">max_graph_depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+</code></pre></div>
+<p>Current verified behavior:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Current runtime behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default_k</code></td>
+<td><code>MemoryManager.recall()</code> still has a method default of <code>k=10</code>. Pass <code>k</code> directly when you call <code>recall()</code>.</td>
+</tr>
+<tr>
+<td><code>similarity_threshold</code></td>
+<td><code>VectorRetriever()</code> still initializes with constructor default <code>0.15</code> in the verified path.</td>
+</tr>
+<tr>
+<td><code>entity_boost</code></td>
+<td><code>VectorRetriever()</code> still initializes with constructor default <code>2.5</code> in the verified path.</td>
+</tr>
+<tr>
+<td><code>max_graph_depth</code></td>
+<td><code>MemoryManager</code> still calls graph retrieval with source-level depth <code>2</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>For high precision today, pass a smaller <code>k</code> and ask a narrower query:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
 
 <span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
 <span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;APT28 Cobalt Strike C2&quot;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;High-precision results: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="6-tune-for-high-recall-cast-a-wide-net">6. Tune for high recall (cast a wide net)<a class="headerlink" href="#6-tune-for-high-recall-cast-a-wide-net" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nt">retrieval</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">default_k</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">25</span>
-<span class="w">  </span><span class="nt">similarity_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.10</span>
-<span class="w">  </span><span class="nt">entity_boost</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.5</span>
-<span class="w">  </span><span class="nt">max_graph_depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<p>For high recall today, pass a larger <code>k</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.memory_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
+
+<span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
+<span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;APT28 Cobalt Strike C2&quot;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Results: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">notes</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;APT28 Cobalt Strike C2&quot;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;cti&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;High-recall results: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">notes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>Start with the defaults (<code>similarity_threshold: 0.25</code>, <code>entity_boost: 2.5</code>). Lower the threshold only if relevant notes are being filtered out. Raise <code>entity_boost</code> if entity-specific queries return too much noise from semantically similar but entity-unrelated notes.</p>
-</div>
-<h3 id="7-configure-the-data-directory">7. Configure the data directory<a class="headerlink" href="#7-configure-the-data-directory" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="nt">storage</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">data_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/.amem</span>
-</code></pre></div>
-<p>Or:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">AMEM_DATA_DIR</span><span class="o">=</span>/data/zettelforge
-</code></pre></div>
-<p>LanceDB stores its vector index at <code>{data_dir}/vectordb/</code>. The full directory layout:</p>
-<div class="highlight"><pre><span></span><code>~/.amem/
-  notes.jsonl          # Note metadata
-  vectordb/            # LanceDB vector index
-  kg_nodes.jsonl       # Knowledge graph nodes
-  kg_edges.jsonl       # Knowledge graph edges
-  entity_index.json    # Entity index
-  entity_aliases.json  # Local alias mappings
-  zettelforge.db       # SQLite database
-  telemetry/           # Operational telemetry
-  logs/                # Log files
-</code></pre></div>
-<h3 id="8-configure-lancedb-maintenance">8. Configure LanceDB maintenance<a class="headerlink" href="#8-configure-lancedb-maintenance" title="Permanent link">&para;</a></h3>
-<p>ZettelForge runs a background cleanup daemon that prunes old LanceDB version chains. On write-heavy instances, unbounded version chains cause tail-latency growth. The daemon collapses the chain on a configurable interval.</p>
+<h3 id="5-configure-lancedb-cleanup">5. Configure LanceDB cleanup<a class="headerlink" href="#5-configure-lancedb-cleanup" title="Permanent link">&para;</a></h3>
+<p>ZettelForge creates a LanceDB version-cleanup helper when <code>MemoryStore</code> initializes and starts it on the first vector write. It reads these fields:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">lance</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">cleanup_interval_minutes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
 <span class="w">  </span><span class="nt">cleanup_older_than_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
@@ -2813,7 +2730,7 @@
 <table>
 <thead>
 <tr>
-<th>Parameter</th>
+<th>Key</th>
 <th>Default</th>
 <th>Effect</th>
 </tr>
@@ -2821,43 +2738,40 @@
 <tbody>
 <tr>
 <td><code>cleanup_interval_minutes</code></td>
-<td>60</td>
-<td>Interval between cleanup passes. Set to <code>0</code> to disable.</td>
+<td><code>60</code></td>
+<td>Interval between cleanup passes. Set <code>0</code> to disable cleanup.</td>
 </tr>
 <tr>
 <td><code>cleanup_older_than_seconds</code></td>
-<td>3600</td>
-<td>Versions older than this are eligible for pruning.</td>
+<td><code>3600</code></td>
+<td>Versions older than this are eligible for cleanup.</td>
 </tr>
 </tbody>
 </table>
-<p>For one-shot compaction of accumulated fragment chains, use the bundled script:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Dry run first — inspect without mutating</span>
-python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span>--data-dir<span class="w"> </span>~/.amem<span class="w"> </span>--dry-run
-
-<span class="c1"># Compact all shards</span>
-python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span>--data-dir<span class="w"> </span>~/.amem<span class="w"> </span>--all<span class="w"> </span>--force
+<p>For one-shot compaction, inspect first:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">DATA_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AMEM_DATA_DIR</span><span class="k">:-</span><span class="nv">$HOME</span><span class="p">/.amem</span><span class="si">}</span><span class="s2">&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span>--data-dir<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span>--all<span class="w"> </span>--dry-run
 </code></pre></div>
-<h3 id="9-rebuild-the-index-after-configuration-changes">9. Rebuild the index after configuration changes<a class="headerlink" href="#9-rebuild-the-index-after-configuration-changes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/rebuild_index.py
+<p>Then optimize after you quiesce writers:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">DATA_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AMEM_DATA_DIR</span><span class="k">:-</span><span class="nv">$HOME</span><span class="p">/.amem</span><span class="si">}</span><span class="s2">&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data-dir<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span>--all<span class="w"> </span>--mode<span class="w"> </span>optimize<span class="w"> </span>--force
 </code></pre></div>
-<p>Optional flags to override default paths:</p>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/rebuild_index.py<span class="w"> </span>--jsonl<span class="w"> </span>/path/to/notes.jsonl<span class="w"> </span>--lance<span class="w"> </span>/path/to/vectordb
-</code></pre></div>
+<p>The <code>--force</code> flag is required for a mutating run. The script exits with <code>0</code> on success, <code>1</code> if a table reports an error, and <code>2</code> for argument or environment failures.</p>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>Rebuilding the index re-embeds all notes. With the default fastembed provider this takes approximately 0.7 seconds per 100 notes.</p>
+<p class="admonition-title">Default compact mode is in progress</p>
+<p>In the standard ZettelForge 2.8.0 wheel, the script's default <code>compact</code> mode exits with code <code>1</code> because <code>compact_files()</code> requests the undeclared <code>pylance</code> library. The <code>optimize</code> command above completed against the same standard installation. Use the verified mode until the package declares and tests the missing dependency or changes its default.</p>
 </div>
-<hr />
-<p><strong>LLM quick reference</strong></p>
-<p>Embedding config: <code>embedding.provider</code> (default <code>fastembed</code>, alternative <code>ollama</code>), <code>embedding.model</code> (default <code>nomic-ai/nomic-embed-text-v1.5-Q</code>), <code>embedding.dimensions</code> (default <code>768</code>). Env overrides: <code>ZETTELFORGE_EMBEDDING_PROVIDER</code>, <code>AMEM_EMBEDDING_MODEL</code>. The default fastembed provider runs in-process via ONNX with no external service required.</p>
-<p>Retrieval config: <code>retrieval.default_k</code> (10), <code>retrieval.similarity_threshold</code> (0.25, range 0.0–1.0), <code>retrieval.entity_boost</code> (2.5, multiplicative per overlapping entity), <code>retrieval.max_graph_depth</code> (2, hops in KG traversal).</p>
-<p>Reranking config: <code>retrieval.rerank_enabled</code> (true), <code>retrieval.rerank_max_candidates</code> (8), <code>retrieval.rerank_doc_chars</code> (256), <code>retrieval.rerank_model</code> (<code>Xenova/ms-marco-MiniLM-L-6-v2</code>).</p>
-<p>Maintenance config: <code>lance.cleanup_interval_minutes</code> (60), <code>lance.cleanup_older_than_seconds</code> (3600).</p>
-<p>Data directory: <code>storage.data_dir</code> (default <code>~/.amem</code>). LanceDB vector index at <code>{data_dir}/vectordb/</code>. Env override: <code>AMEM_DATA_DIR</code>.</p>
-<p>High precision preset: <code>default_k: 5</code>, <code>similarity_threshold: 0.50</code>, <code>entity_boost: 3.0</code>, <code>max_graph_depth: 1</code>.
-High recall preset: <code>default_k: 25</code>, <code>similarity_threshold: 0.10</code>, <code>entity_boost: 1.5</code>, <code>max_graph_depth: 3</code>.</p>
-<p>Rebuild index after model change: <code>python scripts/rebuild_index.py</code>.</p>
+<h3 id="6-treat-sqlite-native-vector-rebuilds-as-in-progress">6. Treat SQLite-native vector rebuilds as in progress<a class="headerlink" href="#6-treat-sqlite-native-vector-rebuilds-as-in-progress" title="Permanent link">&para;</a></h3>
+<p>Do not run <code>scripts/rebuild_index.py</code> against the default SQLite store and assume it rebuilt your vectors. In ZettelForge 2.8.0, that source-checkout helper reads <code>notes.jsonl</code>; it does not read <code>zettelforge.db</code>.</p>
+<p>The verification store contained two SQLite notes and a two-row <code>notes_cti</code> table but no <code>notes.jsonl</code>. Both the default helper invocation and its explicit <code>--jsonl</code> form exited with code <code>0</code> after reporting <code>Found 0 notes in JSONL</code>. Neither invocation rebuilt the SQLite-backed notes.</p>
+<p>An automated SQLite-native rebuild is <strong>in progress</strong>. Until it ships, keep the existing data directory intact, create a separate <code>AMEM_DATA_DIR</code> for the new embedding model, re-ingest from your original source material, validate recall there, and only then switch your deployment to the new directory. Do not delete the old vector index as a rebuild shortcut.</p>
+<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../maintain-lancedb/">Maintain LanceDB indexes</a></li>
+<li><a href="../../reference/configuration/">Configuration reference</a></li>
+<li><a href="../../reference/retrieval-policies/">Retrieval policies</a></li>
+</ul>
 
 
 

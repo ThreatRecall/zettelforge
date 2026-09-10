@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="Isolate installation, configuration, storage, LLM, retrieval, synthesis, and MCP failures in ZettelForge 2.8.0.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -29,7 +29,7 @@
     
     
       
-        <title>Troubleshoot - ZettelForge Documentation</title>
+        <title>Troubleshoot ZettelForge - ZettelForge Documentation</title>
       
     
     
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshoot
+              Troubleshoot ZettelForge
             
           </span>
         </div>
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1199,183 +1199,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-first-run" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install / first run
+        Prerequisites
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Install / first run">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#modulenotfounderror-no-module-named-zettelforgemcp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ModuleNotFoundError: No module named 'zettelforge.mcp'
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fastembed-download-stalls-on-first-use" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        fastembed download stalls on first use
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ollama-backend-returns-empty-strings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ollama backend returns empty strings
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#remember-problems" class="md-nav__link">
+  <a href="#1-capture-the-version-and-parsed-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        remember() problems
+        1. Capture the version and parsed configuration
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="remember() problems">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#governanceviolationerror-content-too-short" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GovernanceViolationError: content too short
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#remember-is-slow-1-s-per-call" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        remember() is slow (&gt; 1 s per call)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#remember-aborts-with-keyerror-from_node_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        remember() aborts with KeyError: 'from_node_id'
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#entities-i-expect-are-not-extracted" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entities I expect are not extracted
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#recall-problems" class="md-nav__link">
+  <a href="#2-confirm-the-active-data-and-diagnostic-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        recall() problems
+        2. Confirm the active data and diagnostic files
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="recall() problems">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#zero-results-on-obvious-queries" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zero results on obvious queries
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#results-include-stale-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Results include stale notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#too-many-supersessions-on-conversational-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Too many supersessions" on conversational data
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#synthesize-problems" class="md-nav__link">
+  <a href="#3-follow-the-matching-symptom" class="md-nav__link">
     <span class="md-ellipsis">
       
-        synthesize() problems
+        3. Follow the matching symptom
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="synthesize() problems">
+    <nav class="md-nav" aria-label="3. Follow the matching symptom">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#every-query-returns-no-specific-answer-found-for" class="md-nav__link">
+  <a href="#import-or-version-command-fails" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Every query returns "No specific answer found for: …"
+        Import or version command fails
       
     </span>
   </a>
@@ -1383,66 +1255,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#synthesize-returned-an-answer-but-cited-0-sources" class="md-nav__link">
+  <a href="#remember-raises-governanceviolationerror" class="md-nav__link">
     <span class="md-ellipsis">
       
-        synthesize() returned an answer but cited 0 sources
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#causal-triple-extraction-problems" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Causal triple extraction problems
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Causal triple extraction problems">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#kg_edges-table-has-no-edge_typecausal-rows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        kg_edges table has no edge_type=causal rows
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mcp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MCP
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="MCP">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#claude-code-cannot-find-the-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Claude Code cannot find the server
+        remember() raises GovernanceViolationError
       
     </span>
   </a>
@@ -1450,38 +1266,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zettelforge_sync-is-unavailable" class="md-nav__link">
+  <a href="#remember-succeeds-but-llm-derived-enrichment-is-absent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        zettelforge_sync is unavailable
+        remember() succeeds but LLM-derived enrichment is absent
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#logs-and-diagnostics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logs and diagnostics
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Logs and diagnostics">
-      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#operational-telemetry-rfc-007" class="md-nav__link">
+  <a href="#recall-returns-no-memories" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operational telemetry (RFC-007)
+        recall() returns no memories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synthesize-returns-no-specific-answer-found-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        synthesize() returns No specific answer found for: ...
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#an-mcp-client-cannot-find-zettelforge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An MCP client cannot find ZettelForge
       
     </span>
   </a>
@@ -2645,183 +2466,55 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#install-first-run" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Install / first run
+        Prerequisites
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Install / first run">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#modulenotfounderror-no-module-named-zettelforgemcp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ModuleNotFoundError: No module named 'zettelforge.mcp'
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fastembed-download-stalls-on-first-use" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        fastembed download stalls on first use
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ollama-backend-returns-empty-strings" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ollama backend returns empty strings
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#remember-problems" class="md-nav__link">
+  <a href="#1-capture-the-version-and-parsed-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        remember() problems
+        1. Capture the version and parsed configuration
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="remember() problems">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#governanceviolationerror-content-too-short" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GovernanceViolationError: content too short
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#remember-is-slow-1-s-per-call" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        remember() is slow (&gt; 1 s per call)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#remember-aborts-with-keyerror-from_node_id" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        remember() aborts with KeyError: 'from_node_id'
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#entities-i-expect-are-not-extracted" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Entities I expect are not extracted
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#recall-problems" class="md-nav__link">
+  <a href="#2-confirm-the-active-data-and-diagnostic-files" class="md-nav__link">
     <span class="md-ellipsis">
       
-        recall() problems
+        2. Confirm the active data and diagnostic files
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="recall() problems">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#zero-results-on-obvious-queries" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zero results on obvious queries
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#results-include-stale-notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Results include stale notes
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#too-many-supersessions-on-conversational-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Too many supersessions" on conversational data
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#synthesize-problems" class="md-nav__link">
+  <a href="#3-follow-the-matching-symptom" class="md-nav__link">
     <span class="md-ellipsis">
       
-        synthesize() problems
+        3. Follow the matching symptom
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="synthesize() problems">
+    <nav class="md-nav" aria-label="3. Follow the matching symptom">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#every-query-returns-no-specific-answer-found-for" class="md-nav__link">
+  <a href="#import-or-version-command-fails" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Every query returns "No specific answer found for: …"
+        Import or version command fails
       
     </span>
   </a>
@@ -2829,66 +2522,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#synthesize-returned-an-answer-but-cited-0-sources" class="md-nav__link">
+  <a href="#remember-raises-governanceviolationerror" class="md-nav__link">
     <span class="md-ellipsis">
       
-        synthesize() returned an answer but cited 0 sources
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#causal-triple-extraction-problems" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Causal triple extraction problems
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Causal triple extraction problems">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#kg_edges-table-has-no-edge_typecausal-rows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        kg_edges table has no edge_type=causal rows
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mcp" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MCP
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="MCP">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#claude-code-cannot-find-the-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Claude Code cannot find the server
+        remember() raises GovernanceViolationError
       
     </span>
   </a>
@@ -2896,38 +2533,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#zettelforge_sync-is-unavailable" class="md-nav__link">
+  <a href="#remember-succeeds-but-llm-derived-enrichment-is-absent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        zettelforge_sync is unavailable
+        remember() succeeds but LLM-derived enrichment is absent
       
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#logs-and-diagnostics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logs and diagnostics
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Logs and diagnostics">
-      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#operational-telemetry-rfc-007" class="md-nav__link">
+  <a href="#recall-returns-no-memories" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Operational telemetry (RFC-007)
+        recall() returns no memories
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synthesize-returns-no-specific-answer-found-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        synthesize() returns No specific answer found for: ...
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#an-mcp-client-cannot-find-zettelforge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        An MCP client cannot find ZettelForge
       
     </span>
   </a>
@@ -2971,260 +2613,120 @@
 
 
 <h1 id="troubleshoot-zettelforge">Troubleshoot ZettelForge<a class="headerlink" href="#troubleshoot-zettelforge" title="Permanent link">&para;</a></h1>
-<p>A decision tree for the most common failures, grouped by the phase they
-occur in. Each entry traces back to the behaviour in source or config.</p>
-<h2 id="install-first-run">Install / first run<a class="headerlink" href="#install-first-run" title="Permanent link">&para;</a></h2>
-<h3 id="modulenotfounderror-no-module-named-zettelforgemcp"><code>ModuleNotFoundError: No module named 'zettelforge.mcp'</code><a class="headerlink" href="#modulenotfounderror-no-module-named-zettelforgemcp" title="Permanent link">&para;</a></h3>
-<p>You are running a version older than v2.2.0. The MCP server only became
-importable as <code>zettelforge.mcp</code> starting in v2.2.0. Upgrade:</p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span><span class="s1">&#39;zettelforge&gt;=2.2.0&#39;</span>
-python<span class="w"> </span>-m<span class="w"> </span>zettelforge.mcp<span class="w">   </span><span class="c1"># starts the stdio server</span>
-</code></pre></div>
-<h3 id="fastembed-download-stalls-on-first-use"><code>fastembed</code> download stalls on first use<a class="headerlink" href="#fastembed-download-stalls-on-first-use" title="Permanent link">&para;</a></h3>
-<p>fastembed pulls its ONNX model on first call. If you are behind a proxy:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">HTTPS_PROXY</span><span class="o">=</span>http://proxy:3128
-<span class="nb">export</span><span class="w"> </span><span class="nv">HF_HUB_ENABLE_HF_TRANSFER</span><span class="o">=</span><span class="m">0</span>
-</code></pre></div>
-<p>Pre-download the model outside ZettelForge:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fastembed</span><span class="w"> </span><span class="kn">import</span> <span class="n">TextEmbedding</span>
-<span class="c1"># Use the full HuggingFace model id. The short alias is rejected by fastembed.</span>
-<span class="n">TextEmbedding</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="s2">&quot;nomic-ai/nomic-embed-text-v1.5-Q&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="ollama-backend-returns-empty-strings">Ollama backend returns empty strings<a class="headerlink" href="#ollama-backend-returns-empty-strings" title="Permanent link">&para;</a></h3>
-<p>Two distinct causes share this symptom.</p>
-<p><strong>1. Model not pulled.</strong> Confirm the requested model is present:</p>
-<div class="highlight"><pre><span></span><code>ollama<span class="w"> </span>list
-ollama<span class="w"> </span>pull<span class="w"> </span>qwen2.5:3b<span class="w">   </span><span class="c1"># or the model ZETTELFORGE_LLM_MODEL points to</span>
-</code></pre></div>
-<p><strong>2. Reasoning-model token starvation.</strong> If your configured model emits
-<code>&lt;think&gt;...&lt;/think&gt;</code> reasoning tokens and the OCSF log shows
-<code>event=llm_call_empty_response done_reason=length eval_count=&lt;num_predict&gt;</code>,
-the model consumed its entire token budget on hidden <code>&lt;think&gt;...&lt;/think&gt;</code> tokens
-before emitting a final answer.</p>
-<p>Pre-v2.5.2 budgets were too low (300–1024 tokens depending on the call site) and
-silently failed every causal-extraction, synthesis, fact-extraction, and LLM NER
-call. Upgrade to v2.5.2+; the per-call-site caps are now 2500–8000 tokens and are
-config-overridable. See the <a href="../../reference/configuration/#llm">Configuration Reference — <code>llm</code></a>
-for the exact per-call-site knobs.</p>
-<p>If you cannot upgrade and you are on a reasoning model, switch to a model that
-does not emit <code>&lt;think&gt;</code> tokens, such as <code>qwen2.5:3b</code> when served normally.</p>
-<h2 id="remember-problems"><code>remember()</code> problems<a class="headerlink" href="#remember-problems" title="Permanent link">&para;</a></h2>
-<h3 id="governanceviolationerror-content-too-short"><code>GovernanceViolationError: content too short</code><a class="headerlink" href="#governanceviolationerror-content-too-short" title="Permanent link">&para;</a></h3>
-<p><code>GovernanceValidator</code> enforces <code>governance.min_content_length</code> (default: 1 character).
-Pure whitespace is rejected as well. For benchmark or replay scenarios, set
-<code>governance.enabled: false</code> in <code>config.yaml</code>.</p>
-<h3 id="remember-is-slow-1-s-per-call"><code>remember()</code> is slow (&gt; 1 s per call)<a class="headerlink" href="#remember-is-slow-1-s-per-call" title="Permanent link">&para;</a></h3>
-<p>The normal path returns in approximately 45 ms on v2.1.1+ (55 ms warm with
-fastembed preload on v2.4.3+). If you see multi-second latencies:</p>
+<p>Use this decision path when ZettelForge fails to start, reads the wrong data,
+returns no memories, produces a synthesis fallback, or does not connect to an
+MCP client. Start by capturing the running version and effective configuration;
+then follow the symptom that matches your failure.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Version too old.</strong> You are on a version older than v2.1.1 and
-  <code>_check_supersession</code> runs linearly over the full store. Upgrade.</li>
-<li><strong>LanceDB version overhead.</strong> On v2.4.x or older, <code>notes_&lt;domain&gt;.lance</code>
-  can accumulate multi-gigabyte version-history overhead. Run:</li>
+<li>Use ZettelForge 2.8.0. Complete the <a href="../../tutorials/01-quickstart/">Quickstart</a>
+  before you diagnose an existing installation.</li>
+<li>Run every command in the same shell, virtual environment, container, and
+  working directory as the failing process.</li>
+<li>Keep the <a href="../../reference/configuration/">Configuration reference</a> and
+  <a href="../../reference/governance-controls/">Governance controls reference</a> open.
+  They distinguish parsed settings from settings that the runtime consumes.</li>
 </ul>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span>--data-dir<span class="w"> </span>~/.amem<span class="w"> </span>--all<span class="w"> </span>--force
+<h2 id="1-capture-the-version-and-parsed-configuration">1. Capture the version and parsed configuration<a class="headerlink" href="#1-capture-the-version-and-parsed-configuration" title="Permanent link">&para;</a></h2>
+<p>Run this snapshot without printing credentials:</p>
+<div class="highlight"><pre><span></span><code>python3<span class="w"> </span>-m<span class="w"> </span>zettelforge<span class="w"> </span>version
+
+python3<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;&#39;PY&#39;</span>
+<span class="s">from zettelforge.config import get_config</span>
+
+<span class="s">cfg = get_config()</span>
+<span class="s">for key, value in (</span>
+<span class="s">    (&quot;storage.data_dir&quot;, cfg.storage.data_dir),</span>
+<span class="s">    (&quot;backend&quot;, cfg.backend),</span>
+<span class="s">    (&quot;embedding.provider&quot;, cfg.embedding.provider),</span>
+<span class="s">    (&quot;embedding.model&quot;, cfg.embedding.model),</span>
+<span class="s">    (&quot;llm.provider&quot;, cfg.llm.provider),</span>
+<span class="s">    (&quot;llm.model&quot;, cfg.llm.model),</span>
+<span class="s">    (&quot;llm_ner.enabled&quot;, cfg.llm_ner.enabled),</span>
+<span class="s">    (&quot;retrieval.default_k&quot;, cfg.retrieval.default_k),</span>
+<span class="s">    (&quot;retrieval.similarity_threshold&quot;, cfg.retrieval.similarity_threshold),</span>
+<span class="s">    (&quot;logging.level&quot;, cfg.logging.level),</span>
+<span class="s">):</span>
+<span class="s">    print(f&quot;{key}={value}&quot;)</span>
+<span class="s">PY</span>
 </code></pre></div>
-<p>Then upgrade to v2.4.3+ so the background <code>lance.cleanup_*</code> daemon keeps the
-  shard trimmed automatically. See the
-  <a href="../../reference/configuration/#lance">Configuration Reference — <code>lance</code></a>
-  for the daemon's two knobs.</p>
-<ul>
-<li>
-<p><strong><code>sync=True</code> passed.</strong> That is expected behaviour. The call blocks until the
-  background enrichment queue (causal triples, LLM NER, A-Mem evolution) finishes.
-  On a 9B-Q4_K_M reasoning model in v2.5.2, this can be 1–3 minutes per note
-  because causal extraction uses an 8000-token budget. Use the default async path
-  unless you specifically need the result in-line.</p>
-</li>
-<li>
-<p><strong>Enrichment queue full.</strong> <code>llm_ner.enabled</code> is <code>true</code> and the LLM backend is
-  slow. LLM NER runs asynchronously and does not block <code>remember()</code> until the
-  enrichment queue reaches its limit (maxsize=500). At that point, writes back-pressure. Either
-  scale the LLM or set <code>ZETTELFORGE_LLM_NER_ENABLED=false</code>.</p>
-</li>
-</ul>
-<h3 id="remember-aborts-with-keyerror-from_node_id"><code>remember()</code> aborts with <code>KeyError: 'from_node_id'</code><a class="headerlink" href="#remember-aborts-with-keyerror-from_node_id" title="Permanent link">&para;</a></h3>
-<p>Pre-v2.5.1 versions hard-failed <code>KnowledgeGraph._cache_edge</code> on legacy edges that
-used <code>{source_id, target_id, relation_type}</code> keys instead of the canonical
-<code>{from_node_id, to_node_id, relationship}</code>. This affects any deployment with
-mixed-schema history in <code>kg_edges.jsonl</code> and takes down every <code>recall()</code> and
-<code>synthesize()</code> at construction time. The v2.5.1 hotfix added a normalize-on-load
-pass. Upgrade to v2.5.1+.</p>
-<h3 id="entities-i-expect-are-not-extracted">Entities I expect are not extracted<a class="headerlink" href="#entities-i-expect-are-not-extracted" title="Permanent link">&para;</a></h3>
-<p>Regex-only extraction covers 13 types: <code>cve</code>, <code>intrusion_set</code>, <code>actor</code>, <code>tool</code>,
-<code>campaign</code>, <code>attack_pattern</code>, <code>ipv4</code>, <code>domain</code>, <code>url</code>, <code>md5</code>, <code>sha1</code>, <code>sha256</code>,
-<code>email</code>. Conversational types (<code>person</code>, <code>location</code>, <code>organization</code>, <code>event</code>,
-<code>activity</code>, <code>temporal</code>) require LLM NER. Check:</p>
-<ul>
-<li><code>llm_ner.enabled</code> is <code>true</code> in your config (default).</li>
-<li>Your LLM backend is reachable.</li>
-<li>Wait for enrichment to complete, or pass <code>sync=True</code>.</li>
-</ul>
-<h2 id="recall-problems"><code>recall()</code> problems<a class="headerlink" href="#recall-problems" title="Permanent link">&para;</a></h2>
-<h3 id="zero-results-on-obvious-queries">Zero results on obvious queries<a class="headerlink" href="#zero-results-on-obvious-queries" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Confirm the backend matches the data directory.
-  <code>ZETTELFORGE_BACKEND=sqlite</code> is the v2.2.0 default. A mismatched backend
-  points at an empty database.</li>
-<li>The cross-encoder reranker drops low-similarity hits. Lower
-  <code>retrieval.similarity_threshold</code> or raise <code>retrieval.default_k</code>.</li>
-<li>Notes may be superseded. Retry with <code>exclude_superseded=False</code>.</li>
-</ul>
-<h3 id="results-include-stale-notes">Results include stale notes<a class="headerlink" href="#results-include-stale-notes" title="Permanent link">&para;</a></h3>
-<p>Raise <code>retrieval.entity_boost</code> or set a tighter <code>retrieval.similarity_threshold</code>.
-To exclude tier <code>"C"</code> notes from synthesis results, pass <code>tier_filter=["A", "B"]</code>
-as a keyword argument to <code>synthesize()</code>. The <code>synthesis.tier_filter</code> config key is
-not read at runtime; tier filtering is only effective when passed directly to the
-call.</p>
-<h3 id="too-many-supersessions-on-conversational-data">"Too many supersessions" on conversational data<a class="headerlink" href="#too-many-supersessions-on-conversational-data" title="Permanent link">&para;</a></h3>
-<p>Known behaviour. <code>_check_supersession()</code> is entity-overlap driven and
-LOCOMO-style dialogue shares speakers. Pass <code>exclude_superseded=False</code> on
-<code>recall()</code> or disable evolution with <code>mm.remember(..., evolve=False)</code> for the
-ingest pass.</p>
-<h2 id="synthesize-problems"><code>synthesize()</code> problems<a class="headerlink" href="#synthesize-problems" title="Permanent link">&para;</a></h2>
-<h3 id="every-query-returns-no-specific-answer-found-for">Every query returns <code>"No specific answer found for: …"</code><a class="headerlink" href="#every-query-returns-no-specific-answer-found-for" title="Permanent link">&para;</a></h3>
-<p>This is the synthesis fallback string. The LLM call returned empty, malformed
-JSON, or raised. The most likely cause on a reasoning model is token starvation.
-See <a href="#ollama-backend-returns-empty-strings">Ollama backend returns empty strings</a>.</p>
-<p>Upgrade to v2.5.2+, which raised the synthesis budget from 800 to 2500 tokens.
-Alternatively, switch to a non-reasoning model.</p>
-<p>Confirm the degradation in the OCSF log:</p>
-<div class="highlight"><pre><span></span><code>grep<span class="w"> </span><span class="s1">&#39;&quot;schema&quot;:&quot;synthesis&quot;,&quot;raw&quot;:&quot;&quot;&#39;</span><span class="w"> </span>~/.amem/logs/zettelforge.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
-grep<span class="w"> </span><span class="s1">&#39;&quot;event&quot;:&quot;llm_call_empty_response&quot;&#39;</span><span class="w"> </span>~/.amem/logs/zettelforge.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+<p>The first line must report <code>ZettelForge v2.8.0</code>. Keep warnings from stderr:
+an <code>env_var_not_found</code> warning identifies an unresolved <code>${NAME}</code> reference in
+the loaded configuration.</p>
+<p>Treat this output as the parser's view, not proof that every setting is active.
+In 2.8.0, storage and structured-log paths read <code>AMEM_DATA_DIR</code> directly and
+fall back to <code>~/.amem</code>. The base storage factory creates SQLite even when the
+parsed <code>backend</code> value names another backend. Use the Configuration reference
+for every other runtime-wiring exception.</p>
+<h2 id="2-confirm-the-active-data-and-diagnostic-files">2. Confirm the active data and diagnostic files<a class="headerlink" href="#2-confirm-the-active-data-and-diagnostic-files" title="Permanent link">&para;</a></h2>
+<p>List the database and logs from the directory the runtime actually reads, then
+look for LLM and background-enrichment failures:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">data_dir</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AMEM_DATA_DIR</span><span class="k">:-</span><span class="nv">$HOME</span><span class="p">/.amem</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;data directory: %s\n&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$data_dir</span><span class="s2">&quot;</span>
+find<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$data_dir</span><span class="s2">&quot;</span><span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">2</span><span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span><span class="se">\(</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-name<span class="w"> </span><span class="s1">&#39;zettelforge.db&#39;</span><span class="w"> </span>-o<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-name<span class="w"> </span><span class="s1">&#39;zettelforge.log*&#39;</span><span class="w"> </span>-o<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-name<span class="w"> </span><span class="s1">&#39;audit.log*&#39;</span><span class="w"> </span>-o<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-name<span class="w"> </span><span class="s1">&#39;telemetry_*.jsonl&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="se">\)</span><span class="w"> </span>-print
+grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;event&quot;: &quot;(all_llm_backends_failed|llm_call_empty_response|enrichment_failed|llm_ner_failed|neighbor_evolution_failed)&quot;&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">&quot;</span><span class="nv">$data_dir</span><span class="s2">/logs/zettelforge.log&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
-<p>Both events appear when synthesis is silently degrading.</p>
-<h3 id="synthesize-returned-an-answer-but-cited-0-sources"><code>synthesize()</code> returned an answer but cited 0 sources<a class="headerlink" href="#synthesize-returned-an-answer-but-cited-0-sources" title="Permanent link">&para;</a></h3>
-<p><code>recall()</code> returned no notes for the query. Check:</p>
-<ul>
-<li><code>retrieval.similarity_threshold</code> — too high; lower to 0.15.</li>
-<li><code>retrieval.default_k</code> — too low; raise.</li>
-<li>Tier filtering — when you call <code>synthesize()</code> without a <code>tier_filter</code> argument,
-  it defaults to all tiers <code>["A", "B", "C"]</code>, so every tier is eligible. If you
-  are explicitly passing <code>tier_filter=["A", "B"]</code> in your call, tier <code>"C"</code> notes
-  are excluded. Pass <code>tier_filter=["A", "B", "C"]</code> or remove the argument to
-  include all tiers. Note: the <code>synthesis.tier_filter</code> config key has no effect
-  at runtime and can be ignored for troubleshooting purposes.</li>
-</ul>
-<h2 id="causal-triple-extraction-problems">Causal triple extraction problems<a class="headerlink" href="#causal-triple-extraction-problems" title="Permanent link">&para;</a></h2>
-<h3 id="kg_edges-table-has-no-edge_typecausal-rows"><code>kg_edges</code> table has no <code>edge_type=causal</code> rows<a class="headerlink" href="#kg_edges-table-has-no-edge_typecausal-rows" title="Permanent link">&para;</a></h3>
-<p>Either the LLM call returned empty (token starvation; see
-<a href="#ollama-backend-returns-empty-strings">Ollama backend returns empty strings</a>)
-or the parser failed. Check:</p>
-<div class="highlight"><pre><span></span><code>sqlite3<span class="w"> </span>~/.amem/zettelforge.db<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span><span class="s2">&quot;SELECT edge_type, count(*) FROM kg_edges GROUP BY edge_type;&quot;</span>
+<p>No <code>zettelforge.db</code> means the failing process is using another data directory
+or has not initialized storage. No grep output means the current log contains
+none of those events; reproduce the failure once and run the command again.
+Structured events go to <code>logs/zettelforge.log</code>; warning-and-higher events also
+appear on stderr.</p>
+<h2 id="3-follow-the-matching-symptom">3. Follow the matching symptom<a class="headerlink" href="#3-follow-the-matching-symptom" title="Permanent link">&para;</a></h2>
+<h3 id="import-or-version-command-fails">Import or version command fails<a class="headerlink" href="#import-or-version-command-fails" title="Permanent link">&para;</a></h3>
+<p>The <code>python3</code> interpreter in this shell cannot import the same installation as
+the failing process. Activate that process's environment and repeat step 1. If
+the version is not 2.8.0, return to the Quickstart and align the installation
+before changing configuration.</p>
+<h3 id="remember-raises-governanceviolationerror"><code>remember()</code> raises <code>GovernanceViolationError</code><a class="headerlink" href="#remember-raises-governanceviolationerror" title="Permanent link">&para;</a></h3>
+<p>Use the exception text to identify the control that rejected the write. The
+2.8.0 validator checks input type, the maximum-content limit, prompt-injection
+patterns, and optional PII policy. The parsed <code>governance.enabled</code> and
+<code>governance.min_content_length</code> fields do not disable or configure those
+observed checks. Apply the matching control from the Governance controls
+reference; do not disable governance to work around the error.</p>
+<h3 id="remember-succeeds-but-llm-derived-enrichment-is-absent"><code>remember()</code> succeeds but LLM-derived enrichment is absent<a class="headerlink" href="#remember-succeeds-but-llm-derived-enrichment-is-absent" title="Permanent link">&para;</a></h3>
+<p>Compare the effective <code>llm.provider</code>, <code>llm.model</code>, and <code>llm_ner.enabled</code> values
+from step 1 with the intended configuration. Then use step 2 to find provider,
+empty-response, or enrichment events. A direct library call defaults to
+<code>evolve=False</code> and <code>sync=False</code>; set either option only when your workflow
+requires its additional LLM work.</p>
+<h3 id="recall-returns-no-memories"><code>recall()</code> returns no memories<a class="headerlink" href="#recall-returns-no-memories" title="Permanent link">&para;</a></h3>
+<p>Confirm that ingestion and retrieval use the same <code>AMEM_DATA_DIR</code>, and confirm
+that <code>zettelforge.db</code> exists there. The 2.8.0 base runtime uses SQLite; a parsed
+backend value does not activate a different store. After ruling out a data-root
+mismatch, retry the call with <code>exclude_superseded=False</code>. The method defaults to
+excluding superseded notes. Change retrieval thresholds only after these checks;
+use the <a href="../../reference/retrieval-policies/">Retrieval policies reference</a> to
+select a deliberate value.</p>
+<h3 id="synthesize-returns-no-specific-answer-found-for"><code>synthesize()</code> returns <code>No specific answer found for: ...</code><a class="headerlink" href="#synthesize-returns-no-specific-answer-found-for" title="Permanent link">&para;</a></h3>
+<p>Troubleshoot <code>recall()</code> first when the result reports zero sources. When sources
+exist, search the structured log for <code>all_llm_backends_failed</code>,
+<code>llm_call_empty_response</code>, and <code>parse_failed</code> with <code>schema</code> set to <code>synthesis</code>.
+The fallback means the provider returned no usable JSON or raised an exception;
+it does not prove that retrieval failed.</p>
+<h3 id="an-mcp-client-cannot-find-zettelforge">An MCP client cannot find ZettelForge<a class="headerlink" href="#an-mcp-client-cannot-find-zettelforge" title="Permanent link">&para;</a></h3>
+<p>Test the stdio transport outside the client:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%s\n&#39;</span><span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;method&quot;:&quot;tools/list&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>zettelforge.mcp<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;import json, sys; response=json.load(sys.stdin); print(&quot;jsonrpc={} tools={}&quot;.format(response[&quot;jsonrpc&quot;], len(response[&quot;result&quot;][&quot;tools&quot;])))&#39;</span>
 </code></pre></div>
-<p>If you only see <code>heuristic</code> rows, no causal triples are being persisted. v2.5.2
-is the minimum version where this works end-to-end on reasoning models — earlier
-versions silently failed because the 300-token budget was exhausted by <code>&lt;think&gt;</code>
-tokens.</p>
-<p>If you are on v2.5.2+ and still see zero causal edges:</p>
-<ol>
-<li>Confirm the LLM is reachable and returns non-empty responses for the synthesis
-   prompt.</li>
-<li>Pass <code>sync=True</code> and watch the OCSF log for
-   <code>event=parse_failed schema=causal_triples raw=...</code>. The <code>raw</code> preview shows what
-   the model returned: either an empty string (token starvation) or relations
-   outside the allowlist (<code>causes</code>, <code>enables</code>, <code>targets</code>, <code>uses</code>, <code>exploits</code>,
-   <code>attributed_to</code>, <code>related_to</code>). Out-of-allowlist relations appear as
-   <code>event=invalid_causal_relation</code> with the offending string.</li>
-</ol>
-<h2 id="mcp">MCP<a class="headerlink" href="#mcp" title="Permanent link">&para;</a></h2>
-<h3 id="claude-code-cannot-find-the-server">Claude Code cannot find the server<a class="headerlink" href="#claude-code-cannot-find-the-server" title="Permanent link">&para;</a></h3>
-<p>Confirm the invocation in your MCP client config:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;zettelforge&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;python3&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;-m&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;zettelforge.mcp&quot;</span><span class="p">]</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Test the server directly:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:1,&quot;method&quot;:&quot;tools/list&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>zettelforge.mcp
-</code></pre></div>
-<p>The command returns a JSON-RPC response listing seven tools. If the call hangs for more
-than approximately 10 seconds on first use, the MemoryManager is initialising
-embeddings and models — this only happens once per process.</p>
-<h3 id="zettelforge_sync-is-unavailable"><code>zettelforge_sync</code> is unavailable<a class="headerlink" href="#zettelforge_sync-is-unavailable" title="Permanent link">&para;</a></h3>
-<p><code>zettelforge_sync</code> is an OpenCTI sync tool available on ThreatRecall.ai (SaaS).
-It is not included in the ZettelForge OSS build. See
-<a href="../configure-opencti/">Configure OpenCTI</a> for the current availability status.</p>
-<h2 id="logs-and-diagnostics">Logs and diagnostics<a class="headerlink" href="#logs-and-diagnostics" title="Permanent link">&para;</a></h2>
-<p>ZettelForge writes structured JSON logs to rotating files under the data directory.
-Stdout is never used for logs (GOV-012). Typical paths:</p>
-<div class="highlight"><pre><span></span><code>tail<span class="w"> </span>-f<span class="w"> </span>~/.amem/logs/zettelforge.log<span class="w">             </span><span class="c1"># OCSF structured events</span>
-tail<span class="w"> </span>-f<span class="w"> </span>~/.amem/logs/audit.log<span class="w">                   </span><span class="c1"># Security-relevant events (GOV-012)</span>
-tail<span class="w"> </span>-f<span class="w"> </span>~/.amem/telemetry/telemetry_<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.jsonl<span class="w">  </span><span class="c1"># Operational telemetry (RFC-007)</span>
-</code></pre></div>
-<p>Useful events to grep:</p>
-<table>
-<thead>
-<tr>
-<th>Event</th>
-<th>Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>remember_completed</code></td>
-<td>Fast-path finished; includes <code>note_id</code>, <code>duration_ms</code></td>
-</tr>
-<tr>
-<td><code>enrichment_queue_full</code></td>
-<td>Write back-pressure — scale the LLM or disable LLM NER</td>
-</tr>
-<tr>
-<td><code>supersession_applied</code></td>
-<td>A note was marked superseded; includes <code>old_note_id</code>, <code>new_note_id</code></td>
-</tr>
-<tr>
-<td><code>lance_index_failed</code></td>
-<td>LanceDB write failed; check rebuild script and disk space</td>
-</tr>
-<tr>
-<td><code>governance_violation</code></td>
-<td>Input validation rejected a write</td>
-</tr>
-</tbody>
-</table>
-<p>Set <code>logging.level: DEBUG</code> in <code>config.yaml</code> for verbose output.</p>
-<h3 id="operational-telemetry-rfc-007">Operational telemetry (RFC-007)<a class="headerlink" href="#operational-telemetry-rfc-007" title="Permanent link">&para;</a></h3>
-<p>Every <code>MemoryManager.recall()</code> and <code>.synthesize()</code> call emits a per-query event
-to <code>~/.amem/telemetry/telemetry_YYYY-MM-DD.jsonl</code>. At INFO level this is
-aggregated counts plus latency; at DEBUG it adds per-note metadata, tier
-distribution, vector/graph latency breakdown, and citation-based utility feedback.</p>
-<p>Telemetry scripts:</p>
-<table>
-<thead>
-<tr>
-<th>Script</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>python -m zettelforge.scripts.telemetry_aggregator --date YYYY-MM-DD</code></td>
-<td>Daily summary: latency averages, tier distribution, unused notes, top utility notes</td>
-</tr>
-<tr>
-<td><code>python -m zettelforge.scripts.human_eval_sampler</code></td>
-<td>Sample 20 random synthesis briefings for the monthly human-evaluation rubric</td>
-</tr>
-<tr>
-<td><code>streamlit run src/zettelforge/scripts/telemetry_dashboard.py</code></td>
-<td>Optional visualisation: query volume, latency p50/p95, tier/utility trends</td>
-</tr>
-</tbody>
-</table>
-<p>Raw note content is never persisted in telemetry — only IDs, tiers, source types,
-and domains. Query text is truncated to 200 chars at INFO and 500 at DEBUG. All
-data stays local.</p>
+<p>ZettelForge 2.8.0 prints <code>jsonrpc=2.0 tools=7</code>. If this succeeds, set the MCP
+client command to <code>python3</code> and its arguments to <code>-m</code>, <code>zettelforge.mcp</code> in the
+same environment. If it fails, fix the import or version problem first. A
+successful <code>tools/list</code> response verifies the stdio server and tool registry;
+it does not initialize storage, embeddings, or an LLM.</p>
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../reference/configuration/">Configuration Reference</a></li>
-<li><a href="../../reference/governance-controls/">Governance Controls Reference</a></li>
-<li><a href="../../reference/retrieval-policies/">Retrieval Policies Reference</a></li>
+<li><a href="../../reference/configuration/">Configuration reference</a></li>
+<li><a href="../../reference/governance-controls/">Governance controls reference</a></li>
+<li><a href="../../reference/mcp-protocol/">MCP protocol reference</a></li>
+<li><a href="../../reference/retrieval-policies/">Retrieval policies reference</a></li>
 </ul>
 
 
@@ -3232,6 +2734,9 @@ data stays local.</p>
 
 
 
+
+  
+  
 
 
 

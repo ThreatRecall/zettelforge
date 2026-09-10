@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2189,10 +2189,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#extract_llm-method-complete-not-activated" class="md-nav__link">
+  <a href="#extract_llm-and-llm-ner-enrichment-complete-background-path-active" class="md-nav__link">
     <span class="md-ellipsis">
       
-        extract_llm() method (complete; not activated)
+        extract_llm() and LLM NER enrichment (complete; background path active)
       
     </span>
   </a>
@@ -2568,10 +2568,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#extract_llm-method-complete-not-activated" class="md-nav__link">
+  <a href="#extract_llm-and-llm-ner-enrichment-complete-background-path-active" class="md-nav__link">
     <span class="md-ellipsis">
       
-        extract_llm() method (complete; not activated)
+        extract_llm() and LLM NER enrichment (complete; background path active)
       
     </span>
   </a>
@@ -2703,7 +2703,7 @@
 </tr>
 <tr>
 <td><strong>Last updated</strong></td>
-<td>2026-04-16</td>
+<td>2026-07-27</td>
 </tr>
 <tr>
 <td><strong>ZettelForge version</strong></td>
@@ -2711,7 +2711,7 @@
 </tr>
 <tr>
 <td><strong>Related RFCs</strong></td>
-<td>RFC-002 Universal LLM Provider (pending)</td>
+<td><a href="../RFC-002-universal-llm-provider/">RFC-002 Universal LLM Provider</a></td>
 </tr>
 </tbody>
 </table>
@@ -2751,7 +2751,7 @@
 <tr>
 <td>Conversational</td>
 <td><code>person</code>, <code>location</code>, <code>organization</code>, <code>event</code>, <code>activity</code>, <code>temporal</code></td>
-<td>LLM NER (built; see note below)</td>
+<td>Regex fallback plus background LLM NER when enabled</td>
 </tr>
 </tbody>
 </table>
@@ -2766,14 +2766,15 @@
 <li><code>_LOCATION_PATTERN</code> matches 40+ major world cities by name.</li>
 </ul>
 <p>These are supplementary. They do not cover implicit references ("my friend from college") or locations not in the hardcoded list.</p>
-<h3 id="extract_llm-method-complete-not-activated"><code>extract_llm()</code> method (complete; not activated)<a class="headerlink" href="#extract_llm-method-complete-not-activated" title="Permanent link">&para;</a></h3>
-<p><code>EntityExtractor.extract_llm()</code> is implemented and functional when called directly. It uses <code>llm_client.generate()</code> with a structured JSON prompt, truncates input to 2,000 characters, sets <code>max_tokens=300, temperature=0.0</code>, and retries once on JSON parse failure with <code>json_mode=True</code> and <code>temperature=0.3</code>. On exception, it returns an empty dict and logs <code>exc_info=True</code>.</p>
-<p><strong>As of v2.7.0, no production code path calls <code>use_llm=True</code>.</strong> <code>remember()</code>, <code>build()</code>, and <code>NoteConstructor</code> all use <code>extract_all(use_llm=False)</code> (the default). The LLM NER path is implemented but dormant. Conversational entity types (<code>person</code>, <code>location</code>, <code>organization</code>, <code>event</code>, <code>activity</code>, <code>temporal</code>) are populated only by the limited regex fallbacks above.</p>
+<h3 id="extract_llm-and-llm-ner-enrichment-complete-background-path-active"><code>extract_llm()</code> and LLM NER enrichment (complete; background path active)<a class="headerlink" href="#extract_llm-and-llm-ner-enrichment-complete-background-path-active" title="Permanent link">&para;</a></h3>
+<p><code>EntityExtractor.extract_llm()</code> is implemented and functional when called directly. It calls the configured LLM provider with a structured JSON prompt, isolates input to 2,000 characters, uses <code>get_config().llm.max_tokens_ner</code> (default <code>2500</code>) with <code>temperature=0.0</code>, and retries once on JSON parse failure with <code>json_mode=True</code> and <code>temperature=0.3</code>. On exception, it returns an empty dict and logs <code>exc_info=True</code>.</p>
+<p>The foreground <code>remember()</code> path still indexes the note with <code>extract_all(use_llm=False)</code> for deterministic writes. After that write, <code>MemoryManager.remember()</code> dispatches an <code>llm_ner</code> enrichment job when both <code>enrichment.enabled</code> and <code>llm_ner.enabled</code> are true. Both default to true and can be disabled with <code>ZETTELFORGE_ENRICHMENT_ENABLED=false</code> or <code>ZETTELFORGE_LLM_NER_ENABLED=false</code>. <code>_run_llm_ner()</code> calls <code>extract_llm()</code>, then writes any new entity mappings into the storage backend and the legacy JSON <code>EntityIndexer</code>.</p>
+<p>Benchmark ingestion disables enrichment with <code>ZETTELFORGE_ENRICHMENT_ENABLED=false</code>, so LOCOMO runs do not exercise LLM NER unless you intentionally override that benchmark default.</p>
 <h3 id="entityindexer-persistence-complete">EntityIndexer persistence (complete)<a class="headerlink" href="#entityindexer-persistence-complete" title="Permanent link">&para;</a></h3>
 <p><code>EntityIndexer</code> maintains an inverted index: <code>{entity_type -&gt; {entity_value -&gt; Set[note_id]}}</code>. Writes are batched via a 5-second <code>threading.Timer</code> (deferred flush). An <code>atexit</code> handler flushes on process exit. <code>build()</code> reindexes all notes synchronously with regex-only extraction.</p>
 <p>As of v2.2.0, entity data exists in two stores: <code>entity_index.json</code> (the primary runtime store) and a SQLite <code>entity_index</code> table. The two are not kept in sync by a single authoritative writer. This is a known inconsistency.</p>
 <h3 id="tests">Tests<a class="headerlink" href="#tests" title="Permanent link">&para;</a></h3>
-<p><code>tests/test_conversational_entities.py</code> has <strong>27 tests</strong> across 8 classes (5 more than the 22 named at RFC write time — <code>TestFreeTextPersonNotExtracted</code> was added after the adversarial review):</p>
+<p><code>tests/test_conversational_entities.py</code> has <strong>27 tests</strong> across 8 classes (5 more than the 22 named at RFC write time; <code>TestFreeTextPersonNotExtracted</code> was added after the adversarial review):</p>
 <table>
 <thead>
 <tr>
@@ -2791,12 +2792,12 @@
 <tr>
 <td><code>TestLLMExtraction</code></td>
 <td>3</td>
-<td>CI-skipped (llama-cpp segfaults in CI)</td>
+<td>Runs against the mock LLM provider</td>
 </tr>
 <tr>
 <td><code>TestHybridExtraction</code></td>
 <td>2</td>
-<td>CI-skipped</td>
+<td>Runs against the mock LLM provider</td>
 </tr>
 <tr>
 <td><code>TestNERParsing</code></td>
@@ -2825,11 +2826,11 @@
 </tr>
 </tbody>
 </table>
-<p>LLM extraction tests remain CI-skipped. There are no automated regression tests for IOC extraction, the hash false-positive filter, <code>remove_note()</code>, or <code>search_entities()</code>.</p>
+<p>Additional coverage now exists outside this file: <code>tests/test_basic.py::TestEntityExtractor</code> covers IOC extraction and the git-SHA hash false-positive filter, and <code>tests/test_entity_indexer_races.py</code> covers the RFC-001 Warning 4, 5, and 6 fixes for atomic save, <code>remove_note()</code>, and concurrent save/mutation. The remaining test gap is live-provider LLM NER quality; current LLM NER tests prove parser and wiring behavior with a mock provider, not extraction quality from a real model.</p>
 <h2 id="what-did-not-ship">What did not ship<a class="headerlink" href="#what-did-not-ship" title="Permanent link">&para;</a></h2>
-<p><strong>Step 4 — SynthesisGenerator in benchmark.</strong> <code>locomo_benchmark.py</code> still returns raw context as the answer. The answer extraction distillation step has not been implemented. This is the single highest-expected-impact remaining item.</p>
-<p><strong>LLM NER activation.</strong> <code>use_llm=True</code> has never been passed by any code path. The conversational entity types remain effectively regex-only in production.</p>
-<p><strong>Async batching.</strong> At 2–3 seconds per LLM NER call, batch ingestion with LLM NER enabled would be slow. No async batching implementation has been scheduled.</p>
+<p><strong>Step 4 — production <code>SynthesisGenerator</code> in benchmark.</strong> <code>locomo_benchmark.py</code> now calls a benchmark-local <code>_synthesize_answer()</code> helper after retrieval. That helper uses Ollama's <code>/api/generate</code> endpoint with <code>SYNTH_MODEL</code> defaulting to <code>qwen2.5:3b</code>, then falls back to relevant-sentence extraction when the LLM call fails. The original RFC goal of wiring the production <code>SynthesisGenerator</code> into the benchmark has not shipped.</p>
+<p><strong>Foreground LLM NER activation.</strong> The deterministic foreground indexing path still uses <code>extract_all(use_llm=False)</code>. LLM NER activation now exists as a background enrichment job, not as an inline <code>use_llm=True</code> call inside <code>remember()</code> or <code>NoteConstructor</code>.</p>
+<p><strong>Batch LLM NER.</strong> LLM NER jobs run one note at a time through the enrichment worker. No batch API or batched prompt path has shipped.</p>
 <p><strong>EntityIndexer backend unification.</strong> The JSON/SQLite dual-write inconsistency has not been resolved.</p>
 <h2 id="locomo-benchmark-results">LOCOMO benchmark results<a class="headerlink" href="#locomo-benchmark-results" title="Permanent link">&para;</a></h2>
 <p>The RFC targeted 80%+ LOCOMO accuracy. Actual results:</p>
@@ -2871,15 +2872,15 @@
 </table>
 <p>The 80% target was not achieved. Analysis:</p>
 <ul>
-<li>Entity extraction alone is insufficient. Without Step 4 (SynthesisGenerator distilling focused answers), the judge evaluates a wall of context and scores low even when the answer is present.</li>
+<li>Entity extraction alone is insufficient. The benchmark now has a local focused-answer helper, but it does not use the production <code>SynthesisGenerator</code>, and the fallback still evaluates extracted context snippets when no synthesis LLM is available.</li>
 <li>The 3B model ceiling. Qwen2.5-3B handles common entities adequately but struggles with implicit references and abstract events. LOCOMO relies heavily on these.</li>
-<li>LLM NER was never activated. Conversational entity extraction has not been deployed, so the core RFC value proposition (LLM-powered NER improving multi-hop and temporal accuracy) remains untested in production.</li>
+<li>LLM NER is activated only through background enrichment and is disabled during the deterministic benchmark path. The core RFC value proposition, LLM-powered conversational NER improving multi-hop and temporal accuracy, remains unmeasured in the LOCOMO benchmark.</li>
 <li>Most of the v2.1.1 gain came from performance fixes and a better judge, not from entity extraction.</li>
 </ul>
 <p>The v2.7.0 7% keyword-judge baseline is not directly comparable to the v2.1.1 22% Ollama-judge result. The methodology change (keyword judge vs LLM judge) accounts for most of the apparent regression. See <a href="../../how-to/reproduce-benchmarks/">Reproduce Benchmarks</a> for how to replicate either result.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
 <p><strong>Accepted</strong> (2026-04-09). Adversarial review completed 2026-04-16. Two blockers identified and actioned: <code>load()</code> log event name corrected; <code>attack_pattern</code> regex capture group fixed. Remaining findings documented as open issues.</p>
-<p><strong>Status as of v2.7.0:</strong> Partially Implemented. Steps 1–3 are complete. Step 4 (SynthesisGenerator in benchmark) is not started. LLM NER activation is deferred.</p>
+<p><strong>Status as of v2.7.0:</strong> Partially Implemented. Steps 1–3 are complete. LLM NER activation exists as background enrichment. Step 4's production <code>SynthesisGenerator</code> benchmark integration is not complete.</p>
 <h2 id="adversarial-review-findings-2026-04-16">Adversarial review findings (2026-04-16)<a class="headerlink" href="#adversarial-review-findings-2026-04-16" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2895,7 +2896,7 @@
 <td>1</td>
 <td>BLOCKER</td>
 <td><code>use_llm=True</code> never called — LLM NER is dead code</td>
-<td>Open — fix pending</td>
+<td>Fixed as background enrichment; foreground path remains regex-only</td>
 </tr>
 <tr>
 <td>2</td>
@@ -2913,31 +2914,31 @@
 <td>4</td>
 <td>WARNING</td>
 <td><code>save()</code> truncates before flock — race condition</td>
-<td>Open</td>
+<td>Fixed</td>
 </tr>
 <tr>
 <td>5</td>
 <td>WARNING</td>
 <td><code>remove_note()</code> deletes entity type keys</td>
-<td>Open</td>
+<td>Fixed</td>
 </tr>
 <tr>
 <td>6</td>
 <td>WARNING</td>
 <td><code>_flush_sync()</code> not thread-safe on <code>self.index</code></td>
-<td>Open</td>
+<td>Fixed</td>
 </tr>
 <tr>
 <td>7</td>
 <td>WARNING</td>
 <td><code>extract_all(use_llm=True)</code> overwrites regex results</td>
-<td>Open</td>
+<td>Fixed</td>
 </tr>
 <tr>
 <td>8</td>
 <td>WARNING</td>
 <td>No tests for IOCs, hash filter, <code>remove_note</code>, <code>search_entities</code></td>
-<td>Open</td>
+<td>Fixed except live-provider LLM NER quality coverage</td>
 </tr>
 <tr>
 <td>9</td>
@@ -2955,8 +2956,8 @@
 </table>
 <h2 id="recommendations-for-future-work">Recommendations for future work<a class="headerlink" href="#recommendations-for-future-work" title="Permanent link">&para;</a></h2>
 <ol>
-<li>Wire <code>use_llm=True</code> into the <code>remember()</code> ingest path (highest-priority fix — unlocks the core RFC value proposition).</li>
-<li>Implement Step 4 (SynthesisGenerator in <code>locomo_benchmark.py</code>) — highest expected LOCOMO impact.</li>
+<li>Measure background LLM NER impact on LOCOMO with enrichment enabled and a reachable real LLM provider.</li>
+<li>Replace the benchmark-local <code>_synthesize_answer()</code> helper with the production <code>SynthesisGenerator</code>, then re-run LOCOMO with the same judge and dataset.</li>
 <li>Add mock-based NER regression tests that cover <code>extract_llm()</code> without a live model. <code>TestNERParsing</code> already covers parse logic; extend to the full extraction path.</li>
 <li>Unify <code>EntityIndexer</code> storage to write through <code>StorageBackend</code> and eliminate the JSON/SQLite dual-write inconsistency.</li>
 <li>Evaluate RFC-002 (Universal LLM Provider) impact: once a larger model is accessible through a stable provider interface, re-run LOCOMO to measure the NER quality ceiling independent of the 3B model constraint.</li>

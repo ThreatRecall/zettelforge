@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -919,10 +919,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-fragmentation-happens" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How fragmentation happens
+        Prerequisites
       
     </span>
   </a>
@@ -930,10 +930,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#automatic-version-cleanup-daemon" class="md-nav__link">
+  <a href="#1-inspect-the-tables" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Automatic version cleanup (daemon)
+        1. Inspect the tables
       
     </span>
   </a>
@@ -941,10 +941,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#offline-compaction-manual" class="md-nav__link">
+  <a href="#2-stop-writers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Offline compaction (manual)
+        2. Stop writers
       
     </span>
   </a>
@@ -952,10 +952,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#choosing-between-compact-and-optimize" class="md-nav__link">
+  <a href="#3-optimize-every-table" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Choosing between compact and optimize
+        3. Optimize every table
       
     </span>
   </a>
@@ -963,10 +963,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#when-to-compact" class="md-nav__link">
+  <a href="#4-inspect-again-and-resume-writers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When to compact
+        4. Inspect again and resume writers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-automatic-version-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure automatic version cleanup
       
     </span>
   </a>
@@ -2405,10 +2416,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-fragmentation-happens" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How fragmentation happens
+        Prerequisites
       
     </span>
   </a>
@@ -2416,10 +2427,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#automatic-version-cleanup-daemon" class="md-nav__link">
+  <a href="#1-inspect-the-tables" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Automatic version cleanup (daemon)
+        1. Inspect the tables
       
     </span>
   </a>
@@ -2427,10 +2438,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#offline-compaction-manual" class="md-nav__link">
+  <a href="#2-stop-writers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Offline compaction (manual)
+        2. Stop writers
       
     </span>
   </a>
@@ -2438,10 +2449,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#choosing-between-compact-and-optimize" class="md-nav__link">
+  <a href="#3-optimize-every-table" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Choosing between compact and optimize
+        3. Optimize every table
       
     </span>
   </a>
@@ -2449,10 +2460,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#when-to-compact" class="md-nav__link">
+  <a href="#4-inspect-again-and-resume-writers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When to compact
+        4. Inspect again and resume writers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-automatic-version-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure automatic version cleanup
       
     </span>
   </a>
@@ -2491,117 +2513,62 @@
 
 
 <h1 id="maintain-lancedb-indexes">Maintain LanceDB indexes<a class="headerlink" href="#maintain-lancedb-indexes" title="Permanent link">&para;</a></h1>
-<p>ZettelForge accumulates fragments in its LanceDB vector store as you ingest notes. Each <code>remember()</code> call writes a new fragment to a domain-specific table. On write-heavy deployments, fragment accumulation degrades insert performance. Two mechanisms address this: an automatic background daemon that prunes old version chains, and an offline compaction script that merges fragments.</p>
-<h2 id="how-fragmentation-happens">How fragmentation happens<a class="headerlink" href="#how-fragmentation-happens" title="Permanent link">&para;</a></h2>
-<p>LanceDB uses a log-structured format. Each write appends a new fragment to the table instead of rewriting the existing data. Insert latency grows as LanceDB walks a longer list of fragments to service each new write. A shard with 17,000+ fragments (as on the default <code>notes_cti</code> table after sustained use) can produce tail latencies of 55 seconds per insert.</p>
-<p>Tables are domain-namespaced. Your <code>~/.amem/vectordb/</code> directory contains directories like:</p>
-<div class="highlight"><pre><span></span><code>notes_cti.lance/
-notes_general.lance/
-notes_security_ops.lance/
-notes_detection.lance/
-</code></pre></div>
-<p>Each domain you write to gets its own table. There is no single <code>notes</code> table.</p>
-<h2 id="automatic-version-cleanup-daemon">Automatic version cleanup (daemon)<a class="headerlink" href="#automatic-version-cleanup-daemon" title="Permanent link">&para;</a></h2>
-<p>ZettelForge includes a background daemon that prunes old LanceDB version chains automatically. It starts when <code>MemoryStore</code> initializes and runs one daemon thread per active table, waking on a configurable interval.</p>
-<p>You do not invoke this daemon manually. Control it with two config keys under <code>lance:</code> in your <code>config.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">lance</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">cleanup_interval_minutes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span><span class="w">       </span><span class="c1"># how often to run per table; 0 disables</span>
-<span class="w">  </span><span class="nt">cleanup_older_than_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span><span class="w">   </span><span class="c1"># prune versions older than this</span>
-</code></pre></div>
-<p>These defaults mean: once per hour, prune any version chain entries older than 1 hour. Set <code>cleanup_interval_minutes: 0</code> to disable the daemon without restarting ZettelForge.</p>
-<p>The daemon is best-effort: any error in a single cleanup cycle is logged at <code>warning</code> level and the thread continues. A maintenance failure never crashes the running process.</p>
-<h2 id="offline-compaction-manual">Offline compaction (manual)<a class="headerlink" href="#offline-compaction-manual" title="Permanent link">&para;</a></h2>
-<p>For shards that have accumulated many fragments before the daemon was active, or after a batch-ingestion event, run the one-shot compaction script:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Dry-run — inspect fragment counts without touching data</span>
-python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--data-dir<span class="w"> </span>~/.amem<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--dry-run
-</code></pre></div>
-<p>Example dry-run output (actual captured output, 2026-06-23):</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;data_dir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/home/rolandpg/.amem&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dry-run&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;tables&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;notes_cti&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dry-run&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;before_fragments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">17759</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;before_bytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">177761640</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">17759</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;table&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;notes_general&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dry-run&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;before_fragments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">995</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;before_bytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8551895</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;row_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">995</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">],</span>
-<span class="w">  </span><span class="nt">&quot;totals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;before_fragments&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20296</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;before_bytes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">212401032</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>When you are ready to compact, quiesce any agents writing to ZettelForge, then run with <code>--force</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Compact all tables — requires --force to acknowledge writers are quiesced</span>
-python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--data-dir<span class="w"> </span>~/.amem<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--all<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--force
-
-<span class="c1"># Compact one table only</span>
-python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--data-dir<span class="w"> </span>~/.amem<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--table<span class="w"> </span>notes_cti<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--force
-
-<span class="c1"># Full optimize: compact + prune old versions + reindex</span>
-python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--data-dir<span class="w"> </span>~/.amem<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--all<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mode<span class="w"> </span>optimize<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--force
-</code></pre></div>
-<p><strong>Compaction is safe alongside concurrent readers.</strong> Concurrent writers are allowed by LanceDB but not recommended for a one-shot compaction run. Quiesce any agents actively calling <code>remember()</code> before running with <code>--force</code>.</p>
-<p>The script exits with code <code>0</code> on success, <code>1</code> if any table had an error, <code>2</code> on argument or environment failures.</p>
-<h2 id="choosing-between-compact-and-optimize">Choosing between compact and optimize<a class="headerlink" href="#choosing-between-compact-and-optimize" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Mode</th>
-<th>What it does</th>
-<th>When to use</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>compact</code> (default)</td>
-<td>Merges fragments into larger files</td>
-<td>After batch ingestion; fastest operation</td>
-</tr>
-<tr>
-<td><code>optimize</code></td>
-<td>Compact + prune old version metadata + reindex</td>
-<td>After running <code>compact</code> many times; reduces on-disk size further</td>
-</tr>
-</tbody>
-</table>
-<p>Run <code>compact</code> first. If disk usage is still high after compaction, follow with <code>optimize</code>.</p>
-<h2 id="when-to-compact">When to compact<a class="headerlink" href="#when-to-compact" title="Permanent link">&para;</a></h2>
-<p>You do not need to compact frequently if the background daemon is running. The daemon handles version chain growth automatically. Run the offline script when:</p>
+<p>Inspect and optimize LanceDB after a large ingest or when vector writes slow down. You first measure every table without changing it, stop active writers, then run the verified optimization path.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>You have just completed a large batch ingestion (thousands of notes in one session).</li>
-<li>Fragment count from a dry-run exceeds 10,000 for a single table.</li>
-<li>Insert latency has measurably degraded since the last compaction.</li>
+<li>You run ZettelForge 2.8.0 on the host that owns the data directory.</li>
+<li>You use the same Python environment that imports <code>zettelforge</code> and <code>lancedb</code>.</li>
+<li>You have a current backup of the data directory.</li>
+<li>You can stop every process that writes notes during optimization. Readers can remain active.</li>
 </ul>
-<p>Under typical daily use with the daemon enabled, monthly or quarterly offline compaction is sufficient.</p>
+<p>The default data directory is <code>~/.amem</code>. If you set <code>AMEM_DATA_DIR</code>, use that directory instead.</p>
+<h2 id="1-inspect-the-tables">1. Inspect the tables<a class="headerlink" href="#1-inspect-the-tables" title="Permanent link">&para;</a></h2>
+<p>Set <code>DATA_DIR</code> to the directory that contains <code>vectordb/</code>, then run a dry inspection:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">DATA_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">AMEM_DATA_DIR</span><span class="k">:-</span><span class="nv">$HOME</span><span class="p">/.amem</span><span class="si">}</span><span class="s2">&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span>--data-dir<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span>--dry-run
+</code></pre></div>
+<p>The command discovers every <code>*.lance</code> directory under <code>vectordb/</code> and prints one JSON report. Check these fields for each table:</p>
+<ul>
+<li><code>before_fragments</code> — data fragments visible before maintenance.</li>
+<li><code>before_bytes</code> — bytes below that table's <code>.lance</code> directory.</li>
+<li><code>row_count</code> — rows LanceDB can read.</li>
+<li><code>error</code> — <code>null</code> when inspection succeeds.</li>
+</ul>
+<p>ZettelForge creates one table per memory domain. A CTI domain uses <code>notes_cti</code>; other domains use names such as <code>notes_general</code> and <code>notes_detection</code>. There is no single shared <code>notes</code> table.</p>
+<h2 id="2-stop-writers">2. Stop writers<a class="headerlink" href="#2-stop-writers" title="Permanent link">&para;</a></h2>
+<p>Stop agents and services that call <code>remember()</code> before a mutating run. The script requires <code>--force</code> as an explicit acknowledgement and refuses mutation without it.</p>
+<p>Keep the maintenance window in place until the command exits. The script does not request LanceDB's exclusive-access deletion option, so readers can continue, but concurrent writers add avoidable risk while table files change.</p>
+<h2 id="3-optimize-every-table">3. Optimize every table<a class="headerlink" href="#3-optimize-every-table" title="Permanent link">&para;</a></h2>
+<p>Run the current LanceDB API path:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data-dir<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--all<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--mode<span class="w"> </span>optimize<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--force
+</code></pre></div>
+<p>Use <code>--table notes_cti</code> instead of <code>--all</code> when you want to target only that table. The command writes progress to stderr and a JSON report to stdout. Treat exit code <code>0</code> as success, <code>1</code> as a table error, and <code>2</code> as an argument or environment error.</p>
+<div class="admonition warning">
+<p class="admonition-title">The default compact mode is in progress in ZettelForge 2.8.0</p>
+<p>A clean 2.8.0 installation does not install the <code>pylance</code> module that the deprecated <code>compact_files()</code> path requests. Running the script's default <code>compact</code> mode exits with code <code>1</code>. Use <code>--mode optimize</code>, which completes with the standard installation.</p>
+</div>
+<p>Optimization does not guarantee that a tiny table's fragment count or byte size decreases. LanceDB can create maintenance metadata or new fragments during the operation. Judge the result by a null <code>error</code>, exit code <code>0</code>, and your before-and-after workload measurements.</p>
+<h2 id="4-inspect-again-and-resume-writers">4. Inspect again and resume writers<a class="headerlink" href="#4-inspect-again-and-resume-writers" title="Permanent link">&para;</a></h2>
+<p>Run the dry inspection a second time:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>zettelforge.scripts.compact_lance<span class="w"> </span>--data-dir<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span>--dry-run
+</code></pre></div>
+<p>Confirm that every table reports <code>error: null</code>, then restart your writers. If a table reports an error, keep its writers stopped, preserve the JSON report, and repair the environment before retrying.</p>
+<h2 id="configure-automatic-version-cleanup">Configure automatic version cleanup<a class="headerlink" href="#configure-automatic-version-cleanup" title="Permanent link">&para;</a></h2>
+<p>ZettelForge also runs a background version-cleanup thread for each active LanceDB table. The threads begin on the first vector write, not when <code>MemoryStore</code> is constructed. They call LanceDB's <code>cleanup_old_versions()</code> method; they do not replace the offline optimization workflow above.</p>
+<p>The verified defaults run cleanup every 60 minutes and make versions older than 3,600 seconds eligible for pruning:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">lance</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">cleanup_interval_minutes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<span class="w">  </span><span class="nt">cleanup_older_than_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
+</code></pre></div>
+<p>Set <code>cleanup_interval_minutes: 0</code> to disable automatic cleanup. Restart the ZettelForge process after editing <code>config.yaml</code> so the running process loads the new values. A failed cleanup cycle logs a warning and leaves the background thread available for its next interval.</p>
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../configure-lancedb/">Tune LanceDB vector search</a> — embedding, retrieval, and reranking settings</li>
-<li><a href="../../reference/configuration/">Reference: Configuration</a> — all <code>lance.*</code> config keys</li>
-<li><code>src/zettelforge/lance_maintenance.py</code> — background daemon source</li>
-<li><code>src/zettelforge/scripts/compact_lance.py</code> — offline compaction script source</li>
+<li><a href="../configure-lancedb/">Tune LanceDB vector search</a></li>
+<li><a href="../../reference/configuration/">Configuration reference</a></li>
 </ul>
 
 

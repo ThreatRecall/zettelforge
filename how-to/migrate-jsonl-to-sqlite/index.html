@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -958,17 +958,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-the-script-does" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What the script does
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#run-the-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -980,10 +969,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verify" class="md-nav__link">
+  <a href="#verify-the-migrated-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify
+        Verify the migrated data
       
     </span>
   </a>
@@ -991,10 +980,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#roll-back" class="md-nav__link">
+  <a href="#roll-back-and-retry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Roll back
+        Roll back and retry
       
     </span>
   </a>
@@ -1002,10 +991,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#clean-up-optional" class="md-nav__link">
+  <a href="#move-the-backup-after-verification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clean up (optional)
+        Move the backup after verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-a-retry-is-stable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a retry is stable
       
     </span>
   </a>
@@ -2427,17 +2427,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-the-script-does" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What the script does
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#run-the-migration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2449,10 +2438,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#verify" class="md-nav__link">
+  <a href="#verify-the-migrated-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Verify
+        Verify the migrated data
       
     </span>
   </a>
@@ -2460,10 +2449,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#roll-back" class="md-nav__link">
+  <a href="#roll-back-and-retry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Roll back
+        Roll back and retry
       
     </span>
   </a>
@@ -2471,10 +2460,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#clean-up-optional" class="md-nav__link">
+  <a href="#move-the-backup-after-verification" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clean up (optional)
+        Move the backup after verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-a-retry-is-stable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a retry is stable
       
     </span>
   </a>
@@ -2513,96 +2513,76 @@
 
 
 <h1 id="migrate-jsonl-data-to-sqlite">Migrate JSONL data to SQLite<a class="headerlink" href="#migrate-jsonl-data-to-sqlite" title="Permanent link">&para;</a></h1>
-<p>Use this guide when you are upgrading an existing ZettelForge installation from <strong>v2.1.x</strong> (JSONL storage) to <strong>v2.2.0 or newer</strong> (SQLite default) and you want to carry your notes, knowledge graph, and entity index forward.</p>
-<p>Fresh installs do not need this. ZettelForge 2.2.0 and later create an empty SQLite database on first use.</p>
+<p>Use this guide when your ZettelForge data directory contains legacy JSONL files and you need to move your notes, knowledge graph, and entity index into the current SQLite store. This path is verified against ZettelForge <strong>v2.8.0</strong>.</p>
+<p>Fresh installations use SQLite and do not need this migration.</p>
+<div class="admonition warning">
+<p class="admonition-title">Migration tooling is in progress</p>
+<p>The v2.8.0 PyPI wheel does not include the migration module named in ZettelForge's startup warning. Run the repository-root <code>scripts/migrate_jsonl_to_sqlite.py</code> file from the v2.8.0 source tree.</p>
+<p>Do not use <code>--dry-run</code> as a preview. In v2.8.0, that flag still creates and populates <code>zettelforge.db</code>; it only adds a <code>[DRY RUN]</code> label to the output.</p>
+</div>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge <strong>v2.2.0 or newer</strong> installed (<code>pip install -U zettelforge</code>)</li>
-<li>Read and write access to your data directory (<code>~/.amem</code> by default, or whatever <code>AMEM_DATA_DIR</code> / <code>storage.data_dir</code> points to)</li>
-<li>Free disk space for a full backup alongside the new database — expect roughly 1.5x the original JSONL size during migration</li>
+<li>A ZettelForge <strong>v2.8.0 source checkout</strong> with <code>scripts/migrate_jsonl_to_sqlite.py</code> at its root</li>
+<li><code>python3</code> in an environment that has the ZettelForge dependencies installed</li>
+<li>Read and write access to the data directory: <code>~/.amem</code> by default, or the directory selected by <code>AMEM_DATA_DIR</code> or <code>storage.data_dir</code></li>
+<li>Enough free space in that directory for both a copy of the JSONL files and the new SQLite database</li>
+<li>All ZettelForge processes that write to this data directory stopped during the migration</li>
 </ul>
-<h2 id="what-the-script-does">What the script does<a class="headerlink" href="#what-the-script-does" title="Permanent link">&para;</a></h2>
-<p><code>scripts/migrate_jsonl_to_sqlite.py</code> runs five steps:</p>
-<ol>
-<li>Copies <code>notes.jsonl</code>, <code>kg_nodes.jsonl</code>, <code>kg_edges.jsonl</code>, and <code>entity_index.json</code> into <code>&lt;data_dir&gt;/backup_pre_sqlite/</code>.</li>
-<li>Opens or creates <code>&lt;data_dir&gt;/zettelforge.db</code> via <code>SQLiteBackend</code> (WAL journal mode, thread-safe via <code>RLock</code>).</li>
-<li>Writes every note using <code>INSERT OR REPLACE</code>.</li>
-<li>Upserts knowledge-graph nodes and edges.</li>
-<li>Adds entity mappings using <code>INSERT OR IGNORE</code>.</li>
-</ol>
-<p>The script is <strong>idempotent</strong> — running it a second time produces the same database state. The original JSONL files are never deleted.</p>
-<div class="admonition note">
-<p class="admonition-title">The --dry-run flag does not prevent writes</p>
-<p>Despite the flag name, <code>--dry-run</code> creates the SQLite database and runs the full migration — it only adds a <code>[DRY RUN]</code> label to the console output. This is a known source-level behavior. Because the migration is idempotent, a first run is always safe on an empty or pre-existing database.</p>
-</div>
+<p>Run every command below from the root of the v2.8.0 source checkout.</p>
 <h2 id="run-the-migration">Run the migration<a class="headerlink" href="#run-the-migration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>scripts/migrate_jsonl_to_sqlite.py<span class="w"> </span>--data-dir<span class="w"> </span>~/.amem
+<p>Set the data directory, then run the repository script:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">DATA_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/.amem&quot;</span>
+<span class="nv">PYTHONPATH</span><span class="o">=</span>src<span class="w"> </span>python3<span class="w"> </span>scripts/migrate_jsonl_to_sqlite.py<span class="w"> </span>--data-dir<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span>
 </code></pre></div>
-<p>Output format (record counts will match your data):</p>
-<div class="highlight"><pre><span></span><code>ZettelForge JSONL -&gt; SQLite Migration
-Data directory: /home/you/.amem
+<p>A successful run ends with <code>Migration complete!</code> and reports separate counts for notes, knowledge-graph nodes, knowledge-graph edges, and entity mappings. It writes <code>zettelforge.db</code> with owner-only <code>0600</code> permissions and leaves the original JSONL files in place.</p>
+<p>The script also copies any files it finds from this list into <code>$DATA_DIR/backup_pre_sqlite/</code>:</p>
+<ul>
+<li><code>notes.jsonl</code></li>
+<li><code>kg_nodes.jsonl</code></li>
+<li><code>kg_edges.jsonl</code></li>
+<li><code>entity_index.json</code></li>
+</ul>
+<p>If one of these files is absent, the script warns and continues with the files that exist.</p>
+<h2 id="verify-the-migrated-data">Verify the migrated data<a class="headerlink" href="#verify-the-migrated-data" title="Permanent link">&para;</a></h2>
+<p>First, confirm that ZettelForge can read the SQLite store. Replace <code>actor</code> and <code>apt28</code> with an entity type and value from your data:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">AMEM_DATA_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="w"> </span><span class="nv">ZETTELFORGE_BACKEND</span><span class="o">=</span>sqlite<span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span>src<span class="w"> </span>python3<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;&#39;PY&#39;</span>
+<span class="s">from zettelforge import MemoryManager</span>
 
-[1/5] Backing up source files...
-  Backed up notes.jsonl
-  Backed up kg_nodes.jsonl
-  Backed up kg_edges.jsonl
-  Backed up entity_index.json
-  Backup directory: /home/you/.amem/backup_pre_sqlite
-
-[2/5] Migrating notes...
-  Migrated &lt;N&gt; notes
-
-[3/5] Migrating KG nodes...
-  Migrated &lt;N&gt; nodes
-
-[4/5] Migrating KG edges...
-  Migrated &lt;N&gt; edges
-
-[5/5] Migrating entity index...
-  Migrated &lt;N&gt; entity mappings
-
-==================================================
-Migration complete!
-  Notes:           &lt;N&gt;
-  KG nodes:        &lt;N&gt;
-  KG edges:        &lt;N&gt;
-  Entity mappings: &lt;N&gt;
-  Database:        /home/you/.amem/zettelforge.db
-
-JSONL files have NOT been deleted.
-Backup saved to: /home/you/.amem/backup_pre_sqlite
+<span class="s">mm = MemoryManager()</span>
+<span class="s">stats = mm.get_stats()</span>
+<span class="s">print(stats[&quot;total_notes&quot;])</span>
+<span class="s">print([note.id for note in mm.recall_entity(&quot;actor&quot;, &quot;apt28&quot;)])</span>
+<span class="s">try:</span>
+<span class="s">    mm.store.close()</span>
+<span class="s">except Exception:</span>
+<span class="s">    pass</span>
+<span class="s">PY</span>
 </code></pre></div>
-<p>The database file is written with <code>0600</code> permissions (owner read/write only).</p>
-<p>If a file is absent from your data directory the script warns and skips it — this is normal if you never used the TypeDB graph or the entity index.</p>
-<h2 id="verify">Verify<a class="headerlink" href="#verify" title="Permanent link">&para;</a></h2>
-<p>After the migration, confirm your notes are reachable:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
-
-<span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>           <span class="c1"># reads ~/.amem by default</span>
-<span class="n">stats</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">get_stats</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;total_notes&quot;</span><span class="p">])</span>    <span class="c1"># matches the migration log</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">mm</span><span class="o">.</span><span class="n">recall</span><span class="p">(</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+<p>Then compare direct database counts with the migration summary:</p>
+<div class="highlight"><pre><span></span><code>sqlite3<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">/zettelforge.db&quot;</span><span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM notes;&quot;</span>
+sqlite3<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">/zettelforge.db&quot;</span><span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM kg_edges;&quot;</span>
 </code></pre></div>
-<p>You can also inspect the database directly:</p>
-<div class="highlight"><pre><span></span><code>sqlite3<span class="w"> </span>~/.amem/zettelforge.db<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM notes;&quot;</span>
-sqlite3<span class="w"> </span>~/.amem/zettelforge.db<span class="w"> </span><span class="s2">&quot;SELECT COUNT(*) FROM kg_edges;&quot;</span>
+<h2 id="roll-back-and-retry">Roll back and retry<a class="headerlink" href="#roll-back-and-retry" title="Permanent link">&para;</a></h2>
+<p>If verification fails, preserve the failed database and rerun the migration from the original JSONL files:</p>
+<div class="highlight"><pre><span></span><code>ls<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">/backup_pre_sqlite/&quot;</span>
+<span class="nv">FAILED_DB</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">/zettelforge.db.failed-</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%Y%m%dT%H%M%SZ<span class="k">)</span><span class="s2">&quot;</span>
+mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">/zettelforge.db&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$FAILED_DB</span><span class="s2">&quot;</span>
+<span class="nv">PYTHONPATH</span><span class="o">=</span>src<span class="w"> </span>python3<span class="w"> </span>scripts/migrate_jsonl_to_sqlite.py<span class="w"> </span>--data-dir<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span>
 </code></pre></div>
-<h2 id="roll-back">Roll back<a class="headerlink" href="#roll-back" title="Permanent link">&para;</a></h2>
-<p>If anything looks wrong, delete the database and re-migrate from the original JSONL files (which were not deleted):</p>
-<div class="highlight"><pre><span></span><code>ls<span class="w"> </span>~/.amem/backup_pre_sqlite/
-<span class="c1"># notes.jsonl  kg_nodes.jsonl  kg_edges.jsonl  entity_index.json</span>
-rm<span class="w"> </span>~/.amem/zettelforge.db
-python<span class="w"> </span>scripts/migrate_jsonl_to_sqlite.py<span class="w"> </span>--data-dir<span class="w"> </span>~/.amem
+<p>The timestamped filename keeps the failed database available for inspection.</p>
+<h2 id="move-the-backup-after-verification">Move the backup after verification<a class="headerlink" href="#move-the-backup-after-verification" title="Permanent link">&para;</a></h2>
+<p>Keep the backup outside the live data directory after you verify the migrated store:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">BACKUP_PARENT</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nv">BACKUP_DIR</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$BACKUP_PARENT</span><span class="s2">/zettelforge-jsonl-backup-</span><span class="k">$(</span>date<span class="w"> </span>-u<span class="w"> </span>+%Y%m%dT%H%M%SZ<span class="k">)</span><span class="s2">&quot;</span>
+mv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$DATA_DIR</span><span class="s2">/backup_pre_sqlite&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BACKUP_DIR</span><span class="s2">&quot;</span>
 </code></pre></div>
-<h2 id="clean-up-optional">Clean up (optional)<a class="headerlink" href="#clean-up-optional" title="Permanent link">&para;</a></h2>
-<p>Once you are confident the SQLite store is healthy, move the backup out of your data directory:</p>
-<div class="highlight"><pre><span></span><code>mv<span class="w"> </span>~/.amem/backup_pre_sqlite<span class="w"> </span>~/zettelforge-jsonl-backup-<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>
-</code></pre></div>
-<p>Delete the backup only after a full release cycle with no regressions.</p>
+<p>Retain both the JSONL source files and this backup until you complete a full release cycle without a migration regression.</p>
+<h2 id="why-a-retry-is-stable">Why a retry is stable<a class="headerlink" href="#why-a-retry-is-stable" title="Permanent link">&para;</a></h2>
+<p>The migration is idempotent for the data shapes it handles. Notes use <code>INSERT OR REPLACE</code>, entity mappings use <code>INSERT OR IGNORE</code>, and knowledge-graph nodes and edges use backend upserts. Re-running the verified fixture kept all four table counts unchanged.</p>
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../reference/configuration/">Configuration reference</a> — <code>storage.data_dir</code> and <code>backend</code> keys</li>
-<li><a href="../../explanation/architecture/">Architecture (why SQLite + LanceDB)</a> — why SQLite replaced JSONL as the default</li>
+<li><a href="../../reference/configuration/">Configuration reference</a> - select <code>storage.data_dir</code> and the SQLite backend</li>
+<li><a href="../../explanation/architecture/">Architecture</a> - understand the SQLite and LanceDB storage roles</li>
 </ul>
 
 

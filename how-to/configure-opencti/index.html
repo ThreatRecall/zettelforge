@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Connect ZettelForge to an OpenCTI instance using STIX exchange and programmatic relationship ingestion. Automated bi-directional sync is on the roadmap; this guide covers what works today.">
+        <meta name="description" content="Exchange OpenCTI data through ThreatRecall.ai STIX and TAXII paths, or write OpenCTI relationships into ZettelForge 2.8.0 with a custom connector.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -650,49 +650,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-works-today" class="md-nav__link">
+  <a href="#choose-a-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What works today
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="What works today">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#manual-stix-exchange-via-threatrecallai" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Manual STIX exchange via ThreatRecall.ai
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#programmatic-relationship-ingestion-zettelforge-oss" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Programmatic relationship ingestion (ZettelForge OSS)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-keys-zettelforge-oss" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration keys (ZettelForge OSS)
+        Choose a path
       
     </span>
   </a>
@@ -700,10 +661,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#roadmap" class="md-nav__link">
+  <a href="#exchange-a-stix-bundle-through-threatrecallai" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Roadmap
+        Exchange a STIX bundle through ThreatRecall.ai
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-a-taxii-collection-in-threatrecallai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage a TAXII collection in ThreatRecall.ai
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write-relationships-into-zettelforge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write relationships into ZettelForge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-zettelforge-configuration-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the ZettelForge configuration keys
       
     </span>
   </a>
@@ -800,7 +794,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2433,49 +2427,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-works-today" class="md-nav__link">
+  <a href="#choose-a-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What works today
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="What works today">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#manual-stix-exchange-via-threatrecallai" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Manual STIX exchange via ThreatRecall.ai
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#programmatic-relationship-ingestion-zettelforge-oss" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Programmatic relationship ingestion (ZettelForge OSS)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-keys-zettelforge-oss" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration keys (ZettelForge OSS)
+        Choose a path
       
     </span>
   </a>
@@ -2483,10 +2438,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#roadmap" class="md-nav__link">
+  <a href="#exchange-a-stix-bundle-through-threatrecallai" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Roadmap
+        Exchange a STIX bundle through ThreatRecall.ai
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-a-taxii-collection-in-threatrecallai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage a TAXII collection in ThreatRecall.ai
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write-relationships-into-zettelforge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write relationships into ZettelForge
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understand-the-zettelforge-configuration-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understand the ZettelForge configuration keys
       
     </span>
   </a>
@@ -2527,136 +2515,164 @@
 <h1 id="configure-opencti-integration">Configure OpenCTI integration<a class="headerlink" href="#configure-opencti-integration" title="Permanent link">&para;</a></h1>
 <div class="admonition warning">
 <p class="admonition-title">In progress</p>
-<p>Automated bi-directional OpenCTI sync is not yet available in ZettelForge OSS or
-ThreatRecall.ai. This page documents the configuration keys that exist today, the
-manual STIX exchange path that works now, and the relationship ingestion API for
-programmatic graph writes. Full connector support is on the roadmap.</p>
+<p>Native OpenCTI pull, push, and scheduled synchronization are not available
+in ZettelForge 2.8.0. ThreatRecall.ai supports manual STIX 2.1 exchange and
+a generic, manually triggered TAXII 2.1 pull. This audit did not connect the
+TAXII path to a live OpenCTI server, so OpenCTI-specific TAXII compatibility
+remains in progress.</p>
 </div>
-<p>OpenCTI is an open-source threat intelligence platform that stores indicators,
-reports, and relationships in a structured graph. ZettelForge is a complementary
-memory layer for CTI analysts: it enriches raw intelligence with entity extraction,
-alias resolution, and semantic recall. This guide shows you how to connect them
-today using STIX as the data exchange format, and what to expect when automated sync
-ships.</p>
+<p>Use this guide to choose a working handoff path today. You can exchange STIX
+bundles with ThreatRecall.ai, stage a compatible TAXII collection in
+ThreatRecall.ai, or write relationships from your own connector into
+ZettelForge.</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge 2.7.0 or later installed (see <a href="../../tutorials/01-quickstart/">Quickstart</a>)</li>
-<li>A running OpenCTI instance reachable from your environment</li>
-<li>For ThreatRecall.ai STIX exchange: an active account and API token</li>
+<li>For the ZettelForge path, install ZettelForge 2.8.0 and complete the
+  <a href="../../tutorials/01-quickstart/">Quickstart</a>.</li>
+<li>For the ThreatRecall.ai paths, use a plan with direct ingestion and create an
+  ingest-scoped API key. A read-capable key is sufficient for export.</li>
+<li>Export a STIX 2.1 bundle from OpenCTI, or obtain a compatible TAXII 2.1
+  collection objects URL from your OpenCTI operator.</li>
+<li>Keep OpenCTI and ThreatRecall credentials out of source-controlled files.</li>
 </ul>
-<h2 id="what-works-today">What works today<a class="headerlink" href="#what-works-today" title="Permanent link">&para;</a></h2>
-<h3 id="manual-stix-exchange-via-threatrecallai">Manual STIX exchange via ThreatRecall.ai<a class="headerlink" href="#manual-stix-exchange-via-threatrecallai" title="Permanent link">&para;</a></h3>
-<p>The most reliable path today is a STIX roundtrip through the ThreatRecall.ai API.
-You export from OpenCTI as a STIX 2.1 bundle, import it into ThreatRecall.ai, and
-export recall sessions back to OpenCTI as STIX.</p>
-<p><strong>Import a STIX bundle from OpenCTI:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Export from OpenCTI (use your OpenCTI UI or API)</span>
-<span class="c1"># Then import the resulting bundle into ThreatRecall.ai:</span>
-curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://app.threatrecall.ai/api/ingest/stix<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$THREATRECALL_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-d<span class="w"> </span>@opencti-export.stix.json
-</code></pre></div>
-<p><strong>Export a recall session back to OpenCTI:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run a recall session first, capture the session ID from the response,</span>
-<span class="c1"># then export it as STIX:</span>
-curl<span class="w"> </span>-sS<span class="w"> </span>https://app.threatrecall.ai/api/recall/sessions/<span class="nv">$RECALL_SESSION_ID</span>/export.stix<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$THREATRECALL_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-o<span class="w"> </span>recall-session.stix.json
-
-<span class="c1"># Import the file into OpenCTI using its STIX import connector or the API.</span>
-</code></pre></div>
-<p>Both endpoints are implemented and validated (see
-<a href="https://github.com/rolandpg/zettelforge">AGE-138 connector validation, 2026-06-15</a>).</p>
-<h3 id="programmatic-relationship-ingestion-zettelforge-oss">Programmatic relationship ingestion (ZettelForge OSS)<a class="headerlink" href="#programmatic-relationship-ingestion-zettelforge-oss" title="Permanent link">&para;</a></h3>
-<p>If you write a custom connector or sync script, you can push OpenCTI relationships
-directly into the ZettelForge knowledge graph using <code>ingest_relationship()</code>. This
-method is available in the OSS package and does not require any extension.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
-
-<span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
-
-<span class="c1"># Push a relationship from your OpenCTI data</span>
-<span class="n">mm</span><span class="o">.</span><span class="n">ingest_relationship</span><span class="p">(</span>
-    <span class="n">from_type</span><span class="o">=</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span>
-    <span class="n">from_value</span><span class="o">=</span><span class="s2">&quot;APT28&quot;</span><span class="p">,</span>
-    <span class="n">to_type</span><span class="o">=</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span>
-    <span class="n">to_value</span><span class="o">=</span><span class="s2">&quot;Mimikatz&quot;</span><span class="p">,</span>
-    <span class="n">relationship</span><span class="o">=</span><span class="s2">&quot;USES_TOOL&quot;</span><span class="p">,</span>
-    <span class="n">properties</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">0.85</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;opencti-export&quot;</span><span class="p">},</span>
-<span class="p">)</span>
-</code></pre></div>
-<p>The method is idempotent: calling it again with the same entity-relationship triple
-updates edge properties without creating a duplicate edge.</p>
-<p><strong>Method signature:</strong></p>
+<h2 id="choose-a-path">Choose a path<a class="headerlink" href="#choose-a-path" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Description</th>
+<th>Goal</th>
+<th>Product and path</th>
+<th>State</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>from_type</code></td>
-<td><code>str</code></td>
-<td>Source entity type (<code>"actor"</code>, <code>"malware"</code>, <code>"campaign"</code>)</td>
+<td>Move a bundle from OpenCTI into managed memory</td>
+<td>ThreatRecall.ai STIX import</td>
+<td>Verified in the SaaS route tests</td>
 </tr>
 <tr>
-<td><code>from_value</code></td>
-<td><code>str</code></td>
-<td>Canonical source entity value</td>
+<td>Move a recall session back to OpenCTI</td>
+<td>ThreatRecall.ai STIX export</td>
+<td>Implemented with read, TLP, lifecycle, and redistribution gates</td>
 </tr>
 <tr>
-<td><code>to_type</code></td>
-<td><code>str</code></td>
-<td>Target entity type</td>
+<td>Pull a TAXII collection into a review batch</td>
+<td>ThreatRecall.ai TAXII ingestion</td>
+<td>Runtime and safety controls verified; live OpenCTI compatibility unverified</td>
 </tr>
 <tr>
-<td><code>to_value</code></td>
-<td><code>str</code></td>
-<td>Canonical target entity value</td>
+<td>Feed selected relationships into local memory</td>
+<td>ZettelForge <code>ingest_relationship()</code></td>
+<td>Verified in ZettelForge 2.8.0</td>
 </tr>
 <tr>
-<td><code>relationship</code></td>
-<td><code>str</code></td>
-<td>Relationship label (e.g. <code>"USES_TOOL"</code>, <code>"TARGETS_ASSET"</code>)</td>
-</tr>
-<tr>
-<td><code>properties</code></td>
-<td><code>dict</code> or <code>None</code></td>
-<td>Optional edge properties: confidence, timestamps, etc.</td>
+<td>Run native or scheduled OpenCTI synchronization</td>
+<td>Neither product</td>
+<td>In progress</td>
 </tr>
 </tbody>
 </table>
-<h2 id="configuration-keys-zettelforge-oss">Configuration keys (ZettelForge OSS)<a class="headerlink" href="#configuration-keys-zettelforge-oss" title="Permanent link">&para;</a></h2>
-<p>ZettelForge 2.7.0 includes OpenCTI config keys that parse correctly from
-<code>config.yaml</code>. Automated sync against a live OpenCTI instance is not yet
-implemented in the OSS package, but you can set these for future compatibility
-when the sync connector ships.</p>
-<p>Add to your <code>config.yaml</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">opencti</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:8080</span><span class="w">   </span><span class="c1"># OpenCTI instance URL</span>
-<span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="w">                    </span><span class="c1"># OpenCTI API token</span>
-<span class="w">  </span><span class="nt">sync_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w">             </span><span class="c1"># Seconds between sync cycles; 0 = disabled (default)</span>
+<h2 id="exchange-a-stix-bundle-through-threatrecallai">Exchange a STIX bundle through ThreatRecall.ai<a class="headerlink" href="#exchange-a-stix-bundle-through-threatrecallai" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Export a STIX 2.1 bundle from OpenCTI.</li>
+<li>Submit the bundle to <code>POST https://app.threatrecall.ai/api/ingest/stix</code>.
+   Send your ingest-scoped key in <code>X-API-Key</code> and wrap the STIX object in the
+   JSON field <code>bundle</code>. A valid bundle returned HTTP <code>201</code> in the route test; a
+   read-scoped key returned HTTP <code>403</code> before ingestion.</li>
+<li>Run recall in ThreatRecall.ai and retain the returned <code>recall_id</code>.</li>
+<li>Request
+   <code>GET https://app.threatrecall.ai/api/recall/sessions/{recall_id}/export.stix</code>
+   with a read-capable key.</li>
+<li>Import the returned STIX 2.1 bundle into OpenCTI through the import path your
+   OpenCTI operator supports.</li>
+</ol>
+<p>The export route returns <code>application/stix+json;version=2.1</code> after its policy
+checks pass. It denies export when source redistribution rules block an object.
+It also requires an explicit workspace grant when the remaining export contains
+TLP:RED data. These gates prevent a technically valid STIX handoff from
+bypassing sharing restrictions.</p>
+<h2 id="stage-a-taxii-collection-in-threatrecallai">Stage a TAXII collection in ThreatRecall.ai<a class="headerlink" href="#stage-a-taxii-collection-in-threatrecallai" title="Permanent link">&para;</a></h2>
+<p>ThreatRecall.ai contains a generic TAXII 2.1 pull runtime. It does not contain an
+OpenCTI-specific adapter or a scheduler.</p>
+<ol>
+<li>Ask your ThreatRecall operator to allowlist the TAXII host with
+   <code>TAXII_ALLOWED_HOSTS</code>.</li>
+<li>Register the feed with <code>POST /api/threat-intel/feeds</code>. Store the collection
+   objects URL in <code>connector_config_ref</code> and set an explicit default TLP and
+   redistribution state.</li>
+<li>Trigger <code>POST /api/threat-intel/batches</code> with
+   <code>input_kind</code> set to <code>taxii_2_1_pull</code> and the registered <code>feed_source_id</code>.</li>
+<li>Review the staged items, then commit the approved item identifiers through
+   <code>POST /api/threat-intel/batches/{batch_id}/commit</code>.</li>
+</ol>
+<p>The pull requires HTTPS outside local development, rejects hosts that are not
+allowlisted, revalidates redirect destinations, blocks private or reserved
+addresses, applies an eight-second default timeout, and caps a response at 512
+KiB. The service stages returned STIX objects for review; it does not silently
+commit them.</p>
+<div class="admonition note">
+<p class="admonition-title">OpenCTI compatibility boundary</p>
+<p>This run verified the TAXII client and staging code with local fixtures. It
+did not authenticate to a live OpenCTI collection. The current client sends
+an <code>Accept</code> header but no API token or other authorization credential, so an
+authenticated OpenCTI TAXII collection is unsupported. Confirm the
+collection URL and returned STIX objects in your environment before you
+depend on this path.</p>
+</div>
+<h2 id="write-relationships-into-zettelforge">Write relationships into ZettelForge<a class="headerlink" href="#write-relationships-into-zettelforge" title="Permanent link">&para;</a></h2>
+<p>Use <code>ingest_relationship()</code> when your connector already reads OpenCTI data and
+you want to add selected edges to the local ZettelForge knowledge graph.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge</span><span class="w"> </span><span class="kn">import</span> <span class="n">MemoryManager</span>
+
+<span class="n">mm</span> <span class="o">=</span> <span class="n">MemoryManager</span><span class="p">()</span>
+<span class="n">mm</span><span class="o">.</span><span class="n">ingest_relationship</span><span class="p">(</span>
+    <span class="n">from_type</span><span class="o">=</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span>
+    <span class="n">from_value</span><span class="o">=</span><span class="s2">&quot;apt28&quot;</span><span class="p">,</span>
+    <span class="n">to_type</span><span class="o">=</span><span class="s2">&quot;tool&quot;</span><span class="p">,</span>
+    <span class="n">to_value</span><span class="o">=</span><span class="s2">&quot;mimikatz&quot;</span><span class="p">,</span>
+    <span class="n">relationship</span><span class="o">=</span><span class="s2">&quot;USES_TOOL&quot;</span><span class="p">,</span>
+    <span class="n">properties</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;confidence&quot;</span><span class="p">:</span> <span class="mf">0.85</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;opencti-export&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="n">relationships</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">get_entity_relationships</span><span class="p">(</span><span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;apt28&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">relationships</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">relationships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;relationship&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">relationships</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;node&quot;</span><span class="p">][</span><span class="s2">&quot;entity_value&quot;</span><span class="p">])</span>
 </code></pre></div>
-<p><code>sync_interval: 0</code> is the default and disables any sync polling. Setting a value
-here has no effect in the current OSS release because the sync worker is not yet
-implemented.</p>
-<h2 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
-<p>Automated bi-directional sync between OpenCTI and ZettelForge is planned. When it
-ships, this page will be updated with working connector configuration. Until then:</p>
-<ul>
-<li>Use STIX import/export (ThreatRecall.ai) for structured data exchange.</li>
-<li>Use <code>ingest_relationship()</code> to push relationship data programmatically from your
-  own connector script.</li>
-</ul>
+<p>Observed output:</p>
+<div class="highlight"><pre><span></span><code>1
+USES_TOOL
+mimikatz
+</code></pre></div>
+<p>Use canonical lowercase entity values. The lookup path canonicalizes the query
+before it reads the graph; the audit found that display-case values such as
+<code>APT28</code> did not round-trip through this lookup. Repeating the same source,
+target, and relationship updates the edge properties and keeps one edge.</p>
+<p>This method writes a relationship only. Your connector remains responsible for
+reading OpenCTI, selecting and normalizing objects, handling checkpoints, and
+scheduling later runs.</p>
+<h2 id="understand-the-zettelforge-configuration-keys">Understand the ZettelForge configuration keys<a class="headerlink" href="#understand-the-zettelforge-configuration-keys" title="Permanent link">&para;</a></h2>
+<p>ZettelForge 2.8.0 parses this block from <code>config.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">opencti</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:8080</span>
+<span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&quot;</span>
+<span class="w">  </span><span class="nt">sync_interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+</code></pre></div>
+<p>The matching environment variables are <code>OPENCTI_URL</code>, <code>OPENCTI_TOKEN</code>, and
+<code>OPENCTI_SYNC_INTERVAL</code>. The defaults are <code>http://localhost:8080</code>, an empty
+token, and <code>0</code> seconds.</p>
+<p>These keys do not activate a connector in ZettelForge 2.8.0. Setting a nonzero
+interval does not start a worker because the release contains no native
+OpenCTI connector module. Keep the token blank in the YAML file and provide it
+through the environment if your own connector reads this configuration.</p>
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../../tutorials/01-quickstart/">Quickstart</a>: get ZettelForge running first</li>
-<li><a href="../../tutorials/02-first-cti-report/">First CTI report</a>: ingest and recall threat data</li>
-<li><a href="../../#two-products-one-core">Two products, one core</a>: ZettelForge OSS vs ThreatRecall.ai SaaS</li>
+<li><a href="../../tutorials/01-quickstart/">Quickstart</a>: verify ZettelForge before you add
+  a connector</li>
+<li><a href="../../tutorials/02-first-cti-report/">First CTI report</a>: ingest and recall
+  threat data</li>
+<li><a href="../../#two-products-one-core">Two products, one core</a>: choose between
+  ZettelForge and ThreatRecall.ai</li>
 </ul>
 
 

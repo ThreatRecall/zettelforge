@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -2738,6 +2738,8 @@
 <p>This page is the single source of truth for product names, API identifiers, and
 entity type vocabulary used across ZettelForge documentation. When in doubt, prefer
 the forms listed here over informal variations.</p>
+<p><strong>Prerequisites:</strong> None. This page describes the public names and identifiers in
+ZettelForge 2.8.0 and the canonical name of the hosted ThreatRecall.ai product.</p>
 <hr />
 <h2 id="product-names">Product names<a class="headerlink" href="#product-names" title="Permanent link">&para;</a></h2>
 <table>
@@ -2756,17 +2758,17 @@ the forms listed here over informal variations.</p>
 </tr>
 <tr>
 <td><strong>ThreatRecall.ai</strong></td>
-<td>The hosted SaaS product. Always hyphenated, lowercase "ai".</td>
+<td>The hosted SaaS product. One word, capital T and R, with lowercase <code>ai</code> after the dot.</td>
 <td>"ThreatRecall", "Threat Recall", "threatrecall" in prose</td>
 </tr>
 <tr>
 <td><strong>ZettelForge OSS</strong></td>
 <td>Acceptable short form when distinguishing from SaaS in the same sentence.</td>
-<td>"ZettelForge open source" (only at first mention) is also acceptable</td>
+<td>"ZettelForge open source" after the first mention</td>
 </tr>
 </tbody>
 </table>
-<p>ThreatRecall.ai is the commercial hosted product. ZettelForge is the Apache-2.0-licensed
+<p>ThreatRecall.ai is the commercial hosted product. ZettelForge is the MIT-licensed
 open-source engine. They share a core but are distinct products; do not use the
 names interchangeably.</p>
 <hr />
@@ -2983,8 +2985,9 @@ call. The <code>actor</code> and <code>threat_actor</code> types are interchange
 <code>intrusion_set</code> is preferred for APT/UNC/FIN-style designations.</p>
 <hr />
 <h2 id="knowledge-graph-relationship-types">Knowledge graph relationship types<a class="headerlink" href="#knowledge-graph-relationship-types" title="Permanent link">&para;</a></h2>
-<p>Canonical relationship label strings used in <code>ingest_relationship()</code> and returned
-by <code>get_entity_relationships()</code> and <code>traverse_graph()</code>. See the
+<p>ZettelForge 2.8.0 writes these built-in relationship labels and returns them from
+<code>get_entity_relationships()</code> and <code>traverse_graph()</code>. You can also pass them to
+<code>ingest_relationship()</code>. See the
 <a href="../kg-edge-schema/">KG Edge Schema</a> reference for the complete taxonomy.</p>
 <h3 id="cti-and-ioc-relationship-types">CTI and IOC relationship types<a class="headerlink" href="#cti-and-ioc-relationship-types" title="Permanent link">&para;</a></h3>
 <table>
@@ -3037,14 +3040,6 @@ by <code>get_entity_relationships()</code> and <code>traverse_graph()</code>. Se
 <tr>
 <td><code>SUPERSEDES</code></td>
 <td>Note supersedes another note</td>
-</tr>
-<tr>
-<td><code>TEMPORAL_BEFORE</code></td>
-<td>Note precedes another temporally</td>
-</tr>
-<tr>
-<td><code>TEMPORAL_AFTER</code></td>
-<td>Note follows another temporally</td>
 </tr>
 </tbody>
 </table>
@@ -3119,59 +3114,45 @@ by <code>get_entity_relationships()</code> and <code>traverse_graph()</code>. Se
 </table>
 <hr />
 <h2 id="tlp-values">TLP values<a class="headerlink" href="#tlp-values" title="Permanent link">&para;</a></h2>
-<p>Traffic Light Protocol markings on <code>MemoryNote.metadata.tlp</code>. Both short forms
-(<code>WHITE</code>) and <code>TLP:</code>-prefixed forms (<code>TLP:WHITE</code>) are accepted; the policy layer
-normalizes them when making sharing decisions. The field stores whatever value
-was passed at ingest time.</p>
+<p>In ZettelForge 2.8.0, <code>MemoryNote.metadata.tlp</code> is a free-form string with an
+empty-string default. The shipped schema documents the following values, and the
+SQLite backend stores the string without normalizing it:</p>
 <table>
 <thead>
 <tr>
 <th>Value</th>
-<th>Rank</th>
-<th>Meaning</th>
+<th>Role in ZettelForge 2.8.0</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>""</code> (empty string)</td>
-<td>—</td>
-<td>Unclassified; normalized to <code>TLP:CLEAR</code> by the policy</td>
+<td>Schema and SQLite default</td>
 </tr>
 <tr>
-<td><code>CLEAR</code> or <code>TLP:CLEAR</code></td>
-<td>0</td>
-<td>Unlimited distribution</td>
+<td><code>WHITE</code></td>
+<td>Documented schema value; not validated</td>
 </tr>
 <tr>
-<td><code>WHITE</code> or <code>TLP:WHITE</code></td>
-<td>0</td>
-<td>Unlimited distribution (same sharing level as CLEAR)</td>
+<td><code>GREEN</code></td>
+<td>Documented schema value; not validated</td>
 </tr>
 <tr>
-<td><code>GREEN</code> or <code>TLP:GREEN</code></td>
-<td>1</td>
-<td>Community-limited distribution</td>
+<td><code>AMBER</code></td>
+<td>Documented schema value; not validated</td>
 </tr>
 <tr>
-<td><code>AMBER</code> or <code>TLP:AMBER</code></td>
-<td>2</td>
-<td>Organization-limited distribution</td>
-</tr>
-<tr>
-<td><code>AMBER+STRICT</code> or <code>TLP:AMBER+STRICT</code></td>
-<td>3</td>
-<td>Organization-limited, no further sharing</td>
-</tr>
-<tr>
-<td><code>RED</code> or <code>TLP:RED</code></td>
-<td>4</td>
-<td>Named recipients only</td>
+<td><code>RED</code></td>
+<td>Documented schema value; not validated</td>
 </tr>
 </tbody>
 </table>
-<p>The default note TLP is <code>TLP:CLEAR</code>. The default share-max TLP (for unauthenticated
-export) is <code>TLP:GREEN</code>. <code>TLP:AMBER</code> and higher require an explicit caller identity
-matching the configured local identity.</p>
+<div class="admonition warning">
+<p class="admonition-title">TLP policy enforcement is in progress</p>
+<p>ZettelForge 2.8.0 does not validate, rank, or enforce TLP values. Use the
+labels above consistently, but enforce sharing policy outside ZettelForge
+until a public policy layer ships.</p>
+</div>
 <hr />
 <h2 id="architecture-terms">Architecture terms<a class="headerlink" href="#architecture-terms" title="Permanent link">&para;</a></h2>
 <table>
@@ -3245,19 +3226,19 @@ matching the configured local identity.</p>
 <tbody>
 <tr>
 <td><code>direct_answer</code></td>
-<td>ZettelForge OSS and ThreatRecall.ai</td>
+<td>Available in ZettelForge 2.8.0</td>
 </tr>
 <tr>
 <td><code>synthesized_brief</code></td>
-<td>ThreatRecall.ai SaaS only; falls back to <code>direct_answer</code> in OSS</td>
+<td>In progress. ZettelForge 2.8.0 accepts the value but falls back to <code>direct_answer</code>; the current ThreatRecall.ai endpoint uses <code>brief</code> or <code>detailed</code> instead.</td>
 </tr>
 <tr>
 <td><code>timeline_analysis</code></td>
-<td>ThreatRecall.ai SaaS only; falls back to <code>direct_answer</code> in OSS</td>
+<td>In progress. ZettelForge 2.8.0 accepts the value but falls back to <code>direct_answer</code>; the current ThreatRecall.ai endpoint uses <code>brief</code> or <code>detailed</code> instead.</td>
 </tr>
 <tr>
 <td><code>relationship_map</code></td>
-<td>ThreatRecall.ai SaaS only; falls back to <code>direct_answer</code> in OSS</td>
+<td>In progress. ZettelForge 2.8.0 accepts the value but falls back to <code>direct_answer</code>; the current ThreatRecall.ai endpoint uses <code>brief</code> or <code>detailed</code> instead.</td>
 </tr>
 </tbody>
 </table>

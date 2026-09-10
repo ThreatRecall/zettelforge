@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -670,7 +670,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1052,10 +1052,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#limitations-in-v1" class="md-nav__link">
+  <a href="#limitations-in-280" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Limitations in v1
+        Limitations in 2.8.0
       
     </span>
   </a>
@@ -2515,10 +2515,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#limitations-in-v1" class="md-nav__link">
+  <a href="#limitations-in-280" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Limitations in v1
+        Limitations in 2.8.0
       
     </span>
   </a>
@@ -2558,15 +2558,18 @@
 
 <h1 id="use-detection-rules-and-the-explainer">Use detection rules and the explainer<a class="headerlink" href="#use-detection-rules-and-the-explainer" title="Permanent link">&para;</a></h1>
 <p>Use this guide when you have ingested Sigma or YARA rules into ZettelForge and you want an LLM-generated, structured explanation of what each rule detects, how it works, and its false-positive patterns.</p>
-<p>This covers <strong>ZettelForge 2.7.0</strong>. The explainer is the shipped detection-rule feature in v1. The match-consumer interface exists but no concrete consumers ship in v1 (see <a href="#limitations-in-v1">Limitations in v1</a>).</p>
+<p>This guide covers <strong>ZettelForge 2.8.0</strong>. The explainer ships in this release. The match-consumer protocol exists, but the built-in consumer registry is empty (see <a href="#limitations-in-280">Limitations in 2.8.0</a>).</p>
 <h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>ZettelForge <strong>2.7.0 or newer</strong> installed (<code>pip install -U zettelforge</code>)</li>
+<li>ZettelForge <strong>2.8.0</strong> installed (<code>python -m pip install zettelforge==2.8.0</code>)</li>
 <li>A configured LLM provider. The explainer calls whatever provider <code>zettelforge.llm_client.get_llm_provider()</code> resolves to. The <code>mock</code> provider returns a deterministic placeholder and makes no network calls, which is useful for testing the wiring.</li>
 <li>One or more detection rules in Sigma or YARA format</li>
 </ul>
+<p>To test the call path without a live model, use the mock provider for the current shell:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_LLM_PROVIDER</span><span class="o">=</span>mock
+</code></pre></div>
 <h2 id="how-the-explainer-fits">How the explainer fits<a class="headerlink" href="#how-the-explainer-fits" title="Permanent link">&para;</a></h2>
-<p>The explainer is a standalone function. It is <strong>not wired into ingest</strong> in v1: parsing or ingesting a Sigma/YARA rule does not automatically generate an explanation. Callers invoke <code>explain()</code> themselves after they have a parsed rule.</p>
+<p>The explainer is a standalone function. ZettelForge 2.8.0 does <strong>not</strong> invoke it during ingest: parsing or ingesting a Sigma/YARA rule does not automatically generate an explanation. Call <code>explain()</code> after you have a parsed rule.</p>
 <p>The pieces:</p>
 <ul>
 <li><code>DetectionRule</code> (<code>zettelforge.detection.base</code>) is the writeable supertype shared by all formats. <code>SigmaRule</code> and <code>YaraRule</code> are subtypes that share its field contract (<code>rule_id</code>, <code>title</code>, <code>source_format</code>, <code>content_sha256</code>, <code>level</code>, <code>status</code>, <code>tags</code>, and others).</li>
@@ -2660,7 +2663,7 @@
 </tbody>
 </table>
 <h2 id="failure-handling">Failure handling<a class="headerlink" href="#failure-handling" title="Permanent link">&para;</a></h2>
-<p>The explainer never raises for recoverable conditions. If the LLM is offline, returns invalid JSON, returns an empty response, or the call is rate-limited, <code>explain()</code> returns a <code>RuleExplanation</code> with <code>confidence=0.0</code> and a diagnostic <code>summary</code> (for example <code>explanation unavailable: rate limited</code> or <code>explanation unavailable: llm error (...)</code>). Always check <code>confidence</code> before trusting an explanation:</p>
+<p>The explainer never raises for recoverable conditions. If the LLM is offline, returns invalid JSON, returns an empty response, or rate-limits the call, <code>explain()</code> returns a <code>RuleExplanation</code> with <code>confidence=0.0</code> and a diagnostic <code>summary</code> (for example <code>explanation unavailable: rate limited</code> or <code>explanation unavailable: llm error (...)</code>). Always check <code>confidence</code> before trusting an explanation:</p>
 <div class="highlight"><pre><span></span><code><span class="n">explanation</span> <span class="o">=</span> <span class="n">explain</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">rule_body</span><span class="o">=</span><span class="n">rule_yaml</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">explanation</span><span class="o">.</span><span class="n">confidence</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
     <span class="c1"># degraded result — render the diagnostic summary, do not treat as authoritative</span>
@@ -2675,19 +2678,19 @@
 <h2 id="security-model">Security model<a class="headerlink" href="#security-model" title="Permanent link">&para;</a></h2>
 <p>Rule bodies are untrusted input. The explainer applies several controls before the body reaches the LLM:</p>
 <ul>
-<li>The body is wrapped in an <code>&lt;rule_source untrusted="true"&gt;</code> delimiter and the system prompt instructs the model to treat everything inside as data, not instructions.</li>
-<li>Any <code>&lt;/rule_source&gt;</code> sequence in the body is neutralized so a crafted rule cannot close the delimiter and inject its own instructions.</li>
-<li>The body is hard-capped at <strong>8192 characters</strong> before the call, limiting prompt-injection blast radius and token cost. Longer bodies are truncated with a <code>... [truncated]</code> marker.</li>
-<li>The verbatim LLM output is never persisted on the returned <code>RuleExplanation</code>; only the coerced, typed fields are kept.</li>
+<li>The explainer wraps the body in a <code>&lt;rule_source untrusted="true"&gt;</code> delimiter, and the system prompt tells the model to treat everything inside as data, not instructions.</li>
+<li>The explainer neutralizes every <code>&lt;/rule_source&gt;</code> sequence so a crafted rule cannot close the delimiter and inject its own instructions.</li>
+<li>The explainer caps the body at <strong>8192 characters</strong> before the call, limiting prompt-injection blast radius and token cost. It marks a longer body with <code>... [truncated]</code>.</li>
+<li>The explainer discards the verbatim LLM output after coercing its typed fields into <code>RuleExplanation</code>.</li>
 </ul>
-<h2 id="limitations-in-v1">Limitations in v1<a class="headerlink" href="#limitations-in-v1" title="Permanent link">&para;</a></h2>
+<h2 id="limitations-in-280">Limitations in 2.8.0<a class="headerlink" href="#limitations-in-280" title="Permanent link">&para;</a></h2>
 <div class="admonition note">
-<p class="admonition-title">Match consumers do not ship in v1</p>
-<p>ZettelForge defines a <code>DetectionMatchConsumer</code> protocol and a <code>RuleMatchEvent</code> type for adapting external rule-match events (from a SIEM or detection pipeline) into note writes. In v1 the interface is frozen but <strong>no concrete consumers are included</strong> — <code>zettelforge.detection.ALL_CONSUMERS</code> is empty by design. Consumer implementations are deferred to a future release. If you need to react to live rule matches today, you must write your own consumer against the protocol.</p>
+<p class="admonition-title">Match consumers do not ship in 2.8.0</p>
+<p>ZettelForge defines a <code>DetectionMatchConsumer</code> protocol and a <code>RuleMatchEvent</code> type for adapting external rule-match events (from a SIEM or detection pipeline) into note writes. ZettelForge 2.8.0 ships the protocol but <strong>no concrete consumers</strong> — <code>zettelforge.detection.ALL_CONSUMERS</code> is empty. To react to live rule matches, write your own consumer against the protocol.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">The explainer is not auto-invoked on ingest</p>
-<p>Ingesting Sigma or YARA rules does not enqueue explanation jobs in v1. Call <code>explain()</code> yourself after ingest completes.</p>
+<p>Ingesting Sigma or YARA rules does not enqueue explanation jobs in ZettelForge 2.8.0. Call <code>explain()</code> yourself after ingest completes.</p>
 </div>
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
 <ul>

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="Runtime input, PII, timeout, and memory-anomaly controls in ZettelForge 2.8.0.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1508,10 +1508,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#control-order-at-remember-time" class="md-nav__link">
+  <a href="#direct-write-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Control order at remember() time
+        Direct write path
       
     </span>
   </a>
@@ -1519,15 +1519,26 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-reference" class="md-nav__link">
+  <a href="#recall-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Config reference
+        Recall path
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Config reference">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration reference">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1542,10 +1553,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#governancelimits-operation-limits" class="md-nav__link">
+  <a href="#governancelimits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        governance.limits — operation limits
+        governance.limits
       
     </span>
   </a>
@@ -1553,10 +1564,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#governancepii-pii-detection" class="md-nav__link">
+  <a href="#governancepii" class="md-nav__link">
     <span class="md-ellipsis">
       
-        governance.pii — PII detection
+        governance.pii
       
     </span>
   </a>
@@ -1564,16 +1575,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#governancememory_defense-write-time-anomaly-detection" class="md-nav__link">
+  <a href="#governancememory_defense" class="md-nav__link">
     <span class="md-ellipsis">
       
-        governance.memory_defense — write-time anomaly detection
+        governance.memory_defense
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="governance.memory_defense — write-time anomaly detection">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#anomaly-scoring" class="md-nav__link">
@@ -1586,32 +1596,16 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#short-circuit-conditions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Short-circuit conditions
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#prompt-injection-detection" class="md-nav__link">
+  <a href="#prompt-injection-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prompt injection detection
+        Prompt-injection patterns
       
     </span>
   </a>
@@ -1630,10 +1624,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#minimal-hardening-config" class="md-nav__link">
+  <a href="#minimal-hardening-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Minimal hardening config
+        Minimal hardening configuration
       
     </span>
   </a>
@@ -2472,10 +2466,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#control-order-at-remember-time" class="md-nav__link">
+  <a href="#direct-write-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Control order at remember() time
+        Direct write path
       
     </span>
   </a>
@@ -2483,15 +2477,26 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#config-reference" class="md-nav__link">
+  <a href="#recall-path" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Config reference
+        Recall path
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Config reference">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration reference">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2506,10 +2511,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#governancelimits-operation-limits" class="md-nav__link">
+  <a href="#governancelimits" class="md-nav__link">
     <span class="md-ellipsis">
       
-        governance.limits — operation limits
+        governance.limits
       
     </span>
   </a>
@@ -2517,10 +2522,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#governancepii-pii-detection" class="md-nav__link">
+  <a href="#governancepii" class="md-nav__link">
     <span class="md-ellipsis">
       
-        governance.pii — PII detection
+        governance.pii
       
     </span>
   </a>
@@ -2528,16 +2533,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#governancememory_defense-write-time-anomaly-detection" class="md-nav__link">
+  <a href="#governancememory_defense" class="md-nav__link">
     <span class="md-ellipsis">
       
-        governance.memory_defense — write-time anomaly detection
+        governance.memory_defense
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="governance.memory_defense — write-time anomaly detection">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#anomaly-scoring" class="md-nav__link">
@@ -2550,32 +2554,16 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#short-circuit-conditions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Short-circuit conditions
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#prompt-injection-detection" class="md-nav__link">
+  <a href="#prompt-injection-patterns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prompt injection detection
+        Prompt-injection patterns
       
     </span>
   </a>
@@ -2594,10 +2582,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#minimal-hardening-config" class="md-nav__link">
+  <a href="#minimal-hardening-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Minimal hardening config
+        Minimal hardening configuration
       
     </span>
   </a>
@@ -2625,79 +2613,118 @@
 
 
 <h1 id="governance-controls">Governance controls<a class="headerlink" href="#governance-controls" title="Permanent link">&para;</a></h1>
-<p>ZettelForge applies four layered controls every time content enters memory: a content size limit, a prompt injection check, optional PII detection, and a write-time anomaly gate. All four are configured under the <code>governance</code> block in <code>config.yaml</code>.</p>
-<h2 id="control-order-at-remember-time">Control order at <code>remember()</code> time<a class="headerlink" href="#control-order-at-remember-time" title="Permanent link">&para;</a></h2>
-<p>When you call <code>mm.remember(content)</code>, the controls run in this sequence:</p>
+<p>ZettelForge 2.8.0 validates memory writes and recall queries before they reach
+storage or retrieval. Use this reference to confirm the implemented content
+limit, prompt-injection guard, optional PII handling, recall timeout behavior,
+and write-time anomaly gate.</p>
+<p><strong>Prerequisites:</strong> Install ZettelForge with the
+<a href="../../tutorials/01-quickstart/">Quickstart</a>, then use the
+<a href="../configuration/">Configuration reference</a> to locate your active
+<code>config.yaml</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">In progress: three configured controls do not fully enforce their intent</p>
+<p><code>governance.enabled</code> and <code>governance.min_content_length</code> exist in the
+configuration dataclass, but the ZettelForge 2.8.0 write path does not pass
+them into <code>GovernanceValidator</code>. Setting <code>enabled: false</code> does not disable
+the implemented checks, and <code>min_content_length</code> does not reject short or
+empty strings.</p>
+<p><code>governance.limits.recall_timeout_seconds</code> detects an overrun and changes
+the result to an empty list. The current executor waits for the retrieval
+worker to finish before returning control, so this setting is not a hard
+wall-clock latency cap.</p>
+</div>
+<h2 id="direct-write-path">Direct write path<a class="headerlink" href="#direct-write-path" title="Permanent link">&para;</a></h2>
+<p>The default <code>mm.remember(content)</code> path applies controls in this order:</p>
 <ol>
-<li><strong>Content size check</strong> — rejects content that exceeds <code>governance.limits.max_content_length</code>.</li>
-<li><strong>Prompt injection block</strong> — rejects content that contains high-confidence instruction-injection patterns.</li>
-<li><strong>PII detection</strong> (disabled by default) — logs, redacts, or blocks content containing personally identifiable information.</li>
-<li><strong>Memory anomaly gate</strong> (audit mode by default) — scores the candidate note against recent trusted notes; blocks or quarantines when the anomaly score exceeds the calibration threshold.</li>
+<li><strong>Structural validation</strong> rejects values that are neither strings nor
+   objects with a <code>content</code> attribute. The public <code>remember()</code> signature
+   declares <code>content</code> as a string.</li>
+<li><strong>Content length</strong> rejects content above
+   <code>governance.limits.max_content_length</code> when the value is greater than zero.</li>
+<li><strong>Prompt-injection detection</strong> rejects the first matching hostile pattern.</li>
+<li><strong>PII handling</strong> runs when <code>governance.pii.enabled</code> is <code>true</code> and the
+   optional analyzer is available.</li>
+<li><strong>Note construction</strong> builds the memory note from the accepted or redacted
+   content.</li>
+<li><strong>Memory anomaly evaluation</strong> compares the note with recent same-domain
+   reference notes.</li>
+<li><strong>Storage and indexing</strong> write the note and then update the vector index.</li>
 </ol>
-<p>An exception in any step halts storage. The content never reaches the backend store unless all enabled controls pass.</p>
-<hr />
-<h2 id="config-reference">Config reference<a class="headerlink" href="#config-reference" title="Permanent link">&para;</a></h2>
-<p>All keys live under the <code>governance</code> top-level block in <code>config.yaml</code>.</p>
+<p>Content-limit, prompt-injection, and blocking PII failures raise
+<code>GovernanceViolationError</code> before note construction. A flagged anomaly raises
+<code>MemoryAnomalyError</code> in <code>block</code> or <code>quarantine</code> mode. An unexpected anomaly
+evaluation error is logged and the write continues.</p>
+<h2 id="recall-path">Recall path<a class="headerlink" href="#recall-path" title="Permanent link">&para;</a></h2>
+<p><code>mm.recall(query)</code> checks the query with the same prompt-injection guard before
+retrieval. A match raises <code>PromptInjectionError</code> immediately.</p>
+<p>When <code>recall_timeout_seconds</code> is greater than zero, recall runs in a worker. An
+overrun records <code>recall_timed_out</code> and discards the worker result by returning
+an empty list after the worker finishes. A value of <code>0</code> runs retrieval without
+the timeout wrapper.</p>
+<h2 id="configuration-reference">Configuration reference<a class="headerlink" href="#configuration-reference" title="Permanent link">&para;</a></h2>
+<p>All keys live under the <code>governance</code> block in <code>config.yaml</code>.</p>
 <h3 id="top-level-keys">Top-level keys<a class="headerlink" href="#top-level-keys" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Key</th>
 <th>Default</th>
-<th>Description</th>
+<th>Environment variable</th>
+<th>Runtime state</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>enabled</code></td>
 <td><code>true</code></td>
-<td>Master switch for governance controls. Setting to <code>false</code> disables structural validation; PII and defense have their own switches.</td>
+<td>none</td>
+<td>Defined but not wired into the 2.8.0 validator or write path.</td>
 </tr>
 <tr>
 <td><code>min_content_length</code></td>
 <td><code>1</code></td>
-<td>Minimum byte length for stored content. Content shorter than this raises <code>GovernanceViolationError</code>.</td>
+<td>none</td>
+<td>Defined but not enforced by the 2.8.0 validator.</td>
 </tr>
 </tbody>
 </table>
-<p>Environment override: none (use config file).</p>
-<hr />
-<h3 id="governancelimits-operation-limits"><code>governance.limits</code> — operation limits<a class="headerlink" href="#governancelimits-operation-limits" title="Permanent link">&para;</a></h3>
-<p>DoS mitigation. Values of <code>0</code> disable the corresponding limit.</p>
+<h3 id="governancelimits"><code>governance.limits</code><a class="headerlink" href="#governancelimits" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th>Key</th>
 <th>Default</th>
-<th>Env var</th>
-<th>Description</th>
+<th>Environment variable</th>
+<th>Runtime behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>max_content_length</code></td>
-<td><code>52428800</code> (50 MB)</td>
+<td><code>52428800</code></td>
 <td><code>ZETTELFORGE_LIMITS_MAX_CONTENT_LENGTH</code></td>
-<td>Maximum byte length of content passed to <code>remember()</code>. Content exceeding this raises <code>GovernanceViolationError</code>.</td>
+<td>Rejects <code>remember()</code> content when <code>len(content)</code> exceeds the value. <code>0</code> disables the check. The current exception text says “bytes,” but the implementation counts Python string characters.</td>
 </tr>
 <tr>
 <td><code>recall_timeout_seconds</code></td>
 <td><code>30.0</code></td>
 <td><code>ZETTELFORGE_LIMITS_RECALL_TIMEOUT</code></td>
-<td>Wall-clock timeout for <code>recall()</code> queries. <code>0</code> means no timeout.</td>
+<td>Marks an overrun and returns <code>[]</code> after the retrieval worker finishes. <code>0</code> disables the wrapper.</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h3 id="governancepii-pii-detection"><code>governance.pii</code> — PII detection<a class="headerlink" href="#governancepii-pii-detection" title="Permanent link">&para;</a></h3>
-<p>Disabled by default. Requires <code>pip install zettelforge[pii]</code> (Microsoft Presidio + spaCy). When the package is not installed, ZettelForge logs a warning at startup and continues without PII enforcement — no core functionality breaks.</p>
+<h3 id="governancepii"><code>governance.pii</code><a class="headerlink" href="#governancepii" title="Permanent link">&para;</a></h3>
+<p>PII detection is disabled by default. It requires the <code>pii</code> optional extra,
+which installs Microsoft Presidio and spaCy support. If you enable PII handling
+without a usable analyzer, validation logs <code>pii_validation_skipped</code> and stores
+the original content.</p>
 <table>
 <thead>
 <tr>
 <th>Key</th>
 <th>Default</th>
-<th>Env var</th>
-<th>Description</th>
+<th>Environment variable</th>
+<th>Runtime behavior</th>
 </tr>
 </thead>
 <tbody>
@@ -2705,57 +2732,77 @@
 <td><code>enabled</code></td>
 <td><code>false</code></td>
 <td><code>ZETTELFORGE_PII_ENABLED</code></td>
-<td>Enable PII detection before <code>remember()</code>.</td>
+<td>Enables PII analysis before storage.</td>
 </tr>
 <tr>
 <td><code>action</code></td>
 <td><code>"log"</code></td>
 <td><code>ZETTELFORGE_PII_ACTION</code></td>
-<td>What to do when PII is detected: <code>log</code> (warn, pass through), <code>redact</code> (replace with placeholder), <code>block</code> (raise before storage).</td>
+<td>Selects <code>log</code>, <code>redact</code>, or <code>block</code>.</td>
 </tr>
 <tr>
 <td><code>redact_placeholder</code></td>
 <td><code>"[REDACTED]"</code></td>
-<td>—</td>
-<td>Replacement text for redacted PII spans. Used only when <code>action=redact</code>.</td>
+<td>none</td>
+<td>Replaces every selected PII span in <code>redact</code> mode.</td>
 </tr>
 <tr>
 <td><code>entities</code></td>
-<td><code>[]</code> (all)</td>
-<td>—</td>
-<td>Presidio entity types to detect. Empty list detects all supported types minus the CTI allowlist.</td>
+<td><code>[]</code></td>
+<td>none</td>
+<td>Detects every supported type except the CTI allowlist. A non-empty list requests exactly those types.</td>
 </tr>
 <tr>
 <td><code>language</code></td>
 <td><code>"en"</code></td>
-<td>—</td>
-<td>Language code passed to Presidio.</td>
+<td>none</td>
+<td>Sets the Presidio language.</td>
 </tr>
 <tr>
 <td><code>nlp_model</code></td>
 <td><code>"en_core_web_sm"</code></td>
-<td>—</td>
-<td>spaCy model used by Presidio. Downloaded automatically on first use.</td>
+<td>none</td>
+<td>Sets the spaCy model used by Presidio.</td>
 </tr>
 </tbody>
 </table>
-<p><strong>CTI allowlist.</strong> IP addresses (<code>IP_ADDRESS</code>), URLs (<code>URL</code>), and domain names (<code>DOMAIN_NAME</code>) are excluded from PII detection by default. These are legitimate threat indicators, not personally identifiable information. The allowlist applies when <code>entities</code> is empty (detect-all mode). When you specify an explicit <code>entities</code> list, only the listed types are detected and the allowlist is not applied.</p>
-<p><strong>Actions:</strong></p>
-<ul>
-<li><code>log</code> — Presidio detects PII, logs entity types and confidence scores (never the actual text), and passes content through to storage unchanged.</li>
-<li><code>redact</code> — Detected PII spans are replaced with the <code>redact_placeholder</code> before storage.</li>
-<li><code>block</code> — Any PII detection raises <code>GovernanceViolationError</code> and content is not stored.</li>
-</ul>
-<hr />
-<h3 id="governancememory_defense-write-time-anomaly-detection"><code>governance.memory_defense</code> — write-time anomaly detection<a class="headerlink" href="#governancememory_defense-write-time-anomaly-detection" title="Permanent link">&para;</a></h3>
-<p>A MemSAD-style anomaly gate that scores each candidate note against recent trusted notes before writing. Default mode is <code>audit</code>: anomalies are logged but writes proceed. Switch to <code>block</code> or <code>quarantine</code> once you have a clean calibration corpus.</p>
+<p>The detect-all CTI allowlist excludes <code>IP_ADDRESS</code>, <code>URL</code>, and <code>DOMAIN_NAME</code>
+because those values are common threat indicators. An explicit <code>entities</code> list
+is not filtered through that allowlist.</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>log</code></td>
+<td>Logs entity types and confidence scores without detected text, then stores the original content.</td>
+</tr>
+<tr>
+<td><code>redact</code></td>
+<td>Replaces detected spans with <code>redact_placeholder</code>, then stores the processed content.</td>
+</tr>
+<tr>
+<td><code>block</code></td>
+<td>Raises <code>GovernanceViolationError</code> at the validator boundary before storage.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="governancememory_defense"><code>governance.memory_defense</code><a class="headerlink" href="#governancememory_defense" title="Permanent link">&para;</a></h3>
+<p>The memory anomaly gate compares a candidate with recent same-domain notes
+before a direct write. The default <code>audit</code> mode logs a flagged decision and
+allows the write. <code>block</code> rejects the write. <code>quarantine</code> writes a JSONL
+forensic record and then rejects the write.</p>
 <table>
 <thead>
 <tr>
 <th>Key</th>
 <th>Default</th>
-<th>Env var</th>
-<th>Description</th>
+<th>Environment variable</th>
+<th>Runtime behavior</th>
 </tr>
 </thead>
 <tbody>
@@ -2763,156 +2810,148 @@
 <td><code>enabled</code></td>
 <td><code>true</code></td>
 <td><code>ZETTELFORGE_MEMORY_DEFENSE_ENABLED</code></td>
-<td>Enable the anomaly gate.</td>
+<td>Enables anomaly evaluation.</td>
 </tr>
 <tr>
 <td><code>mode</code></td>
 <td><code>"audit"</code></td>
 <td><code>ZETTELFORGE_MEMORY_DEFENSE_MODE</code></td>
-<td><code>audit</code> logs anomalies; <code>block</code> raises <code>MemoryAnomalyError</code>; <code>quarantine</code> writes the note to a JSONL file and then raises.</td>
+<td>Selects <code>audit</code>, <code>block</code>, or <code>quarantine</code>. An unknown value falls back to <code>audit</code>.</td>
 </tr>
 <tr>
 <td><code>min_calibration_notes</code></td>
 <td><code>50</code></td>
 <td><code>ZETTELFORGE_MEMORY_DEFENSE_MIN_CALIBRATION</code></td>
-<td>Minimum number of reference notes required to compute the calibration baseline. Below this count the gate passes all writes through with reason <code>calibration_insufficient</code>.</td>
+<td>Requires this many valid reference notes before scoring.</td>
 </tr>
 <tr>
 <td><code>max_reference_notes</code></td>
 <td><code>50</code></td>
-<td>—</td>
-<td>Maximum reference notes used per evaluation. Ordered by most recently created.</td>
+<td>none</td>
+<td>Caps valid reference notes used per evaluation.</td>
 </tr>
 <tr>
 <td><code>kappa</code></td>
 <td><code>2.0</code></td>
 <td><code>ZETTELFORGE_MEMORY_DEFENSE_KAPPA</code></td>
-<td>Sensitivity multiplier. Threshold = calibration mean + (kappa × calibration std dev). Lower kappa = more sensitive.</td>
+<td>Multiplies calibration standard deviation in the threshold.</td>
 </tr>
 <tr>
 <td><code>lexical_weight</code></td>
 <td><code>0.25</code></td>
-<td>—</td>
-<td>Weight of the lexical divergence term in the composite score.</td>
+<td>none</td>
+<td>Weights character n-gram Jensen-Shannon divergence.</td>
 </tr>
 <tr>
 <td><code>ngram_size</code></td>
 <td><code>3</code></td>
-<td>—</td>
-<td>Character n-gram size for the lexical Jensen-Shannon divergence term.</td>
+<td>none</td>
+<td>Sets the character n-gram size.</td>
 </tr>
 <tr>
 <td><code>monitored_domains</code></td>
-<td><code>[]</code> (all)</td>
-<td>—</td>
-<td>CTI domains to monitor. Empty list monitors all domains. Notes with a domain not in this list pass through without evaluation.</td>
+<td><code>[]</code></td>
+<td>none</td>
+<td>Evaluates every domain when empty; otherwise evaluates listed domains only.</td>
 </tr>
 <tr>
 <td><code>quarantine_path</code></td>
 <td><code>""</code></td>
-<td>—</td>
-<td>Path to the quarantine JSONL file. Default: <code>&lt;data_dir&gt;/quarantine/memory_anomalies.jsonl</code>.</td>
+<td>none</td>
+<td>Resolves an empty value to <code>&lt;data_dir&gt;/quarantine/memory_anomalies.jsonl</code>.</td>
 </tr>
 <tr>
 <td><code>quarantine_raw_content</code></td>
 <td><code>true</code></td>
-<td>—</td>
-<td>Include raw note content in quarantine records. Set to <code>false</code> to omit content from quarantine logs.</td>
+<td>none</td>
+<td>Includes raw content in quarantine records. Set it to <code>false</code> when the record must omit content.</td>
 </tr>
 </tbody>
 </table>
-<h4 id="anomaly-scoring">Anomaly scoring<a class="headerlink" href="#anomaly-scoring" title="Permanent link">&para;</a></h4>
-<p>The gate computes a composite score for each candidate note:</p>
-<div class="highlight"><pre><span></span><code>memsad_score = 0.5 × max_cosine_similarity(candidate, refs)
-             + 0.5 × mean_cosine_similarity(candidate, refs)
-
-lexical_jsd  = Jensen-Shannon divergence over character n-grams
-             (candidate vs. pooled reference corpus)
-
-score = memsad_score + (lexical_weight × lexical_jsd)
-</code></pre></div>
-<p>The threshold is calibrated leave-one-out from the reference set:</p>
-<div class="highlight"><pre><span></span><code>calibration_scores = [score(note_i, all_others) for note_i in reference_notes]
-threshold = mean(calibration_scores) + kappa × std_dev(calibration_scores)
-</code></pre></div>
-<p>A note is flagged when <code>score &gt; threshold</code>. In <code>audit</code> mode the gate logs the decision and allows the write. In <code>block</code> or <code>quarantine</code> mode it raises <code>MemoryAnomalyError</code>.</p>
-<p>Cosine similarity uses the 768-dimension fastembed embeddings stored in the note's embedding vector. Notes without a valid embedding vector bypass scoring with reason <code>candidate_embedding_unavailable</code>.</p>
-<h4 id="short-circuit-conditions">Short-circuit conditions<a class="headerlink" href="#short-circuit-conditions" title="Permanent link">&para;</a></h4>
-<p>The gate returns <code>action=audit, flagged=False</code> without scoring when:</p>
+<h3 id="anomaly-scoring">Anomaly scoring<a class="headerlink" href="#anomaly-scoring" title="Permanent link">&para;</a></h3>
+<p>The embedding term is <code>0.5 × maximum cosine similarity + 0.5 × mean cosine
+similarity</code>. The final score adds <code>lexical_weight × lexical Jensen-Shannon
+divergence</code> over character n-grams.</p>
+<p>Calibration scores each reference note against the other reference notes. The
+threshold is <code>calibration mean + kappa × calibration standard deviation</code>. A
+candidate is flagged only when its score is greater than that threshold.</p>
+<p>The gate returns without scoring in these cases:</p>
 <table>
 <thead>
 <tr>
 <th>Condition</th>
-<th>Reason field</th>
+<th>Action</th>
+<th><code>reason</code></th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>enabled=false</code></td>
+<td><code>allow</code></td>
 <td><code>disabled</code></td>
 </tr>
 <tr>
-<td>Domain not in <code>monitored_domains</code> (list non-empty)</td>
+<td>Domain not listed in <code>monitored_domains</code></td>
+<td><code>allow</code></td>
 <td><code>domain_not_monitored</code></td>
 </tr>
 <tr>
-<td>Candidate embedding vector missing or all-zero</td>
+<td>Candidate embedding missing or all-zero</td>
+<td><code>audit</code></td>
 <td><code>candidate_embedding_unavailable</code></td>
 </tr>
 <tr>
-<td>Fewer than <code>min_calibration_notes</code> valid reference notes</td>
+<td>Too few valid reference notes</td>
+<td><code>audit</code></td>
 <td><code>calibration_insufficient</code></td>
 </tr>
 <tr>
 <td>Leave-one-out calibration produces no scores</td>
+<td><code>audit</code></td>
 <td><code>calibration_unscorable</code></td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="prompt-injection-detection">Prompt injection detection<a class="headerlink" href="#prompt-injection-detection" title="Permanent link">&para;</a></h2>
-<p>Every call to <code>remember()</code> runs <code>require_no_prompt_injection(content)</code> before content reaches the backend. Detection is deterministic regex-based matching — no LLM call. The check is always active when <code>governance.enabled=true</code> and has no separate config switch.</p>
-<p>Seven pattern categories are detected, all at <code>high</code> severity:</p>
+<h2 id="prompt-injection-patterns">Prompt-injection patterns<a class="headerlink" href="#prompt-injection-patterns" title="Permanent link">&para;</a></h2>
+<p>ZettelForge normalizes control characters and whitespace, then evaluates six
+deterministic regular-expression patterns in order. The guard returns the first
+matching code and raises <code>PromptInjectionError</code>.</p>
 <table>
 <thead>
 <tr>
-<th>Category</th>
-<th>What it matches</th>
+<th>Code</th>
+<th>Pattern intent</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>direct_instruction_override</code></td>
-<td>"ignore/disregard/override/bypass … previous/system instructions"</td>
+<td><code>instruction_override</code></td>
+<td>Ignore, disregard, forget, bypass, or override earlier instructions or rules.</td>
 </tr>
 <tr>
-<td><code>role_takeover</code></td>
-<td>"you are now / act as / pretend to be … system/admin/root"</td>
-</tr>
-<tr>
-<td><code>system_prompt_exfiltration</code></td>
-<td>"reveal/print/leak/dump … system/hidden prompt"</td>
+<td><code>role_rewrite</code></td>
+<td>Replace the model role or activate admin, root, jailbreak, or developer-mode framing.</td>
 </tr>
 <tr>
 <td><code>secret_exfiltration</code></td>
-<td>"send/exfiltrate … api_key/token/secret/password" (within 80 chars)</td>
+<td>Reveal, print, dump, show, exfiltrate, leak, or return hidden prompts, credentials, or secrets.</td>
 </tr>
 <tr>
-<td><code>tool_instruction_smuggling</code></td>
-<td>"call/invoke/use/execute the tool/function/api/mcp/shell"</td>
+<td><code>tool_or_network_command</code></td>
+<td>Call, invoke, use, run, or execute a tool, shell, HTTP request, or webhook.</td>
 </tr>
 <tr>
-<td><code>retrieval_poisoning</code></td>
-<td>"when this note is retrieved …" or "always/only answer/respond/say"</td>
+<td><code>prompt_boundary_marker</code></td>
+<td>Insert a begin/end marker for a system, developer, assistant, or tool prompt or message.</td>
 </tr>
 <tr>
-<td><code>role_delimiter_smuggling</code></td>
-<td>Lines starting with <code>system:</code> / <code>developer:</code>, XML role tags, <code>BEGIN_SYSTEM_PROMPT</code></td>
+<td><code>memory_poisoning_intent</code></td>
+<td>Store content as a system, developer, or highest-priority instruction or memory.</td>
 </tr>
 </tbody>
 </table>
-<p>Any high-severity match raises <code>PromptInjectionError</code>, which <code>GovernanceValidator</code> converts to <code>GovernanceViolationError</code>. Content is not stored.</p>
-<hr />
+<p><code>remember()</code> wraps this error as <code>GovernanceViolationError</code>. Recall and other
+direct guard call sites expose <code>PromptInjectionError</code>.</p>
 <h2 id="exceptions">Exceptions<a class="headerlink" href="#exceptions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2926,26 +2965,31 @@ threshold = mean(calibration_scores) + kappa × std_dev(calibration_scores)
 <tr>
 <td><code>GovernanceViolationError</code></td>
 <td><code>zettelforge.governance_validator</code></td>
-<td>Content size exceeded; structural validation failed; prompt injection detected; PII blocked (<code>action=block</code>).</td>
+<td>Structural validation, content length, prompt-injection, or PII validation rejects a write.</td>
 </tr>
 <tr>
 <td><code>PromptInjectionError</code></td>
-<td><code>zettelforge.prompt_security</code></td>
-<td>High-confidence injection pattern detected. Converted to <code>GovernanceViolationError</code> by the validator.</td>
+<td><code>zettelforge.prompt_injection_guard</code></td>
+<td>A direct prompt guard call finds one of the six pattern codes.</td>
+</tr>
+<tr>
+<td><code>PIIBlockedError</code></td>
+<td><code>zettelforge.pii_validator</code></td>
+<td>The raw PII validator finds PII in <code>block</code> mode; the governance boundary wraps it.</td>
 </tr>
 <tr>
 <td><code>MemoryAnomalyError</code></td>
 <td><code>zettelforge.memory_defense</code></td>
-<td>Anomaly gate fires with <code>mode=block</code> or <code>mode=quarantine</code>. Contains a <code>decision</code> attribute with full <code>MemoryAnomalyDecision</code> fields.</td>
+<td>A candidate is flagged in <code>block</code> or <code>quarantine</code> mode. The exception carries its <code>MemoryAnomalyDecision</code>.</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="minimal-hardening-config">Minimal hardening config<a class="headerlink" href="#minimal-hardening-config" title="Permanent link">&para;</a></h2>
-<p>Enable PII redaction and switch the anomaly gate to block mode once your store has 50+ calibration notes:</p>
+<h2 id="minimal-hardening-configuration">Minimal hardening configuration<a class="headerlink" href="#minimal-hardening-configuration" title="Permanent link">&para;</a></h2>
+<p>Enable PII redaction and switch the anomaly gate to <code>block</code> only after the
+store has at least <code>min_calibration_notes</code> clean same-domain references:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">governance</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">limits</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">max_content_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1048576</span><span class="w">  </span><span class="c1"># 1 MB per note</span>
+<span class="w">    </span><span class="nt">max_content_length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1048576</span>
 <span class="w">    </span><span class="nt">recall_timeout_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15.0</span>
 <span class="w">  </span><span class="nt">pii</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
@@ -2955,19 +2999,24 @@ threshold = mean(calibration_scores) + kappa × std_dev(calibration_scores)
 <span class="w">    </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">block</span>
 <span class="w">    </span><span class="nt">kappa</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
 </code></pre></div>
-<p>Or with environment variables:</p>
+<p>Set the environment-backed subset with:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_PII_ENABLED</span><span class="o">=</span><span class="nb">true</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_PII_ACTION</span><span class="o">=</span>redact
 <span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_MEMORY_DEFENSE_MODE</span><span class="o">=</span>block
 <span class="nb">export</span><span class="w"> </span><span class="nv">ZETTELFORGE_LIMITS_MAX_CONTENT_LENGTH</span><span class="o">=</span><span class="m">1048576</span>
 </code></pre></div>
-<p>Do not switch <code>memory_defense.mode</code> to <code>block</code> before you have at least <code>min_calibration_notes</code> notes in the store. Before that threshold the gate always passes writes through and produces no calibration baseline.</p>
+<p><code>block</code> mode does not reject a candidate before calibration exists. Until the
+gate has enough valid reference notes, it returns <code>calibration_insufficient</code>
+and allows the write.</p>
 
 
 
 
 
 
+
+  
+  
 
 
 

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="ZettelForge is an open-source agentic memory system for cyber threat intelligence with STIX knowledge graphs, threat-actor alias resolution, and an MCP server. Offline-first, Apache-2.0-licensed.">
+        <meta name="description" content="ZettelForge is an MIT-licensed, open-source memory system for cyber threat intelligence with local storage, entity extraction, natural-language recall, and an MCP server.">
       
       
         <meta name="author" content="Patrick Roland">
@@ -665,7 +665,7 @@
   <span class="md-ellipsis">
     
   
-    Ingest a threat report
+    Ingest a news report
   
 
     
@@ -1620,10 +1620,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-this-reference-covers" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What this reference covers
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Public exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#processing-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Processing layers
       
     </span>
   </a>
@@ -1642,65 +1664,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parser" class="md-nav__link">
+  <a href="#metadata-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parser
+        Metadata validation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Parser">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parse_yaratext-str-listdictstr-any" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        parse_yara(text: str) → list[dict[str, Any]]
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parse_filepath-str-path-listdictstr-any" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        parse_file(path: str | Path) → list[dict[str, Any]]
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#yaraparseerror" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        YaraParseError
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cccs-metadata-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CCCS metadata validation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="CCCS metadata validation">
+    <nav class="md-nav" aria-label="Metadata validation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1715,10 +1687,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#required-cccs-fields" class="md-nav__link">
+  <a href="#fields-required-by-zettelforge-strict-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Required CCCS fields
+        Fields required by ZettelForge strict mode
       
     </span>
   </a>
@@ -1726,10 +1698,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#auto-generated-fields" class="md-nav__link">
+  <a href="#optional-fields-with-implemented-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Auto-generated fields
+        Optional fields with implemented validation
       
     </span>
   </a>
@@ -1737,21 +1709,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-cccs-fields" class="md-nav__link">
+  <a href="#declared-fields-without-implemented-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional CCCS fields
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#validate_metadatarule_meta-tier-validationresult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        validate_metadata(rule_meta, tier) → ValidationResult
+        Declared fields without implemented validation
       
     </span>
   </a>
@@ -1775,22 +1736,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#yararule-dataclass" class="md-nav__link">
+  <a href="#parser-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        YaraRule dataclass
+        Parser API
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="YaraRule dataclass">
+    <nav class="md-nav" aria-label="Parser API">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#detectionrule-base-fields-inherited" class="md-nav__link">
+  <a href="#parse_yara" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DetectionRule base fields (inherited)
+        parse_yara
       
     </span>
   </a>
@@ -1798,21 +1759,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#yararule-specific-fields" class="md-nav__link">
+  <a href="#parse_file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        YaraRule-specific fields
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#extra-keys" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Extra keys
+        parse_file
       
     </span>
   </a>
@@ -1825,22 +1775,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rule_to_entitiesrule-tier-yararule-listdict" class="md-nav__link">
+  <a href="#entity-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        rule_to_entities(rule, *, tier) → (YaraRule, list[dict])
+        Entity model
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="rule_to_entities(rule, *, tier) → (YaraRule, list[dict])">
+    <nav class="md-nav" aria-label="Entity model">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#kg-edge-shape" class="md-nav__link">
+  <a href="#detectionrule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KG edge shape
+        DetectionRule
       
     </span>
   </a>
@@ -1848,10 +1798,38 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relation-types" class="md-nav__link">
+  <a href="#yararule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Relation types
+        YaraRule
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity conversion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entity conversion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emitted-relations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emitted relations
       
     </span>
   </a>
@@ -1859,10 +1837,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#tag-resolution-resolve_yara_tagtag-entity_type-entity_properties" class="md-nav__link">
+  <a href="#tag-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tag resolution — resolve_yara_tag(tag) → (entity_type, entity_properties)
+        Tag resolution
       
     </span>
   </a>
@@ -1887,10 +1865,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ingest_rulerule_source-mm-domain-tier-sync-memorynote-none-listdict" class="md-nav__link">
+  <a href="#ingest_rule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ingest_rule(rule_source, mm, *, domain, tier, sync) → (MemoryNote | None, list[dict])
+        ingest_rule
       
     </span>
   </a>
@@ -1898,10 +1876,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ingest_rules_dirpath-mm-glob-tier-domain-bulk-flush_timeout-dict" class="md-nav__link">
+  <a href="#ingest_rules_dir" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ingest_rules_dir(path, mm, *, glob, tier, domain, bulk, flush_timeout) → dict
+        ingest_rules_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directory-security-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory security controls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-graph-edge-persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge-graph edge persistence
       
     </span>
   </a>
@@ -1918,6 +1918,28 @@
     <span class="md-ellipsis">
       
         CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick reference example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current limitations
       
     </span>
   </a>
@@ -2644,10 +2666,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-this-reference-covers" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What this reference covers
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Public exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#processing-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Processing layers
       
     </span>
   </a>
@@ -2666,65 +2710,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#parser" class="md-nav__link">
+  <a href="#metadata-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Parser
+        Metadata validation
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Parser">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#parse_yaratext-str-listdictstr-any" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        parse_yara(text: str) → list[dict[str, Any]]
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#parse_filepath-str-path-listdictstr-any" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        parse_file(path: str | Path) → list[dict[str, Any]]
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#yaraparseerror" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        YaraParseError
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cccs-metadata-validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CCCS metadata validation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="CCCS metadata validation">
+    <nav class="md-nav" aria-label="Metadata validation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2739,10 +2733,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#required-cccs-fields" class="md-nav__link">
+  <a href="#fields-required-by-zettelforge-strict-mode" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Required CCCS fields
+        Fields required by ZettelForge strict mode
       
     </span>
   </a>
@@ -2750,10 +2744,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#auto-generated-fields" class="md-nav__link">
+  <a href="#optional-fields-with-implemented-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Auto-generated fields
+        Optional fields with implemented validation
       
     </span>
   </a>
@@ -2761,21 +2755,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-cccs-fields" class="md-nav__link">
+  <a href="#declared-fields-without-implemented-validation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional CCCS fields
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#validate_metadatarule_meta-tier-validationresult" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        validate_metadata(rule_meta, tier) → ValidationResult
+        Declared fields without implemented validation
       
     </span>
   </a>
@@ -2799,22 +2782,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#yararule-dataclass" class="md-nav__link">
+  <a href="#parser-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        YaraRule dataclass
+        Parser API
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="YaraRule dataclass">
+    <nav class="md-nav" aria-label="Parser API">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#detectionrule-base-fields-inherited" class="md-nav__link">
+  <a href="#parse_yara" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DetectionRule base fields (inherited)
+        parse_yara
       
     </span>
   </a>
@@ -2822,21 +2805,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#yararule-specific-fields" class="md-nav__link">
+  <a href="#parse_file" class="md-nav__link">
     <span class="md-ellipsis">
       
-        YaraRule-specific fields
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#extra-keys" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Extra keys
+        parse_file
       
     </span>
   </a>
@@ -2849,22 +2821,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#rule_to_entitiesrule-tier-yararule-listdict" class="md-nav__link">
+  <a href="#entity-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        rule_to_entities(rule, *, tier) → (YaraRule, list[dict])
+        Entity model
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="rule_to_entities(rule, *, tier) → (YaraRule, list[dict])">
+    <nav class="md-nav" aria-label="Entity model">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#kg-edge-shape" class="md-nav__link">
+  <a href="#detectionrule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        KG edge shape
+        DetectionRule
       
     </span>
   </a>
@@ -2872,10 +2844,38 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#relation-types" class="md-nav__link">
+  <a href="#yararule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Relation types
+        YaraRule
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity conversion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entity conversion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emitted-relations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emitted relations
       
     </span>
   </a>
@@ -2883,10 +2883,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#tag-resolution-resolve_yara_tagtag-entity_type-entity_properties" class="md-nav__link">
+  <a href="#tag-resolution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Tag resolution — resolve_yara_tag(tag) → (entity_type, entity_properties)
+        Tag resolution
       
     </span>
   </a>
@@ -2911,10 +2911,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ingest_rulerule_source-mm-domain-tier-sync-memorynote-none-listdict" class="md-nav__link">
+  <a href="#ingest_rule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ingest_rule(rule_source, mm, *, domain, tier, sync) → (MemoryNote | None, list[dict])
+        ingest_rule
       
     </span>
   </a>
@@ -2922,10 +2922,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ingest_rules_dirpath-mm-glob-tier-domain-bulk-flush_timeout-dict" class="md-nav__link">
+  <a href="#ingest_rules_dir" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ingest_rules_dir(path, mm, *, glob, tier, domain, bulk, flush_timeout) → dict
+        ingest_rules_dir
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#directory-security-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory security controls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-graph-edge-persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge-graph edge persistence
       
     </span>
   </a>
@@ -2942,6 +2964,28 @@
     <span class="md-ellipsis">
       
         CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick reference example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current limitations
       
     </span>
   </a>
@@ -2969,18 +3013,92 @@
 
 
 <h1 id="yara-schema-reference">YARA schema reference<a class="headerlink" href="#yara-schema-reference" title="Permanent link">&para;</a></h1>
-<p>Modules: <code>zettelforge.yara</code>, <code>zettelforge.yara.parser</code>, <code>zettelforge.yara.entities</code>, <code>zettelforge.yara.tags</code>, <code>zettelforge.yara.ingest</code></p>
-<p>ZettelForge 2.7.0 — Apache-2.0 license</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">YaraRule</span><span class="p">,</span> <span class="n">YaraParseError</span><span class="p">,</span>
-    <span class="n">parse_yara</span><span class="p">,</span> <span class="n">parse_file</span><span class="p">,</span>
-    <span class="n">rule_to_entities</span><span class="p">,</span> <span class="n">resolve_yara_tag</span><span class="p">,</span>
-    <span class="n">ingest_rule</span><span class="p">,</span> <span class="n">ingest_rules_dir</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-<hr />
-<h2 id="what-this-reference-covers">What this reference covers<a class="headerlink" href="#what-this-reference-covers" title="Permanent link">&para;</a></h2>
-<p>The YARA subsystem has three layers:</p>
+<p>Use this page to look up the ZettelForge YARA parser, CCCS metadata validation,
+entity mapping, ingest API, and command-line interface. The reference covers
+ZettelForge 2.8.0, released under the MIT license.</p>
+<p>Modules: <code>zettelforge.yara</code>, <code>zettelforge.yara.parser</code>,
+<code>zettelforge.yara.cccs_metadata</code>, <code>zettelforge.yara.entities</code>,
+<code>zettelforge.yara.tags</code>, <code>zettelforge.yara.ingest</code></p>
+<div class="admonition warning">
+<p class="admonition-title">In progress</p>
+<p>Parsing, core metadata validation, entity mapping, persistence, and dry-run
+ingestion work in ZettelForge 2.8.0. Modifier flags, several optional CCCS
+validators, <code>reference</code> mapping, strict live-ingest exit status, dry-run
+symlink protection, and CLI explainer integration remain incomplete. See
+<a href="#current-limitations">Current limitations</a>.</p>
+</div>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<p>You need ZettelForge 2.8.0 and Python 3.10 or later. Use
+<a href="../../how-to/configure-yara-ingestion/">Configure YARA ingestion</a> for a
+task-oriented import procedure. Read
+<a href="../detection-rules-schema/">Detection rules schema</a> for the shared Sigma and
+YARA model.</p>
+<h2 id="public-exports">Public exports<a class="headerlink" href="#public-exports" title="Permanent link">&para;</a></h2>
+<p><code>zettelforge.yara</code> exports these names:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Kind</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>YaraRule</code></td>
+<td style="text-align: left;">dataclass</td>
+<td style="text-align: left;">YARA-specific <code>DetectionRule</code> subtype</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>YaraParseError</code></td>
+<td style="text-align: left;">exception</td>
+<td style="text-align: left;">Reports file stat and size errors</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>YaraValidationError</code></td>
+<td style="text-align: left;">exception</td>
+<td style="text-align: left;">Reserved validation exception; the 2.8.0 APIs return <code>ValidationResult</code> instead of raising it</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>parse_yara</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Parses YARA source text</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>parse_file</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Reads and parses one rule file</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>validate_metadata</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Validates flattened metadata at a selected tier</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rule_to_entities</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Builds a <code>YaraRule</code> and relation dictionaries</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>resolve_yara_tag</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Resolves supported inline tags to typed entities</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ingest_rule</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Persists the first rule from one input</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ingest_rules_dir</code></td>
+<td style="text-align: left;">function</td>
+<td style="text-align: left;">Walks and ingests a rule directory</td>
+</tr>
+</tbody>
+</table>
+<p><code>zettelforge.yara.parser.parse_text</code> is a legacy alias for <code>parse_yara</code>. It is
+available from the parser submodule but is not a package-level export.</p>
+<h2 id="processing-layers">Processing layers<a class="headerlink" href="#processing-layers" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2993,24 +3111,28 @@
 <tr>
 <td style="text-align: left;">Parser</td>
 <td style="text-align: left;"><code>yara.parser</code></td>
-<td style="text-align: left;">Wrap plyara, normalize output to a stable dict shape</td>
+<td style="text-align: left;">Wrap Plyara and normalize parsed dictionaries</td>
+</tr>
+<tr>
+<td style="text-align: left;">Metadata</td>
+<td style="text-align: left;"><code>yara.cccs_metadata</code> / <code>yara.schemas</code></td>
+<td style="text-align: left;">Load the CCCS metadata definitions and apply the implemented validators</td>
 </tr>
 <tr>
 <td style="text-align: left;">Entity</td>
 <td style="text-align: left;"><code>yara.entities</code> / <code>yara.tags</code></td>
-<td style="text-align: left;">Map a parsed rule dict to <code>YaraRule</code> + KG edges</td>
+<td style="text-align: left;">Map a parsed dictionary to <code>YaraRule</code> and relation dictionaries</td>
 </tr>
 <tr>
 <td style="text-align: left;">Ingest</td>
 <td style="text-align: left;"><code>yara.ingest</code></td>
-<td style="text-align: left;">Orchestrate parse → entity → remember → persist</td>
+<td style="text-align: left;">Store each rule as a memory note and write knowledge-graph edges</td>
 </tr>
 </tbody>
 </table>
-<p>This page covers all three layers. The CLI wraps the ingest layer; see <a href="#cli">CLI</a>.</p>
-<hr />
 <h2 id="vendored-cccs-schemas">Vendored CCCS schemas<a class="headerlink" href="#vendored-cccs-schemas" title="Permanent link">&para;</a></h2>
-<p>Two CCCS YARA metadata schema files are vendored in <code>src/zettelforge/yara/schemas/</code>:</p>
+<p>ZettelForge packages two CCCS YARA metadata files in
+<code>src/zettelforge/yara/schemas/</code>:</p>
 <table>
 <thead>
 <tr>
@@ -3021,754 +3143,724 @@
 <tbody>
 <tr>
 <td style="text-align: left;"><code>CCCS_YARA.yml</code></td>
-<td style="text-align: left;">Field definitions, formats, and <code>optional</code> flags for all CCCS metadata keys</td>
+<td style="text-align: left;">Declares metadata fields, formats, uniqueness, optionality, and validator names</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>CCCS_YARA_values.yml</code></td>
-<td style="text-align: left;">Allowed value sets for <code>status</code>, <code>sharing</code>, <code>category</code>, <code>malware_type</code>, <code>actor_type</code>, and <code>hash</code></td>
+<td style="text-align: left;">Declares allowed status, sharing, category, malware-type, actor-type, and hash patterns</td>
 </tr>
 </tbody>
 </table>
-<p>These files are a clean-room re-implementation; the upstream CCCS <code>validator_functions.py</code> is not vendored. See <code>schemas/NOTICE.md</code>.</p>
-<p>ZettelForge loads both files eagerly at import time. A missing or unreadable schema file raises at startup.</p>
-<hr />
-<h2 id="parser">Parser<a class="headerlink" href="#parser" title="Permanent link">&para;</a></h2>
-<h3 id="parse_yaratext-str-listdictstr-any"><code>parse_yara(text: str) → list[dict[str, Any]]</code><a class="headerlink" href="#parse_yaratext-str-listdictstr-any" title="Permanent link">&para;</a></h3>
-<p>Parse YARA source text into a list of normalized rule dicts. A single <code>.yar</code> file may contain multiple rules; one dict per rule.</p>
-<p>Uses a module-level <code>plyara.Plyara</code> instance protected by a threading lock (<code>_PARSER_LOCK</code>). The parser is reset before and after each call so state does not leak between invocations.</p>
-<p>Each returned dict contains:</p>
+<p>The YAML files come from the Cyber Centre's CCCS-Yara project and retain its MIT
+license. ZettelForge does not vendor the upstream <code>validator_functions.py</code>;
+<code>cccs_metadata.py</code> implements the validation logic locally. The module loads
+both YAML files at import time, so a missing or unreadable file prevents the
+module from importing.</p>
+<h2 id="metadata-validation">Metadata validation<a class="headerlink" href="#metadata-validation" title="Permanent link">&para;</a></h2>
+<p>Signature:
+<code>validate_metadata(rule_meta: dict[str, Any], tier: Tier = 'warn') -&gt; ValidationResult</code></p>
+<p><code>ValidationResult</code> contains three fields:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Key</th>
+<th style="text-align: left;">Field</th>
 <th style="text-align: left;">Type</th>
-<th style="text-align: left;">Source</th>
+<th style="text-align: left;">Meaning</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>rule_name</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">plyara</td>
+<td style="text-align: left;"><code>accepted</code></td>
+<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;">Whether the selected tier accepts the metadata</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>tags</code></td>
+<td style="text-align: left;"><code>warnings</code></td>
 <td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">plyara (inline rule tags, e.g. <code>rule Foo : APT</code>)</td>
+<td style="text-align: left;">Non-blocking missing-field and value findings</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>imports</code></td>
+<td style="text-align: left;"><code>errors</code></td>
 <td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">plyara (YARA <code>import</code> statements)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>metadata</code></td>
-<td style="text-align: left;"><code>list[dict]</code></td>
-<td style="text-align: left;">plyara raw (list of single-key dicts)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>meta</code></td>
-<td style="text-align: left;"><code>dict</code></td>
-<td style="text-align: left;">added by parser — flattened from <code>metadata</code>, last-write-wins for duplicate keys</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>strings</code></td>
-<td style="text-align: left;"><code>list[dict]</code></td>
-<td style="text-align: left;">plyara</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>condition_terms</code></td>
-<td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">plyara</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>raw_condition</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">plyara</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>raw_strings</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">plyara</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>raw_meta</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">plyara</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>raw_rule</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">added by parser — exact source text carved from <code>start_line</code>/<code>stop_line</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>start_line</code></td>
-<td style="text-align: left;"><code>int</code></td>
-<td style="text-align: left;">plyara (1-indexed, inclusive)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>stop_line</code></td>
-<td style="text-align: left;"><code>int</code></td>
-<td style="text-align: left;">plyara</td>
+<td style="text-align: left;">Blocking strict-tier findings</td>
 </tr>
 </tbody>
 </table>
-<h3 id="parse_filepath-str-path-listdictstr-any"><code>parse_file(path: str | Path) → list[dict[str, Any]]</code><a class="headerlink" href="#parse_filepath-str-path-listdictstr-any" title="Permanent link">&para;</a></h3>
-<p>Parse a <code>.yar</code> or <code>.yara</code> file. Raises <code>YaraParseError</code> when:</p>
-<ul>
-<li>the file cannot be stat'd (I/O error),</li>
-<li>the file exceeds <code>MAX_RULE_FILE_BYTES</code> (1 048 576 bytes, 1 MiB), or</li>
-<li>plyara raises on a syntax error (re-raised as <code>ValueError</code>).</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="n">rules</span> <span class="o">=</span> <span class="n">parse_file</span><span class="p">(</span><span class="s2">&quot;rules/apt41.yar&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">rule</span> <span class="ow">in</span> <span class="n">rules</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">rule</span><span class="p">[</span><span class="s2">&quot;rule_name&quot;</span><span class="p">],</span> <span class="n">rule</span><span class="p">[</span><span class="s2">&quot;meta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;status&quot;</span><span class="p">))</span>
-</code></pre></div>
-<h3 id="yaraparseerror"><code>YaraParseError</code><a class="headerlink" href="#yaraparseerror" title="Permanent link">&para;</a></h3>
-<p><code>ValueError</code> subclass raised when a rule file is rejected before it reaches plyara (I/O error, oversize). Syntax errors from plyara are re-raised as plain <code>ValueError</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">YaraParseError</span><span class="p">,</span> <span class="n">parse_file</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">rules</span> <span class="o">=</span> <span class="n">parse_file</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">YaraParseError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rejected: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;syntax error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<hr />
-<h2 id="cccs-metadata-validation">CCCS metadata validation<a class="headerlink" href="#cccs-metadata-validation" title="Permanent link">&para;</a></h2>
 <h3 id="validation-tiers">Validation tiers<a class="headerlink" href="#validation-tiers" title="Permanent link">&para;</a></h3>
-<p>ZettelForge validates each rule's metadata block against the vendored CCCS schema at ingest time. Three tiers control strictness:</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Tier</th>
-<th style="text-align: left;">Behaviour</th>
+<th style="text-align: left;">Behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>"warn"</code> (default)</td>
-<td style="text-align: left;">Required-field failures and value violations are recorded as warnings. <code>accepted</code> is always <code>True</code>.</td>
+<td style="text-align: left;"><code>warn</code></td>
+<td style="text-align: left;">Records missing required fields and invalid values as warnings; always sets <code>accepted=True</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>"strict"</code></td>
-<td style="text-align: left;">Failures on required fields produce errors and set <code>accepted = False</code>; the ingest path drops the rule.</td>
+<td style="text-align: left;"><code>strict</code></td>
+<td style="text-align: left;">Records missing or invalid required fields as errors and sets <code>accepted=False</code>; invalid optional fields remain warnings</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>"non_cccs"</code></td>
-<td style="text-align: left;">All checks skipped. Returns <code>(True, [], [])</code> unconditionally.</td>
+<td style="text-align: left;"><code>non_cccs</code></td>
+<td style="text-align: left;">Skips every check and returns <code>accepted=True</code> with empty warning and error lists</td>
 </tr>
 </tbody>
 </table>
-<h3 id="required-cccs-fields">Required CCCS fields<a class="headerlink" href="#required-cccs-fields" title="Permanent link">&para;</a></h3>
-<p>These fields are <code>optional: No</code> in <code>CCCS_YARA.yml</code> and must be present in <code>strict</code> tier. In <code>warn</code> tier, their absence is recorded as a warning but does not block ingest.</p>
+<p>Strict-tier ingest drops a rule when its entity is not marked <code>strict</code>. Warn-tier
+ingest keeps the rule and records the findings in <code>YaraRule.extra</code>.</p>
+<h3 id="fields-required-by-zettelforge-strict-mode">Fields required by ZettelForge strict mode<a class="headerlink" href="#fields-required-by-zettelforge-strict-mode" title="Permanent link">&para;</a></h3>
+<p>ZettelForge combines two CCCS optionality classes into one strict gate. It
+requires every <code>optional: No</code> field and every <code>optional: Optional</code> field because
+the local validator does not generate missing values.</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Field</th>
-<th style="text-align: left;">Format</th>
-<th style="text-align: left;">Validated values</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>status</code></td>
-<td style="text-align: left;">uppercase string</td>
-<td style="text-align: left;"><code>TESTING</code>, <code>RELEASED</code>, <code>DEPRECATED</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>sharing</code></td>
-<td style="text-align: left;">TLP label</td>
-<td style="text-align: left;"><code>TLP:CLEAR</code>, <code>TLP:GREEN</code>, <code>TLP:AMBER</code>, <code>TLP:AMBER+STRICT</code> (each also allows <code>//COMMERCIAL</code> suffix)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>source</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">Any non-empty string; uppercase is convention</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>author</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;"><code>[A-Za-z0-9_.@+-]+</code></td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>description</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">Any non-empty string</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>category</code></td>
-<td style="text-align: left;">uppercase string</td>
-<td style="text-align: left;"><code>INFO</code>, <code>EXPLOIT</code>, <code>TECHNIQUE</code>, <code>TOOL</code>, <code>MALWARE</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="auto-generated-fields">Auto-generated fields<a class="headerlink" href="#auto-generated-fields" title="Permanent link">&para;</a></h3>
-<p>These fields are <code>optional: Optional</code> in <code>CCCS_YARA.yml</code>. The upstream CCCS validator auto-generates them when absent; ZettelForge does not auto-generate but treats them as required in <code>strict</code> tier to preserve provenance.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Field</th>
-<th style="text-align: left;">Format</th>
+<th style="text-align: left;">CCCS optionality</th>
+<th style="text-align: left;">Implemented format or values</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>id</code></td>
-<td style="text-align: left;">Base62 UUID (16+ chars)</td>
+<td style="text-align: left;"><code>Optional</code></td>
+<td style="text-align: left;">Base62 text with at least 16 characters</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>fingerprint</code></td>
-<td style="text-align: left;">Hex digest (SHA-1 or SHA-256, 40–64 chars)</td>
+<td style="text-align: left;"><code>Optional</code></td>
+<td style="text-align: left;">40–64 hexadecimal characters</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>version</code></td>
-<td style="text-align: left;"><code>x.y</code></td>
+<td style="text-align: left;"><code>Optional</code></td>
+<td style="text-align: left;">Two numeric components, such as <code>1.0</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>modified</code></td>
-<td style="text-align: left;"><code>YYYY-MM-DD</code></td>
+<td style="text-align: left;"><code>Optional</code></td>
+<td style="text-align: left;"><code>YYYY-MM-DD</code> text</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>status</code></td>
+<td style="text-align: left;"><code>No</code></td>
+<td style="text-align: left;"><code>TESTING</code>, <code>RELEASED</code>, or <code>DEPRECATED</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>sharing</code></td>
+<td style="text-align: left;"><code>No</code></td>
+<td style="text-align: left;">One of the supported TLP strings below</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>source</code></td>
+<td style="text-align: left;"><code>No</code></td>
+<td style="text-align: left;">Any non-empty value; uppercase is a convention, not a validation rule</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>author</code></td>
+<td style="text-align: left;"><code>No</code></td>
+<td style="text-align: left;">Whole value matches <code>[A-Za-z0-9_.@+-]+</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>description</code></td>
+<td style="text-align: left;"><code>No</code></td>
+<td style="text-align: left;">Non-empty after trimming</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>category</code></td>
+<td style="text-align: left;"><code>No</code></td>
+<td style="text-align: left;"><code>INFO</code>, <code>EXPLOIT</code>, <code>TECHNIQUE</code>, <code>TOOL</code>, or <code>MALWARE</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="optional-cccs-fields">Optional CCCS fields<a class="headerlink" href="#optional-cccs-fields" title="Permanent link">&para;</a></h3>
-<p>All other fields in <code>CCCS_YARA.yml</code> are <code>optional: Yes</code>. They are validated when present but their absence never produces a warning or error.</p>
+<p>Supported <code>sharing</code> values are:</p>
+<ul>
+<li><code>TLP:CLEAR</code> and <code>TLP:CLEAR//COMMERCIAL</code></li>
+<li><code>TLP:WHITE</code> and <code>TLP:WHITE//COMMERCIAL</code></li>
+<li><code>TLP:GREEN</code> and <code>TLP:GREEN//COMMERCIAL</code></li>
+<li><code>TLP:AMBER</code> and <code>TLP:AMBER//COMMERCIAL</code></li>
+<li><code>TLP:AMBER+STRICT</code> and <code>TLP:AMBER+STRICT//COMMERCIAL</code></li>
+</ul>
+<p><code>TLP:WHITE</code> remains accepted alongside <code>TLP:CLEAR</code> for compatibility with
+existing rules.</p>
+<h3 id="optional-fields-with-implemented-validation">Optional fields with implemented validation<a class="headerlink" href="#optional-fields-with-implemented-validation" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Field</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Accepted value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>date</code></td>
-<td style="text-align: left;">string (<code>YYYY-MM-DD</code>)</td>
-<td style="text-align: left;">Creation date</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>score</code></td>
-<td style="text-align: left;">integer (0–100)</td>
-<td style="text-align: left;">Confidence percentage</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>minimum_yara</code></td>
-<td style="text-align: left;">string (<code>x.y</code>)</td>
-<td style="text-align: left;">Minimum YARA version required</td>
+<td style="text-align: left;"><code>YYYY-MM-DD</code> text</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>malware_type</code></td>
-<td style="text-align: left;">uppercase string</td>
-<td style="text-align: left;">Malware capability (see <a href="#malware-type-values">malware types</a>)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>mitre_att</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">MITRE ATT&amp;CK ID(s): <code>T####</code>, <code>T####.###</code>, <code>TA####</code>, <code>G####</code>, <code>S####</code>; comma- or semicolon-separated list accepted</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>actor</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">Threat actor name</td>
+<td style="text-align: left;">One of the values in <a href="#malware-type-values">Malware type values</a></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>actor_type</code></td>
-<td style="text-align: left;">uppercase string</td>
 <td style="text-align: left;"><code>APT</code>, <code>CRIMEWARE</code>, or <code>FIN</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>technique</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">CCCS technique tag (freeform; distinct from <code>mitre_att</code>)</td>
-</tr>
-<tr>
 <td style="text-align: left;"><code>hash</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">Sample hash: 32-char (MD5), 40-char (SHA-1), or 64-char (SHA-256) hex</td>
+<td style="text-align: left;">32-, 40-, or 64-character hexadecimal value</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>report</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">Linked report URL or reference</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>reference</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">External reference (URL, report, individual)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>vol_script</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">Reverse-engineering team metadata</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>al_*</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">Assembly Line internal metadata</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>credit</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">Author credit note</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>original_*</code></td>
-<td style="text-align: left;">string</td>
-<td style="text-align: left;">Preserved metadata from rule conversions</td>
+<td style="text-align: left;"><code>mitre_att</code></td>
+<td style="text-align: left;">One <code>TA####</code>, <code>T####</code>, <code>T####.###</code>, <code>M####</code>, <code>G####</code>, or <code>S####</code> identifier</td>
 </tr>
 </tbody>
 </table>
-<h3 id="validate_metadatarule_meta-tier-validationresult"><code>validate_metadata(rule_meta, tier)</code> → <code>ValidationResult</code><a class="headerlink" href="#validate_metadatarule_meta-tier-validationresult" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.cccs_metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_metadata</span><span class="p">,</span> <span class="n">ValidationResult</span>
-
-<span class="n">result</span><span class="p">:</span> <span class="n">ValidationResult</span> <span class="o">=</span> <span class="n">validate_metadata</span><span class="p">(</span><span class="n">meta_dict</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
-<span class="c1"># result.accepted  — True unless strict tier produced errors</span>
-<span class="c1"># result.warnings  — list[str]</span>
-<span class="c1"># result.errors    — list[str]</span>
-</code></pre></div>
+<p>An invalid optional value produces a warning in both <code>warn</code> and <code>strict</code> mode;
+it does not make strict validation fail. The entity converter separately splits
+comma- and semicolon-delimited <code>mitre_att</code> text, but the metadata validator
+accepts only one identifier per value.</p>
+<h3 id="declared-fields-without-implemented-validation">Declared fields without implemented validation<a class="headerlink" href="#declared-fields-without-implemented-validation" title="Permanent link">&para;</a></h3>
+<p>The vendored schema declares validators for these optional fields, but
+ZettelForge 2.8.0 accepts their values without applying those validators:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Format declared by the vendored schema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>score</code></td>
+<td style="text-align: left;">Integer percentage</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>minimum_yara</code></td>
+<td style="text-align: left;"><code>x.x</code> version</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>actor</code></td>
+<td style="text-align: left;">Actor name</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>mitre_group</code></td>
+<td style="text-align: left;">ATT&amp;CK group alias</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>report</code></td>
+<td style="text-align: left;">Linked report</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>reference</code></td>
+<td style="text-align: left;">Free-form external reference</td>
+</tr>
+<tr>
+<td style="text-align: left;">category child metadata</td>
+<td style="text-align: left;">Category-specific uppercase value</td>
+</tr>
+</tbody>
+</table>
+<p>The schema also declares unvalidated fields such as <code>tags</code>, <code>vol_script</code>,
+<code>al_*</code>, <code>credit</code>, and <code>original_*</code>. Unknown metadata keys pass through without a
+warning.</p>
 <h3 id="malware-type-values">Malware type values<a class="headerlink" href="#malware-type-values" title="Permanent link">&para;</a></h3>
-<p>Valid values for <code>malware_type</code> (validated when present):</p>
-<p><code>ADWARE</code>, <code>APT</code>, <code>BACKDOOR</code>, <code>BANKER</code>, <code>BOOTKIT</code>, <code>BOT</code>, <code>BROWSER-HIJACKER</code>, <code>BRUTEFORCER</code>, <code>CLICKFRAUD</code>, <code>CRYPTOMINER</code>, <code>DDOS</code>, <code>DOWNLOADER</code>, <code>DROPPER</code>, <code>EXPLOITKIT</code>, <code>FAKEAV</code>, <code>HACKTOOL</code>, <code>INFOSTEALER</code>, <code>KEYLOGGER</code>, <code>LOADER</code>, <code>OBFUSCATOR</code>, <code>POS</code>, <code>PROXY</code>, <code>RAT</code>, <code>RANSOMWARE</code>, <code>REVERSE-PROXY</code>, <code>ROOTKIT</code>, <code>SCANNER</code>, <code>SCAREWARE</code>, <code>SPAMMER</code>, <code>TROJAN</code>, <code>VIRUS</code>, <code>WIPER</code>, <code>WEBSHELL</code>, <code>WORM</code></p>
-<hr />
-<h2 id="yararule-dataclass"><code>YaraRule</code> dataclass<a class="headerlink" href="#yararule-dataclass" title="Permanent link">&para;</a></h2>
-<p><code>YaraRule</code> extends <code>DetectionRule</code> with YARA-specific fields.</p>
-<h3 id="detectionrule-base-fields-inherited"><code>DetectionRule</code> base fields (inherited)<a class="headerlink" href="#detectionrule-base-fields-inherited" title="Permanent link">&para;</a></h3>
+<p>The implemented <code>malware_type</code> validator accepts:</p>
+<p><code>ADWARE</code>, <code>APT</code>, <code>BACKDOOR</code>, <code>BANKER</code>, <code>BOOTKIT</code>, <code>BOT</code>, <code>BROWSER-HIJACKER</code>,
+<code>BRUTEFORCER</code>, <code>CLICKFRAUD</code>, <code>CRYPTOMINER</code>, <code>DDOS</code>, <code>DOWNLOADER</code>, <code>DROPPER</code>,
+<code>EXPLOITKIT</code>, <code>FAKEAV</code>, <code>HACKTOOL</code>, <code>INFOSTEALER</code>, <code>KEYLOGGER</code>, <code>LOADER</code>,
+<code>OBFUSCATOR</code>, <code>POS</code>, <code>PROXY</code>, <code>RAT</code>, <code>RANSOMWARE</code>, <code>REVERSE-PROXY</code>, <code>ROOTKIT</code>,
+<code>SCANNER</code>, <code>SCAREWARE</code>, <code>SPAMMER</code>, <code>TROJAN</code>, <code>VIRUS</code>, <code>WIPER</code>, <code>WEBSHELL</code>, and
+<code>WORM</code>.</p>
+<h2 id="parser-api">Parser API<a class="headerlink" href="#parser-api" title="Permanent link">&para;</a></h2>
+<h3 id="parse_yara"><code>parse_yara</code><a class="headerlink" href="#parse_yara" title="Permanent link">&para;</a></h3>
+<p>Signature: <code>parse_yara(text: str) -&gt; list[dict[str, Any]]</code></p>
+<p><code>parse_yara</code> parses source text into one dictionary per rule. It protects a
+module-level <code>plyara.Plyara</code> instance with <code>_PARSER_LOCK</code>, clears the parser
+before and after every call, flattens Plyara's metadata list into <code>meta</code>, and
+carves <code>raw_rule</code> from the source line range.</p>
+<p>The normalizer always adds these keys:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Key</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>meta</code></td>
+<td style="text-align: left;"><code>dict</code></td>
+<td style="text-align: left;">Flattened metadata; the last duplicate key wins</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>tags</code></td>
+<td style="text-align: left;"><code>list[str]</code></td>
+<td style="text-align: left;">Inline tags, or an empty list</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>raw_rule</code></td>
+<td style="text-align: left;"><code>str</code></td>
+<td style="text-align: left;">Source text between Plyara's start and stop lines</td>
+</tr>
+</tbody>
+</table>
+<p>Plyara supplies the remaining rule-dependent keys, including <code>rule_name</code>,
+<code>metadata</code>, <code>strings</code>, <code>condition_terms</code>, <code>raw_condition</code>, <code>raw_strings</code>,
+<code>raw_meta</code>, <code>start_line</code>, <code>stop_line</code>, and <code>scopes</code>. ZettelForge also copies
+parser-level <code>imports</code> into a rule when Plyara omits them from that rule.</p>
+<p>Plyara syntax failures surface as <code>ValueError</code> with a <code>plyara parse error</code>
+message.</p>
+<h3 id="parse_file"><code>parse_file</code><a class="headerlink" href="#parse_file" title="Permanent link">&para;</a></h3>
+<p>Signature: <code>parse_file(path: str | Path) -&gt; list[dict[str, Any]]</code></p>
+<p><code>parse_file</code> stats the path, rejects files larger than
+<code>MAX_RULE_FILE_BYTES = 1_048_576</code>, reads UTF-8 text, and delegates to
+<code>parse_yara</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Failure</th>
+<th style="text-align: left;">Exception</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Path cannot be statted</td>
+<td style="text-align: left;"><code>YaraParseError</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">File exceeds 1,048,576 bytes</td>
+<td style="text-align: left;"><code>YaraParseError</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Plyara rejects the text</td>
+<td style="text-align: left;"><code>ValueError</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">UTF-8 read fails after a successful stat</td>
+<td style="text-align: left;">The underlying read or decode exception</td>
+</tr>
+</tbody>
+</table>
+<p><code>YaraParseError</code> extends <code>ValueError</code>.</p>
+<h2 id="entity-model">Entity model<a class="headerlink" href="#entity-model" title="Permanent link">&para;</a></h2>
+<h3 id="detectionrule"><code>DetectionRule</code><a class="headerlink" href="#detectionrule" title="Permanent link">&para;</a></h3>
+<p><code>YaraRule</code> extends <code>zettelforge.detection.base.DetectionRule</code>.</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Field</th>
 <th style="text-align: left;">Type</th>
-<th style="text-align: left;">Description</th>
+<th style="text-align: left;">YARA mapping</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>rule_id</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">Primary identifier. CCCS <code>id</code> when present; otherwise <code>yara_&lt;content_hash[:16]&gt;</code></td>
+<td style="text-align: left;">CCCS <code>id</code>, or <code>yara_</code> plus the first 16 content-hash characters</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>title</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">Rule name (<code>rule_name</code> from parser)</td>
+<td style="text-align: left;">Parsed rule name</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>source_format</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">Always <code>"yara"</code></td>
+<td style="text-align: left;"><code>yara</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>content_sha256</code></td>
 <td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">SHA-256 of the raw rule text (when available) or of <code>rule_name + strings + condition</code></td>
+<td style="text-align: left;">SHA-256 of <code>raw_rule</code>, or a stable fallback projection</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>description</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">From CCCS <code>description</code> meta</td>
+<td style="text-align: left;">CCCS <code>description</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>author</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">From CCCS <code>author</code> meta</td>
+<td style="text-align: left;">CCCS <code>author</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>date</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">From CCCS <code>date</code> meta (<code>YYYY-MM-DD</code>)</td>
+<td style="text-align: left;">CCCS <code>date</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>modified</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">From CCCS <code>modified</code> meta (<code>YYYY-MM-DD</code>)</td>
+<td style="text-align: left;">CCCS <code>modified</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>references</code></td>
 <td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">Populated from <code>meta["report"]</code> when present</td>
+<td style="text-align: left;">One CCCS <code>report</code> value when present; <code>reference</code> is not mapped</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>tags</code></td>
 <td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">Inline YARA tags (grammar-level, e.g. <code>rule Foo : APT MAL</code>)</td>
+<td style="text-align: left;">Raw inline YARA tags</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>level</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">Not populated by YARA ingest (Sigma concept)</td>
+<td style="text-align: left;">Remains <code>None</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>status</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">Lowercased CCCS <code>status</code> value</td>
+<td style="text-align: left;">Lowercase CCCS <code>status</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>tlp</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">From CCCS <code>sharing</code> meta</td>
+<td style="text-align: left;">CCCS <code>sharing</code> value</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>license</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">Not populated by YARA ingest</td>
+<td style="text-align: left;">Remains <code>None</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>source_repo</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">Not populated by YARA ingest</td>
+<td style="text-align: left;">Remains <code>None</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>source_path</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">Not populated by YARA ingest</td>
+<td style="text-align: left;">Remains <code>None</code>; directory ingest writes the path into the note body</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>extra</code></td>
 <td style="text-align: left;"><code>dict[str, Any]</code></td>
-<td style="text-align: left;">See <a href="#extra-keys">extra keys</a></td>
+<td style="text-align: left;">Validation and parser details described below</td>
 </tr>
 </tbody>
 </table>
-<h3 id="yararule-specific-fields"><code>YaraRule</code>-specific fields<a class="headerlink" href="#yararule-specific-fields" title="Permanent link">&para;</a></h3>
+<h3 id="yararule"><code>YaraRule</code><a class="headerlink" href="#yararule" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Field</th>
 <th style="text-align: left;">Type</th>
-<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Mapping</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>rule_name</code></td>
-<td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">Raw YARA rule name (same as <code>title</code>)</td>
-</tr>
-<tr>
 <td style="text-align: left;"><code>cccs_id</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">CCCS <code>id</code> meta value</td>
+<td style="text-align: left;">CCCS <code>id</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>fingerprint</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">CCCS <code>fingerprint</code> meta (SHA-256 over strings + condition)</td>
+<td style="text-align: left;">CCCS <code>fingerprint</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>category</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">CCCS category: <code>INFO</code>, <code>EXPLOIT</code>, <code>TECHNIQUE</code>, <code>TOOL</code>, or <code>MALWARE</code></td>
+<td style="text-align: left;">CCCS <code>category</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>technique_tag</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">CCCS <code>technique</code> meta value (freeform; distinct from MITRE IDs)</td>
+<td style="text-align: left;">CCCS <code>technique</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>cccs_version</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">CCCS <code>version</code> meta value, coerced to string</td>
+<td style="text-align: left;">String form of CCCS <code>version</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>hash_of_sample</code></td>
 <td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">CCCS <code>hash</code> values (one or more sample hashes)</td>
+<td style="text-align: left;">One or more CCCS <code>hash</code> values</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>rule_name</code></td>
+<td style="text-align: left;"><code>str \| None</code></td>
+<td style="text-align: left;">Parsed rule name</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>is_private</code></td>
 <td style="text-align: left;"><code>bool</code></td>
-<td style="text-align: left;"><code>True</code> when the rule has the <code>private</code> modifier</td>
+<td style="text-align: left;">Remains <code>False</code> in 2.8.0 even when Plyara reports a private scope</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>is_global</code></td>
 <td style="text-align: left;"><code>bool</code></td>
-<td style="text-align: left;"><code>True</code> when the rule has the <code>global</code> modifier</td>
+<td style="text-align: left;">Remains <code>False</code> in 2.8.0 even when Plyara reports a global scope</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>imports</code></td>
 <td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">YARA <code>import</code> module names (e.g. <code>"pe"</code>, <code>"hash"</code>, <code>"dotnet"</code>)</td>
+<td style="text-align: left;">Parsed YARA module imports</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>condition</code></td>
 <td style="text-align: left;"><code>str \| None</code></td>
-<td style="text-align: left;">Raw condition expression, stripped of leading/trailing whitespace</td>
+<td style="text-align: left;">Trimmed raw condition</td>
 </tr>
 </tbody>
 </table>
-<h3 id="extra-keys">Extra keys<a class="headerlink" href="#extra-keys" title="Permanent link">&para;</a></h3>
+<p><code>extra</code> always contains <code>cccs_compliant</code>, <code>cccs_warnings</code>, <code>cccs_errors</code>,
+<code>condition_terms</code>, and <code>source_line_range</code>. It also contains <code>source</code> and
+<code>malware_type</code> when present. If metadata supplies <code>actor_type</code> without an
+<code>actor</code> name, <code>extra</code> contains <code>actor_type</code> and the converter emits no actor
+relation.</p>
+<h2 id="entity-conversion">Entity conversion<a class="headerlink" href="#entity-conversion" title="Permanent link">&para;</a></h2>
+<p>Signature:
+<code>rule_to_entities(rule: dict[str, Any], *, tier: str = 'warn') -&gt; tuple[YaraRule, list[dict[str, Any]]]</code></p>
+<p>The function validates <code>rule['meta']</code> at the requested tier and returns a
+<code>YaraRule</code> plus relation dictionaries. It returns the entity even when strict
+validation fails; the ingest layer decides whether to drop it.</p>
+<p><code>zettelforge.yara.entities.from_rule_dict(rule)</code> is a compatibility wrapper that
+calls <code>rule_to_entities</code> at the default <code>warn</code> tier. It is not a package-level
+export.</p>
+<p>Each relation dictionary contains:</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Key</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>cccs_compliant</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">Tier the rule was tagged with: <code>"strict"</code>, <code>"warn"</code>, or <code>"non_cccs"</code></td>
+<td style="text-align: left;"><code>from_type</code></td>
+<td style="text-align: left;"><code>YaraRule</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>cccs_warnings</code></td>
-<td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">Warnings from metadata validation</td>
+<td style="text-align: left;"><code>from_value</code></td>
+<td style="text-align: left;">Source rule identifier</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>cccs_errors</code></td>
-<td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">Errors from metadata validation</td>
+<td style="text-align: left;"><code>rel</code></td>
+<td style="text-align: left;">ZettelForge relation name</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>condition_terms</code></td>
-<td style="text-align: left;"><code>list[str]</code></td>
-<td style="text-align: left;">Individual condition tokens from plyara</td>
+<td style="text-align: left;"><code>to_type</code></td>
+<td style="text-align: left;">Target entity type</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>source_line_range</code></td>
-<td style="text-align: left;"><code>[int, int]</code></td>
-<td style="text-align: left;"><code>[start_line, stop_line]</code> from plyara</td>
+<td style="text-align: left;"><code>to_value</code></td>
+<td style="text-align: left;">Target entity identifier</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>source</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">CCCS <code>source</code> org (when present)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>malware_type</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">CCCS <code>malware_type</code> (when present)</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>actor_type</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;">CCCS <code>actor_type</code> (present when <code>actor_type</code> is given but no <code>actor</code> name)</td>
+<td style="text-align: left;"><code>properties</code></td>
+<td style="text-align: left;">Relation metadata</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="rule_to_entitiesrule-tier-yararule-listdict"><code>rule_to_entities(rule, *, tier)</code> → <code>(YaraRule, list[dict])</code><a class="headerlink" href="#rule_to_entitiesrule-tier-yararule-listdict" title="Permanent link">&para;</a></h2>
-<p>Convert a parsed YARA rule dict into a <code>YaraRule</code> entity and a list of KG edges.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.entities</span><span class="w"> </span><span class="kn">import</span> <span class="n">rule_to_entities</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_yara</span>
-
-<span class="n">rules</span> <span class="o">=</span> <span class="n">parse_yara</span><span class="p">(</span><span class="n">yara_text</span><span class="p">)</span>
-<span class="n">entity</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">rule_to_entities</span><span class="p">(</span><span class="n">rules</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="kg-edge-shape">KG edge shape<a class="headerlink" href="#kg-edge-shape" title="Permanent link">&para;</a></h3>
-<p>Every relation dict uses the canonical edge shape expected by <code>SQLiteMemoryStore.add_kg_edge</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="s2">&quot;from_type&quot;</span><span class="p">:</span> <span class="s2">&quot;YaraRule&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;from_value&quot;</span><span class="p">:</span> <span class="n">entity</span><span class="o">.</span><span class="n">rule_id</span><span class="p">,</span>   <span class="c1"># str</span>
-    <span class="s2">&quot;rel&quot;</span><span class="p">:</span>        <span class="nb">str</span><span class="p">,</span>              <span class="c1"># see relation types below</span>
-    <span class="s2">&quot;to_type&quot;</span><span class="p">:</span>    <span class="nb">str</span><span class="p">,</span>              <span class="c1"># entity type of the target</span>
-    <span class="s2">&quot;to_value&quot;</span><span class="p">:</span>   <span class="nb">str</span><span class="p">,</span>              <span class="c1"># primary identifier of the target</span>
-    <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>            <span class="c1"># additional relation properties</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="relation-types">Relation types<a class="headerlink" href="#relation-types" title="Permanent link">&para;</a></h3>
+<h3 id="emitted-relations">Emitted relations<a class="headerlink" href="#emitted-relations" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Relation</th>
-<th style="text-align: left;"><code>to_type</code></th>
-<th style="text-align: left;">Trigger</th>
-<th style="text-align: left;"><code>to_value</code></th>
+<th style="text-align: left;">Target type</th>
+<th style="text-align: left;">Emitted when</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>detects</code></td>
 <td style="text-align: left;"><code>AttackPattern</code></td>
-<td style="text-align: left;">CCCS <code>mitre_att</code> meta (one edge per technique ID)</td>
-<td style="text-align: left;">Normalized MITRE ID, e.g. <code>T1218</code>, <code>T1218.001</code></td>
+<td style="text-align: left;">CCCS <code>mitre_att</code> contains a token, including <code>TA</code>, <code>T</code>, <code>M</code>, <code>G</code>, or <code>S</code> identifiers</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>detects</code></td>
 <td style="text-align: left;"><code>AttackPattern</code></td>
-<td style="text-align: left;">Inline tag matches <code>T####</code> or <code>attack.T####</code></td>
-<td style="text-align: left;">MITRE technique ID</td>
+<td style="text-align: left;">An inline tag resolves as a technique</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>attributed_to</code></td>
 <td style="text-align: left;"><code>ThreatActor</code></td>
-<td style="text-align: left;">CCCS <code>actor</code> meta</td>
-<td style="text-align: left;">Actor name string</td>
+<td style="text-align: left;">CCCS <code>actor</code> contains a name</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>tagged_with</code></td>
 <td style="text-align: left;"><code>YaraTag</code></td>
-<td style="text-align: left;">CCCS <code>technique</code> meta</td>
-<td style="text-align: left;">Technique name (namespace <code>"technique"</code>)</td>
+<td style="text-align: left;">CCCS <code>technique</code> contains a value</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>tagged_with</code></td>
 <td style="text-align: left;"><code>YaraTag</code></td>
-<td style="text-align: left;">Inline tag (category token or freeform)</td>
-<td style="text-align: left;">Tag name</td>
+<td style="text-align: left;">An inline tag resolves as a category or free-form tag</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>references_cve</code></td>
 <td style="text-align: left;"><code>Vulnerability</code></td>
-<td style="text-align: left;">Inline tag matches <code>CVE_YYYY_NNNN</code> or <code>CVE-YYYY-NNNN</code></td>
-<td style="text-align: left;">Normalized <code>CVE-YYYY-NNNN</code></td>
+<td style="text-align: left;">An inline tag resolves as a CVE</td>
 </tr>
 </tbody>
 </table>
-<h3 id="tag-resolution-resolve_yara_tagtag-entity_type-entity_properties">Tag resolution — <code>resolve_yara_tag(tag)</code> → <code>(entity_type, entity_properties)</code><a class="headerlink" href="#tag-resolution-resolve_yara_tagtag-entity_type-entity_properties" title="Permanent link">&para;</a></h3>
-<p>Inline YARA grammar tags (the colon-separated tokens after the rule name) are resolved before they become KG edges:</p>
+<p>The CCCS <code>mitre_att</code> mapper uppercases and splits list, comma-delimited, and
+semicolon-delimited values. It maps every token to <code>AttackPattern</code>; it does not
+distinguish group, software, or tactic identifiers.</p>
+<h3 id="tag-resolution">Tag resolution<a class="headerlink" href="#tag-resolution" title="Permanent link">&para;</a></h3>
+<p>Signature:
+<code>resolve_yara_tag(tag: str) -&gt; tuple[str, dict[str, str]]</code></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Tag pattern</th>
-<th style="text-align: left;">Resolved type</th>
-<th style="text-align: left;">Example</th>
+<th style="text-align: left;">Input pattern</th>
+<th style="text-align: left;">Returned entity and properties</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>T####</code> or <code>attack.T####</code> (case-insensitive)</td>
-<td style="text-align: left;"><code>AttackPattern</code></td>
-<td style="text-align: left;"><code>T1218</code> → <code>{"technique_id": "T1218"}</code></td>
+<td style="text-align: left;"><code>T1218</code>, <code>attack.T1218</code>, or <code>attack_T1218</code></td>
+<td style="text-align: left;"><code>AttackPattern</code> with <code>technique_id='T1218'</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>CVE_YYYY_NNNN</code> or <code>CVE-YYYY-NNNN</code> (case-insensitive)</td>
-<td style="text-align: left;"><code>Vulnerability</code></td>
-<td style="text-align: left;"><code>CVE_2021_44228</code> → <code>{"cve_id": "CVE-2021-44228"}</code></td>
+<td style="text-align: left;"><code>attack.T1059.003</code></td>
+<td style="text-align: left;"><code>AttackPattern</code> with <code>technique_id='T1059.003'</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CVE_2021_44228</code> or <code>CVE-2021-44228</code></td>
+<td style="text-align: left;"><code>Vulnerability</code> with canonical <code>cve_id</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Known category token</td>
-<td style="text-align: left;"><code>YaraTag</code></td>
-<td style="text-align: left;"><code>APT</code> → <code>{"namespace": "category", "name": "APT"}</code></td>
+<td style="text-align: left;"><code>YaraTag</code> with namespace <code>category</code> and an uppercase name</td>
 </tr>
 <tr>
-<td style="text-align: left;">Anything else</td>
-<td style="text-align: left;"><code>YaraTag</code></td>
-<td style="text-align: left;"><code>custom_tag</code> → <code>{"namespace": "freeform", "name": "custom_tag"}</code></td>
+<td style="text-align: left;">Any other value</td>
+<td style="text-align: left;"><code>YaraTag</code> with namespace <code>freeform</code> and the trimmed input</td>
 </tr>
 </tbody>
 </table>
-<p>Known category tokens (case-insensitive match): <code>APT</code>, <code>CRIME</code>, <code>CRIMEWARE</code>, <code>EXPL</code>, <code>HKTL</code>, <code>MAL</code>, <code>MALWARE</code>, <code>PUA</code>, <code>RAT</code>, <code>RANSOM</code>, <code>RANSOMWARE</code>, <code>SUSP</code>, <code>VULN</code>, <code>WEBSHELL</code>.</p>
-<hr />
+<p>Known category tokens are <code>APT</code>, <code>CRIME</code>, <code>CRIMEWARE</code>, <code>EXPL</code>, <code>HKTL</code>, <code>MAL</code>,
+<code>MALWARE</code>, <code>PUA</code>, <code>RAT</code>, <code>RANSOM</code>, <code>RANSOMWARE</code>, <code>SUSP</code>, <code>VULN</code>, and <code>WEBSHELL</code>.
+Matching is case-insensitive.</p>
+<p>Each inline tag emits one relation. A technique or CVE tag emits its typed
+relation instead of an additional raw-tag relation.</p>
 <h2 id="ingest-api">Ingest API<a class="headerlink" href="#ingest-api" title="Permanent link">&para;</a></h2>
-<h3 id="ingest_rulerule_source-mm-domain-tier-sync-memorynote-none-listdict"><code>ingest_rule(rule_source, mm, *, domain, tier, sync)</code> → <code>(MemoryNote | None, list[dict])</code><a class="headerlink" href="#ingest_rulerule_source-mm-domain-tier-sync-memorynote-none-listdict" title="Permanent link">&para;</a></h3>
-<p>Ingest a single YARA rule into a <code>MemoryManager</code> instance.</p>
+<h3 id="ingest_rule"><code>ingest_rule</code><a class="headerlink" href="#ingest_rule" title="Permanent link">&para;</a></h3>
+<p>Signature:
+<code>ingest_rule(rule_source, mm=None, *, domain='detection', tier='warn', sync=True) -&gt; tuple[MemoryNote | None, list[dict]]</code></p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">Parameter</th>
-<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Accepted value</th>
 <th style="text-align: left;">Default</th>
-<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>rule_source</code></td>
-<td style="text-align: left;"><code>str \| Path \| dict</code></td>
+<td style="text-align: left;">Dictionary, YARA text, path string, or <code>Path</code></td>
 <td style="text-align: left;">required</td>
-<td style="text-align: left;">Path to a <code>.yar</code> file, raw YARA text, or a pre-parsed plyara dict. When a file contains multiple rules, only the first is ingested.</td>
+<td style="text-align: left;">Normalizes the input and ingests only the first parsed rule</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>mm</code></td>
-<td style="text-align: left;"><code>MemoryManager</code></td>
-<td style="text-align: left;">required</td>
-<td style="text-align: left;">Must not be <code>None</code>; raises <code>ValueError</code> otherwise.</td>
+<td style="text-align: left;"><code>MemoryManager</code>-compatible object</td>
+<td style="text-align: left;"><code>None</code></td>
+<td style="text-align: left;">Raises <code>ValueError</code> when omitted or <code>None</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>domain</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;"><code>"detection"</code></td>
-<td style="text-align: left;">Memory domain for the note.</td>
+<td style="text-align: left;">string</td>
+<td style="text-align: left;"><code>detection</code></td>
+<td style="text-align: left;">Stored note domain</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>tier</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;"><code>"warn"</code></td>
-<td style="text-align: left;">CCCS validation tier.</td>
+<td style="text-align: left;"><code>strict</code>, <code>warn</code>, or <code>non_cccs</code></td>
+<td style="text-align: left;"><code>warn</code></td>
+<td style="text-align: left;">Controls CCCS validation</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>sync</code></td>
-<td style="text-align: left;"><code>bool</code></td>
+<td style="text-align: left;">boolean</td>
 <td style="text-align: left;"><code>True</code></td>
-<td style="text-align: left;">Run MemoryManager enrichment inline.</td>
+<td style="text-align: left;">Controls inline enrichment in <code>MemoryManager.remember</code></td>
 </tr>
 </tbody>
 </table>
-<p>Returns <code>(None, relations)</code> when strict-tier validation rejects the rule. <code>relations</code> is always a list (empty when the rule has no extractable entities).</p>
-<p><strong>Idempotency.</strong> Before calling <code>mm.remember</code>, the ingest path checks for an existing note with <code>source_ref = "yara:{rule_id}:{content_sha256[:12]}"</code>. If found, the rule is skipped and the existing note is returned.</p>
-<h3 id="ingest_rules_dirpath-mm-glob-tier-domain-bulk-flush_timeout-dict"><code>ingest_rules_dir(path, mm, *, glob, tier, domain, bulk, flush_timeout)</code> → <code>dict</code><a class="headerlink" href="#ingest_rules_dirpath-mm-glob-tier-domain-bulk-flush_timeout-dict" title="Permanent link">&para;</a></h3>
-<p>Walk a directory tree and ingest every YARA rule file.</p>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">ingest_rules_dir</span><span class="p">(</span><span class="s2">&quot;rules/&quot;</span><span class="p">,</span> <span class="n">mm</span><span class="o">=</span><span class="n">mm</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">,</span> <span class="n">domain</span><span class="o">=</span><span class="s2">&quot;detection&quot;</span><span class="p">)</span>
-<span class="c1"># result == {&quot;ingested&quot;: int, &quot;skipped&quot;: int, &quot;errors&quot;: list[str]}</span>
-</code></pre></div>
+<p>Strict rejection returns <code>(None, relations)</code>. A new accepted rule becomes a
+memory note with <code>source_type='yara'</code>. The generated source reference is
+<code>yara:&lt;rule_id&gt;:&lt;first-12-content-hash-characters&gt;</code>.</p>
+<p>If the store already contains that source reference, the function returns the
+existing note and newly computed relations without persisting a duplicate.</p>
+<h3 id="ingest_rules_dir"><code>ingest_rules_dir</code><a class="headerlink" href="#ingest_rules_dir" title="Permanent link">&para;</a></h3>
+<p>Signature:
+<code>ingest_rules_dir(path, mm=None, *, glob='**/*.yar', tier='warn', domain='detection', bulk=False, flush_timeout=None) -&gt; dict[str, Any]</code></p>
+<p>The return dictionary has <code>ingested</code>, <code>skipped</code>, and <code>errors</code> fields. A missing
+root returns <code>{'ingested': 0, 'skipped': 0, 'errors': ['path does not exist: ...']}</code>
+instead of raising.</p>
+<p>The default glob checks both <code>.yar</code> and <code>.yara</code> files. A custom glob replaces
+that pair. The function records parse and per-rule failures in <code>errors</code>, counts
+strict rejections and idempotent hits as skipped, and continues the walk.</p>
+<p>When <code>bulk=True</code>, the function calls each rule ingest with <code>sync=False</code> and
+calls <code>mm.flush(timeout=flush_timeout)</code> once after the walk when <code>mm</code> exposes a
+<code>flush</code> method. A false flush result produces a warning log and does not add a
+return error.</p>
+<h3 id="directory-security-controls">Directory security controls<a class="headerlink" href="#directory-security-controls" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Parameter</th>
-<th style="text-align: left;">Type</th>
-<th style="text-align: left;">Default</th>
-<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Control</th>
+<th style="text-align: left;">Behavior</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><code>path</code></td>
-<td style="text-align: left;"><code>str \| Path</code></td>
-<td style="text-align: left;">required</td>
-<td style="text-align: left;">Root directory to walk.</td>
+<td style="text-align: left;">File size</td>
+<td style="text-align: left;"><code>parse_file</code> rejects files larger than 1,048,576 bytes</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>mm</code></td>
-<td style="text-align: left;"><code>MemoryManager</code></td>
-<td style="text-align: left;">required</td>
-<td style="text-align: left;">Must not be <code>None</code>.</td>
+<td style="text-align: left;">Symlinks</td>
+<td style="text-align: left;"><code>ingest_rules_dir</code> skips symlinked files</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>glob</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;"><code>"**/*.yar"</code></td>
-<td style="text-align: left;">Glob pattern for rule files. The default also sweeps for <code>**/*.yara</code>.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>tier</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;"><code>"warn"</code></td>
-<td style="text-align: left;">CCCS validation tier.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>domain</code></td>
-<td style="text-align: left;"><code>str</code></td>
-<td style="text-align: left;"><code>"detection"</code></td>
-<td style="text-align: left;">Memory domain for notes.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>bulk</code></td>
-<td style="text-align: left;"><code>bool</code></td>
-<td style="text-align: left;"><code>False</code></td>
-<td style="text-align: left;">Defer enrichment and flush once after all rules. Pass <code>True</code> for large rule sets.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>flush_timeout</code></td>
-<td style="text-align: left;"><code>float \| None</code></td>
-<td style="text-align: left;"><code>None</code></td>
-<td style="text-align: left;">Timeout in seconds passed to <code>mm.flush()</code> when <code>bulk=True</code>.</td>
+<td style="text-align: left;">Root containment</td>
+<td style="text-align: left;"><code>ingest_rules_dir</code> skips resolved paths outside the requested root</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Security.</strong> Symlinks are never followed. Files whose resolved path escapes the root directory are skipped with a warning log.</p>
-<hr />
+<h3 id="knowledge-graph-edge-persistence">Knowledge-graph edge persistence<a class="headerlink" href="#knowledge-graph-edge-persistence" title="Permanent link">&para;</a></h3>
+<p>Before persistence, ingest adds these properties unless the relation already
+supplies them:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Property</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>edge_type</code></td>
+<td style="text-align: left;"><code>detection</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>source</code></td>
+<td style="text-align: left;"><code>yara_ingest</code></td>
+</tr>
+</tbody>
+</table>
+<p>If one edge write raises an exception, ZettelForge logs
+<code>yara_edge_persist_failed</code> and continues with the next relation.</p>
 <h2 id="cli">CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code>python -m zettelforge.yara.ingest &lt;path&gt; [--tier TIER] [--dry-run] [--domain DOMAIN] [--json]
+<p>The verified dry-run invocation against the v2.8.0 release fixture is:</p>
+<div class="highlight"><pre><span></span><code><span class="go">python3 -m zettelforge.yara.ingest tests/fixtures/yara/technique_loader.yar --dry-run</span>
 </code></pre></div>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Flag</th>
+<th style="text-align: left;">Argument</th>
 <th style="text-align: left;">Default</th>
 <th style="text-align: left;">Description</th>
 </tr>
@@ -3777,7 +3869,7 @@
 <tr>
 <td style="text-align: left;"><code>path</code></td>
 <td style="text-align: left;">required</td>
-<td style="text-align: left;">Path to a <code>.yar</code> file or directory</td>
+<td style="text-align: left;">One <code>.yar</code> file or a directory</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--tier</code></td>
@@ -3787,28 +3879,77 @@
 <tr>
 <td style="text-align: left;"><code>--dry-run</code></td>
 <td style="text-align: left;">off</td>
-<td style="text-align: left;">Parse, validate, and print a summary without writing to memory</td>
+<td style="text-align: left;">Parses, validates, and maps without persistence</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--domain</code></td>
 <td style="text-align: left;"><code>detection</code></td>
-<td style="text-align: left;">Memory domain for ingested notes</td>
+<td style="text-align: left;">Memory domain for persisted notes</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>--json</code></td>
 <td style="text-align: left;">off</td>
-<td style="text-align: left;">Emit machine-readable JSON output</td>
+<td style="text-align: left;">Emits JSON instead of the human-readable summary</td>
 </tr>
 </tbody>
 </table>
-<p>Exit codes: <code>0</code> on success; <code>1</code> on parse errors, strict-tier rejections, or I/O failures.</p>
-<p>Dry-run a directory:</p>
-<div class="highlight"><pre><span></span><code>python -m zettelforge.yara.ingest tests/fixtures/yara/ --dry-run
+<p>The successful command writes this stdout and exits 0:</p>
+<div class="highlight"><pre><span></span><code>[warn] MemoryModule  (technique_loader.yar)  relations=2  mitre=T1218
+    warn: missing required CCCS field: id
+    warn: missing required CCCS field: fingerprint
+    warn: missing required CCCS field: modified
 </code></pre></div>
-<p>Ingest with strict CCCS validation:</p>
-<div class="highlight"><pre><span></span><code>python -m zettelforge.yara.ingest rules/ --tier strict --domain detection
+<p>The <code>ingest</code> module invocation emits a non-fatal <code>runpy</code> warning on stderr
+because <code>zettelforge.yara.__init__</code> imports <code>ingest</code> before Python executes it as
+a module. The command still runs.</p>
+<p>Dry-run mode returns exit 1 for parse failures and strict-tier rejection. Live
+mode returns exit 1 when the result contains errors or the input path is
+missing. In 2.8.0, a strict-tier live rejection increments <code>skipped</code> but leaves
+<code>errors</code> empty, so the command prints <code>ingested=0 skipped=1 errors=0</code> and
+incorrectly exits 0.</p>
+<p>The CLI does not invoke the LLM rule explainer in 2.8.0.</p>
+<h2 id="quick-reference-example">Quick reference example<a class="headerlink" href="#quick-reference-example" title="Permanent link">&para;</a></h2>
+<p>This self-contained example parses a rule and inspects its entity relations
+without writing data:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">zettelforge.yara</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_yara</span><span class="p">,</span> <span class="n">rule_to_entities</span>
+
+<span class="n">yara_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;rule CommandShell : APT T1218 CVE_2021_44228 {</span>
+<span class="s2">    strings:</span>
+<span class="s2">        $cmd = &quot;cmd.exe&quot;</span>
+<span class="s2">    condition:</span>
+<span class="s2">        $cmd</span>
+<span class="s2">}</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">rule_dict</span> <span class="o">=</span> <span class="n">parse_yara</span><span class="p">(</span><span class="n">yara_text</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">entity</span><span class="p">,</span> <span class="n">relations</span> <span class="o">=</span> <span class="n">rule_to_entities</span><span class="p">(</span><span class="n">rule_dict</span><span class="p">,</span> <span class="n">tier</span><span class="o">=</span><span class="s2">&quot;non_cccs&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">entity</span><span class="o">.</span><span class="n">rule_id</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">rule_name</span><span class="p">,</span> <span class="n">entity</span><span class="o">.</span><span class="n">extra</span><span class="p">[</span><span class="s2">&quot;cccs_compliant&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">([(</span><span class="n">edge</span><span class="p">[</span><span class="s2">&quot;rel&quot;</span><span class="p">],</span> <span class="n">edge</span><span class="p">[</span><span class="s2">&quot;to_value&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">relations</span><span class="p">])</span>
 </code></pre></div>
-<p>The LLM rule explainer is not invoked by this CLI command in v1. Explainer integration with the async enrichment worker is a v1.1 task.</p>
+<p>Output:</p>
+<div class="highlight"><pre><span></span><code>yara_bb08e39bbce9a1f8 CommandShell non_cccs
+[(&#39;tagged_with&#39;, &#39;APT&#39;), (&#39;detects&#39;, &#39;T1218&#39;), (&#39;references_cve&#39;, &#39;CVE-2021-44228&#39;)]
+</code></pre></div>
+<h2 id="current-limitations">Current limitations<a class="headerlink" href="#current-limitations" title="Permanent link">&para;</a></h2>
+<p>These ZettelForge 2.8.0 behaviors are in progress:</p>
+<ul>
+<li>Plyara records private and global modifiers in <code>scopes</code>, but entity conversion
+  leaves <code>YaraRule.is_private</code> and <code>YaraRule.is_global</code> false.</li>
+<li>The optional CCCS validators listed under
+  <a href="#declared-fields-without-implemented-validation">Declared fields without implemented validation</a>
+  do not run.</li>
+<li>The metadata validator accepts one <code>mitre_att</code> identifier, while entity
+  conversion also splits compound values. The converter maps every resulting
+  identifier type to <code>AttackPattern</code>.</li>
+<li><code>YaraRule.references</code> maps <code>report</code> but ignores <code>reference</code>.</li>
+<li>Strict-tier rejection in live CLI mode exits 0 when no separate ingest error
+  occurs.</li>
+<li>CLI dry-run directory traversal follows matching symlinked rule files; the
+  <code>ingest_rules_dir</code> persistence path skips them.</li>
+<li><code>YaraValidationError</code> is exported but no YARA 2.8.0 public function raises it.</li>
+<li>The CLI parses, validates, maps, and persists rules, but it does not run the
+  LLM rule explainer.</li>
+</ul>
 
 
 
