@@ -349,7 +349,13 @@ class WebConfig:
     """
 
     enabled: bool = True
-    host: str = "0.0.0.0"
+    # Not currently read to open a socket — the actual bind address comes
+    # from web/app.py's `--host` CLI arg (default 127.0.0.1, gated behind
+    # an API key for wider binds) or an explicit `--host` in deployment
+    # tooling (e.g. the Docker image's 0.0.0.0). Kept here for the config
+    # editor UI; default matches the safe CLI default rather than
+    # advertising an all-interfaces bind.
+    host: str = "127.0.0.1"
     port: int = 8088
     ui_dir: str = ""  # defaults to web/ui/ relative to project root at runtime
 
