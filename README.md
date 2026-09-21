@@ -10,7 +10,7 @@ It extracts CVEs, threat actors, IOCs, and ATT&CK techniques from analyst notes 
 
 [![PyPI](https://img.shields.io/pypi/v/zettelforge)](https://pypi.org/project/zettelforge/)
 [![Downloads/month](https://static.pepy.tech/personalized-badge/zettelforge?period=month&units=international_system&left_color=grey&right_color=blue&left_text=downloads%2Fmonth)](https://pepy.tech/projects/zettelforge)
-[![Star History](https://api.star-history.com/svg?repos=rolandpg/zettelforge&type=Date)](https://star-history.com/#rolandpg/zettelforge&Date)
+[![Star History](https://api.star-history.com/svg?repos=ThreatRecall/zettelforge&type=Date)](https://star-history.com/#ThreatRecall/zettelforge&Date)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/rolandpg/zettelforge/actions/workflows/ci.yml/badge.svg)](https://github.com/rolandpg/zettelforge/actions)
