@@ -23,7 +23,7 @@ description cell). Drop this row in, alphabetically, matching the surrounding
 ```html
 <tr>
     <td>
-        <a href="https://github.com/rolandpg/zettelforge" target="_blank">ZettelForge</a>
+        <a href="https://github.com/ThreatRecall/zettelforge" target="_blank">ZettelForge</a>
     </td>
     <td>
         ZettelForge is a threat-intelligence knowledge base that extracts CVEs,
@@ -42,7 +42,7 @@ Pipe-table format with columns
 Add, alphabetically:
 
 ```
-| ZettelForge | Threat-intelligence memory and knowledge graph: extracts CVEs, actors, IOCs and ATT&CK techniques from analyst notes, resolves actor aliases, builds a STIX 2.1 graph with blended vector + graph retrieval, served over web UI, REST and MCP | https://docs.threatrecall.ai/ | Managed, Open source | https://github.com/rolandpg/zettelforge | Memory Tool | Graph, Vector |
+| ZettelForge | Threat-intelligence memory and knowledge graph: extracts CVEs, actors, IOCs and ATT&CK techniques from analyst notes, resolves actor aliases, builds a STIX 2.1 graph with blended vector + graph retrieval, served over web UI, REST and MCP | https://docs.threatrecall.ai/ | Managed, Open source | https://github.com/ThreatRecall/zettelforge | Memory Tool | Graph, Vector |
 ```
 
 (ZettelForge is already named as a peer of Mem0/Graphiti/Cognee in its own
