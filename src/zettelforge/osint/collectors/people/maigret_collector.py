@@ -5,22 +5,16 @@ Enumerates the social platforms a username (``Alias``) is present on and
 emits a ``SocialAccount`` per hit, linked to the input alias via the
 ``has_account`` edge.
 
-Backend: ``maigret`` (soxoj, MIT) with ``sherlock`` (MIT) as an alternate.
-Both are lazy-imported behind ``_search_username`` so the package loads
-without them; a missing dependency logs a warning and returns ``[]``.
-
-This replaces the GPL ``holehe`` path that AGE-118 excluded (see
-``collectors/people/holehe_collector.py``): account enumeration is done on
-a permissive basis only.
-
-No retries: maigret already manages per-site timeouts, and AGENTS.OE
-Override 4 forbids silent retry. Any backend failure surfaces as an empty
-result plus a structured warning.
+Temporarily disabled: Maigret 0.6.6 constrains SoupSieve to vulnerable
+versions (CVE-2026-126190). The collector stays registered for API
+compatibility but performs no imports or network work, even if an older
+installation still contains Maigret. It returns no records and emits a
+structured warning. Re-enable only after upstream supports patched dependencies
+and the complete dependency audit passes.
 """
 
 from __future__ import annotations
 
-import logging
 from typing import Any
 
 from zettelforge.log import get_logger
@@ -39,53 +33,9 @@ MAX_ACCOUNTS = 200
 
 
 def _search_username(username: str) -> list[dict[str, Any]]:
-    """Run a username presence search. Returns rows ``{platform, url}``.
-
-    Lazy-imports ``maigret`` (MIT). Returns ``[]`` when maigret is not
-    installed or the search fails — fail-closed, no silent retry. maigret's
-    public search API is async, so it is driven on a private event loop.
-
-    The live maigret wiring is best-effort behind a single boundary; tests
-    mock this function and exercise the pure mapping in ``_rows_to_tuples``.
-    """
-    try:
-        import asyncio
-
-        import maigret
-        from maigret.sites import MaigretDatabase
-    except ImportError:
-        _logger.warning("maigret_collector_missing_dep", username=username)
-        return []
-
-    try:
-        settings = maigret.settings.Settings()
-        load = getattr(settings, "load", None)
-        if callable(load):
-            load()
-        db = MaigretDatabase().load_from_path(settings.sites_db_path)
-        sites = db.ranked_sites_dict(top=MAX_ACCOUNTS)
-        backend_logger = logging.getLogger("zettelforge.osint.collectors.maigret.backend")
-        results = asyncio.run(
-            maigret.search(
-                username=username,
-                site_dict=sites,
-                timeout=30,
-                logger=backend_logger,
-                no_progressbar=True,
-            )
-        )
-    except Exception as exc:  # backend boundary: any maigret failure fails closed
-        _logger.warning("maigret_collector_failed", error=str(exc))
-        return []
-
-    rows: list[dict[str, Any]] = []
-    for site_name, data in (results or {}).items():
-        status = data.get("status")
-        # maigret marks a confirmed hit with a CLAIMED query-result status.
-        claimed = getattr(status, "status", None)
-        if claimed is not None and str(claimed).upper().endswith("CLAIMED"):
-            rows.append({"platform": site_name, "url": data.get("url_user", "")})
-    return rows
+    """Fail closed until Maigret supports patched SoupSieve releases."""
+    _logger.warning("maigret_collector_disabled", advisory="CVE-2026-126190")
+    return []
 
 
 def _rows_to_tuples(username: str, rows: list[dict[str, Any]]) -> list[CollectorTuple]:
@@ -134,7 +84,7 @@ def collect(input_entity_type: str, input_value: str) -> list[CollectorTuple]:
 
 _METADATA = TransformMetadata(
     name="maigret_collector",
-    description="maigret/sherlock: enumerate a username's social accounts.",
+    description="Disabled: Maigret username search awaits a fix for CVE-2026-126190.",
     input_types=("Alias",),
     output_types=(("SocialAccount", "has_account"),),
     api_dependencies=("maigret",),

@@ -9,7 +9,7 @@ bodies, raw note content, or exception text.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Literal
 
 EnrichmentJobState = Literal[
@@ -54,7 +54,7 @@ class EnrichmentJobRecord:
             note_id=note_id,
             job_type=job_type,
             state="queued",
-            created_at=datetime.now(timezone.utc).isoformat(),
+            created_at=datetime.now(UTC).isoformat(),
             domain=domain,
             content_len=content_len,
         )

@@ -15,7 +15,7 @@ Event classes:
     3005 - Account Change (stub for multi-tenant)
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any
@@ -100,7 +100,7 @@ def _base_fields(
         "activity_name": activity_name,
         "status_id": status_id,
         "status": "Success" if status_id == STATUS_SUCCESS else "Failure",
-        "time": datetime.now(timezone.utc).isoformat(),
+        "time": datetime.now(UTC).isoformat(),
         # GOV-012 §"Required OCSF Base Fields" lists timezone_offset alongside
         # `time`. We always emit UTC, so this is constant; surfacing it lets
         # OCSF-strict downstream validators (Sentinel custom-log tables) accept

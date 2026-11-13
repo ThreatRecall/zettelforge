@@ -24,6 +24,13 @@ This project implements:
 - Dependabot for weekly dependency updates
 - Snyk SAST scanning on every push/PR
 
+## Current dependency restrictions
+
+Version 2.9.0 requires Python 3.11 or newer to resolve patched dependencies.
+Maigret username discovery is disabled pending an upstream release compatible
+with patched SoupSieve (CVE-2026-126190). Installing Maigret separately does not
+reactivate the collector. See [upgrade notes](docs/security-update-2.9.0.md).
+
 ## Known Security Architecture
 
 See [THREAT_MODEL.md](docs/THREAT_MODEL.md) for the complete STRIDE threat model.

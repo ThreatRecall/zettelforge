@@ -15,7 +15,7 @@ import math
 import os
 from collections import Counter
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -254,7 +254,7 @@ class MemoryAnomalyGate:
         path.parent.mkdir(parents=True, exist_ok=True)
 
         record: dict[str, Any] = {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "request_id": request_id,
             "domain": domain,
             "source_type": source_type,

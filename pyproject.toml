@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "zettelforge"
-version = "2.8.0"
+version = "2.9.0"
 description = "ZettelForge: Agentic Memory System with vector search, knowledge graph, and synthesis"
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [
     {name = "Patrick Roland", email = "patrick@groland.com"}
 ]
@@ -18,7 +18,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -30,12 +29,15 @@ classifiers = [
 # Core dependencies (Community edition — MIT licensed)
 dependencies = [
     "lancedb>=0.5.0",
-    "pyarrow>=14.0.0",
-    "pydantic>=2.0.0",
+    "pyarrow>=23.0.1",
+    "pydantic>=2.4.0",
     "numpy>=1.24.0",
-    "requests>=2.31.0",
+    "requests>=2.33.0",
     "tantivy>=0.11.0",
     "fastembed>=0.8.0",
+    # Security floors for fastembed/Hugging Face transitive dependencies.
+    "filelock>=4.2.1",
+    "pillow>=13.0.0",
     "httpx>=0.25.0",
     "structlog>=24.0.0",
     # Detection rules (Phase 1c): Sigma + YARA first-class
@@ -68,7 +70,7 @@ local-all = [
 # LiteLLM — unified routing to 100+ LLM providers (RFC-012)
 # pip install zettelforge[litellm]
 litellm = [
-    "litellm>=1.60.0",
+    "litellm>=1.109.1",
 ]
 
 # PII detection via Microsoft Presidio (RFC-013, optional)
@@ -89,16 +91,15 @@ extensions = [
 
 # Web UI (ZettelForge)
 web = [
-    # Exclude 0.136.3 while PyPI advisory MAL-2026-4750 is active.
-    "fastapi>=0.100.0,!=0.136.3,<0.139.1",
+    "fastapi>=0.162.5,<0.163.0",
     "uvicorn>=0.20.0",
     "psutil>=5.9.0",
-    "jinja2>=3.0.0",
+    "jinja2>=3.1.6",
 ]
 
 # LangChain integration
 langchain = [
-    "langchain-core>=0.2.0",
+    "langchain-core>=1.3.3",
 ]
 
 # CrewAI integration — exposes ZettelForge memory as CrewAI BaseTool subclasses.
@@ -117,29 +118,27 @@ crewai = [
 # don't pay the cost. CI's [dev] install pulls these in via the line
 # below.
 osint = [
-    "dnspython>=2.4.0",
+    # Patched DNS message parsing requires Python 3.11+ for this extra.
+    "dnspython>=2.9.0",
     "python-whois>=0.9.0",
     "ipwhois>=1.2.0",
-    # AGE-120 enrichers. maigret/sherlock are both MIT (AGE-118 approved); they
-    # back username_to_social. Lazy-imported and fail-closed in the collector,
-    # so absence at runtime is non-fatal. HIBP and the block explorer use the
-    # already-present httpx (no new dep).
-    "maigret>=0.4.0",
+    # Maigret is temporarily disabled: its SoupSieve<3 constraint excludes
+    # the fix for CVE-2026-126190. See SECURITY.md before re-enabling it.
+    # HIBP and the block explorer use the already-present httpx.
     "sherlock-project>=0.14.0",
 ]
 
 dev = [
-    "pytest>=7.0.0",
+    "pytest>=9.0.3",
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.0.0",
     "mypy>=1.0.0",
     "ruff>=0.4.0",
-    "langchain-core>=0.2.0",
-    # Exclude 0.136.3 while PyPI advisory MAL-2026-4750 is active.
-    "fastapi>=0.100.0,!=0.136.3,<0.139.1",  # for test_web_api.py
+    "langchain-core>=1.3.3",
+    "fastapi>=0.162.5,<0.163.0",  # for test_web_api.py
     "uvicorn>=0.20.0",      # for test_web_api.py
     "psutil>=5.9.0",        # for test_web_api.py
-    "jinja2>=3.0.0",        # for test_web_api.py
+    "jinja2>=3.1.6",        # for test_web_api.py
     "zettelforge[osint]",   # OSINT collectors need dnspython etc. for tests
 ]
 
@@ -158,7 +157,7 @@ zettelforge-mcp = "zettelforge.mcp.server:run_stdio"
 packages = ["src/zettelforge"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
