@@ -1,5 +1,7 @@
 # AGE-120 dependency audit (AGE-118 gate)
 
+> Historical evidence. Superseded by the [2.9.0 security update](../../../../docs/security-update-2.9.0.md): Maigret is removed and disabled; CI no longer carries the exemptions described below.
+
 GOV-009 / AGE-118 requires a pip-audit (OSV) run against the final pinned
 OSINT dependency set, with high/critical findings blocking merge. The CI
 `pip-audit` job (`.github/workflows/ci.yml`) is the enforcing gate; it audits

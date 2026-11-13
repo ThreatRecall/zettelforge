@@ -13,10 +13,10 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Set up Python
-      uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+      uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
       with:
         python-version: '3.12'
 
@@ -35,53 +35,21 @@ jobs:
   pip-audit:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
     - name: Set up Python
-      uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+      uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
       with:
         python-version: '3.12'
-    - name: Install pip-audit
-      run: pip install pip-audit==2.9.0
+    - name: Install patched audit tooling
+      run: python -m pip install --upgrade pip==26.3 pip-audit==2.10.1
     - name: Audit dependencies (any reported vuln blocks)
       run: |
-        pip install -e ".[dev]" || pip install -e "."
-        # pip-audit fails non-zero on any reported vuln. Add
-        # --ignore-vuln=CVE-... with a citation when the finding is
-        # explicitly accepted per GOV-009 §"Vulnerability Response".
-        #
-        # CVE-2026-3219 / PYSEC-2026-196: vulnerability in `pip` itself (the package
-        # manager), not a project dependency. The runner's pip is
-        # supplied by GitHub's setup-python image and is not something
-        # ZettelForge's pyproject can pin or upgrade. Risk-accepted
-        # because the pip vulnerability surface is exposed during
-        # install, not at runtime; CI builds in ephemeral runners with
-        # no persistent state. Re-evaluate when GitHub's images ship a
-        # patched pip.
-        #
-        # CVE-2023-36464 / GHSA-4vvm-4w3v-6mr8: medium-severity
-        # infinite-loop DoS in PyPDF2 3.0.1, introduced transitively by
-        # Maigret. PyPDF2 has no patched release under that package name
-        # (upstream recommends migrating to pypdf>=3.9.0), and ZettelForge's
-        # AGE-120 username collector does not parse attacker-supplied PDFs or
-        # invoke Maigret report generation. Accepted for AGE-120 because the
-        # GOV-009 blocking threshold is HIGH/CRITICAL and the collector
-        # lazy-imports/fails closed.
-        #
-        # --skip-editable: do not audit the editable local zettelforge
-        # install. It is the project itself, not a third-party dependency,
-        # and on a release-prep PR its version is bumped ahead of PyPI
-        # (e.g. 2.8.0 before publish), so pip-audit cannot resolve it.
-        #
-        # --strict is intentionally NOT used: it fails the run whenever a
-        # distribution can't be audited, which includes the editable
-        # package we deliberately skip ("distribution marked as editable").
-        # pip-audit still exits non-zero on any real reported vulnerability,
-        # so the "any reported vuln blocks" gate is preserved; every
-        # third-party dependency (and the runner's pip) is still audited.
-        pip-audit --skip-editable \
-          --ignore-vuln=CVE-2026-3219 \
-          --ignore-vuln=PYSEC-2026-196 \
-          --ignore-vuln=CVE-2023-36464
+        # Fail closed if the complete supported development/web dependency
+        # graph cannot be installed; never fall back to a smaller graph.
+        python -m pip install -e ".[dev,web]"
+        # Editable source has no PyPI release to audit. Every installed
+        # third-party package, including pip itself, remains in scope.
+        pip-audit --skip-editable
 
   test:
     runs-on: ubuntu-latest
@@ -92,18 +60,18 @@ jobs:
       # these jobs in parallel can double-hit HuggingFace and trigger 429s.
       max-parallel: 1
       matrix:
-        python-version: ['3.12', '3.13']
+        python-version: ['3.11', '3.12', '3.13']
 
     steps:
-    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+      uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Cache fastembed model
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: |
           ~/.cache/fastembed
@@ -147,10 +115,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: lint
     steps:
-    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Set up Python
-      uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+      uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
       with:
         python-version: '3.12'
 
@@ -175,10 +143,10 @@ jobs:
     needs: [test, governance]
 
     steps:
-    - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Set up Python
-      uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+      uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
       with:
         python-version: '3.12'
 

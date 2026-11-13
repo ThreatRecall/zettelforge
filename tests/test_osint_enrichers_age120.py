@@ -9,8 +9,8 @@ executor and the new ontology entities/edges.
 
 from __future__ import annotations
 
-import sys
-from types import ModuleType, SimpleNamespace
+import builtins
+from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import httpx
@@ -148,8 +148,7 @@ def test_maigret_emits_social_accounts() -> None:
         {"platform": "GitHub", "url": "https://github.com/bobz"},
         {"platform": "Twitter", "url": "https://twitter.com/bobz"},
     ]
-    with patch.object(maigret_collector, "_search_username", return_value=rows):
-        out = maigret_collector.collect("Alias", "BobZ")
+    out = maigret_collector._rows_to_tuples("bobz", rows)
 
     assert {t.output_entity_type for t in out} == {"SocialAccount"}
     assert all(t.edge_type == "has_account" for t in out)
@@ -162,51 +161,19 @@ def test_maigret_rejects_non_alias() -> None:
     assert maigret_collector.collect("EmailAddress", "x@y.com") == []
 
 
-def test_maigret_live_path_loads_settings_and_passes_logger(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    calls: dict[str, object] = {}
+def test_maigret_disabled_without_importing_backend(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A leftover Maigret installation must not reactivate vulnerable parsing."""
+    real_import = builtins.__import__
 
-    class FakeSettings:
-        sites_db_path = ""
+    def guarded_import(name, *args, **kwargs):
+        if name == "maigret" or name.startswith("maigret."):
+            pytest.fail("Disabled collector imported the vulnerable backend")
+        return real_import(name, *args, **kwargs)
 
-        def load(self) -> None:
-            calls["settings_loaded"] = True
-            self.sites_db_path = "maigret-sites.json"
-
-    class FakeDatabase:
-        def load_from_path(self, path: str):
-            calls["sites_db_path"] = path
-            return self
-
-        def ranked_sites_dict(self, top: int):
-            calls["top"] = top
-            return {"GitHub": object()}
-
-    async def fake_search(**kwargs):
-        calls["logger"] = kwargs.get("logger")
-        return {
-            "GitHub": {
-                "status": SimpleNamespace(status="CLAIMED"),
-                "url_user": "https://github.com/bobz",
-            }
-        }
-
-    fake_maigret = ModuleType("maigret")
-    fake_maigret.settings = SimpleNamespace(Settings=FakeSettings)
-    fake_maigret.search = fake_search
-    fake_sites = ModuleType("maigret.sites")
-    fake_sites.MaigretDatabase = FakeDatabase
-    monkeypatch.setitem(sys.modules, "maigret", fake_maigret)
-    monkeypatch.setitem(sys.modules, "maigret.sites", fake_sites)
-
-    rows = maigret_collector._search_username("bobz")
-
-    assert rows == [{"platform": "GitHub", "url": "https://github.com/bobz"}]
-    assert calls["settings_loaded"] is True
-    assert calls["sites_db_path"] == "maigret-sites.json"
-    assert calls["top"] == maigret_collector.MAX_ACCOUNTS
-    assert calls["logger"] is not None
+    monkeypatch.setattr(builtins, "__import__", guarded_import)
+    with patch.object(maigret_collector._logger, "warning") as warning:
+        assert maigret_collector.collect("Alias", "BobZ") == []
+    warning.assert_called_once_with("maigret_collector_disabled", advisory="CVE-2026-126190")
 
 
 # ---------------------------------------------------------------------------
