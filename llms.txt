@@ -1,0 +1,64 @@
+# ZettelForge
+
+> Agentic memory system for cyber threat intelligence. Combines SQLite-backed notes and knowledge graph, LanceDB vector search, entity extraction, STIX-aligned ontology, and intent-classified blended retrieval. MIT-licensed, offline-first, no cloud or API keys required.
+
+## Reference (highest priority for agents)
+
+- [Memory Manager API](reference/memory-manager-api.md): Full MemoryManager API surface — remember, recall, synthesize, traverse, entity lookups
+- [STIX 2.1 Schema](reference/stix-schema.md): STIX-aligned entity types, relation types, TypeDB type mappings (extension)
+- [Configuration](reference/configuration.md): All config keys, types, defaults, environment variable overrides
+- [Retrieval Policies](reference/retrieval-policies.md): BlendedRetriever intent→policy mapping, scoring formulas
+- [Governance Controls](reference/governance-controls.md): GOV-003 / GOV-007 / GOV-011 / GOV-012 enforcement matrix
+
+## How-To Guides
+
+- [Store a Threat Actor](how-to/store-threat-actor.md): remember() with CTI entity extraction
+- [Query APT Tools](how-to/query-apt-tools.md): recall() + synthesize() for APT tooling analysis
+- [Ingest News Reports](how-to/ingest-news-report.md): remember_report() chunked ingestion
+- [Resolve Aliases](how-to/resolve-aliases.md): Fancy Bear → APT28 via the bundled alias table
+- [Run Temporal Queries](how-to/run-temporal-query.md): valid-from/valid-until edge queries
+- [Configure LanceDB](how-to/configure-lancedb.md): IVF_PQ index tuning
+- [Configure TypeDB](how-to/configure-typedb.md): Docker setup + schema deployment (enterprise extension)
+- [Configure OpenCTI](how-to/configure-opencti.md): OpenCTI pull/push sync (enterprise extension)
+- [Integrate with Your LLM Agent](how-to/integrate-llm-agent.md): Agent integration via `get_context()`, `ZettelForgeRetriever` (LangChain), or the MCP server
+
+## Tutorials
+
+- [Quickstart](tutorials/01-quickstart.md): First memory stored in under 5 minutes
+- [Ingest a CTI Report](tutorials/02-first-cti-report.md): STIX bundle end-to-end
+
+## Explanation
+
+- [Architecture](explanation/architecture.md): Why SQLite + LanceDB (community default) and when TypeDB helps (extension)
+- [Zettelkasten Philosophy](explanation/zettelkasten-philosophy.md): How knowledge is stored and retrieved
+- [Two-Phase Pipeline](explanation/two-phase-pipeline.md): FactExtractor → MemoryUpdater design
+- [STIX in ZettelForge](explanation/stix-in-zettelforge.md): How STIX 2.1 maps to ZettelForge concepts
+- [Epistemic Tiers](explanation/epistemic-tiers.md): Confidence model and decay
+
+## Design Records
+
+- [RFC-001: Conversational Entity Extractor](rfcs/RFC-001-conversational-entity-extractor.md): Regex + LLM NER via the enrichment queue
+- [RFC-002: Universal LLM Provider Interface](rfcs/RFC-002-universal-llm-provider.md): Pluggable LLM backends (Draft)
+- [RFC-003: Read-Path Depth Routing](rfcs/RFC-003-read-path-depth-routing.md): Quality Gate + System 1 / System 2 retrieval (Draft)
+- [The Memory Problem (origin story)](narrative/2026-04-16-the-memory-problem.md)
+
+## Key Concepts
+
+- **ZettelForge**: Agentic memory system for cyber threat intelligence. Community edition ships a SQLite + LanceDB pipeline with MCP server, LangChain retriever, and STIX-aligned entity extraction.
+- **SQLite backend**: Default storage for notes, knowledge graph nodes and edges, and the entity index. WAL mode. Zero external server.
+- **LanceDB vector layer**: On-disk vector store holding 768-dim fastembed embeddings (`nomic-embed-text-v1.5-Q`, ONNX, in-process). IVF_PQ index, in-memory fallback for small corpora.
+- **Dual-stream write path**: `remember()` returns in ~45 ms on the fast path. LLM causal triple extraction, LLM NER, and A-Mem memory evolution run asynchronously in a background enrichment queue. Pass `sync=True` to block until the queue drains.
+- **BlendedRetriever**: Merges VectorRetriever (cosine similarity + entity boost) and GraphRetriever (BFS over the knowledge graph, hop-distance scoring) using intent-derived policy weights. Cross-encoder reranker (`Xenova/ms-marco-MiniLM-L-6-v2`) finalises ordering.
+- **Intent classification**: Five intents — `FACTUAL`, `TEMPORAL`, `RELATIONAL`, `CAUSAL`, `EXPLORATORY` — each maps to a different vector/graph/entity-index weight policy.
+- **Entity extraction**: Regex path recognises 19 types (CVE, intrusion_set, actor, tool, campaign, attack_pattern, IPv4, domain, URL, MD5, SHA1, SHA256, email, person, location, organization, event, activity, temporal). LLM NER augments for conversational entities (controlled via `llm_ner.enabled`).
+- **Alias resolution**: 36 seeded CTI aliases (APT28 / Fancy Bear / Sofacy / STRONTIUM, etc.). Fires automatically on both store and recall. TypeDB extension adds inference-driven alias chains.
+- **Epistemic tier**: Quality classification on every note — `A` (authoritative: CISA, MITRE), `B` (operational: threat reports, default), `C` (support: LLM-extracted, speculative).
+- **STIX 2.1 alignment**: Community taxonomy covers `intrusion_set`, `threat_actor`, `malware`, `attack_pattern`, `vulnerability`, `campaign`, `tool`, and indicator sub-types. The enterprise extension adds a TypeDB-enforced STIX 2.1 schema with inference rules.
+- **Memory evolution (Mem0 + A-Mem)**: Phase 1 (`FactExtractor`) distills content into scored facts. Phase 2 (`MemoryUpdater`) decides ADD / UPDATE / DELETE / NOOP per fact. A-Mem neighbour refinement runs in the background when the store has ≥ 3 notes.
+- **MCP server**: `python -m zettelforge.mcp` exposes 7 stdio tools (`zettelforge_remember`, `zettelforge_recall`, `zettelforge_synthesize`, `zettelforge_entity`, `zettelforge_graph`, `zettelforge_stats`, `zettelforge_sync`).
+- **Governance controls**:
+  - **GOV-003** — Python Standards: ruff lint, ruff format, mypy `disallow_untyped_defs` (build/CI gate)
+  - **GOV-007** — Testing Standards: pytest with `--cov-fail-under=67` (build/CI gate)
+  - **GOV-011** — Access Control & Input Validation: `GovernanceValidator.enforce()` runs on every `remember()` (runtime)
+  - **GOV-012** — Audit Logging: OCSF v1.3 events (`ocsf.py`) via structlog to rotating files (runtime)
+- **Extensions**: `zettelforge-enterprise` adds TypeDB STIX backend, OpenCTI sync, Sigma rule generation, and multi-tenant auth. Detection is automatic — the community package runs standalone.

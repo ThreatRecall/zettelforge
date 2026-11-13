@@ -1,0 +1,70 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   ZettelForge docs — mkdocs-material override layer
+
+   Loaded AFTER `colors_and_type.css` (see extra_css order in mkdocs.yml).
+   Its job is narrow: map the brand tokens defined upstream into the
+   `--md-*` variables that mkdocs-material's theme actually consults, so
+   the docs site reflects the brand palette without us re-styling every
+   component from scratch.
+
+   When editing: prefer re-pointing a material token at a brand token over
+   inventing new colors. If you need a color that isn't in the brand, stop
+   and add it to the brand first.
+   ────────────────────────────────────────────────────────────────────── */
+
+/* Palette mapping — applies to both schemes. Material's `custom` primary
+   and accent (set in mkdocs.yml) picks these up. */
+:root {
+  --md-primary-fg-color:         var(--signal-neon);
+  --md-primary-fg-color--light:  var(--signal-neon);
+  --md-primary-fg-color--dark:   var(--signal-neon-dim);
+  --md-primary-bg-color:         var(--graphite-0);
+  --md-accent-fg-color:          var(--signal-neon);
+  --md-accent-fg-color--transparent: rgba(0, 255, 163, 0.10);
+
+  /* Font stacks — match brand tokens so `--md-text-font` flows to body
+     and `--md-code-font` flows to every code block / inline code / kbd. */
+  --md-text-font:  var(--font-sans);
+  --md-code-font:  var(--font-mono);
+}
+
+/* Dark scheme (slate) — the canonical ZettelForge surface. */
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color:          var(--graphite-0);
+  --md-default-fg-color:           var(--fg-1);
+  --md-default-fg-color--light:    var(--fog-4);
+  --md-default-fg-color--lighter:  var(--fog-5);
+
+  --md-code-bg-color:              var(--graphite-2);
+  --md-code-fg-color:               var(--fog-3);
+
+  --md-typeset-a-color:             var(--intent-factual);
+
+  --md-footer-bg-color:             var(--graphite-3);
+  --md-footer-bg-color--dark:       var(--graphite-0);
+}
+
+/* Light scheme — parity only. Brand rule: neon reads as radioactive on
+   white, so swap the accent for the muted sage. */
+[data-md-color-scheme="default"] {
+  --md-primary-fg-color:         var(--signal-leaf);
+  --md-primary-fg-color--light:  var(--signal-leaf-soft);
+  --md-primary-fg-color--dark:   var(--signal-leaf-deep);
+  --md-accent-fg-color:          var(--signal-leaf-deep);
+
+  --md-default-bg-color:         var(--fog-0);
+  --md-default-fg-color:         var(--fog-6);
+
+  --md-code-bg-color:            var(--fog-1);
+  --md-code-fg-color:            var(--fog-6);
+
+  --md-typeset-a-color:          var(--signal-leaf-deep);
+}
+
+/* Selection — use the signal accent at low alpha. Brand rule is at most
+   one signal-accent surface per viewport, but selection is ephemeral so
+   it doesn't count against the quota. */
+[data-md-color-scheme="slate"] ::selection {
+  background: rgba(0, 255, 163, 0.25);
+  color: var(--fog-0);
+}

@@ -1,0 +1,158 @@
+/* ──────────────────────────────────────────────────────────────────────────
+   ZettelForge / ThreatRecall — Design Tokens
+   ──────────────────────────────────────────────────────────────────────────
+   Two related identities share the same core:
+     • ZettelForge   — open-source CTI memory library; terminal/dev aesthetic
+     • ThreatRecall  — hosted commercial product; slightly softer, marketing-friendly
+   Both use Inter for UI text and a monospace (JetBrains Mono) for code, IDs,
+   CVEs, hashes, and any technical identifier.
+   ────────────────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+/* Neuropol — brand display face. Used for logo wordmarks, hero headlines, and
+   any "ZettelForge" or "ThreatRecall" treatment where the mark is the voice.
+   Not for body UI (too wide at small sizes) and not for long-form reading. */
+@font-face {
+  font-family: 'Neuropol';
+  src: url('fonts/Neuropol.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ── Brand colors ─────────────────────────────────────────────────────── */
+
+  /* Signal green — the single controlled highlight.
+     "One live indicator or confirmed finding."
+     Two shades because the OS library (ZettelForge) and the marketing
+     site (ThreatRecall) calibrate it differently: ZF goes electric, TR goes
+     botanical. */
+  --signal-neon:        #00FFA3;   /* ZettelForge terminal accent */
+  --signal-neon-dim:    #00CC82;
+  --signal-leaf:        #5EAE78;   /* ThreatRecall primary */
+  --signal-leaf-soft:   #8ED1A0;   /* gradient top stop */
+  --signal-leaf-deep:   #3F8A59;
+
+  /* Graphite — near-black neutrals used for deep surfaces and type on light. */
+  --graphite-0:         #0A0E17;   /* deepest — ZF app background */
+  --graphite-1:         #0D0F1C;   /* docs background (slate scheme) */
+  --graphite-2:         #0D1117;   /* input surface */
+  --graphite-3:         #161B22;   /* card / header surface */
+  --graphite-4:         #21262D;   /* subtle fill, pill tag */
+  --graphite-5:         #30363D;   /* border on dark */
+  --graphite-6:         #484F58;   /* disabled / empty-state */
+
+  /* Fog — mid/light neutrals used on light surfaces and as fg2/fg3 on dark. */
+  --fog-0:              #FFFFFF;
+  --fog-1:              #F4F6FA;   /* light canvas */
+  --fog-2:              #E5E9F0;   /* light divider */
+  --fog-3:              #C9D1D9;   /* fg1 on dark */
+  --fog-4:              #8B949E;   /* fg2 on dark / fg on light-muted */
+  --fog-5:              #6B7280;   /* tagline gray from lockup */
+  --fog-6:              #1F2937;   /* dark ink on light */
+
+  /* Semantic signals — tier / intent / indicator colors.
+     Kept intentionally muted — CTI analysts look at these all day. */
+  --tier-a-fg:          #3FB950;   /* authoritative (CISA, MITRE) */
+  --tier-a-bg:          #1A472A;
+  --tier-b-fg:          #A371F7;   /* operational (reports, default) */
+  --tier-b-bg:          #2A1A47;
+  --tier-c-fg:          #D29922;   /* support (LLM-extracted, speculative) */
+  --tier-c-bg:          #3A2A0F;
+
+  --intent-factual:     #58A6FF;   /* blue — the link color */
+  --intent-temporal:    #F0883E;
+  --intent-relational:  #A371F7;
+  --intent-causal:      #DB61A2;
+  --intent-exploratory: #3FB950;
+
+  --danger:             #F85149;
+  --warning:            #D29922;
+  --success:            #3FB950;
+  --info:               #58A6FF;
+
+  /* ── Foreground / background semantic aliases ─────────────────────────── */
+  --bg-app:             var(--graphite-0);
+  --bg-surface:         var(--graphite-3);
+  --bg-surface-hi:      var(--graphite-4);
+  --bg-input:           var(--graphite-2);
+  --border:             var(--graphite-5);
+  --border-focus:       var(--intent-factual);
+
+  --fg-1:               var(--fog-3);       /* primary body text on dark */
+  --fg-2:               var(--fog-4);       /* secondary/meta on dark */
+  --fg-3:               var(--graphite-6);  /* disabled */
+  --fg-link:            var(--intent-factual);
+  --fg-accent:          var(--signal-neon);
+
+  /* ── Typography ───────────────────────────────────────────────────────── */
+  --font-sans:          'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono:          'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --font-display:       'Neuropol', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Base sizes */
+  --text-xs:    11px;
+  --text-sm:    12px;
+  --text-base:  14px;     /* default UI body — dense, analyst-friendly */
+  --text-md:    15px;     /* search input, result content */
+  --text-lg:    18px;
+  --text-xl:    20px;     /* H1 in header */
+  --text-2xl:   24px;
+  --text-3xl:   32px;
+  --text-4xl:   44px;
+  --text-hero:  64px;     /* marketing hero only */
+
+  /* Line heights */
+  --lh-tight:   1.2;
+  --lh-snug:    1.4;
+  --lh-normal:  1.6;
+  --lh-relaxed: 1.7;      /* long-form synthesis output */
+
+  /* Weights */
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+  --fw-black:    800;     /* ThreatRecall wordmark accent only */
+
+  /* Letter spacing */
+  --ls-tight:   -0.02em;  /* display */
+  --ls-normal:   0;
+  --ls-label:    0.04em;  /* small-caps labels */
+  --ls-tagline:  0.2em;   /* THREAT INTELLIGENCE . MEMORY . RECALL */
+
+  /* ── Spacing — 4px base grid ──────────────────────────────────────────── */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+  --sp-20: 80px;
+
+  /* ── Radii ────────────────────────────────────────────────────────────── */
+  --r-xs:   4px;
+  --r-sm:   6px;          /* most inputs & buttons */
+  --r-md:   8px;          /* cards, results */
+  --r-lg:   12px;
+  --r-pill: 9999px;       /* tags, entity chips */
+
+  /* ── Shadows ──────────────────────────────────────────────────────────── */
+  --shadow-sm:    0 1px 2px rgba(0,0,0,0.30);
+  --shadow-md:    0 4px 12px rgba(0,0,0,0.40);
+  --shadow-lg:    0 12px 32px rgba(0,0,0,0.50);
+  --shadow-focus: 0 0 0 3px rgba(88,166,255,0.10);  /* --intent-factual @10% */
+  --shadow-glow:  0 0 0 1px rgba(0,255,163,0.35), 0 0 16px rgba(0,255,163,0.15);
+
+  /* ── Transitions ──────────────────────────────────────────────────────── */
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast:      120ms;
+  --dur-base:      200ms;
+  --dur-slow:      320ms;
+}
