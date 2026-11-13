@@ -1,8 +1,10 @@
-# awesome-selfhosted-data entry for ZettelForge
-# Target file in the upstream repo: software/zettelforge.yml
-# Format reference: https://github.com/awesome-selfhosted/awesome-selfhosted-data/blob/master/.github/CONTRIBUTING.md
+# Informational awesome-selfhosted-data schema example for ZettelForge.
+# This generated example is NOT for submission: upstream requires a human-
+# authored contribution, including the entry text and PR description.
+# A human contributor must independently author an entry from upstream's template.
+# Format reference: https://github.com/awesome-selfhosted/awesome-selfhosted-data/blob/master/CONTRIBUTING.md
 #
-# NOTE: Only the human-authored fields below are submitted. The maintainer bot
+# NOTE: The maintainer bot
 # auto-populates stargazers_count, updated_at, archived, current_release and
 # commit_history from the GitHub API on merge — do NOT add them by hand.
 

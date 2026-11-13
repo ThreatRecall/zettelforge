@@ -1,19 +1,27 @@
 # Getting ZettelForge onto "awesome" lists — assessment & submission kit
 
-This directory holds ready-to-submit materials and an honest eligibility
-assessment for the two lists requested:
+This directory holds reference examples and an eligibility assessment for
+the two lists requested:
 
 - `awesome-selfhosted/awesome-selfhosted`
 - `sindresorhus/awesome`
 
-> **Two hard constraints up front.** (1) These are third-party repos; the
-> entries must be opened and merged by their maintainers via your own PR — they
-> cannot be pushed from this project. (2) **Both lists explicitly ban
-> AI-generated / AI-submitted entries** and will ban the contributor account for
-> violating it. So the PR must be opened and worded *by you, personally*. The
-> files here are a correctness aid (right format, right vocabulary, verified
-> against the live rules), not a copy-paste-from-a-bot shortcut — review and
-> rewrite the prose in your own voice before submitting.
+> These are third-party repositories with independent contribution policies.
+> Check each repository's current guidelines and PR template before preparing
+> a submission. This directory does not authorize any external submission or
+> establish that its examples are acceptable to a particular maintainer.
+
+### Contribution policies by repository
+
+| Repository | Current policy and guidance |
+|---|---|
+| [awesome-selfhosted-data](https://github.com/awesome-selfhosted/awesome-selfhosted-data/blob/master/CONTRIBUTING.md) | Requires a human-authored submission and prohibits machine/LLM-generated contributions, including an entry generated for a person to submit. The generated `zettelforge.yml` here is informational only and must not be submitted. A person posting or rewording generated text does not establish compliance. |
+| [sindresorhus/awesome](https://github.com/sindresorhus/awesome/blob/main/pull_request_template.md) | Accepts curated lists, not individual tools. Its template rejects fully AI-generated PRs and requires the proposed list not to be AI-generated. Read the full template before considering a list submission. |
+| [hslatman/awesome-threat-intelligence](https://github.com/hslatman/awesome-threat-intelligence/blob/main/CONTRIBUTING.md) | Its published guidelines require nonduplicate suggestions, one suggestion per PR, matching table formatting, and useful PR/commit titles. They do not currently state a blanket AI-submission ban; check the current policy before using an example. |
+| [topoteretes/awesome-ai-memory](https://github.com/topoteretes/awesome-ai-memory#contributing) | Its contribution section asks for project metadata and a PR. It does not currently state a blanket AI-submission ban; check the current policy and requested columns before using an example. |
+
+These policy summaries were checked on 2026-11-12. The linked upstream rules
+are authoritative and can change independently of this directory.
 
 ---
 
@@ -47,14 +55,20 @@ web UI screenshots/endpoints (`/`, `/api/recall`, `/api/graph/*`, config editor)
 
 ### How to submit
 
-1. Fork `awesome-selfhosted/awesome-selfhosted-data`.
-2. Copy `zettelforge.yml` (this directory) to `software/zettelforge.yml` in your
-   fork. Do **not** add `stargazers_count`, `updated_at`, `current_release`,
-   `commit_history`, or `archived` — the bot fills those on merge.
+1. Read the current [contribution guidelines](https://github.com/awesome-selfhosted/awesome-selfhosted-data/blob/master/CONTRIBUTING.md)
+   and [addition template](https://github.com/awesome-selfhosted/awesome-selfhosted-data/blob/master/.github/ISSUE_TEMPLATE/addition.md).
+   A human must independently author any submission; do not copy or reword the
+   generated `zettelforge.yml` here for submission.
+2. If proceeding under those rules, fork the data repository and independently
+   create `software/zettelforge.yml` from its upstream template. Do **not** add
+   `stargazers_count`, `updated_at`, `current_release`, `commit_history`, or
+   `archived` — the bot fills those on merge.
 3. Optionally run their linter locally:
    `make install && make` (it validates fields, tags, platforms, licenses).
-4. Open a PR. Tick the checklist boxes honestly (project age, license,
-   self-hostable, etc.). Write the PR description in your own words.
+4. The human author may open a PR and complete the checklist truthfully
+   (project age, license, self-hostable, etc.), including the authorship
+   attestation. The PR description must also comply with the human-authorship
+   requirement.
 5. If you want a `demo_url`, only add one that points at a live demo of the
    *self-hosted software itself* (not the hosted ThreatRecall SaaS, which
    reviewers may treat as promotion). Left out by default.
@@ -76,9 +90,10 @@ topics:
 
 **The achievable path: become an entry inside one of those existing lists**,
 which are themselves part of the awesome ecosystem `sindresorhus/awesome`
-indexes. Paste-ready, correctly-formatted entries for both are in
-[`EXISTING_LISTS_ENTRIES.md`](EXISTING_LISTS_ENTRIES.md). You open those PRs
-against the third-party repos yourself and reword them in your own voice.
+indexes. Draft entries illustrating their formats are in
+[`EXISTING_LISTS_ENTRIES.md`](EXISTING_LISTS_ENTRIES.md). Before any external
+submission, check the target repository's own current policy, verify the
+entry, and follow its requested format and authorship requirements.
 
 ---
 
@@ -86,15 +101,15 @@ against the third-party repos yourself and reword them in your own voice.
 
 | List | Verdict | Action |
 |---|---|---|
-| awesome-selfhosted | Eligible (frame as a web service) | Submit `zettelforge.yml` as `software/zettelforge.yml` — by hand, in your own words |
+| awesome-selfhosted | Assess as a web service under current rules | Human author starts from the upstream template; generated `zettelforge.yml` is informational only, not for submission |
 | sindresorhus/awesome (directly) | Impossible for a single tool; new list = duplicate reject | — |
-| via `hslatman/awesome-threat-intelligence` | Achievable | Submit the HTML-table entry from `EXISTING_LISTS_ENTRIES.md` |
-| via `topoteretes/awesome-ai-memory` | Achievable | Submit the pipe-table entry from `EXISTING_LISTS_ENTRIES.md` |
+| via `hslatman/awesome-threat-intelligence` | Potential fit | Check current contribution policy and HTML-table format before preparing a submission |
+| via `topoteretes/awesome-ai-memory` | Potential fit | Check current contribution policy and table columns before preparing a submission |
 
-## What only you can do (why nothing here is the final step)
+## External submissions are separate
 
-Every actual *listing* is a merge into a repo neither this agent nor its
-GitHub scope can touch (`awesome-selfhosted/*`, `hslatman/*`, `topoteretes/*`,
-`sindresorhus/*`), and all of these lists **ban AI-submitted entries**. So the
-agent's job ends at "correct, validated, paste-ready materials"; opening and
-merging the PRs is inherently yours.
+This change only updates ZettelForge's own documentation. It does not open,
+modify, or merge anything in the target repositories. A listing remains a
+separate contribution subject to that repository's policy and maintainer
+review; the authorship restrictions of one list do not automatically apply
+to the others.

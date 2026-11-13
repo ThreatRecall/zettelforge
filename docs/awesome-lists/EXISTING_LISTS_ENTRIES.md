@@ -1,4 +1,4 @@
-# Paste-ready entries for existing curated lists
+# Draft entries for existing curated lists
 
 `sindresorhus/awesome` lists *awesome lists*, never individual projects, and the
 two topics ZettelForge fits (threat intelligence, AI/agent memory) **already
@@ -7,10 +7,12 @@ duplicate. The realistic route into that ecosystem is to be an **entry inside an
 existing, already-curated list**. Below are entries formatted to each target
 list's exact convention.
 
-> Same caveats as the selfhosted submission: these are third-party repos, so you
-> open the PRs yourself, and you should reword the prose in your own voice.
-> Verify the target section/columns against the neighbours at submit time — list
-> formats drift.
+> Check each target's current contribution policy before using these drafts:
+> [hslatman's guidelines](https://github.com/hslatman/awesome-threat-intelligence/blob/main/CONTRIBUTING.md)
+> and [topoteretes' contribution section](https://github.com/topoteretes/awesome-ai-memory#contributing).
+> Their rules are independent of the awesome-selfhosted authorship restrictions
+> described in [the submission guide](SUBMISSION_GUIDE.md). Verify factual claims
+> and the target section/columns at submit time; formats and policies can change.
 
 ---
 
