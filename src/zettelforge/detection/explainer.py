@@ -24,7 +24,7 @@ from __future__ import annotations
 import os
 import time
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from zettelforge import llm_client
@@ -162,7 +162,7 @@ def explain(
     start = time.monotonic()
     provider_name = provider or llm_client.get_llm_provider()
     is_mock = provider_name == "mock"
-    now_iso = datetime.now(timezone.utc).isoformat()
+    now_iso = datetime.now(UTC).isoformat()
 
     # Mock provider — return canned deterministic response so CI tests
     # don't depend on fake-JSON parsing from the MockProvider's "mock response".

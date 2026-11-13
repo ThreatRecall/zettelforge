@@ -17,7 +17,7 @@ import uuid
 from collections import defaultdict, deque
 from collections.abc import Iterator
 from dataclasses import asdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -537,7 +537,7 @@ class SQLiteBackend(StorageBackend):
 
     def mark_enrichment_job_running(self, job_id: str) -> None:
         """Mark a job as running and increment its attempt count if present."""
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         with self._write_lock:
             self._check_open()
             self._conn.execute(
@@ -565,7 +565,7 @@ class SQLiteBackend(StorageBackend):
         """
         if state not in {"succeeded", "failed", "dead_lettered", "cancelled"}:
             raise ValueError(f"Invalid terminal enrichment job state: {state}")
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         with self._write_lock:
             self._check_open()
             self._conn.execute(

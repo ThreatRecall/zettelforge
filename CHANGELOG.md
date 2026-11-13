@@ -4,7 +4,29 @@ All notable changes to ZettelForge are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 Versioning follows [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [2.9.0] - Unreleased
+
+### Security
+
+- Raise dependency minimums to patched releases of Requests, PyArrow,
+  Pydantic, Jinja2, LangChain, LiteLLM, dnspython, Pillow, filelock and pytest.
+  Update the web extra to FastAPI 0.162.5.
+- Temporarily disable Maigret username discovery and remove its dependency.
+  Maigret 0.6.6 requires SoupSieve versions affected by CVE-2026-126190;
+  the collector performs no backend imports or network calls, including on
+  upgraded installations that still contain Maigret. Other OSINT collectors
+  remain available.
+- Refresh SHA-pinned GitHub Actions and pin the Snyk CLI. Audit the full
+  development/web dependency set without fallback installs or obsolete
+  vulnerability exemptions.
+
+### Changed
+
+- Require Python 3.11 or newer: patched dependency releases no longer support
+  end-of-life Python 3.10. CI now includes Python 3.11, 3.12 and 3.13.
+- Align the package, runtime and MCP registry versions at 2.9.0. No database
+  migration is required. See [upgrade notes](docs/security-update-2.9.0.md)
+  for cleaning previously installed Maigret dependencies.
 
 ## [2.8.0] - 2026-06-26
 

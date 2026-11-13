@@ -17,32 +17,35 @@ jobs:
       actions: read
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Python
-        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[dev]" || pip install -e "."
-
-      - name: Set up Snyk CLI
-        uses: snyk/actions/setup@9adf32b1121593767fc3c057af55b55db032dc04
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          python -m pip install -e ".[dev,web]"
 
       - name: Check Snyk token
         id: check_token
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         run: |
-          if [ -z "${{ secrets.SNYK_TOKEN }}" ]; then
+          if [ -z "$SNYK_TOKEN" ]; then
             echo "has_token=false" >> "$GITHUB_OUTPUT"
             echo "::warning::SNYK_TOKEN not configured — skipping security scan"
           else
             echo "has_token=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Set up Snyk CLI
+        if: steps.check_token.outputs.has_token == 'true'
+        uses: snyk/actions/setup@11b673cfb4b0dc0d860a1323caa199d54950dcce
+        with:
+          snyk-version: v1.1308.4
 
       # GOV-009 §"Vulnerability Response" + GOV-011 §"Testing Phase":
       # HIGH/CRITICAL Snyk findings must fail the gate. Audit H-5 found
@@ -65,7 +68,7 @@ jobs:
 
       - name: Upload SARIF to GitHub
         if: steps.check_token.outputs.has_token == 'true'
-        uses: github/codeql-action/upload-sarif@99df26d4f13ea111d4ec1a7dddef6063f76b97e9
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
         with:
           sarif_file: snyk-code.sarif
         continue-on-error: true
