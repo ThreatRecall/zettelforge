@@ -91,7 +91,7 @@ extensions = [
 
 # Web UI (ZettelForge)
 web = [
-    "fastapi>=0.162.5,<0.163.0",
+    "fastapi>=0.162.5,<0.164.0",
     "uvicorn>=0.20.0",
     "psutil>=5.9.0",
     "jinja2>=3.1.6",
@@ -135,7 +135,7 @@ dev = [
     "mypy>=1.0.0",
     "ruff>=0.4.0",
     "langchain-core>=1.3.3",
-    "fastapi>=0.162.5,<0.163.0",  # for test_web_api.py
+    "fastapi>=0.162.5,<0.164.0",  # for test_web_api.py
     "uvicorn>=0.20.0",      # for test_web_api.py
     "psutil>=5.9.0",        # for test_web_api.py
     "jinja2>=3.1.6",        # for test_web_api.py
